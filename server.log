@@ -1,0 +1,56 @@
+
+> treepod-web@0.1.0 dev
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.1.7:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 633ms
+ GET /api/public/disponibilidad?from=2026-02-01&to=2026-03-01 200 in 1291ms (compile: 195ms, proxy.ts: 80ms, render: 1017ms)
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET /disponibilidad 200 in 1563ms (compile: 1408ms, proxy.ts: 20ms, render: 136ms)
+ GET /images/news/celebrating-at-treepod.jpg 404 in 322ms (compile: 269ms, render: 53ms)
+ GET /images/services/breakfast.jpg 404 in 375ms (compile: 300ms, render: 75ms)
+ ⨯ The requested resource isn't a valid image for /images/news/celebrating-at-treepod.jpg received null
+ ⨯ The requested resource isn't a valid image for /images/services/breakfast.jpg received null
+ GET /api/public/disponibilidad?from=2026-02-20&to=2026-08-20 200 in 1179ms (compile: 1258µs, proxy.ts: 2ms, render: 1176ms)
+🚀 API calcular-precio llamada con: { entrada: '2026-03-11', salida: '2026-03-13', adultos: 2 }
+🔗 Conectando a Supabase en: https://iwcejrbiaflbebggvlrm.supabase.co
+✅ Precio base calculado: { temporada: 'Verano', precio_noche: 130000, noches: 2, total: 260000 }
+ POST /api/calcular-precio 200 in 679ms (compile: 137ms, proxy.ts: 10ms, render: 532ms)
+ POST /api/reservas/crear 200 in 1823ms (compile: 125ms, proxy.ts: 9ms, render: 1689ms)
+ GET /reserva/c8e18c95-34ea-4c3f-9307-f28d26139bd4 200 in 505ms (compile: 489ms, proxy.ts: 5ms, render: 11ms)
+📝 Payload recibido: {
+  reservaId: 'c8e18c95-34ea-4c3f-9307-f28d26139bd4',
+  nombre: 'Test',
+  apellido: 'Lead',
+  email: 'test_lead@example.com'
+}
+⚠️ Error registrando lead: Could not find the table 'public.leads_checkout' in the schema cache
+ POST /api/reservas/actualizar-huesped 200 in 1370ms (compile: 83ms, proxy.ts: 10ms, render: 1277ms)
+ GET /reserva/c8e18c95-34ea-4c3f-9307-f28d26139bd4 200 in 27ms (compile: 9ms, proxy.ts: 2ms, render: 16ms)
+ GET /disponibilidad 200 in 58ms (compile: 5ms, proxy.ts: 8ms, render: 45ms)
+ GET /images/services/breakfast.jpg 404 in 54ms (compile: 8ms, render: 46ms)
+ GET /images/news/celebrating-at-treepod.jpg 404 in 55ms (compile: 32ms, render: 23ms)
+ ⨯ The requested resource isn't a valid image for /images/services/breakfast.jpg received null
+ ⨯ The requested resource isn't a valid image for /images/news/celebrating-at-treepod.jpg received null
+ GET /api/public/disponibilidad?from=2026-02-20&to=2026-08-20 200 in 972ms (compile: 1311µs, proxy.ts: 3ms, render: 968ms)
+🚀 API calcular-precio llamada con: { entrada: '2026-04-15', salida: '2026-04-17', adultos: 2 }
+🔗 Conectando a Supabase en: https://iwcejrbiaflbebggvlrm.supabase.co
+✅ Precio base calculado: { temporada: 'Otoño', precio_noche: 130000, noches: 2, total: 260000 }
+💰 Descuento aplicado por anticipación (54 días): 26000
+ POST /api/calcular-precio 200 in 348ms (compile: 782µs, proxy.ts: 41ms, render: 307ms)
+ POST /api/reservas/crear 200 in 1111ms (compile: 14ms, proxy.ts: 6ms, render: 1091ms)
+ GET /reserva/d64ea414-7bc7-46af-8034-24ea1115dcf5 200 in 24ms (compile: 6ms, proxy.ts: 1842µs, render: 16ms)
+📝 Payload recibido: {
+  reservaId: 'd64ea414-7bc7-46af-8034-24ea1115dcf5',
+  nombre: 'Real',
+  apellido: 'Test',
+  email: 'real_lead@treepod.cl'
+}
+ POST /api/reservas/actualizar-huesped 200 in 934ms (compile: 5ms, proxy.ts: 14ms, render: 916ms)
+ GET /reserva/d64ea414-7bc7-46af-8034-24ea1115dcf5 200 in 28ms (compile: 10ms, proxy.ts: 2ms, render: 17ms)
