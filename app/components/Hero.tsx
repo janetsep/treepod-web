@@ -13,10 +13,10 @@ export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const heroImages = [
-    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Refugio cálido diseñado para el descanso profundo en TreePod" },
+    { src: "/images/exteriors/domo-exterior-arrival.jpg", alt: "Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo" },
+    { src: "/images/exteriors/domo-iluminado-noche.jpg", alt: "Domo iluminado en la noche, Valle Las Trancas" },
+    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Interior acogedor del domo con estufa a pellet" },
     { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Cama matrimonial con vistas al bosque nativo de Las Trancas" },
-    { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Ventanales panorámicos que integran la naturaleza" },
-    { src: "/images/hero/interior-domo-acogedor-74-2.jpg", alt: "Vistas directas al bosque desde la comodidad de tu refugio" },
   ];
 
   useEffect(() => {
@@ -86,6 +86,11 @@ Bosque nativo · Privacidad real · Comodidad sin concesiones.
           </button>
 
         </div>
+
+        {/* Precio ancla */}
+        <p className="mt-6 text-white/70 text-sm font-bold tracking-wide animate-fade-in-up delay-300">
+          Desde <span className="text-white font-black">$98.000</span> / noche · 2 personas
+        </p>
 
         {/* Aura: Animated Scroll Mouse - Visible on All Devices to prevent False Floor */}
         <div
