@@ -177,7 +177,7 @@ function DisponibilidadContent() {
           total: calcularTotalConServicios(),
           precio_original: resultado.precio_original,
           descuento_monto: resultado.descuento_aplicado?.monto || 0,
-          descuento_detalle: resultado.descuento_aplicado?.motivos || [],
+          descuento_detalle: resultado.descuento_aplicado ? [resultado.descuento_aplicado.tipo] : [],
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
             if (!s) return null;
@@ -394,7 +394,7 @@ function DisponibilidadContent() {
                       </span>
                     </div>
                     <p className="text-xs text-text-sub leading-relaxed font-bold">
-                      {s.description || s.descripcion}
+                      {s.descripcion}
                     </p>
                   </div>
                 </div>
@@ -494,18 +494,16 @@ function DisponibilidadContent() {
                         </div>
                       )}
 
-                      {resultado.descuento_aplicado && resultado.descuento_aplicado.motivos && (
+                      {resultado.descuento_aplicado && (
                         <div className="space-y-2">
                           <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest pl-1">Descuentos Aplicados</p>
-                          {resultado.descuento_aplicado.motivos.map((m: any, idx: number) => (
-                            <div key={idx} className="flex justify-between items-center text-xs font-bold text-emerald-700 bg-emerald-50/40 p-3 rounded-xl border border-emerald-100/50">
+                          <div className="flex justify-between items-center text-xs font-bold text-emerald-700 bg-emerald-50/40 p-3 rounded-xl border border-emerald-100/50">
                               <span className="flex items-center gap-2">
                                 <Tag className="w-3.5 h-3.5 text-emerald-500" />
-                                {m.motivo}
+                                {resultado.descuento_aplicado.tipo}
                               </span>
-                              <span className="font-black">-${(m.monto || 0).toLocaleString("es-CL")}</span>
+                              <span className="font-black">-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
                             </div>
-                          ))}
                           <div className="flex justify-between items-center px-3 py-1 text-[10px] font-black text-emerald-600/70">
                             <span>Total Ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
                             <span>-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
@@ -553,7 +551,7 @@ function DisponibilidadContent() {
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
                       disabled={reserving}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-[2rem] text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3"
+                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-[2rem] text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4"
                     >
                       {reserving ? (
                         <>
@@ -562,6 +560,17 @@ function DisponibilidadContent() {
                         </>
                       ) : "Pagar Ahora"}
                     </button>
+
+                    <div className="flex flex-col items-center justify-center pt-6 opacity-70">
+                      <p className="text-[10px] font-bold text-text-sub uppercase tracking-wider mb-2 flex items-center gap-1">
+                        Pago 100% Seguro <Check className="w-3 h-3 text-emerald-500" />
+                      </p>
+                      <div className="flex items-center gap-4">
+                        <span className="text-[10px] font-bold font-sans tracking-wide">Webpay Plus</span>
+                        <span className="w-1 h-1 rounded-full bg-black/20"></span>
+                        <span className="text-[10px] font-bold font-sans tracking-wide">Transferencia</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

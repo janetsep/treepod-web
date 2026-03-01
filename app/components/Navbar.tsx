@@ -65,7 +65,7 @@ export default function Navbar() {
         >
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
                 <Link href="/" className="flex items-center space-x-2 group relative z-50">
-                    <div className={`h-[50px] md:h-[70px] relative w-36 md:w-48 transition-all duration-300 group-hover:scale-105 ${!isNavbarSolid ? 'drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]' : ''}`}>
+                    <div className={`h-[50px] md:h-[70px] relative w-44 md:w-56 transition-all duration-300 group-hover:scale-105 ${!isNavbarSolid ? 'drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]' : ''}`}>
                         <Logo className="w-full h-full object-contain" variant={isNavbarSolid ? "color" : "white"} />
                     </div>
                 </Link>
@@ -118,7 +118,7 @@ export default function Navbar() {
                 {/* MOBILE DROPDOWN */}
                 {isMobileMenuOpen && (
                     <div className="lg:hidden fixed inset-0 top-0 h-screen w-full bg-white z-40 flex flex-col items-center justify-center p-8 animate-fade-in-up">
-                        <div className="flex flex-col space-y-12 text-center">
+                        <div className="flex flex-col space-y-8 text-center w-full max-w-sm mx-auto">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
@@ -130,6 +130,15 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
+                            <div className="pt-8 border-t border-black/10 w-full mt-4">
+                                <Link
+                                    href="/disponibilidad"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 rounded-full text-base uppercase tracking-[0.2em] shadow-xl w-full"
+                                >
+                                    Reservar Ahora
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 )}

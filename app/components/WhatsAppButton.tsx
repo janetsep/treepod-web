@@ -29,7 +29,7 @@ export default function WhatsAppButton() {
             </svg>
 
             {/* Tooltip opcional que aparece al hover */}
-            <span className="absolute right-20 bg-white dark:bg-surface-dark text-text-main-light dark:text-text-main-dark px-4 py-2 rounded-xl text-xs font-bold shadow-xl opacity-0 translate-x-4 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap border border-gray-100 dark:border-gray-800">
+            <span className="absolute right-full mr-4 bg-white text-gray-900 px-4 py-2 rounded-xl text-xs font-bold shadow-xl opacity-0 translate-x-4 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap border border-gray-100">
                 ¿Necesitas ayuda?
             </span>
 

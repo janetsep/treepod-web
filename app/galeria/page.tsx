@@ -71,7 +71,7 @@ export default function GaleriaPage() {
                         <div className="relative group overflow-hidden rounded-[2rem] shadow-xl border border-black/5">
                             <Image
                                 alt="Tinaja caliente de ciprés bajo el bosque nativo"
-                                src="/images/wellness/Tinaja2.jpeg"
+                                src="/images/wellness/Tinaja1.jpg"
                                 layout="fill"
                                 objectFit="cover"
                                 className="transform group-hover:scale-110 transition-transform duration-[1.5s]"
@@ -137,7 +137,7 @@ export default function GaleriaPage() {
                         <div className="lg:col-span-7 overflow-x-auto pb-8 hide-scrollbar">
                             <div className="flex space-x-8">
                                 {[
-                                    { title: "Cenas Privadas", img: "/images/interiors/interior-1.jpg" },
+                                    { title: "Cenas Exclusivas", img: "/images/interiors/interior-1.jpg" },
                                     { title: "Nieve & Deporte", img: "/images/exteriors/domo-exterior-arrival.jpg" }
                                 ].map((item, i) => (
                                     <div key={i} className="min-w-[320px] h-[450px] relative rounded-[2rem] overflow-hidden group cursor-pointer shadow-2xl border border-black/5">

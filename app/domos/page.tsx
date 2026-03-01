@@ -13,7 +13,7 @@ export default function DomosPage() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const heroImages = [
-        { src: "/images/hero/domo-night-real.jpg", alt: "Arquitectura geodésica iluminada bajo el cielo estrellado del Valle Las Trancas" },
+        { src: "/images/exteriors/hero-night-2.jpg", alt: "Arquitectura geodésica iluminada bajo el cielo estrellado del Valle Las Trancas" },
         { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Refugio cálido diseñado para el descanso profundo" },
         { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Cama matrimonial con vistas al bosque nativo de Las Trancas" },
         { src: "/images/hero/interior-domo-acogedor-21-2.jpg", alt: "Detalles en madera y confort moderno en la cordillera" },
@@ -22,7 +22,7 @@ export default function DomosPage() {
         { src: "/images/hero/interior-domo-acogedor-74-2.jpg", alt: "Vistas directas al bosque desde la comodidad de tu refugio" },
         { src: "/images/hero/interior-domo-acogedor-83-3.jpg", alt: "Diseño único que combina tranquilidad y elegancia" },
         { src: "/images/hero/interior-domo-acogedor-27-2.jpg", alt: "Fachada exterior del domo integrada en el paisaje" },
-        { src: "/images/hero/Tinaja2.jpg", alt: "Relajación total en tinaja bajo las estrellas" }
+        { src: "/images/wellness/Tinaja1.jpg", alt: "Relajación total en tinaja bajo las estrellas" }
     ];
 
     useEffect(() => {
@@ -74,7 +74,7 @@ export default function DomosPage() {
                         className={`object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
                     />
                 ))}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10"></div>
 
                 <div className="relative z-10 text-center max-w-4xl px-6 animate-fade-in-up">
                     <h1 className="h1-display text-white mb-4 [text-shadow:_0_5px_30px_rgba(0,0,0,0.5)]">
@@ -306,29 +306,20 @@ export default function DomosPage() {
 
             {/* 5. Sticky Booking Bar / Footer CTA */}
             <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
-                <div className="container mx-auto max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="hidden md:flex flex-col items-start gap-1">
-                        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-text-sub/40">Tarifa por Noche</p>
-                        <div className="flex gap-10">
-                            <div className="flex flex-col">
-                                <span className="text-[10px] text-text-sub uppercase tracking-wider font-bold">1 Noche</span>
-                                <span className="text-3xl font-display font-black text-text-main">
-                                    {price1Night ? `$${price1Night}` : "Consultar"}
-                                </span>
-                            </div>
-                            <div className="w-px bg-black/5 h-10"></div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] text-primary uppercase tracking-wider font-bold">2+ Noches (Promo)</span>
-                                <span className="text-3xl font-display font-black text-primary">
-                                    {price2NightsPerNight ? `$${price2NightsPerNight}` : "Consultar"}
-                                </span>
-                            </div>
+                <div className="container mx-auto max-w-6xl flex flex-row justify-between items-center gap-4 md:gap-6">
+                    {/* Price structure visible across all devices, stacked nicely on mobile */}
+                    <div className="flex flex-row md:flex-col items-center md:items-start gap-2 md:gap-1">
+                        <div className="flex flex-col">
+                            <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/60">Desde</span>
+                            <span className="text-xl md:text-3xl font-display font-black text-primary">
+                                {price2NightsPerNight ? `$${price2NightsPerNight}` : "$98.000"} <span className="text-xs md:text-sm text-text-sub font-bold italic-display">/ noche</span>
+                            </span>
                         </div>
                     </div>
 
                     <Link
                         href="/disponibilidad"
-                        className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-black py-4 px-12 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-4"
+                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-black py-4 px-4 sm:px-8 md:px-12 rounded-2xl text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 md:gap-4"
                     >
                         <span>Reservar Ahora</span>
                         <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />

@@ -11,7 +11,7 @@ export default function ContactoPage() {
             {/* Hero Section */}
             <section className="relative h-[45vh] min-h-[400px] flex items-center justify-center overflow-hidden">
                 <Image
-                    src="/images/hero/domo-night-real.jpg"
+                    src="/images/exteriors/hero-night-2.jpg"
                     alt="Contacto TreePod"
                     fill
                     className="object-cover scale-105 animate-slow-zoom"

@@ -48,8 +48,8 @@ html {
 
 html,
 body {
-  background-color: var(--background) !important;
-  color: var(--text-main) !important;
+  background-color: var(--background);
+  color: var(--text-main);
   font-family: var(--font-sans);
   font-weight: 500;
   /* Increased base weight from 400 */
@@ -65,7 +65,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: var(--text-main) !important;
+  color: var(--text-main);
   font-family: var(--font-display);
 }
 

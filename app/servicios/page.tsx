@@ -19,7 +19,7 @@ export default function ServicesPage() {
             title: "Gastronomía Local",
             subtitle: "Sabor de la Tierra",
             description: "Disfruta de una experiencia culinaria rústica y auténtica: desde un asado en el quincho hasta desayunos cordilleranos con productos frescos del valle. El sabor de lo real.",
-            image: "/images/exteriors/terrace-2.jpg",
+            image: "/images/interiors/interior-1.jpg",
             alt: "Terraza exterior equipada para disfrutar gastronomía al aire libre",
             features: ["Quincho & Asados", "Desayuno del Valle", "Vinos de la Zona"]
         },
@@ -39,7 +39,7 @@ export default function ServicesPage() {
             <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
                 <Image
                     alt="Servicios TreePod"
-                    src="/images/hero/domo-night-real.jpg"
+                    src="/images/exteriors/hero-night-2.jpg"
                     layout="fill"
                     objectFit="cover"
                     priority

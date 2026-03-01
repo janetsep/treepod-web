@@ -11,7 +11,7 @@ export default function WhyChooseUs() {
         {
             icon: Bed,
             title: "Descanso Profundo",
-            description: "Camas matrimoniales, calefacción eficiente y Starlink para cuando decidas reconectar con el mundo digital."
+            description: "Camas matrimoniales, calefacción eficiente y Starlink para cuando decidas conectar con el mundo digital."
         },
         {
             icon: Map,

@@ -56,7 +56,7 @@ export default function PaquetesPage() {
             <section className="relative h-[50vh] min-h-[450px] flex items-center justify-center overflow-hidden">
                 <Image
                     alt="Paquetes & Extras TreePod"
-                    src="/images/hero/Tinaja2.jpg"
+                    src="/images/wellness/Tinaja1.jpg"
                     layout="fill"
                     objectFit="cover"
                     priority
