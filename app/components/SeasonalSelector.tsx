@@ -62,7 +62,7 @@ export default function SeasonalSelector() {
                                 <span className="text-primary italic-display">Todas las Estaciones</span>
                             </h2>
                             <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed max-w-lg">
-                                Nuestra arquitectura geodésica no solo es estética; es una respuesta inteligente a los desafíos climáticos del Valle Las Trancas.
+                                El valle cambia con las estaciones. El domo responde a cada una.
                             </p>
                         </header>
 
