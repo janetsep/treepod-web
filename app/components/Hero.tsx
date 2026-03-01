@@ -15,12 +15,8 @@ export default function Hero() {
   const heroImages = [
     { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Refugio cálido diseñado para el descanso profundo en TreePod" },
     { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Cama matrimonial con vistas al bosque nativo de Las Trancas" },
-    { src: "/images/hero/interior-domo-acogedor-21-2.jpg", alt: "Detalles en madera y confort moderno en la cordillera" },
     { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Ventanales panorámicos que integran la naturaleza" },
-    { src: "/images/hero/interior-domo-acogedor-28-3.jpg", alt: "Espacios luminosos y armónicos dentro del domo" },
     { src: "/images/hero/interior-domo-acogedor-74-2.jpg", alt: "Vistas directas al bosque desde la comodidad de tu refugio" },
-    { src: "/images/hero/interior-domo-acogedor-83-3.jpg", alt: "Diseño único que combina tranquilidad y elegancia" },
-    { src: "/images/hero/interior-domo-acogedor-27-2.jpg", alt: "Fachada exterior del domo integrada en el paisaje" }
   ];
 
   useEffect(() => {
@@ -70,9 +66,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 md:mb-20 max-w-3xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-          Bosque nativo, privacidad real, comodidad sin concesiones.
-          <br className="hidden md:block" />
-          Domo geodésico con vistas directas a la naturaleza.
+Bosque nativo · Privacidad real · Comodidad sin concesiones.
         </p>
 
         <div className="flex flex-col w-full max-w-sm mx-auto md:max-w-none md:flex-row md:justify-center gap-4 animate-fade-in-up delay-300">
