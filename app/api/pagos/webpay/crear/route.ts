@@ -167,7 +167,7 @@ export async function POST(req: Request) {
     const ordenCompra = `res-${timestamp}`;
 
     const baseUrl = getBaseUrl(req);
-    const returnUrl = `${baseUrl}/pago/retorno?reserva_id=${reserva.id}`;
+    const returnUrl = `${baseUrl}/api/pagos/webpay/retorno?reserva_id=${reserva.id}`;
     console.log('🌐 Usando baseUrl/returnUrl:', { baseUrl, returnUrl });
 
     console.log('📝 Detalles del pago:', {

@@ -127,7 +127,16 @@ function ReservaContent({ id }: { id: string }) {
   }
 
   if (!reserva) {
-    notFound();
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-red-50 text-red-800">
+        <div className="max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-4">
+          <h2 className="text-2xl font-bold">Error de Carga</h2>
+          <p>No pudimos encontrar la reserva con ID: <code className="bg-red-100 px-2 py-1 rounded">{id}</code></p>
+          <p className="text-sm opacity-80">Si acabas de crear esta reserva, es posible que haya un retraso en la base de datos o un problema de permisos (RLS).</p>
+          <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full">Reintentar</button>
+        </div>
+      </div>
+    );
   }
 
   const isExpired = minutesLeft === 0 && reserva.estado === "pendiente_pago";

@@ -71,27 +71,28 @@ Bosque nativo · Privacidad real · Comodidad sin concesiones.
         </p>
 
         <div className="flex flex-col w-full max-w-sm mx-auto md:max-w-none md:flex-row md:justify-center gap-4 animate-fade-in-up delay-300">
-          <button
-            onClick={() => { trackEvent("click_ver_disponibilidad_home", { origen: "hero" }); router.push('/disponibilidad'); }}
-            className="w-full md:w-64 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-full transition-all transform hover:-translate-y-1 shadow-lg shadow-primary/30 text-sm tracking-widest uppercase flex items-center justify-center gap-2"
-          >
-            <span>Ver Disponibilidad</span>
-            <ArrowRight size={18} />
-          </button>
-
-          <button
-            onClick={() => document.getElementById('domos')?.scrollIntoView({ behavior: 'smooth' })}
-            className="w-full md:w-64 border-2 border-white/70 hover:border-white text-white font-bold py-4 rounded-full transition-all transform hover:-translate-y-1 text-sm tracking-widest uppercase backdrop-blur-sm bg-white/10 hover:bg-white/20"
-          >
-            Conocer los Domos
-          </button>
-
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => { trackEvent("click_ver_disponibilidad_home", { origen: "hero" }); router.push('/disponibilidad'); }}
+              className="w-full md:w-64 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-full transition-all transform hover:-translate-y-1 shadow-lg shadow-primary/30 text-sm tracking-widest uppercase flex items-center justify-center gap-2"
+            >
+              <span>Ver Disponibilidad</span>
+              <ArrowRight size={18} />
+            </button>
+            {/* Precio ancla junto al CTA */}
+            <p className="text-white/70 text-xs font-bold tracking-wide">
+              Desde <span className="text-white font-black">$98.000</span> / noche · 2 personas
+            </p>
+          </div>
         </div>
 
-        {/* Precio ancla */}
-        <p className="mt-6 text-white/70 text-sm font-bold tracking-wide animate-fade-in-up delay-300">
-          Desde <span className="text-white font-black">$98.000</span> / noche · 2 personas
-        </p>
+        {/* Botón secundario como link discreto */}
+        <button
+          onClick={() => document.getElementById('domos')?.scrollIntoView({ behavior: 'smooth' })}
+          className="mt-4 text-white/60 hover:text-white text-xs tracking-widest uppercase underline underline-offset-4 transition-colors animate-fade-in-up delay-300"
+        >
+          Conocer los Domos
+        </button>
 
         {/* Aura: Animated Scroll Mouse - Visible on All Devices to prevent False Floor */}
         <div

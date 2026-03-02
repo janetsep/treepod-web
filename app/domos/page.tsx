@@ -10,21 +10,6 @@ import { CheckCircle2, Ruler, Users, Wifi, ParkingCircle, Waves, Grid3X3, ArrowR
 export default function DomosPage() {
     const [price1Night, setPrice1Night] = useState<string | null>(null);
     const [price2NightsPerNight, setPrice2NightsPerNight] = useState<string | null>(null);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    const heroImages = [
-        { src: "/images/exteriors/hero-night-2.jpg", alt: "Arquitectura geodésica iluminada bajo el cielo estrellado del Valle Las Trancas" },
-        { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Refugio cálido diseñado para el descanso profundo" },
-        { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Cama matrimonial con vistas al bosque nativo de Las Trancas" },
-        { src: "/images/hero/interior-domo-acogedor-21-2.jpg", alt: "Detalles en madera y confort moderno en la cordillera" },
-        { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Ventanales panorámicos que integran la naturaleza" },
-        { src: "/images/hero/interior-domo-acogedor-28-3.jpg", alt: "Espacios luminosos y armónicos dentro del domo" },
-        { src: "/images/hero/interior-domo-acogedor-74-2.jpg", alt: "Vistas directas al bosque desde la comodidad de tu refugio" },
-        { src: "/images/hero/interior-domo-acogedor-83-3.jpg", alt: "Diseño único que combina tranquilidad y elegancia" },
-        { src: "/images/hero/interior-domo-acogedor-27-2.jpg", alt: "Fachada exterior del domo integrada en el paisaje" },
-        { src: "/images/wellness/Tinaja1.jpg", alt: "Relajación total en tinaja bajo las estrellas" }
-    ];
-
     useEffect(() => {
         // Disparar evento view_item_list a GA4
         if (typeof window !== 'undefined') {
@@ -50,37 +35,30 @@ export default function DomosPage() {
         }
         loadPrices();
 
-        // Carousel interval
-        const interval = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-        }, 5000);
 
-        return () => clearInterval(interval);
     }, []);
 
     return (
         <div className="bg-white font-sans text-text-main min-h-screen transition-colors duration-500">
 
-            {/* 1. Hero Minimalista (Whitepod Style) */}
-            <section className="relative h-[70vh] min-h-[500px] flex items-end pb-24 justify-center overflow-hidden">
-                {heroImages.map((img, index) => (
+            {/* 1. Hero Editorial - Croquis Arquitectónico */}
+            <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center overflow-hidden" style={{backgroundColor: '#F5F0E8'}}>
+                {/* Croquis de fondo */}
+                <div className="absolute inset-0 flex items-center justify-center p-8 md:p-16">
                     <Image
-                        key={index}
-                        alt={img.alt}
-                        src={img.src}
+                        src="/images/concept/concept-bg-real.png"
+                        alt="Croquis arquitectónico Domo TreePod"
                         fill
-                        priority={index === 0} // Only prioritize the first image
-                        sizes="100vw"
-                        className={`object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                        priority
+                        className="object-contain mix-blend-multiply opacity-60 p-8 md:p-20"
                     />
-                ))}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10"></div>
+                </div>
 
                 <div className="relative z-10 text-center max-w-4xl px-6 animate-fade-in-up">
-                    <h1 className="h1-display text-white mb-4 [text-shadow:_0_5px_30px_rgba(0,0,0,0.5)]">
-                        Domo <span className="italic-display">en el Bosque</span>
+                    <h1 className="h1-display text-text-main mb-4">
+                        Domo <span className="italic-display text-primary">en el Bosque</span>
                     </h1>
-                    <p className="text-white font-bold tracking-[0.3em] uppercase text-xs md:text-sm drop-shadow-md">
+                    <p className="text-text-sub font-bold tracking-[0.3em] uppercase text-xs md:text-sm">
                         40m² · Bosque Nativo · Entorno Natural
                     </p>
                 </div>
@@ -308,12 +286,13 @@ export default function DomosPage() {
             <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
                 <div className="container mx-auto max-w-6xl flex flex-row justify-between items-center gap-4 md:gap-6">
                     {/* Price structure visible across all devices, stacked nicely on mobile */}
-                    <div className="flex flex-row md:flex-col items-center md:items-start gap-2 md:gap-1">
-                        <div className="flex flex-col">
-                            <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/60">Desde</span>
+                    <div className="flex flex-col items-start gap-1">
+                        <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/60">Desde</span>
+                        <div className="flex items-baseline gap-1">
                             <span className="text-xl md:text-3xl font-display font-black text-primary">
-                                {price2NightsPerNight ? `$${price2NightsPerNight}` : "$98.000"} <span className="text-xs md:text-sm text-text-sub font-bold italic-display">/ noche</span>
+                                {price2NightsPerNight ? `$${price2NightsPerNight}` : "$98.000"}
                             </span>
+                            <span className="text-[10px] md:text-sm text-text-sub font-bold italic-display">/noche</span>
                         </div>
                     </div>
 

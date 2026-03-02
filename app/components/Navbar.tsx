@@ -131,13 +131,15 @@ export default function Navbar() {
                                 </Link>
                             ))}
                             <div className="pt-8 border-t border-black/10 w-full mt-4">
-                                <Link
-                                    href="/disponibilidad"
-                                    onClick={() => setIsMobileMenuOpen(false)}
+                                <button
+                                    onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        router.push('/disponibilidad');
+                                    }}
                                     className="block bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 rounded-full text-base uppercase tracking-[0.2em] shadow-xl w-full"
                                 >
                                     Reservar Ahora
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>

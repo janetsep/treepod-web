@@ -241,7 +241,7 @@ function DisponibilidadContent() {
 
       <main className="container max-w-7xl mx-auto px-6 py-8 md:py-12 flex-1">
         {/* HEADER & LEGEND */}
-        <header className="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-black/5 pb-8">
+        <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/5 pb-8">
           <div className="space-y-2">
             <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight text-text-main">
               Reserva tu <span className="text-primary italic-display">Domo</span>
@@ -249,23 +249,6 @@ function DisponibilidadContent() {
             <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
               {entrada && salida ? "02. Elige tus extras y confirma" : "01. Selecciona tus fechas en el calendario"}
             </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 md:gap-8 p-4 md:p-6 bg-white/70 border border-black/10 rounded-2xl shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-main">
-              <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(0,173,239,0.3)]"></div>
-              <span>Seleccionado</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-sub">
-              <div className="w-3 h-3 rounded-full border border-black/20 bg-white"></div>
-              <span>Disponible</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-sub/50">
-              <div className="w-3 h-3 rounded-full bg-black/10 relative overflow-hidden border border-black/10">
-                <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
-              </div>
-              <span>Ocupado</span>
-            </div>
           </div>
         </header>
 
@@ -305,7 +288,25 @@ function DisponibilidadContent() {
               <div className="h-px bg-black/5 w-full"></div>
 
               <div className="space-y-4">
-                <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
+                  <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
+                      <span className="text-text-main">Selección</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full border border-black/20 bg-white"></div>
+                      <span>Libre</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 opacity-60">
+                      <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
+                        <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
+                      </div>
+                      <span>Usado</span>
+                    </div>
+                  </div>
+                </div>
                 <AvailabilityCalendar
                   selectedRange={{
                     from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
@@ -498,12 +499,12 @@ function DisponibilidadContent() {
                         <div className="space-y-2">
                           <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest pl-1">Descuentos Aplicados</p>
                           <div className="flex justify-between items-center text-xs font-bold text-emerald-700 bg-emerald-50/40 p-3 rounded-xl border border-emerald-100/50">
-                              <span className="flex items-center gap-2">
-                                <Tag className="w-3.5 h-3.5 text-emerald-500" />
-                                {resultado.descuento_aplicado.tipo}
-                              </span>
-                              <span className="font-black">-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
-                            </div>
+                            <span className="flex items-center gap-2">
+                              <Tag className="w-3.5 h-3.5 text-emerald-500" />
+                              {resultado.descuento_aplicado.tipo}
+                            </span>
+                            <span className="font-black">-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
+                          </div>
                           <div className="flex justify-between items-center px-3 py-1 text-[10px] font-black text-emerald-600/70">
                             <span>Total Ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
                             <span>-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
