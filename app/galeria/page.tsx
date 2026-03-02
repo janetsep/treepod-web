@@ -8,32 +8,24 @@ import { Trees, ChevronDown, Sparkles, Waves } from "lucide-react";
 export default function GaleriaPage() {
     return (
         <div className="bg-white text-text-main transition-colors duration-300 font-sans min-h-screen">
-            <header className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0">
-                    <Image
-                        alt="Interior de domo con vista al bosque"
-                        src="/images/hero/interior-domo-acogedor-105-2.jpg"
-                        layout="fill"
-                        objectFit="cover"
-                        priority
-                        className="scale-105 animate-slow-zoom"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-white"></div>
-                </div>
-                <div className="relative z-10 container mx-auto px-6 text-center text-white pt-32">
-                    <div className="inline-block px-5 py-2 bg-black/40 backdrop-blur-md border border-white/30 rounded-full mb-10 shadow-2xl">
-                        <span className="text-[11px] font-black tracking-[0.4em] uppercase text-white">La Vida en el Bosque</span>
+
+
+            <main className="py-16 md:py-24 bg-white">
+                {/* Título editorial */}
+                <div className="container mx-auto px-6 md:px-10 mb-8 md:mb-12">
+                    <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm mb-8">
+                        <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
+                            La Vida en el Bosque
+                        </span>
                     </div>
-                    <h1 className="text-6xl md:text-8xl font-display font-black mb-10 leading-[1.0] tracking-tight text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                        La Belleza de <br /><span className="text-primary italic font-light">lo Auténtico</span>
+                    <h1 className="h1-display text-text-main leading-tight mb-6">
+                        La Belleza de <span className="italic-display text-primary">lo Auténtico</span>
                     </h1>
-                    <p className="text-xl md:text-2xl text-white font-bold max-w-2xl mx-auto mb-14 leading-relaxed drop-shadow-lg">
+                    <div className="h-1.5 w-24 bg-primary mb-6"></div>
+                    <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
                         Imágenes reales de lo que encontrarás aquí. Sin filtros exagerados. Solo el bosque y tu refugio.
                     </p>
                 </div>
-            </header>
-
-            <main className="py-24 bg-white">
                 <section className="container mx-auto px-6 md:px-10">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 auto-rows-[300px] md:auto-rows-[400px]">
                         {/* Main Featured Image */}
@@ -45,7 +37,7 @@ export default function GaleriaPage() {
                                 objectFit="cover"
                                 className="transform group-hover:scale-110 transition-transform duration-[2s]"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                             <div className="absolute bottom-12 left-12 right-12">
                                 <span className="inline-block bg-primary text-white text-[11px] px-5 py-2 rounded-xl mb-6 uppercase tracking-[0.2em] font-black shadow-2xl">Noches del Valle</span>
                                 <h3 className="text-4xl md:text-6xl font-display font-black text-white mb-4 [text-shadow:_0_5px_20px_rgba(0,0,0,0.8)]">Bajo las Estrellas</h3>

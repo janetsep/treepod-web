@@ -35,28 +35,25 @@ export default function ServicesPage() {
 
     return (
         <div className="bg-white font-sans text-text-main transition-colors duration-300 min-h-screen">
-            {/* Hero Section */}
-            <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-                <Image
-                    alt="Servicios TreePod"
-                    src="/images/exteriors/hero-night-2.jpg"
-                    layout="fill"
-                    objectFit="cover"
-                    priority
-                    className="scale-105 animate-slow-zoom"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-white"></div>
-                <div className="relative z-10 text-center px-6 pt-32">
-                    <div className="inline-block px-5 py-2 bg-black/40 backdrop-blur-md border border-white/30 rounded-full mb-8 shadow-2xl">
-                        <span className="text-[11px] font-black tracking-[0.4em] uppercase text-white">Experiencias TreePod</span>
-                    </div>
-                    <h1 className="text-6xl md:text-8xl font-display font-black text-white mb-8 tracking-tight drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">El Arte de <span className="text-primary italic font-light">Habitar</span></h1>
-                    <p className="text-xl md:text-2xl text-white font-bold max-w-2xl mx-auto leading-relaxed drop-shadow-lg">Más que un lugar donde dormir, un santuario diseñado para revitalizar tus sentidos.</p>
-                </div>
-            </section>
+
 
             {/* Featured Services Grid */}
-            <main className="py-24 container mx-auto px-6 md:px-10">
+            <main className="py-16 md:py-24 container mx-auto px-6 md:px-10">
+                {/* Título editorial */}
+                <div className="mb-16 md:mb-24">
+                    <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm mb-8">
+                        <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
+                            Experiencias TreePod
+                        </span>
+                    </div>
+                    <h1 className="h1-display text-text-main leading-tight mb-6">
+                        El Arte de <span className="italic-display text-primary">Habitar</span>
+                    </h1>
+                    <div className="h-1.5 w-24 bg-primary mb-6"></div>
+                    <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
+                        Más que un lugar donde dormir, un santuario diseñado para revitalizar tus sentidos.
+                    </p>
+                </div>
                 <div className="space-y-32">
                     {mainServices.map((service, index) => (
                         <div key={index} className={`flex flex-col lg:flex-row gap-16 items-center ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>

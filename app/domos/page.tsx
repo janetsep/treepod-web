@@ -41,28 +41,7 @@ export default function DomosPage() {
     return (
         <div className="bg-white font-sans text-text-main min-h-screen transition-colors duration-500">
 
-            {/* 1. Hero Editorial - Croquis Arquitectónico */}
-            <section className="relative h-[55vh] min-h-[420px] flex items-center justify-center overflow-hidden" style={{backgroundColor: '#F5F0E8'}}>
-                {/* Croquis de fondo */}
-                <div className="absolute inset-0 flex items-center justify-center p-8 md:p-16">
-                    <Image
-                        src="/images/concept/concept-bg-real.png"
-                        alt="Croquis arquitectónico Domo TreePod"
-                        fill
-                        priority
-                        className="object-contain mix-blend-multiply opacity-60 p-8 md:p-20"
-                    />
-                </div>
 
-                <div className="relative z-10 text-center max-w-4xl px-6 animate-fade-in-up">
-                    <h1 className="h1-display text-text-main mb-4">
-                        Domo <span className="italic-display text-primary">en el Bosque</span>
-                    </h1>
-                    <p className="text-text-sub font-bold tracking-[0.3em] uppercase text-xs md:text-sm">
-                        40m² · Bosque Nativo · Entorno Natural
-                    </p>
-                </div>
-            </section>
 
             <main className="container mx-auto px-4 md:px-12 lg:px-24 py-16 md:py-24">
 
