@@ -6,7 +6,7 @@ export default function Testimonios() {
   return (
     <section className="py-20 md:py-32 bg-white" id="testimonios">
       <div className="container mx-auto px-6 text-center max-w-7xl">
-        <div className="inline-block px-4 py-1.5 border border-primary/20 rounded-full mb-8 bg-primary/5 shadow-sm">
+        <div className="inline-block mb-4">
           <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Huéspedes</span>
         </div>
 

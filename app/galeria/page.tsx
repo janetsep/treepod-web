@@ -13,7 +13,7 @@ export default function GaleriaPage() {
             <main className="py-16 md:py-24 bg-white">
                 {/* Título editorial */}
                 <div className="container mx-auto px-6 md:px-10 mb-8 md:mb-12">
-                    <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm mb-8">
+                    <div className="inline-block mb-8">
                         <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
                             La Vida en el Bosque
                         </span>
@@ -39,7 +39,7 @@ export default function GaleriaPage() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                             <div className="absolute bottom-12 left-12 right-12">
-                                <span className="inline-block bg-primary text-white text-[11px] px-5 py-2 rounded-xl mb-6 uppercase tracking-[0.2em] font-black shadow-2xl">Noches del Valle</span>
+                                <span className="inline-block text-white text-[11px] mb-6 uppercase tracking-[0.2em] font-black drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">Noches del Valle</span>
                                 <h3 className="text-4xl md:text-6xl font-display font-black text-white mb-4 [text-shadow:_0_5px_20px_rgba(0,0,0,0.8)]">Bajo las Estrellas</h3>
                                 <p className="text-white text-lg md:text-xl italic font-bold opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 [text-shadow:_0_2px_10px_rgba(0,0,0,0.5)]">La oscuridad de la cordillera es nuestro mejor espectáculo.</p>
                             </div>
@@ -107,10 +107,14 @@ export default function GaleriaPage() {
                     </div>
                 </section>
 
+                <div className="container mx-auto px-6 max-w-7xl mt-32">
+                    <hr className="border-t border-black/10" />
+                </div>
+
                 <section id="estilo-vida" className="container mx-auto px-6 md:px-10 mt-32">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
                         <div className="lg:col-span-5 space-y-8">
-                            <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm">
+                            <div className="inline-block mb-4">
                                 <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">Ritmo de Montaña</span>
                             </div>
                             <h2 className="h2-display text-text-main leading-tight">

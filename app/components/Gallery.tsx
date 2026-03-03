@@ -7,7 +7,7 @@ export default function Gallery() {
         <section className="py-12 bg-white dark:bg-background-dark overflow-hidden" id="galeria">
             <div className="container mx-auto px-6 text-center">
                 <div className="max-w-3xl mx-auto mb-16">
-                    <div className="inline-block px-4 py-1.5 border border-gold/30 rounded-full mb-6 bg-transparent">
+                    <div className="inline-block mb-4">
                         <span className="text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold tracking-[0.3em] uppercase">Capturando la Esencia</span>
                     </div>
                     <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main-light dark:text-text-main-dark">Así se Vive <span className="text-primary italic">TreePod</span></h2>

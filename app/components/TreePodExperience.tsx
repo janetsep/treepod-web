@@ -11,7 +11,7 @@ export default function TreePodExperience() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
 
                     <div className="space-y-10">
-                        <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full">
+                        <div className="inline-block mb-4">
                             <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Características</span>
                         </div>
 

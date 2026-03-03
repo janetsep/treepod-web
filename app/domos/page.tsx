@@ -51,7 +51,7 @@ export default function DomosPage() {
 
                     {/* Left: Editorial Text */}
                     <div className="space-y-10 order-2 md:order-1">
-                        <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm">
+                        <div className="inline-block mb-4">
                             <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
                                 El Concepto
                             </span>
@@ -78,6 +78,10 @@ export default function DomosPage() {
                         />
                     </div>
 
+                </div>
+
+                <div className="container mx-auto px-6 max-w-7xl mb-24 md:mb-32">
+                    <hr className="border-t border-black/10" />
                 </div>
 
                 {/* 3. Zig-Zag Details (The Experience) */}
@@ -209,8 +213,12 @@ export default function DomosPage() {
                     </div>
                 </div>
 
+                <div className="container mx-auto px-6 max-w-7xl mt-32 mb-16">
+                    <hr className="border-t border-black/10" />
+                </div>
+
                 {/* 4. Technical Specs (The Whitepod Grid) */}
-                <div className="mt-32 pt-16 border-t border-white/10">
+                <div className="">
                     <h3 className="h3-display mb-12 text-center text-white">Ficha Técnica</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
                         <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">

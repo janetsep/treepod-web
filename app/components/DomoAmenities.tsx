@@ -9,7 +9,7 @@ export default function DomoAmenities() {
         {
             icon: "hot_tub",
             title: "Tinaja Exclusiva",
-            description: "Disponible junto a tu domo. Uso exclusivo sin horarios compartidos.",
+            description: "En medio del bosque nativo, al aire libre (para apreciar el cielo estrellado) y acceso mediante una pasarela.",
             tag: "Bajo Reserva",
             image: "/images/wellness/Tinaja5.jpg",
             size: "large"
@@ -45,7 +45,7 @@ export default function DomoAmenities() {
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                     <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full mb-6 border border-primary/20 shadow-sm">
+                        <div className="inline-flex items-center gap-2 mb-6">
                             <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Equipamiento Real</span>
                         </div>
                         <h2 className="h2-display leading-tight text-text-main">
@@ -87,7 +87,7 @@ export default function DomoAmenities() {
 
                             {/* Tag */}
                             <div className="absolute top-6 left-6 z-10">
-                                <span className="bg-black/80 backdrop-blur-md px-5 py-2 rounded-full text-[11px] font-black text-white uppercase tracking-[0.2em] border-2 border-primary/40 shadow-2xl">
+                                <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
                                     {item.tag}
                                 </span>
                             </div>

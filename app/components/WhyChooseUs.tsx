@@ -24,7 +24,7 @@ export default function WhyChooseUs() {
         <section className="py-24 bg-[#0A0F11] border-y border-white/5" id="why-choose-us">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-20 space-y-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-primary/20 rounded-full bg-primary/5">
+                    <div className="inline-flex items-center gap-2 mb-4">
                         <Sparkles className="text-primary w-3 h-3" />
                         <span className="text-primary text-[10px] font-black tracking-[0.3em] uppercase">La Diferencia TreePod</span>
                     </div>

@@ -4,15 +4,15 @@ import { MapPin } from "lucide-react";
 
 export default function NotForEveryone() {
     return (
-        <section className="py-24 md:py-32 bg-white" id="concepto">
+        <section className="py-12 md:py-20 bg-white" id="concepto">
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
 
                     {/* Logic & Vision - Pluma Style */}
                     <div className="lg:col-span-5 space-y-12">
                         <div className="space-y-4">
-                            <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm">
-                                <span className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">Por qué un Domo</span>
+                            <div className="inline-block">
+                                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">Por qué un Domo</span>
                             </div>
 
                             <h2 className="h2-display leading-[1.0] text-text-main">
@@ -57,39 +57,18 @@ export default function NotForEveryone() {
                     </div>
 
                     {/* Illustration Section */}
-                    <div className="lg:col-span-7">
+                    <div className="lg:col-span-7 flex flex-col gap-6">
                         <div className="relative group h-[400px] md:h-[650px] w-full rounded-[3.5rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border-8 border-black/5 bg-surface">
                             <img
                                 src="/images/concept/croquis-aereo-nuevo.png"
-                                alt="Ubicación estratégica de los domos TreePod en Las Trancas"
+                                alt="Nuestro glamping - Ubicación estratégica"
                                 className="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
                             />
-
-                            {/* Removed top header to let the sketch breathe */}
-
-                            {/* Info Tag: Simplified as per user request */}
-                            <div className="absolute top-10 left-10 z-20">
-                                <div className="bg-black/80 backdrop-blur-xl px-8 py-5 rounded-[2rem] border border-white/20 shadow-2xl flex items-center gap-5 animate-fade-in-up">
-                                    <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/30">
-                                        <MapPin className="w-7 h-7" strokeWidth={3} />
-                                    </div>
-                                    <div>
-                                        <p className="text-white font-display text-2xl font-bold tracking-tight">Valle las Trancas</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Project Identifier: Simplified as per user request */}
-                            <div className="absolute bottom-12 left-0 w-full px-10 md:px-14 flex justify-between items-end pointer-events-none z-20">
-                                <div className="space-y-2 animate-fade-in-up">
-                                    <p className="text-white font-display text-3xl md:text-5xl font-black tracking-tight [text-shadow:_0_5px_20px_rgba(0,0,0,0.8)]">
-                                        Distribución <br /> <span className="italic-display">del Glamping</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Enhanced Gradient for text legibility */}
-                            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                        </div>
+                        <div className="text-center">
+                            <p className="inline-block text-sm font-black tracking-[0.2em] text-text-sub uppercase">
+                                Nuestro Glamping
+                            </p>
                         </div>
                     </div>
 

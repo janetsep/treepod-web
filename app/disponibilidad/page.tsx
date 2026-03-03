@@ -50,15 +50,25 @@ function DisponibilidadContent() {
   const [cuponAplicado, setCuponAplicado] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
+  const isMundialEvent = searchParams.get("event") === "mundial";
 
   // Auto-scroll to results when calculating is done
   useEffect(() => {
-    if (resultado && resultsRef.current) {
+    if (resultado && resultsRef.current && !isMundialEvent) {
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
-  }, [resultado]);
+  }, [resultado, isMundialEvent]);
+
+  // Set default values if it's Mundial MTB event
+  useEffect(() => {
+    if (isMundialEvent) {
+      setEntrada("2026-03-26");
+      setSalida("2026-03-29");
+      setAdultos(4);
+    }
+  }, [isMundialEvent]);
 
   // Prevent past dates and ensure logical range
   useEffect(() => {
@@ -178,6 +188,7 @@ function DisponibilidadContent() {
           precio_original: resultado.precio_original,
           descuento_monto: resultado.descuento_aplicado?.monto || 0,
           descuento_detalle: resultado.descuento_aplicado ? [resultado.descuento_aplicado.tipo] : [],
+          is_event_mundial: isMundialEvent,
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
             if (!s) return null;
@@ -247,7 +258,7 @@ function DisponibilidadContent() {
               Reserva tu <span className="text-primary italic-display">Domo</span>
             </h1>
             <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
-              {entrada && salida ? "02. Elige tus extras y confirma" : "01. Selecciona tus fechas en el calendario"}
+              {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
             </p>
           </div>
         </header>
@@ -256,164 +267,169 @@ function DisponibilidadContent() {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-6 lg:gap-8 pt-4 items-start">
 
           {/* COL 1: Step 1 - Calendar */}
-          <div className="lg:col-span-1 xl:col-span-4 space-y-4">
-            <header className="px-2">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                  <Calendar className="text-primary w-4 h-4" />
+          {!isMundialEvent && (
+            <div className="lg:col-span-1 xl:col-span-4 space-y-4">
+              <header className="px-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <Calendar className="text-primary w-4 h-4" />
+                  </div>
+                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h3>
                 </div>
-                <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">01. Estadía</h3>
-              </div>
-              <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
-            </header>
+                <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
+              </header>
 
-            <section className="bg-white p-6 lg:p-8 rounded-[2.5rem] border border-black/5 shadow-xl space-y-8">
-              {/* Guest Selection moved here */}
-              <div className="space-y-3">
-                <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">¿Cuántos huéspedes?</label>
-                <div className="relative">
-                  <select
-                    value={adultos}
-                    onChange={(e) => setAdultos(Number(e.target.value))}
-                    className="w-full bg-black/5 border border-black/10 rounded-2xl h-16 px-6 text-base font-bold appearance-none focus:border-primary transition-all outline-none text-text-main cursor-pointer"
-                  >
-                    {[1, 2, 3, 4].map(n => (
-                      <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'Persona' : 'Personas'}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-primary w-6 h-6" />
-                </div>
-              </div>
-
-              <div className="h-px bg-black/5 w-full"></div>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
-                  <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
-                      <span className="text-text-main">Selección</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full border border-black/20 bg-white"></div>
-                      <span>Libre</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 opacity-60">
-                      <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
-                        <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
-                      </div>
-                      <span>Usado</span>
-                    </div>
+              <section className="bg-white p-6 lg:p-8 rounded-[2.5rem] border border-black/5 shadow-xl space-y-8">
+                {/* Guest Selection moved here */}
+                <div className="space-y-3">
+                  <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">¿Cuántos huéspedes?</label>
+                  <div className="relative">
+                    <select
+                      value={adultos}
+                      onChange={(e) => setAdultos(Number(e.target.value))}
+                      className="w-full bg-black/5 border border-black/10 rounded-2xl h-16 px-6 text-base font-bold appearance-none focus:border-primary transition-all outline-none text-text-main cursor-pointer"
+                    >
+                      {[1, 2, 3, 4].map(n => (
+                        <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'Persona' : 'Personas'}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-primary w-6 h-6" />
                   </div>
                 </div>
-                <AvailabilityCalendar
-                  selectedRange={{
-                    from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
-                    to: salida ? new Date(salida + 'T12:00:00') : undefined
-                  }}
-                  onSelect={(range) => {
-                    if (range?.from) {
-                      const year = range.from.getFullYear();
-                      const month = String(range.from.getMonth() + 1).padStart(2, '0');
-                      const day = String(range.from.getDate()).padStart(2, '0');
-                      setEntrada(`${year}-${month}-${day}`);
-                    } else {
-                      setEntrada("");
-                    }
 
-                    if (range?.to) {
-                      const year = range.to.getFullYear();
-                      const month = String(range.to.getMonth() + 1).padStart(2, '0');
-                      const day = String(range.to.getDate()).padStart(2, '0');
-                      setSalida(`${year}-${month}-${day}`);
-                    } else {
-                      setSalida("");
-                    }
-                  }}
-                  className="bg-transparent border-none shadow-none p-0 w-full"
-                />
-              </div>
-            </section>
-          </div>
+                <div className="h-px bg-black/5 w-full"></div>
+
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
+                    <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
+                        <span className="text-text-main">Selección</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full border border-black/20 bg-white"></div>
+                        <span>Libre</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 opacity-60">
+                        <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
+                          <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
+                        </div>
+                        <span>Usado</span>
+                      </div>
+                    </div>
+                  </div>
+                  <AvailabilityCalendar
+                    selectedRange={{
+                      from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
+                      to: salida ? new Date(salida + 'T12:00:00') : undefined
+                    }}
+                    onSelect={(range) => {
+                      if (range?.from) {
+                        const year = range.from.getFullYear();
+                        const month = String(range.from.getMonth() + 1).padStart(2, '0');
+                        const day = String(range.from.getDate()).padStart(2, '0');
+                        setEntrada(`${year}-${month}-${day}`);
+                      } else {
+                        setEntrada("");
+                      }
+
+                      if (range?.to) {
+                        const year = range.to.getFullYear();
+                        const month = String(range.to.getMonth() + 1).padStart(2, '0');
+                        const day = String(range.to.getDate()).padStart(2, '0');
+                        setSalida(`${year}-${month}-${day}`);
+                      } else {
+                        setSalida("");
+                      }
+                    }}
+                    className="bg-transparent border-none shadow-none p-0 w-full"
+                  />
+                </div>
+              </section>
+            </div>
+          )}
 
           {/* COL 2: Step 2 - Extras */}
-          <div className="lg:col-span-1 xl:col-span-4 space-y-4">
-            <header className="px-2 flex justify-between items-center">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                    <Sparkles className="text-primary w-4 h-4" />
+          {!isMundialEvent && (
+            <div className="lg:col-span-1 xl:col-span-4 space-y-4">
+              <header className="px-2 flex justify-between items-center">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                      <Sparkles className="text-primary w-4 h-4" />
+                    </div>
+                    <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h3>
                   </div>
-                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">02. Extras</h3>
+                  <p className="text-[11px] font-black text-text-sub/60 uppercase tracking-widest ml-10">Packs & Experiencias</p>
                 </div>
-                <p className="text-[11px] font-black text-text-sub/60 uppercase tracking-widest ml-10">Packs & Experiencias</p>
-              </div>
-              {!(entrada && salida) && (
-                <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/10 animate-pulse">
-                  Elige fechas primero
-                </span>
-              )}
-            </header>
+                {!(entrada && salida) && (
+                  <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/10 animate-pulse">
+                    Elige fechas primero
+                  </span>
+                )}
+              </header>
 
-            <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
-              {servicios.map((s) => (
-                <div
-                  key={s.id}
-                  onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
-                  className={`group relative flex gap-4 p-3.5 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden ${serviciosSeleccionados.has(s.id)
-                    ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
-                    : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
-                    } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
-                >
-                  <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/30 transition-colors">
-                    <Image
-                      src={s.image_url || "/images/placeholder.jpg"}
-                      alt={s.nombre}
-                      fill
-                      className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                    />
-                    {serviciosSeleccionados.has(s.id) && (
-                      <div className="absolute inset-0 bg-primary/40 backdrop-blur-[1px] flex items-center justify-center">
-                        <Check className="text-white w-8 h-8 drop-shadow-lg" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 flex flex-col justify-center min-w-0">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className={`font-display font-bold text-sm transition-colors ${serviciosSeleccionados.has(s.id) ? 'text-primary' : 'text-text-main'}`}>{s.nombre}</h4>
-                      <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border transition-all ${serviciosSeleccionados.has(s.id) ? 'bg-primary border-primary text-white scale-110' : 'border-black/10 text-transparent'}`}>
-                        <Check className="w-3 h-3" />
-                      </div>
+              <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
+                {servicios.map((s) => (
+                  <div
+                    key={s.id}
+                    onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
+                    className={`group relative flex gap-4 p-3.5 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden ${serviciosSeleccionados.has(s.id)
+                      ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
+                      : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
+                      } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
+                  >
+                    <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/30 transition-colors">
+                      <Image
+                        src={s.image_url || "/images/placeholder.jpg"}
+                        alt={s.nombre}
+                        fill
+                        className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                      />
+                      {serviciosSeleccionados.has(s.id) && (
+                        <div className="absolute inset-0 bg-primary/40 backdrop-blur-[1px] flex items-center justify-center">
+                          <Check className="text-white w-8 h-8 drop-shadow-lg" />
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="font-display font-black text-base text-primary">
-                        ${(s.precio || 0).toLocaleString("es-CL")}
-                      </span>
-                      <span className="text-[8px] text-text-sub font-bold uppercase tracking-widest">
-                        {s.multiplicador_personas ? 'p/p' : 'fijo'}
-                      </span>
+                    <div className="flex-1 flex flex-col justify-center min-w-0">
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className={`font-display font-bold text-sm transition-colors ${serviciosSeleccionados.has(s.id) ? 'text-primary' : 'text-text-main'}`}>{s.nombre}</h4>
+                        <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border transition-all ${serviciosSeleccionados.has(s.id) ? 'bg-primary border-primary text-white scale-110' : 'border-black/10 text-transparent'}`}>
+                          <Check className="w-3 h-3" />
+                        </div>
+                      </div>
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="font-display font-black text-base text-primary">
+                          ${(s.precio || 0).toLocaleString("es-CL")}
+                        </span>
+                        <span className="text-[8px] text-text-sub font-bold uppercase tracking-widest">
+                          {s.multiplicador_personas ? 'p/p' : 'fijo'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-text-sub leading-relaxed font-bold">
+                        {s.descripcion}
+                      </p>
                     </div>
-                    <p className="text-xs text-text-sub leading-relaxed font-bold">
-                      {s.descripcion}
-                    </p>
                   </div>
-                </div>
-              ))}
-            </section>
-          </div>
+                ))}
+              </section>
+            </div>
+          )}
 
           {/* COL 3: Final Summary */}
-          <aside className="lg:col-span-2 xl:col-span-4 space-y-4 lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit">
+          <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-3 xl:col-span-8 xl:col-start-3' : 'lg:col-span-2 xl:col-span-4'}`}>
             <div className="bg-white rounded-[2.5rem] border border-black/5 overflow-hidden shadow-xl">
-              <div className="bg-primary/5 p-6 border-b border-black/5">
+              <div className="bg-primary/5 p-6 border-b border-black/5 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Settings className="text-primary w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="font-display font-bold text-lg text-text-main tracking-tight uppercase leading-none">Resumen</h2>
-                    <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mt-1.5 italic-display">Checkout</p>
+                    <h2 className="font-display font-bold text-lg text-text-main tracking-tight uppercase leading-none">
+                      {isMundialEvent ? "Resumen Alojamiento Mundial MTB 2026" : "Resumen"}
+                    </h2>
                   </div>
                 </div>
               </div>
@@ -428,14 +444,18 @@ function DisponibilidadContent() {
                     <span className="text-xs font-black text-text-main uppercase tracking-widest">Huéspedes</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">In</span>
-                      <span className="font-black text-text-main text-base tracking-tight">{entrada || "—"}</span>
+                  <div className="flex flex-col gap-3">
+                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1.5">
+                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Ingreso</span>
+                      <span className="font-black text-text-main text-[13px] md:text-sm tracking-tight pb-0.5">
+                        {entrada ? `${entrada.split('-').reverse().join('-')} desde las 16:00 hrs.` : "—"}
+                      </span>
                     </div>
-                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Out</span>
-                      <span className="font-black text-text-main text-base tracking-tight">{salida || "—"}</span>
+                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1.5">
+                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Salida</span>
+                      <span className="font-black text-text-main text-[13px] md:text-sm tracking-tight pb-0.5">
+                        {salida ? `${salida.split('-').reverse().join('-')} hasta las 12:00 hrs.` : "—"}
+                      </span>
                     </div>
                   </div>
                 </div>

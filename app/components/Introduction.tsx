@@ -17,7 +17,7 @@ export default function Introduction() {
 
                     <div className="w-full lg:w-1/2 space-y-8">
                         <div className="space-y-4">
-                            <div className="inline-block px-4 py-1.5 border border-primary/20 rounded-full bg-primary/5 shadow-sm">
+                            <div className="inline-block mb-4">
                                 <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Nuestra Esencia</span>
                             </div>
                             <h2 className="h2-display leading-[1.1] text-text-main">

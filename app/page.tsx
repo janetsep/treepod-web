@@ -14,11 +14,42 @@ export default function Home() {
       <Hero />
       <div className="space-y-0">
         <div id="concepto"><NotForEveryone /></div>
+
+        {/* Separator between Concept and Domes */}
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <div id="domos"><TreePodDomes /></div>
+
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <SeasonalSelector />
+
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <div id="servicios"><DomoAmenities /></div>
+
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <div id="reviews"><Testimonios /></div>
+
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <div id="news"><News /></div>
+
+        <div className="container mx-auto px-6 max-w-7xl">
+          <hr className="border-t border-black/10" />
+        </div>
+
         <div id="contacto"><Ubicacion /></div>
       </div>
     </main>

@@ -57,7 +57,7 @@ export default function PaquetesPage() {
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-10 py-16 md:py-24">
                 {/* Título editorial */}
                 <div className="mb-16 md:mb-24">
-                    <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm mb-8">
+                    <div className="inline-block mb-4">
                         <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
                             Experiencias TreePod
                         </span>
@@ -89,7 +89,7 @@ export default function PaquetesPage() {
                                         className="object-cover transition-transform duration-[2s] group-hover:scale-110"
                                     />
                                     <div className="absolute top-8 left-8">
-                                        <span className="bg-black/80 backdrop-blur-md px-5 py-2 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] text-primary border border-primary/30 shadow-2xl">
+                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
                                             {extra.category}
                                         </span>
                                     </div>
@@ -100,12 +100,12 @@ export default function PaquetesPage() {
                                         <p className="text-text-sub text-lg leading-relaxed font-bold">
                                             {extra.descripcion}
                                         </p>
-                                        <div className="flex flex-wrap gap-3 pt-2">
+                                        <div className="flex flex-wrap gap-4 pt-2">
                                             {extra.multiplicador_personas && (
-                                                <span className="px-4 py-1.5 bg-primary/10 text-primary text-[11px] font-black uppercase rounded-lg border border-primary/20 tracking-widest">Por Persona</span>
+                                                <span className="text-primary text-[11px] font-black uppercase tracking-widest">Por Persona</span>
                                             )}
                                             {extra.multiplicador_noches && (
-                                                <span className="px-4 py-1.5 bg-primary/10 text-primary text-[11px] font-black uppercase rounded-lg border border-primary/20 tracking-widest">Por Noche</span>
+                                                <span className="text-primary text-[11px] font-black uppercase tracking-widest">Por Noche</span>
                                             )}
                                         </div>
                                     </div>
@@ -125,6 +125,10 @@ export default function PaquetesPage() {
                         ))}
                     </div>
                 )}
+
+                <div className="container mx-auto px-6 max-w-7xl mt-32">
+                    <hr className="border-t border-black/10" />
+                </div>
 
                 <div className="mt-20 text-center bg-surface rounded-[4rem] p-12 md:p-20 border border-black/5 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>

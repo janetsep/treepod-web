@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import GoogleMapsSection from '../components/GoogleMapsSection';
-import { Phone, Mail, MapPin, Send, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, MessageCircle, Check } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ContactoPage() {
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     return (
         <div className="bg-surface-light font-sans text-text-main min-h-screen">
             {/* Hero Section */}
@@ -19,7 +21,7 @@ export default function ContactoPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-surface-light"></div>
                 <div className="relative z-10 text-center px-6 pt-32 animate-fade-in-up">
-                    <div className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6">
+                    <div className="inline-block mb-4">
                         <span className="text-white text-[10px] font-black tracking-[0.4em] uppercase">Contacto</span>
                     </div>
                     <h1 className="h1-display text-white mb-6 [text-shadow:_0_2px_20px_rgba(0,0,0,0.5)]">
@@ -128,6 +130,7 @@ export default function ContactoPage() {
 
                                 <form className="relative z-10 space-y-7" onSubmit={async (e) => {
                                     e.preventDefault();
+                                    setStatus('loading');
                                     const formData = new FormData(e.currentTarget);
                                     const data = {
                                         name: formData.get('name'),
@@ -144,15 +147,30 @@ export default function ContactoPage() {
                                         });
 
                                         if (response.ok) {
-                                            alert("¡Confirmado! Recibimos tu mensaje. El host te contactará dentro de las próximas horas.");
+                                            setStatus('success');
                                             (e.target as HTMLFormElement).reset();
                                         } else {
-                                            alert("No pudimos conectar con el servidor. Por favor intenta por WhatsApp para una respuesta inmediata.");
+                                            setStatus('error');
                                         }
                                     } catch (_error) {
-                                        alert("Hubo un error de conexión. Te sugerimos contactar directamente vía WhatsApp.");
+                                        setStatus('error');
                                     }
                                 }}>
+                                    {status === 'success' && (
+                                        <div className="bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] px-6 py-4 rounded-2xl flex items-start gap-4 animate-fade-in-up">
+                                            <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shrink-0 mt-0.5">
+                                                <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                                            </div>
+                                            <p className="text-sm font-bold">¡Confirmado! Recibimos tu mensaje. El host te contactará dentro de las próximas horas.</p>
+                                        </div>
+                                    )}
+
+                                    {status === 'error' && (
+                                        <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center gap-4 animate-shake">
+                                            <p className="text-sm font-bold">Hubo un error de conexión. Por favor contáctanos vía WhatsApp para una respuesta inmediata.</p>
+                                        </div>
+                                    )}
+
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                                         <div className="space-y-2.5">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">Nombre</label>
@@ -202,9 +220,9 @@ export default function ContactoPage() {
                                     </div>
 
                                     <div className="space-y-6 pt-4">
-                                        <button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
-                                            Enviar Mensaje
-                                            <Send className="w-4 h-4" />
+                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                                            {status === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
+                                            {!status || status !== 'loading' && <Send className="w-4 h-4" />}
                                         </button>
 
                                         <div className="relative py-4 flex items-center justify-center">

@@ -37,12 +37,12 @@ export default function TreePodDomes() {
     ];
 
     return (
-        <section className="py-20 md:py-32 relative overflow-hidden bg-white" id="domos">
+        <section className="py-12 md:py-16 relative overflow-hidden bg-white" id="domos">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
                     {/* Visual Section: Montage (Aura Style) */}
                     <div className="lg:col-span-7">
@@ -59,10 +59,10 @@ export default function TreePodDomes() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                                 <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end">
                                     <div className="text-white">
-                                        <p className="text-xs uppercase tracking-[0.2em] font-black text-primary mb-2">Exterior</p>
+                                        <p className="text-xs uppercase tracking-[0.2em] font-black text-primary mb-2 drop-shadow-md">Exterior</p>
                                         <h3 className="text-2xl md:text-3xl font-display font-bold [text-shadow:_0_2px_10px_rgba(0,0,0,1)]">Arquitectura de Montaña</h3>
                                     </div>
-                                    <div className="bg-primary px-6 py-2.5 rounded-xl text-white text-[11px] font-black uppercase tracking-widest shadow-xl">
+                                    <div className="text-white text-[11px] font-black uppercase tracking-widest drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
                                         40m² Habitables
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ export default function TreePodDomes() {
                     <div className="lg:col-span-5 space-y-12">
                         <article className="space-y-6">
                             <header className="space-y-4">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+                                <div className="inline-flex items-center gap-2">
                                     <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                                     <span className="text-primary text-[10px] font-bold tracking-[0.2em] uppercase">Habitabilidad</span>
                                 </div>

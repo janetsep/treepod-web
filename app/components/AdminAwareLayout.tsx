@@ -4,13 +4,14 @@ import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import TopBar from "./TopBar";
-import LeadMagnet from "./LeadMagnet";
 import WhatsAppButton from "./WhatsAppButton";
+import LeadMagnet from "./LeadMagnet";
 
 export default function AdminAwareLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith("/admin");
     const isLogin = pathname?.startsWith("/login");
+    const isMundialRoute = pathname?.startsWith("/mundial-mtb-nevados-chillan-2026");
 
     // Si estamos en admin o login, NO mostramos la navegación del sitio
     if (isAdmin || isLogin) {
@@ -22,7 +23,7 @@ export default function AdminAwareLayout({ children }: { children: React.ReactNo
         <>
             <TopBar />
             <Navbar />
-            <LeadMagnet />
+            {!isMundialRoute && <LeadMagnet />}
             <WhatsAppButton />
             {children}
             <Footer />

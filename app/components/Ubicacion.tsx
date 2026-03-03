@@ -11,7 +11,7 @@ export default function Ubicacion() {
           {/* Info Side - Pluma Style */}
           <div className="lg:w-1/3 space-y-10">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm">
+              <div className="inline-flex items-center gap-2 mb-4">
                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
                 <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Estratégico</span>
               </div>
@@ -78,9 +78,9 @@ export default function Ubicacion() {
                 <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''} />
               </div>
 
-              {/* Bottom Decorative Label */}
-              <div className="absolute -bottom-4 right-10 bg-primary text-white px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] shadow-xl z-20">
-                Corazón de Las Trancas
+              {/* Decorative elements to simulate location tracking */}
+              <div className="absolute -bottom-4 right-10 text-primary text-[11px] font-black uppercase tracking-[0.3em] drop-shadow-md z-20">
+                A 10 min del Centro de Ski
               </div>
             </div>
           </div>

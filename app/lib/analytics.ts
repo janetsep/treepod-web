@@ -19,7 +19,11 @@ export type AnalyticsEventName =
   | "select_dome"
   | "generate_lead"
   | "click_reservar_sticky"
-  | "begin_checkout";
+  | "begin_checkout"
+  | "view_mundial_page"
+  | "click_reservar_mundial"
+  | "click_whatsapp_mundial"
+  | "begin_checkout_mundial";
 
 declare global {
   interface Window {

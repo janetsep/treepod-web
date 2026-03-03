@@ -54,7 +54,7 @@ export default function SeasonalSelector() {
                     {/* Info Side */}
                     <div className="lg:w-1/2 space-y-12 z-10">
                         <header className="space-y-6">
-                            <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm">
+                            <div className="inline-block mb-4">
                                 <span className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">Experiencia Anual</span>
                             </div>
                             <h2 className="h2-display text-text-main leading-[1.1]">
@@ -109,7 +109,7 @@ export default function SeasonalSelector() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70"></div>
 
                             {/* Seasonal Badge */}
-                            <div className="absolute top-10 right-10 bg-black/80 backdrop-blur-xl px-8 py-3 rounded-full text-white text-[11px] font-black uppercase tracking-[0.2em] border-2 border-white/30 shadow-2xl">
+                            <div className="absolute top-10 right-10 text-white text-[11px] font-black uppercase tracking-[0.2em] drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
                                 Modo {activeSeason.name}
                             </div>
                         </div>

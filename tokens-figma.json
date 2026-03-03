@@ -1,0 +1,283 @@
+{
+    "TreePod Design System": {
+        "Typography": {
+            "FontFamily": {
+                "value": "Inter",
+                "type": "fontFamilies"
+            },
+            "H1": {
+                "fontSize": {
+                    "value": "36",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.2",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Primary}",
+                    "type": "color"
+                }
+            },
+            "H1-Mobile": {
+                "fontSize": {
+                    "value": "32",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.2",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Primary}",
+                    "type": "color"
+                }
+            },
+            "H2": {
+                "fontSize": {
+                    "value": "28",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.2",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Primary}",
+                    "type": "color"
+                }
+            },
+            "H2-Mobile": {
+                "fontSize": {
+                    "value": "24",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.2",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Primary}",
+                    "type": "color"
+                }
+            },
+            "H3": {
+                "fontSize": {
+                    "value": "22",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.3",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Secondary}",
+                    "type": "color"
+                }
+            },
+            "H3-Mobile": {
+                "fontSize": {
+                    "value": "18",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.3",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Bold",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Secondary}",
+                    "type": "color"
+                }
+            },
+            "Body": {
+                "fontSize": {
+                    "value": "16",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.5",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Regular",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Text.Body}",
+                    "type": "color"
+                }
+            },
+            "Body-Mobile": {
+                "fontSize": {
+                    "value": "14",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.5",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Regular",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Text.Body}",
+                    "type": "color"
+                }
+            },
+            "Label": {
+                "fontSize": {
+                    "value": "12",
+                    "type": "fontSizes"
+                },
+                "lineHeight": {
+                    "value": "1.2",
+                    "type": "lineHeights"
+                },
+                "fontWeight": {
+                    "value": "Regular",
+                    "type": "fontWeights"
+                },
+                "color": {
+                    "value": "{Colors.Text.Muted}",
+                    "type": "color"
+                },
+                "letterSpacing": {
+                    "value": "0.1em",
+                    "type": "letterSpacing"
+                }
+            }
+        },
+        "Colors": {
+            "Primary": {
+                "value": "#00ADEF",
+                "type": "color"
+            },
+            "PrimaryHover": {
+                "value": "#0094CC",
+                "type": "color"
+            },
+            "Secondary": {
+                "value": "#2C3E50",
+                "type": "color"
+            },
+            "Background": {
+                "White": {
+                    "value": "#FFFFFF",
+                    "type": "color"
+                },
+                "LightGray": {
+                    "value": "#F8F9FA",
+                    "type": "color"
+                }
+            },
+            "Text": {
+                "Body": {
+                    "value": "#555555",
+                    "type": "color"
+                },
+                "Muted": {
+                    "value": "#999999",
+                    "type": "color"
+                }
+            },
+            "Accents": {
+                "WhatsApp": {
+                    "value": "#27AE60",
+                    "type": "color"
+                },
+                "Ratings": {
+                    "value": "#FFC107",
+                    "type": "color"
+                }
+            },
+            "Status": {
+                "Error": {
+                    "value": "#E74C3C",
+                    "type": "color"
+                },
+                "Warning": {
+                    "value": "#F39C12",
+                    "type": "color"
+                }
+            }
+        },
+        "Spacing": {
+            "XS": {
+                "value": "8",
+                "type": "spacing"
+            },
+            "SM": {
+                "value": "16",
+                "type": "spacing"
+            },
+            "MD": {
+                "value": "24",
+                "type": "spacing"
+            },
+            "LG": {
+                "value": "32",
+                "type": "spacing"
+            },
+            "XL": {
+                "value": "48",
+                "type": "spacing"
+            },
+            "2XL": {
+                "value": "64",
+                "type": "spacing"
+            }
+        },
+        "BorderRadius": {
+            "Input": {
+                "value": "4",
+                "type": "borderRadius"
+            },
+            "Card": {
+                "value": "8",
+                "type": "borderRadius"
+            },
+            "Pill": {
+                "value": "9999",
+                "type": "borderRadius"
+            }
+        },
+        "Shadows": {
+            "Card": {
+                "value": {
+                    "x": "0",
+                    "y": "2",
+                    "blur": "8",
+                    "spread": "0",
+                    "color": "rgba(0, 0, 0, 0.1)",
+                    "type": "dropShadow"
+                },
+                "type": "boxShadow"
+            }
+        }
+    }
+}

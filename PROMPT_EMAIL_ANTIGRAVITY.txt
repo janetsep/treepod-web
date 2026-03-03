@@ -1,0 +1,289 @@
+═════════════════════════════════════════════════════════════════════════════
+SUBJECT: Solicitud de Propuesta - Rediseño Web Domos TreePod (Glamping Chile)
+═════════════════════════════════════════════════════════════════════════════
+
+Hola Antigravity,
+
+Somos Domos TreePod, un glamping premium ubicado en Valle Las Trancas, Chile.
+Nuestro sitio web (domostrepod.cl) tiene buena fotografía y branding, pero 
+presenta fricciones críticas en el flujo de conversión que están bajando nuestras 
+reservas.
+
+CONTEXTO DEL PROYECTO
+───────────────────────────────────────────────────────────────────────────────
+
+Situación actual:     ~15 reservas/mes
+Target:               25-30 reservas/mes (+67%)
+Presupuesto:          $8,000 - $12,000 USD
+Timeline:             4-5 semanas. Inicio ASAP, lanzamiento antes de 14 abril
+
+REQUERIMOS A UN EXPERTO SENIOR PORQUE...
+───────────────────────────────────────────────────────────────────────────────
+
+No es un rediseño cosmético. Hemos identificado problemas específicos que impiden
+conversiones. Necesitamos:
+
+✓ Experiencia en hotelería/experiencias de lujo (7+ años)
+✓ Certificación o expertise en CRO (Conversion Rate Optimization)
+✓ Portfolio con 5+ proyectos similares (booking sites, resorts, hoteles)
+✓ Experiencia con user testing, heatmaps, análisis de comportamiento
+✓ Capacidad de justificar cada decisión de diseño
+
+PROBLEMAS IDENTIFICADOS (Por orden de impacto)
+───────────────────────────────────────────────────────────────────────────────
+
+1. AUSENCIA DE SOCIAL PROOF EN SECCIONES CRÍTICAS
+   Tenemos 4.9/5 ⭐ en Google pero NO está visible en hero ni en secciones 
+   de decisión.
+   → Impacto: Abandono en homepage, usuarios sin confianza
+
+2. FLUJO DE RESERVA CONFUSO
+   Detalles → Pago → Confirmación SIN indicador visual claro de progreso.
+   → Impacto: ~40% abandono en checkout (meta industria: <30%)
+
+3. IMÁGENES DE EXTRAS EN ESCALA DE GRISES
+   Secciones de "Desayuno Campestre", "Tinaja Caliente" tienen imágenes que
+   parecen placeholders.
+   → Impacto: Baja en upsell (target: +15% en valor promedio)
+
+4. HERO CON CONTRASTE DÉBIL
+   Texto blanco sin overlay. NO cumple WCAG AA. Además, no comunica 
+   "QUÉ ES TREEPOD" en <2 segundos.
+   → Impacto: Accesibilidad + confusión sobre proposición de valor
+
+5. FALTA DE URGENCIA/DISPONIBILIDAD
+   No hay contador de disponibilidad, badges de "últimas noches", 
+   o indicador de demanda.
+   → Impacto: Reducción de impulse bookings
+
+BRIEF DETALLADO POR SECCIÓN
+───────────────────────────────────────────────────────────────────────────────
+
+SECCIÓN 1: HERO (Landing Page Principal)
+──────────────────────────────────────────
+
+Objetivo: En <2 segundos, usuario entiende QUÉ ES TREEPOD y está motivado
+para explorar/reservar.
+
+Requisitos:
+  • Overlay oscuro 50% opacity sobre imagen (mejora contraste WCAG)
+  • Badge visible: ⭐4.9/5 - 200+ huéspedes
+  • Headline: "Despierta en el Corazón de la Naturaleza" (emocional)
+  • Subheadline: "Domo geodésico privado con confort de lujo en Valle Las Trancas"
+  • CTA Primary: "Ver Disponibilidad y Reservar" (44px height, 100% width mobile)
+  • Counter (si viable): "Solo 2 fines de semana disponibles en Abril"
+
+
+SECCIÓN 2: CHECKOUT / FLUJO DE RESERVA
+───────────────────────────────────────
+
+Objetivo: Reducir abandono de carrito 40% → 25%.
+
+Requisitos:
+  • Stepper/Progress bar clara:
+    Step 1 (Confirma tu Estadía) → Step 2 (Completa tu Pago) → 
+    Step 3 (¡Reserva Confirmada!)
+  • Resumen sidebar (desktop): actualizable en tiempo real, sticky
+  • Badge seguridad: 🔒 "Pago 100% Seguro vía WebPay"
+  
+  • Nuevos campos requeridos para hotelería:
+    - Teléfono de emergencia
+    - Restricciones dietéticas
+    - Opción: Recibir confirmación vía SMS/WhatsApp
+    
+  • Copy amable: Errores deben ser constructivos
+
+
+SECCIÓN 3: EXTRAS / AMENIDADES
+───────────────────────────────
+
+Objetivo: Aumentar upsell (+15% en valor promedio por reserva).
+
+Requisitos:
+  • Reemplazar imágenes gris con fotografías COLOR de ALTA CALIDAD
+  • Grid: 2 columnas (desktop), 1 (mobile)
+  • Card structure:
+    - Imagen (aspect ratio 4:3)
+    - Nombre + Descripción (benefit-driven)
+    - Precio destacado (bold, 24px, azul #0098D4)
+    - Hover effect: escala +5%, sombra más oscura
+
+  • Copy transformation:
+    ❌ "Desayuno Campestre" → ✅ "Despierta con café y vistas al bosque"
+    ❌ "Tinaja Caliente (Tarde)" → ✅ "Baño bajo las estrellas con agua termal"
+    ❌ "Pack Romántico" → ✅ "Cena privada, champagne y chocolates en tu terraza"
+
+
+SECCIÓN 4: GALERÍA DE IMÁGENES
+───────────────────────────────
+
+Objetivo: Permitir que el usuario "experimente" virtualmente el lugar.
+
+Requisitos:
+  • Masonry grid (no slider actual)
+  • Desktop: 3 columnas con algunos items 2x2
+  • Mobile: slider vertical swipeable
+  • Overlay descriptivo en hover
+  • Lightbox: full screen con navegación
+  • CTA al final: "Ver Tour Virtual 360°" o "Solicita Reserva Prueba Virtual"
+
+
+SECCIÓN 5: NUEVA - SOCIAL PROOF & TESTIMONIOS
+───────────────────────────────────────────────
+
+CRÍTICO para construcción de confianza. Ubicar DESPUÉS del hero, 
+ANTES de extras.
+
+Requisitos:
+  • Card principal con rating agregado:
+    - Número grande: "4.9/5"
+    - Subtexto: "200+ huéspedes satisfechos"
+    - Desglose visual (barras por estrella)
+    
+  • Carrusel de 3 testimonios destacados:
+    - Foto huésped (60x60px circular)
+    - Nombre + rating
+    - Cita corta (máx 150 caracteres)
+    - Fecha
+    
+  • Link "Ver todas las reseñas en Google/TripAdvisor"
+
+
+ESPECIFICACIONES DE DISEÑO GLOBAL
+───────────────────────────────────────────────────────────────────────────────
+
+TIPOGRAFÍA
+  Font: Inter (preferencia) o Poppins
+  H1: 32-36px, bold, color #0098D4
+  H2: 24-28px, bold, color #0098D4
+  H3: 18-22px, bold, color #2C3E50
+  Body: 14-16px, regular, color #555555
+
+PALETA DE COLOR
+  Primario: #0098D4 (azul cielo - MANTENER)
+  Secundario: #2C3E50 (gris azulado oscuro)
+  Fondo: #FFFFFF (blanco) y #F8F9FA (gris claro)
+  Acentos: #27AE60 (verde WhatsApp), #FFC107 (amarillo ratings)
+  Error/Warning: #E74C3C (rojo), #F39C12 (naranja)
+
+SPACING & COMPONENTES
+  Base unit: 8px (escala 8, 16, 24, 32, 40, 48, 56, 64px)
+  Padding secciones: 48px (desktop), 32px (tablet), 24px (mobile)
+  Button height: 48px (WCAG touch target)
+  Border radius: 8px (cards), 4px (inputs)
+  Shadows: 0 2px 8px (light), 0 6px 16px (medium), 0 12px 24px (heavy)
+
+ACCESIBILIDAD (WCAG 2.1 AA OBLIGATORIO)
+  ✓ Contraste mínimo: 4.5:1
+  ✓ Focus indicators: outline 3px
+  ✓ Alt text descriptivo en todas las imágenes
+  ✓ Touch targets: mínimo 44x44px en mobile
+
+
+ENTREGABLES ESPERADOS
+───────────────────────────────────────────────────────────────────────────────
+
+FASE 1: Wireframes (5 días)
+  ✓ Wireframes baja fidelidad en Figma
+  ✓ User flow diagrams
+  ✓ Feedback call
+
+FASE 2: Diseño Alta Fidelidad (10 días)
+  ✓ Mockups completos (desktop + tablet + mobile)
+  ✓ Design system completo en Figma
+  ✓ Especificaciones de interacción
+  ✓ 2 rounds de feedback/iteración incluidos
+
+FASE 3: Developer Handoff (3 días)
+  ✓ Especificaciones de desarrollo en Figma
+  ✓ Exportación de assets (SVGs, PNGs, iconografía)
+  ✓ Guía de UX copy
+  ✓ Documento de justificación de decisiones
+
+
+MÉTRICAS DE ÉXITO POST-LANZAMIENTO
+───────────────────────────────────────────────────────────────────────────────
+
+El diseño debe optimizar para CONVERSIÓN, no solo estética:
+
+1. Reducción abandono checkout: 40% → 25% (-37.5%)
+2. Aumento upsell extras: +15% en valor promedio por reserva
+3. Engagement en galería: 50%+ de usuarios que completan
+4. Tiempo en página: +40% (más engagement = mejor UX)
+5. Tasa de reservas totales: 15 → 25/mes
+
+
+CONTEXTO VISUAL & RESTRICCIONES
+───────────────────────────────────────────────────────────────────────────────
+
+Sitio actual: domostrepod.cl
+
+MANTENER:
+  • Logo
+  • Color azul primario (#0098D4)
+  • Estilo de fotografía natural
+
+MEJORAR:
+  • Jerarquía visual
+  • Accesibilidad
+  • Flujo de conversión
+  • Spacing y consistencia
+
+NO:
+  • Cambios dramáticos de brand identity
+  • Es rediseño estratégico, no rebranding
+
+
+ESPERAMOS DE USTEDES
+───────────────────────────────────────────────────────────────────────────────
+
+Por favor presenten propuesta con:
+
+1. Portfolio:
+   - 5+ proyectos hotelería/experiencias de lujo
+   - Casos de estudio con métricas de conversión mejorantes
+   
+2. Equipo propuesto:
+   - Designer senior (nombre, años experiencia, certificaciones)
+   - Developer frontend (especialidad, stack)
+   
+3. Metodología:
+   - ¿Cómo harán user testing/validación?
+   - ¿Qué herramientas usarán para análisis (heatmaps, etc)?
+   - ¿Cómo documentarán decisiones de diseño?
+   
+4. Presupuesto desglosado:
+   - Diseño (wireframes, mockups, design system)
+   - Desarrollo frontend
+   - Revisiones/iteraciones
+   
+5. Timeline detallado
+
+6. Referencias de clientes (nombre + contacto + teléfono)
+   → Nos gustaría hablar con 2-3 clientes hotelería que hayan hecho 
+     proyectos similares
+
+
+PRÓXIMOS PASOS
+───────────────────────────────────────────────────────────────────────────────
+
+1. Ustedes envían propuesta con los puntos arriba
+2. Nosotros revisamos y damos feedback
+3. Kick-off call para alignment final
+4. Inicio inmediato del proyecto
+
+
+CONTACTO
+───────────────────────────────────────────────────────────────────────────────
+
+Janet Sepúlveda Correa
+Email: janetsep@gmail.com
+Teléfono: +56 9 8464 3307
+Empresa: Domos TreePod
+
+Esperamos trabajar con ustedes.
+
+Saludos,
+Janet
+
+═════════════════════════════════════════════════════════════════════════════

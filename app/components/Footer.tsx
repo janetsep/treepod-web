@@ -89,8 +89,8 @@ export default function Footer() {
                 <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
                     <p>© {new Date().getFullYear()} TreePod. Glamping de Montaña.</p>
                     <div className="flex gap-10">
-                        <Link href="#" className="hover:text-primary transition-colors">Privacidad</Link>
-                        <Link href="#" className="hover:text-primary transition-colors">Términos</Link>
+                        <Link href="/privacidad" className="hover:text-primary transition-colors">Privacidad</Link>
+                        <Link href="/terminos" className="hover:text-primary transition-colors">Términos</Link>
                     </div>
                 </div>
             </div>

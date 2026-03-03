@@ -41,7 +41,7 @@ export default function ServicesPage() {
             <main className="py-16 md:py-24 container mx-auto px-6 md:px-10">
                 {/* Título editorial */}
                 <div className="mb-16 md:mb-24">
-                    <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 shadow-sm mb-8">
+                    <div className="inline-block mb-4">
                         <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
                             Experiencias TreePod
                         </span>
@@ -54,9 +54,9 @@ export default function ServicesPage() {
                         Más que un lugar donde dormir, un santuario diseñado para revitalizar tus sentidos.
                     </p>
                 </div>
-                <div className="space-y-32">
+                <div className="space-y-16">
                     {mainServices.map((service, index) => (
-                        <div key={index} className={`flex flex-col lg:flex-row gap-16 items-center ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
+                        <><div key={index} className={`flex flex-col lg:flex-row gap-16 items-center ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
                             {/* Image side */}
                             <div className="w-full lg:w-1/2 relative group">
                                 <div className="absolute -inset-6 bg-primary/5 rounded-[2.5rem] transform rotate-2 group-hover:rotate-1 transition-transform duration-700"></div>
@@ -74,7 +74,7 @@ export default function ServicesPage() {
 
                             {/* Text side */}
                             <div className="w-full lg:w-1/2 space-y-10">
-                                <div className="inline-block px-4 py-1.5 border border-primary/20 rounded-full mb-4 bg-primary/10 shadow-sm">
+                                <div className="inline-block mb-4">
                                     <span className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">{service.subtitle}</span>
                                 </div>
                                 <h2 className="h2-display leading-tight text-text-main">
@@ -101,6 +101,12 @@ export default function ServicesPage() {
                                 </div>
                             </div>
                         </div>
+                            {index < mainServices.length - 1 && (
+                                <div className="container mx-auto px-6 max-w-7xl pt-16">
+                                    <hr className="border-t border-black/10" />
+                                </div>
+                            )}
+                        </>
                     ))}
                 </div>
             </main>

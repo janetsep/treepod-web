@@ -54,10 +54,13 @@ export default function Hero() {
 
       <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center pt-24 md:pt-32 pb-32">
 
-        {/* Badge with high contrast */}
-        <span className="subtitle-caps mb-8 border-2 border-primary px-8 py-2.5 rounded-full bg-black/40 backdrop-blur-md shadow-2xl animate-fade-in-up !text-white !font-black !text-[12px]">
+        {/* Subtitle text link without button styles */}
+        <button
+          onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
+          className="mb-8 animate-fade-in-up text-white font-black text-sm uppercase tracking-widest drop-shadow-md hover:text-white/80 transition-colors cursor-pointer"
+        >
           ★ Opiniones verificadas Google · Las Trancas, Chile
-        </span>
+        </button>
 
 
 
@@ -67,7 +70,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 md:mb-20 max-w-3xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-Bosque nativo · Privacidad real · Comodidad sin concesiones.
+          Bosque nativo · Tranquilidad real · Comodidad sin concesiones.
         </p>
 
         <div className="flex flex-col w-full max-w-sm mx-auto md:max-w-none md:flex-row md:justify-center gap-4 animate-fade-in-up delay-300">

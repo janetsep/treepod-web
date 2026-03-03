@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function News() {
     const activities = [
         {
@@ -20,52 +22,82 @@ export default function News() {
             description: "Panoramas ideales todo el año. Disfruta de la gastronomía local, fiestas costumbristas y la vibrante vida de montaña.",
             tag: "Vida Social",
             details: "Restaurantes, ferias locales y eventos en el valle."
+        },
+        {
+            image: "/images/exteriors/domo-exterior-arrival.jpg",
+            title: "Mundial UCI MTB 2026",
+            description: "Alojamiento exclusivo para competidores y equipos durante el UCI Mountain Bike World Championships.",
+            tag: "Evento Mundial",
+            details: "⭐ Ver Pack Especial Doms y Recuperación",
+            href: "/mundial-mtb-nevados-chillan-2026"
         }
     ];
 
     return (
         <section className="hidden md:block py-24 md:py-32 bg-white">
-            <div className="container mx-auto px-6">
+            <div className="container mx-auto px-6 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div className="max-w-xl">
-                        <div className="inline-block px-4 py-1.5 border border-primary/20 rounded-full mb-8 bg-primary/10 shadow-sm">
+                        <div className="inline-block mb-4">
                             <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">Actividades</span>
                         </div>
-                        <h2 className="h2-display text-text-main leading-tight mb-6">Vida en el Valle</h2>
-                        <p className="text-lg md:text-xl text-text-sub font-bold max-w-lg leading-relaxed">Más allá del refugio: vive la intensidad de la montaña y la cultura local.</p>
+                        <h2 className="h2-display text-text-main leading-tight mb-6">Lo que se viene en el Valle</h2>
+                        <p className="text-lg md:text-xl text-text-sub font-bold max-w-lg leading-relaxed">Conoce y reserva tu lugar para los eventos y actividades imperdibles de la temporada.</p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    {activities.map((item, index) => (
-                        <div key={index} className="group bg-surface rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col h-full border border-black/5 ring-1 ring-black/5">
-                            <div className="relative h-72 overflow-hidden shrink-0">
-                                <img
-                                    alt={item.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    src={item.image}
-                                />
-                                <div className="absolute top-6 left-6">
-                                    <span className="bg-primary text-white text-[11px] font-black tracking-widest uppercase px-5 py-2 rounded-xl shadow-2xl">
-                                        {item.tag}
-                                    </span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {activities.map((item, index) => {
+                        const CardContent = (
+                            <div className="group bg-surface rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col h-full border border-black/5 ring-1 ring-black/5 relative hover:-translate-y-2">
+                                <div className="relative h-64 overflow-hidden shrink-0">
+                                    <img
+                                        alt={item.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        src={item.image}
+                                    />
+                                    <div className="absolute top-6 left-6">
+                                        <span className={`text-[9px] font-black tracking-widest uppercase px-4 py-1.5 rounded-full shadow-lg ${item.href ? 'bg-gold text-white' : 'bg-primary text-white'}`}>
+                                            {item.tag}
+                                        </span>
+                                    </div>
+                                    {item.href && (
+                                        <div className="absolute top-6 right-6">
+                                            <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full border border-white/40">
+                                                Ver Landing
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                            <div className="p-10 flex flex-col grow">
-                                <h3 className="font-display font-bold text-2xl mb-6 text-text-main group-hover:text-primary transition-colors leading-tight">
-                                    {item.title}
-                                </h3>
-                                <p className="text-base md:text-lg text-text-sub mb-8 leading-relaxed grow font-bold">
-                                    {item.description}
-                                </p>
-                                <div className="pt-6 border-t border-black/5">
-                                    <p className="text-sm text-text-sub/80 font-bold italic">
-                                        {item.details}
+                                <div className="p-8 flex flex-col grow">
+                                    <h3 className="font-display font-bold text-xl mb-4 text-text-main group-hover:text-primary transition-colors leading-tight">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-sm md:text-base text-text-sub mb-6 leading-relaxed grow font-medium">
+                                        {item.description}
                                     </p>
+                                    <div className="pt-4 border-t border-black/5 flex items-center justify-between">
+                                        <p className={`text-xs font-bold leading-tight ${item.href ? 'text-primary' : 'text-text-sub/80 italic'}`}>
+                                            {item.details}
+                                        </p>
+                                        {item.href && (
+                                            <span className="text-primary ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+
+                        return item.href ? (
+                            <Link key={index} href={item.href} className="block h-full cursor-pointer">
+                                {CardContent}
+                            </Link>
+                        ) : (
+                            <div key={index} className="h-full">
+                                {CardContent}
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
