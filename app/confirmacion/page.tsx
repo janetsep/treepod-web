@@ -1,8 +1,10 @@
 'use client';
 
+import { ArrowDown, CheckCircle2, ChevronRight, Home, MapPin, MessageSquare, Info } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import Stepper from '../components/Stepper';
 
 function ConfirmacionContent() {
     const searchParams = useSearchParams();
@@ -99,6 +101,10 @@ function ConfirmacionContent() {
     return (
         <div className="min-h-screen bg-background-dark py-24 px-4 font-sans text-white">
             <div className="max-w-2xl mx-auto">
+                {/* Cambio #2: Checkout Stepper */}
+                <div className="mb-10 brightness-150">
+                    <Stepper activeStep={3} />
+                </div>
                 {/* Confirmación exitosa */}
                 <div className="bg-white/5 rounded-[3rem] shadow-2xl overflow-hidden border border-white/10 backdrop-blur-xl">
                     {/* Header con check verde */}
@@ -111,67 +117,94 @@ function ConfirmacionContent() {
                     </div>
 
                     {/* Detalles de la reserva */}
-                    <div className="p-10">
+                    <div className="p-10 bg-white">
                         <div className="mb-8">
-                            <h2 className="text-xl font-display font-bold mb-6 text-white uppercase tracking-widest text-center">Resumen del Refugio</h2>
+                            <h2 className="text-xl font-display font-bold mb-8 text-black uppercase tracking-widest text-center">Resumen del Refugio</h2>
 
-                            <div className="space-y-4 text-gray-300">
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-xs">Código de Reserva</span>
-                                    <span className="text-primary font-bold">#{reserva.id.slice(-5).toUpperCase()}</span>
+                            <div className="space-y-4">
+                                <div className="flex justify-between py-3 border-b border-black/5">
+                                    <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Código de Reserva</span>
+                                    <span className="text-primary font-black">#{reserva.id.slice(-5).toUpperCase()}</span>
                                 </div>
 
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-xs">Domo</span>
-                                    <span className="text-white font-medium">{reserva.domos?.nombre || 'TreePod'}</span>
+                                <div className="flex justify-between py-3 border-b border-black/5">
+                                    <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Domo</span>
+                                    <span className="text-text-main font-bold">{reserva.domos?.nombre || 'TreePod'}</span>
                                 </div>
 
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-xs">Check-in</span>
-                                    <span className="text-white font-medium">{new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                <div className="flex justify-between py-3 border-b border-black/5">
+                                    <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-in</span>
+                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                                 </div>
 
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-xs">Check-out</span>
-                                    <span className="text-white font-medium">{new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                <div className="flex justify-between py-3 border-b border-black/5">
+                                    <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-out</span>
+                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                                 </div>
 
-                                <div className="flex justify-between py-3 border-b border-white/5">
-                                    <span className="text-xs">Huésped</span>
-                                    <span className="text-white font-medium">{reserva.nombre} {reserva.apellido}</span>
+                                <div className="flex justify-between py-3 border-b border-black/5">
+                                    <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Huésped</span>
+                                    <span className="text-text-main font-bold">{reserva.nombre} {reserva.apellido}</span>
                                 </div>
 
-                                <div className="flex justify-between py-5 bg-white/5 px-6 rounded-2xl mt-8 border border-white/5 overflow-y-auto max-h-screen">
-                                    <span className="font-bold text-lg">Total Pagado</span>
-                                    <span className="font-bold text-2xl text-primary font-display">
-                                        ${reserva.monto_pagado?.toLocaleString('es-CL') || reserva.total?.toLocaleString('es-CL')}
-                                    </span>
+                                <div className="mt-8 space-y-4">
+                                    <div className="flex justify-between items-end py-6 bg-primary/5 px-8 rounded-3xl border border-primary/10 relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 rotate-12">
+                                            <CheckCircle2 className="w-12 h-12 text-primary" />
+                                        </div>
+                                        <div>
+                                            <span className="block font-black text-primary uppercase tracking-[0.2em] text-[10px] mb-1">Abono Confirmado (50%)</span>
+                                            <span className="text-[9px] text-text-sub uppercase font-bold tracking-widest opacity-60">Pago vía Webpay</span>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="font-black text-3xl text-primary font-display leading-none">
+                                                ${reserva.monto_pagado?.toLocaleString('es-CL') || Math.round(reserva.total * 0.5).toLocaleString('es-CL')}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between items-center py-4 bg-black/[0.02] px-8 rounded-2xl border border-dashed border-black/10">
+                                        <span className="font-bold text-text-sub uppercase tracking-widest text-[10px] flex items-center gap-2">
+                                            <Info className="w-3.5 h-3.5 text-primary/60" />
+                                            Saldo Pendiente (50%)
+                                        </span>
+                                        <span className="font-black text-text-main text-lg">
+                                            ${(reserva.total - (reserva.monto_pagado || Math.round(reserva.total * 0.5))).toLocaleString('es-CL')}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center px-8 pt-2">
+                                        <span className="text-[10px] font-black text-text-sub/50 uppercase tracking-widest">Total Estadía</span>
+                                        <span className="text-xs font-black text-text-main/40 tracking-widest">${reserva.total.toLocaleString('es-CL')}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Próximos pasos */}
-                        <div className="bg-primary/10 border-l-4 border-primary p-6 mb-8 rounded-r-2xl">
-                            <h3 className="font-display font-bold text-primary mb-2 uppercase tracking-widest text-xs">📧 Próximos Pasos</h3>
-                            <ul className="text-sm text-gray-300 space-y-2">
-                                <li className="flex items-center gap-2 font-medium">✓ Recibirás un email de confirmación en <span className="text-white">{reserva.email}</span></li>
-                                <li className="flex items-center gap-2 font-medium">✓ Te enviaremos las instrucciones de llegada 48 horas antes</li>
-                                <li className="flex items-center gap-2 font-medium">✓ Puedes contactarnos por WhatsApp si tienes dudas</li>
+                        <div className="bg-primary/5 border-l-4 border-primary p-6 mb-10 rounded-r-2xl">
+                            <h3 className="font-display font-black text-primary mb-4 uppercase tracking-widest text-xs">📧 Próximos Pasos</h3>
+                            <ul className="text-sm text-text-sub space-y-3 font-medium">
+                                <li className="flex items-center gap-3">
+                                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                    Recibirás un email de confirmación en <span className="text-text-main font-bold">{reserva.email}</span>
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                    Te enviaremos las instrucciones de llegada 48 horas antes
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                    Puedes contactarnos por WhatsApp si tienes dudas
+                                </li>
                             </ul>
                         </div>
 
-                        {/* Botones de acción */}
-                        <div className="flex flex-col sm:flex-row gap-4 mb-6 flex-wrap justify-center">
-                            <button
-                                onClick={() => router.push(`/reserva/${reserva.id}`)}
-                                className="flex-1 bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-bold uppercase tracking-widest text-xs shadow-xl"
-                            >
-                                Ver Detalles Completos
-                            </button>
-
+                        {/* Botón de acción único */}
+                        <div className="flex justify-center mb-10">
                             <button
                                 onClick={() => router.push('/')}
-                                className="flex-1 bg-white/5 text-white px-8 py-4 rounded-full hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs border border-white/10"
+                                className="w-full bg-primary text-white px-10 py-5 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/30"
                             >
                                 Volver al Inicio
                             </button>

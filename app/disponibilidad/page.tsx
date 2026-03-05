@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
-import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw } from "lucide-react";
+import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info } from "lucide-react";
+import Stepper from '../components/Stepper';
 
 type ResultadoPrecio = {
   temporada: string;
@@ -46,6 +47,7 @@ function DisponibilidadContent() {
   const [initialCalcDone, setInitialCalcDone] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState<Set<string>>(new Set());
+  const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
   const [cupon, setCupon] = useState("");
   const [cuponAplicado, setCuponAplicado] = useState(false);
 
@@ -192,11 +194,18 @@ function DisponibilidadContent() {
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
             if (!s) return null;
+
+            const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
+            const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+            const multNoches = s.multiplicador_noches || isBreakfast || isDinner;
+            const nochesParaCalculo = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNoches ? (resultado.noches || 1) : 1);
+            const cantidad = (s.multiplicador_personas ? adultos : 1) * nochesParaCalculo;
+
             return {
               id,
               precio_unitario: s.precio,
-              cantidad: 1,
-              total: getServiceCost(s, adultos, resultado.noches || 1)
+              cantidad,
+              total: getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id])
             };
           }).filter(Boolean)
         }),
@@ -231,17 +240,25 @@ function DisponibilidadContent() {
     setServiciosSeleccionados(newSelected);
   };
 
-  const getServiceCost = (s: Servicio, numAdultos: number, noches: number) => {
+  const getServiceCost = (s: Servicio, numAdultos: number, nochesEstadia: number, nochesEspecificas?: number) => {
     const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
-    const multNoches = s.multiplicador_noches || isBreakfast;
-    return s.precio * (s.multiplicador_personas ? numAdultos : 1) * (multNoches ? noches : 1);
+    const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+
+    // Override de precio para Cena Privada como solicitó el usuario
+    const basePrecio = isDinner ? 25000 : s.precio;
+
+    // Si es cena y tiene noches especificas, usamos esas. Si no, usamos nochesEstadia si multNoches es true.
+    const multNoches = s.multiplicador_noches || isBreakfast || isDinner;
+    const nochesParaCalculo = nochesEspecificas !== undefined ? nochesEspecificas : (multNoches ? nochesEstadia : 1);
+
+    return basePrecio * (s.multiplicador_personas ? numAdultos : 1) * nochesParaCalculo;
   };
 
   const calcularTotalConServicios = () => {
     if (!resultado) return 0;
     let totalServicios = 0;
     servicios.filter(s => serviciosSeleccionados.has(s.id)).forEach(s => {
-      totalServicios += getServiceCost(s, adultos, resultado.noches || 1);
+      totalServicios += getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[s.id]);
     });
     return resultado.total + totalServicios;
   };
@@ -251,6 +268,9 @@ function DisponibilidadContent() {
       <div className="h-16 md:h-20"></div>
 
       <main className="container max-w-7xl mx-auto px-6 py-8 md:py-12 flex-1">
+        {/* Cambio #2: Checkout Stepper */}
+        <Stepper activeStep={1} />
+
         {/* HEADER & LEGEND */}
         <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/5 pb-8">
           <div className="space-y-2">
@@ -279,7 +299,7 @@ function DisponibilidadContent() {
                 <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
               </header>
 
-              <section className="bg-white p-6 lg:p-8 rounded-[2.5rem] border border-black/5 shadow-xl space-y-8">
+              <section className="bg-white p-6 lg:p-8 rounded-[2rem] border border-black/5 shadow-xl space-y-8">
                 {/* Guest Selection moved here */}
                 <div className="space-y-3">
                   <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">¿Cuántos huéspedes?</label>
@@ -371,56 +391,135 @@ function DisponibilidadContent() {
               </header>
 
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
-                {servicios.map((s) => (
-                  <div
-                    key={s.id}
-                    onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
-                    className={`group relative flex gap-4 p-3.5 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden ${serviciosSeleccionados.has(s.id)
-                      ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
-                      : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
-                      } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
-                  >
-                    <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/30 transition-colors">
-                      <Image
-                        src={s.image_url || "/images/placeholder.jpg"}
-                        alt={s.nombre}
-                        fill
-                        className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                      />
-                      {serviciosSeleccionados.has(s.id) && (
-                        <div className="absolute inset-0 bg-primary/40 backdrop-blur-[1px] flex items-center justify-center">
-                          <Check className="text-white w-8 h-8 drop-shadow-lg" />
+                {servicios.map((s) => {
+                  // Cambio #3: Emotional Copies mapping
+                  let displayNombre = s.nombre;
+                  let displayDescripcion = s.descripcion;
+                  let displayImage = s.image_url || "/images/placeholder.jpg";
+
+                  if (s.nombre.toLowerCase().includes("desayuno")) {
+                    displayNombre = "Despierta en el Bosque";
+                    displayDescripcion = "Café orgánico con vistas al bosque desde tu terraza";
+                    displayImage = "/images/DesayunoTreepod.jpg";
+                  } else if (s.nombre.toLowerCase().includes("tinaja")) {
+                    displayNombre = "Baño Privado Bajo las Estrellas";
+                    displayDescripcion = "Relajo absoluto en agua caliente bajo el cielo nativo";
+                    displayImage = "/images/wellness/Tinaja5.jpg";
+                  } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena")) {
+                    displayNombre = "Cena Privada";
+                    displayDescripcion = "Una velada mágica preparada especialmente para ustedes. ($25.000 por persona)";
+                    displayImage = "/images/comidadomoafuerapizza.jpg";
+                  }
+
+                  const isDinner = displayNombre.includes("Cena");
+                  const currentNoches = nochesPorServicio[s.id] || (resultado?.noches || 1);
+
+                  return (
+                    <div key={s.id} className="flex flex-col gap-2">
+                      <div
+                        key={s.id}
+                        onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
+                        className={`group relative flex flex-col sm:flex-row gap-4 p-5 rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden extra-card-enhanced ${serviciosSeleccionados.has(s.id)
+                          ? 'bg-primary/10 border-primary ring-1 ring-primary/20 shadow-lg'
+                          : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
+                          } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
+                      >
+                        <div className="relative w-full sm:w-24 h-32 sm:h-24 rounded-2xl overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/30 transition-colors">
+                          <Image
+                            src={displayImage}
+                            alt={displayNombre}
+                            fill
+                            className={`object-cover transition-transform duration-[2s] group-hover:scale-110 ${isDinner ? 'object-[center_75%]' : ''}`}
+                          />
+                          {serviciosSeleccionados.has(s.id) && (
+                            <div className="absolute inset-0 bg-primary/40 backdrop-blur-[1px] flex items-center justify-center">
+                              <Check className="text-white w-10 h-10 drop-shadow-lg" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center min-w-0">
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className={`font-display font-bold text-lg leading-tight transition-colors ${serviciosSeleccionados.has(s.id) ? 'text-primary' : 'text-text-main'}`}>
+                              {displayNombre}
+                            </h3>
+                            <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-all ${serviciosSeleccionados.has(s.id) ? 'bg-primary border-primary text-white scale-110' : 'border-black/10 text-transparent'}`}>
+                              <Check className="w-4 h-4" />
+                            </div>
+                          </div>
+                          <p className="text-xs text-text-sub leading-relaxed font-bold mb-3">
+                            {displayDescripcion}
+                          </p>
+                          <div className="flex flex-wrap items-baseline gap-2">
+                            <span className="extra-price-large">
+                              ${(s.precio || 0).toLocaleString("es-CL")}
+                            </span>
+                            <span className="text-[10px] text-text-sub font-black uppercase tracking-widest bg-black/5 px-2 py-0.5 rounded-full">
+                              {s.multiplicador_personas ? 'por persona' : 'precio fijo'}
+                            </span>
+                            {serviciosSeleccionados.has(s.id) && (s.multiplicador_noches || isDinner || s.nombre.toLowerCase().includes("desayuno")) && (
+                              <span className="text-[10px] text-primary font-black uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">
+                                x {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Selector de Noches para la Cena */}
+                      {serviciosSeleccionados.has(s.id) && isDinner && (
+                        <div className="bg-white border border-primary/20 rounded-2xl p-4 mt-1 shadow-sm animate-fade-in mx-2">
+                          <p className="text-[10px] font-black text-text-sub uppercase tracking-widest mb-3">¿Prefieres la cena para toda tu estadía o solo algunas noches?</p>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setNochesPorServicio({ ...nochesPorServicio, [s.id]: (resultado?.noches || 1) });
+                              }}
+                              className={`px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${currentNoches === (resultado?.noches || 1) ? 'bg-primary text-white border-primary shadow-md' : 'bg-black/5 text-text-sub border-transparent'}`}
+                            >
+                              Toda la estadía ({resultado?.noches || 1})
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setNochesPorServicio({ ...nochesPorServicio, [s.id]: 1 });
+                              }}
+                              className={`px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${currentNoches === 1 ? 'bg-primary text-white border-primary shadow-md' : 'bg-black/5 text-text-sub border-transparent'}`}
+                            >
+                              Solo 1 noche
+                            </button>
+                            {resultado?.noches && resultado.noches > 2 && (
+                              <div className="flex items-center gap-2 bg-black/5 rounded-xl px-3 ml-auto">
+                                <span className="text-[10px] font-black text-text-sub uppercase opacity-50">Noches:</span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max={resultado.noches}
+                                  value={currentNoches}
+                                  onChange={(e) => {
+                                    let val = parseInt(e.target.value);
+                                    if (isNaN(val)) val = 1;
+                                    if (val > resultado.noches) val = resultado.noches;
+                                    if (val < 1) val = 1;
+                                    setNochesPorServicio({ ...nochesPorServicio, [s.id]: val });
+                                  }}
+                                  className="w-10 bg-transparent py-2 text-center text-xs font-bold text-text-main outline-none"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 flex flex-col justify-center min-w-0">
-                      <div className="flex justify-between items-start mb-1">
-                        <h4 className={`font-display font-bold text-sm transition-colors ${serviciosSeleccionados.has(s.id) ? 'text-primary' : 'text-text-main'}`}>{s.nombre}</h4>
-                        <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center border transition-all ${serviciosSeleccionados.has(s.id) ? 'bg-primary border-primary text-white scale-110' : 'border-black/10 text-transparent'}`}>
-                          <Check className="w-3 h-3" />
-                        </div>
-                      </div>
-                      <div className="flex items-baseline gap-2 mb-1">
-                        <span className="font-display font-black text-base text-primary">
-                          ${(s.precio || 0).toLocaleString("es-CL")}
-                        </span>
-                        <span className="text-[8px] text-text-sub font-bold uppercase tracking-widest">
-                          {s.multiplicador_personas ? 'p/p' : 'fijo'}
-                        </span>
-                      </div>
-                      <p className="text-xs text-text-sub leading-relaxed font-bold">
-                        {s.descripcion}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </section>
             </div>
           )}
 
           {/* COL 3: Final Summary */}
           <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-3 xl:col-span-8 xl:col-start-3' : 'lg:col-span-2 xl:col-span-4'}`}>
-            <div className="bg-white rounded-[2.5rem] border border-black/5 overflow-hidden shadow-xl">
+            <div className="bg-white rounded-[2rem] border border-black/5 overflow-hidden shadow-xl">
               <div className="bg-primary/5 p-6 border-b border-black/5 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
@@ -543,12 +642,15 @@ function DisponibilidadContent() {
                           {Array.from(serviciosSeleccionados).map(id => {
                             const s = servicios.find(srv => srv.id === id);
                             if (!s) return null;
-                            const costo = getServiceCost(s, adultos, resultado.noches || 1);
+                            const costo = getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id]);
+                            const nochesSrv = nochesPorServicio[id] || (s.multiplicador_noches || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("desayuno") ? resultado.noches : 1);
                             return (
                               <div key={id} className="flex justify-between items-start gap-4 text-sm py-1">
                                 <span className="text-text-sub font-medium flex items-start gap-3">
                                   <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><Check className="text-primary w-3 h-3" /></div>
-                                  <span className="flex-1 leading-snug">{s.nombre}</span>
+                                  <span className="flex-1 leading-snug">
+                                    {s.nombre} {nochesSrv && nochesSrv > 0 ? `(x${nochesSrv} ${nochesSrv === 1 ? 'noche' : 'noches'})` : ''}
+                                  </span>
                                 </span>
                                 <span className="text-text-main font-black tracking-tight whitespace-nowrap">${(costo || 0).toLocaleString("es-CL")}</span>
                               </div>
@@ -558,21 +660,47 @@ function DisponibilidadContent() {
                       )}
                     </div>
 
-                    <div className="pt-6 border-t border-black/5 flex flex-wrap justify-between items-center gap-y-4 px-1">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest">Total Final</span>
-                        <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase italic-display tracking-tighter">Iva Incluido</span>
+                    <div className="pt-6 border-t border-black/5 space-y-4 px-1">
+                      <div className="flex flex-wrap justify-between items-center gap-y-4">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest leading-none mb-1">Total Estadía</span>
+                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">Iva Incluido</span>
+                        </div>
+                        <div className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
+                          <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
+                          {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+                        </div>
                       </div>
-                      <div className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-[1.2] flex items-baseline whitespace-nowrap py-2">
-                        <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
-                        {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+
+                      <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 shadow-sm relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
+                          <Sparkles className="w-8 h-8 text-primary" />
+                        </div>
+                        <div className="flex justify-between items-end relative z-10">
+                          <div className="flex flex-col">
+                            <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
+                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estancia</span>
+                          </div>
+                          <div className="text-3xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
+                            <span className="text-lg mr-1 text-primary/70 font-sans">$</span>
+                            {(Math.round((calcularTotalConServicios() || 0) * 0.5)).toLocaleString("es-CL")}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center text-[10px] text-text-sub/80 px-2">
+                        <span className="flex items-center gap-2 font-medium">
+                          <Info className="w-3.5 h-3.5 text-primary/60" />
+                          Saldo al check-in (50%)
+                        </span>
+                        <span className="font-bold text-text-main">${(Math.round((calcularTotalConServicios() || 0) * 0.5)).toLocaleString("es-CL")}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
                       disabled={reserving}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-[2rem] text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4"
+                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4"
                     >
                       {reserving ? (
                         <>

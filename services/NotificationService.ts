@@ -23,9 +23,9 @@ export const NotificationService = {
     }
 
     try {
-      // 1. Correo al Huésped
+      // 1. Correo al Huésped - Usando el dominio de onboarding de Resend para pruebas
       await resend.emails.send({
-        from: 'TreePod Glamping <hola@domostreepod.cl>',
+        from: 'TreePod <onboarding@resend.dev>',
         to: [recipient],
         subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu refugio en Las Trancas te espera 🌲`,
         html: `
@@ -62,7 +62,7 @@ export const NotificationService = {
       // 2. Correo de Alerta al Administrador
       const adminEmail = process.env.ADMIN_EMAIL || 'info@domostreepod.cl';
       await resend.emails.send({
-        from: 'TreePod Reservas <info@domostreepod.cl>',
+        from: 'TreePod <onboarding@resend.dev>',
         to: [adminEmail],
         subject: `🚨 ¡NUEVA RESERVA WEB! - ${guestName}`,
         html: `
@@ -78,7 +78,7 @@ export const NotificationService = {
         `
       });
 
-      console.log(`📧 Emails de bienvenida y alerta enviados.`);
+      console.log(`📧 Emails de bienvenida y alerta enviados (via onboarding@resend.dev).`);
     } catch (error) {
       console.error('🔥 Error enviando emails:', error);
     }
@@ -92,7 +92,7 @@ export const NotificationService = {
 
     try {
       await resend.emails.send({
-        from: 'TreePod Web <hola@domostreepod.cl>',
+        from: 'TreePod <onboarding@resend.dev>',
         to: [adminEmail],
         subject: `Nuevo Contacto: ${data.subject} - ${data.name}`,
         html: `
@@ -106,7 +106,7 @@ export const NotificationService = {
           </div>
         `
       });
-      console.log(`📧 Notificación de contacto enviada a ${adminEmail}`);
+      console.log(`📧 Notificación de contacto enviada a ${adminEmail} (via onboarding@resend.dev)`);
       return { success: true };
     } catch (error) {
       console.error('🔥 Error enviando notificación de contacto:', error);
@@ -132,7 +132,7 @@ export const NotificationService = {
 
     try {
       await resend.emails.send({
-        from: 'TreePod Glamping <hola@domostreepod.cl>',
+        from: 'TreePod <onboarding@resend.dev>',
         to: [recipient],
         subject: '🎁 Tu Guía de Retiro en la Montaña + Regalo Especial',
         html: `
@@ -156,7 +156,7 @@ export const NotificationService = {
                 <h3 style="color: #00ADEF; margin-top: 0;">🎁 Tu Regalo de Bienvenida</h3>
                 <p style="margin-bottom: 20px;">Utiliza este código en tu primera reserva y obtén un <strong>10% de descuento</strong> sobre la tarifa base:</p>
                 <div style="background: white; padding: 10px 20px; display: inline-block; font-family: monospace; font-size: 24px; font-weight: bold; color: #1a1a1a; letter-spacing: 2px; border: 1px solid #ddd;">
-                  TREEPOD10
+                   TREEPOD10
                 </div>
                 <p style="font-size: 12px; color: #666; margin-top: 15px;">*Válido para reservas directas en nuestra web.</p>
               </div>
@@ -173,7 +173,7 @@ export const NotificationService = {
           </div>
         `
       });
-      console.log(`📧 Guía enviada exitosamente a ${recipient}`);
+      console.log(`📧 Guía enviada exitosamente a ${recipient} (via onboarding@resend.dev)`);
       return { success: true };
     } catch (error) {
       console.error('🔥 Error enviando guía:', error);

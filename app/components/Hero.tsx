@@ -14,10 +14,10 @@ export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const heroImages = [
-    { src: "/images/exteriors/domo-exterior-arrival.jpg", alt: "Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo" },
-    { src: "/images/exteriors/domo-iluminado-noche.jpg", alt: "Domo iluminado en la noche, Valle Las Trancas" },
-    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Interior acogedor del domo con estufa a pellet" },
-    { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Cama matrimonial con vistas al bosque nativo de Las Trancas" },
+    { src: "/images/hero/interior-domo-acogedor-83-3.jpg", alt: "Vistas al bosque nativo desde el interior del domo" },
+    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Cama matrimonial acogedora con vistas al bosque nativo" },
+    { src: "/images/hero/interior-domo-acogedor-79-2.jpg", alt: "Detalles del diseño interior cálido y auténtico" },
+    { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Experiencia de descanso profundo en el bosque" },
   ];
 
   useEffect(() => {
@@ -54,47 +54,45 @@ export default function Hero() {
 
       <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center pt-24 md:pt-32 pb-32">
 
-        {/* Subtitle text link without button styles */}
-        <button
+        {/* Cambio #1: Hero Rating Badge (Visibilidad Máxima) */}
+        <div
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
-          className="mb-8 animate-fade-in-up text-white font-black text-sm uppercase tracking-widest drop-shadow-md hover:text-white/80 transition-colors cursor-pointer"
+          className="hero-badge animate-fade-in-up cursor-pointer mb-10 md:mb-14 group relative overflow-hidden"
         >
-          ★ Opiniones verificadas Google · Las Trancas, Chile
-        </button>
+          {/* Brillo dinámico al pasar el ratón */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-
-
-        <h1 className="h1-display mb-6 md:mb-10 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
-          <span className="!text-white">Domo Geodésico en</span><br />
-          <span className="text-primary drop-shadow-[0_4px_12px_rgba(0,0,0,1)] italic block mt-3 !font-black">Valle Las Trancas</span>
-        </h1>
-
-        <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 md:mb-20 max-w-3xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-          Bosque nativo · Tranquilidad real · Comodidad sin concesiones.
-        </p>
-
-        <div className="flex flex-col w-full max-w-sm mx-auto md:max-w-none md:flex-row md:justify-center gap-4 animate-fade-in-up delay-300">
-          <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={() => { trackEvent("click_ver_disponibilidad_home", { origen: "hero" }); router.push('/disponibilidad'); }}
-              className="w-full md:w-64 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-full transition-all transform hover:-translate-y-1 shadow-lg shadow-primary/30 text-sm tracking-widest uppercase flex items-center justify-center gap-2"
-            >
-              <span>Ver Disponibilidad</span>
-              <ArrowRight size={18} />
-            </button>
-            {/* Precio ancla junto al CTA */}
-            <p className="text-white/70 text-xs font-bold tracking-wide">
-              Desde <span className="text-white font-black">$98.000</span> / noche · 2 personas
-            </p>
+          <div className="flex items-center gap-3 relative z-10 transition-transform group-hover:scale-[1.03]">
+            <span className="star text-primary flex">
+              ★★★★★
+            </span>
+            <div className="w-[1px] h-4 bg-primary/20 hidden md:block"></div>
+            <span className="rating-text font-black tracking-widest text-[#001D2D] md:text-[14px]">
+              4.9/5 · <span className="opacity-60">+200 Huéspedes Felices</span>
+            </span>
           </div>
         </div>
 
-        {/* Botón secundario como link discreto */}
+
+
+        <h1 className="h1-display mb-12 md:mb-20 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white">
+          <span className="!text-white">Domo Geodésico en</span><br />
+          <span className="text-primary drop-shadow-[0_4px_12px_rgba(0,0,0,1)] italic block mt-6 md:mt-10 !font-black">Valle Las Trancas</span>
+        </h1>
+
+
+
+
+        {/* Invitación Elegante (Sin Estilo Botón) */}
         <button
           onClick={() => document.getElementById('domos')?.scrollIntoView({ behavior: 'smooth' })}
-          className="mt-4 text-white/60 hover:text-white text-xs tracking-widest uppercase underline underline-offset-4 transition-colors animate-fade-in-up delay-300"
+          className="group relative flex flex-col items-center gap-4 transition-all duration-500 hover:scale-105 mt-16 md:mt-24 mb-32"
         >
-          Conocer los Domos
+          <span className="text-white text-[14px] md:text-[16px] font-black tracking-[0.5em] uppercase drop-shadow-2xl">
+            CONOCER NUESTRO GLAMPING
+          </span>
+          {/* Línea decorativa Cyan C que crece al hover */}
+          <div className="w-16 h-[3px] bg-primary transition-all duration-500 group-hover:w-48 group-hover:shadow-[0_0_15px_rgba(0,173,239,0.8)]"></div>
         </button>
 
         {/* Aura: Animated Scroll Mouse - Visible on All Devices to prevent False Floor */}
@@ -102,10 +100,10 @@ export default function Hero() {
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-90 cursor-pointer group hover:opacity-100 transition-opacity z-20"
           onClick={() => document.getElementById('domos')?.scrollIntoView({ behavior: 'smooth' })}
         >
-          <div className="w-7 h-11 border-2 border-white/50 rounded-full flex justify-center pt-2 group-hover:border-primary transition-colors shadow-lg backdrop-blur-sm bg-black/20">
-            <div className="w-1 h-2 bg-white rounded-full animate-scroll group-hover:bg-primary"></div>
+          <div className="w-9 h-14 border-[3px] border-white rounded-full flex justify-center pt-2 group-hover:border-primary transition-all duration-300 shadow-[0_0_25px_rgba(255,255,255,0.6)] backdrop-blur-xl bg-black/50 ring-4 ring-white/5">
+            <div className="w-2 h-4 bg-primary rounded-full animate-scroll shadow-[0_0_10px_rgba(0,173,239,0.8)]"></div>
           </div>
-          <ChevronDown className="text-white/50 w-5 h-5 animate-bounce mt-1" />
+          <ChevronDown className="text-white w-6 h-6 animate-bounce mt-1 drop-shadow-lg" />
         </div>
 
 

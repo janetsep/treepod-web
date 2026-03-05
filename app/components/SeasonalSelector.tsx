@@ -84,7 +84,7 @@ export default function SeasonalSelector() {
                         </div>
 
                         {/* Feature Highlight */}
-                        <div className="p-10 rounded-[2.5rem] bg-surface border border-black/10 shadow-2xl animate-fade-in-up">
+                        <div className="p-10 rounded-3xl bg-surface border border-black/10 shadow-2xl animate-fade-in-up">
                             <h4 className="text-2xl font-display font-bold mb-4 text-text-main">{activeSeason.title}</h4>
                             <p className="text-text-sub text-base md:text-lg leading-relaxed mb-8 font-bold">
                                 {activeSeason.description}
@@ -98,7 +98,7 @@ export default function SeasonalSelector() {
 
                     {/* Visual Side */}
                     <div className="lg:w-1/2 relative w-full h-[500px] lg:h-[600px]">
-                        <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden border-8 border-black/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700">
+                        <div className="relative w-full h-full rounded-[3rem] overflow-hidden border-8 border-black/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700">
                             <Image
                                 src={activeSeason.image}
                                 alt={activeSeason.title}

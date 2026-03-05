@@ -39,7 +39,6 @@ export default function Footer() {
                         <h4 className="h4-display text-white"><span className="italic-display">Navegación</span></h4>
                         <ul className="flex flex-col gap-5 text-lg text-white/90 font-bold">
                             <li><Link href="/domos" className="hover:text-primary transition-colors">Nuestros Domos</Link></li>
-                            <li><Link href="/paquetes" className="hover:text-primary transition-colors">Paquetes & Extras</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-primary transition-colors">Ubicación & Contacto</Link></li>
                         </ul>

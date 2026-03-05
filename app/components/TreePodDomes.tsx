@@ -10,34 +10,27 @@ export default function TreePodDomes() {
         {
             icon: "check_circle",
             title: "Independencia Total",
-            benefit: "Cocinas y te bañas sin compartir espacios con nadie.",
-            proof: "Baño exclusivo y kitchenette completa en cada domo."
+            benefit: "Siéntete en un refugio autónomo en medio del bosque nativo.",
+            proof: "Baño completo integrado y tinajas de ciprés con agua termal."
         },
         {
             icon: "check_circle",
             title: "Calor Garantizado",
-            benefit: "No pasas frío aunque afuera esté nevando.",
+            benefit: "No pasarás frío aunque afuera esté nevando.",
             proof: "Estufa a pellet de última generación con carga programada."
         },
         {
             icon: "check_circle",
             title: "Descanso Real",
-            benefit: "Despiertas con energía después de un sueño profundo.",
-            proof: "Cama matrimonial vestida con sábanas de alta densidad."
+            benefit: "Despierta con energía tras un sueño profundo rodeado de naturaleza.",
+            proof: "Cama matrimonial con sábanas de alta densidad."
         }
     ];
 
-    const specs = [
-        "40m² de superficie interior",
-        "Terraza de uso exclusivo elevada",
-        "Internet Starlink (Vía Satélite)",
-        "Baño con ducha shower",
-        "Frigobar y microondas",
-        "Cama matrimonial"
-    ];
+
 
     return (
-        <section className="py-12 md:py-16 relative overflow-hidden bg-white" id="domos">
+        <section className="py-20 md:py-32 relative overflow-hidden bg-white" id="domos">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
 
@@ -56,19 +49,10 @@ export default function TreePodDomes() {
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 60vw"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end">
-                                    <div className="text-white">
-                                        <p className="text-xs uppercase tracking-[0.2em] font-black text-primary mb-2 drop-shadow-md">Exterior</p>
-                                        <h3 className="text-2xl md:text-3xl font-display font-bold [text-shadow:_0_2px_10px_rgba(0,0,0,1)]">Arquitectura de Montaña</h3>
-                                    </div>
-                                    <div className="text-white text-[11px] font-black uppercase tracking-widest drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
-                                        40m² Habitables
-                                    </div>
-                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                             </div>
 
-                            <div className="absolute -bottom-10 -right-6 md:-right-12 w-1/2 aspect-video md:aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white/10 z-20 animate-float hidden md:block group/detail">
+                            <div className="absolute -bottom-10 -right-6 md:-right-12 w-1/2 aspect-video md:aspect-square rounded-3xl overflow-hidden shadow-2xl border-8 border-white/10 z-20 animate-float hidden md:block group/detail">
                                 <Image
                                     alt="Interior detallado del domo con vista al bosque"
                                     className="object-cover transition-transform duration-700 group-hover/detail:scale-105"
@@ -76,10 +60,7 @@ export default function TreePodDomes() {
                                     fill
                                     sizes="25vw"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                                <div className="absolute bottom-6 left-6">
-                                    <p className="text-xs text-white uppercase tracking-widest font-black [text-shadow:_0_2px_5px_rgba(0,0,0,1)]">Vista Interior</p>
-                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                             </div>
                         </div>
                     </div>
@@ -92,23 +73,17 @@ export default function TreePodDomes() {
                                     <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                                     <span className="text-primary text-[10px] font-bold tracking-[0.2em] uppercase">Habitabilidad</span>
                                 </div>
-                                <h2 className="h2-display leading-[1.0] text-text-main">
-                                    Arquitectura <br />
-                                    <span className="text-primary italic-display">Efectiva</span>
+                                <h2 className="h2-display text-text-main">
+                                    Arquitectura que <br />
+                                    <span className="text-primary italic-display">Respira Contigo</span>
                                 </h2>
                             </header>
 
-                            <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed max-w-lg">
-                                Un domo geodésico no es solo diseño; es una esfera que permite una circulación de aire eficiente y resistencia estructural superior ante la nieve.
-                            </p>
-
-                            <p className="text-text-sub/80 text-base leading-relaxed font-bold">
-                                Diseñamos cada espacio para que tengas la tranquilidad de un hotel con la libertad de un refugio autónomo en medio del bosque nativo.
-                            </p>
+                            {/* Text removed for simplicity as per user request */}
                         </article>
 
                         {/* Practical Highlights (Benefit Translator) */}
-                        <div className="space-y-10">
+                        <div className="space-y-14">
                             {highlights.map((item, idx) => (
                                 <div key={idx} className="flex gap-6 group">
                                     <div className="pt-1.5">
@@ -131,15 +106,7 @@ export default function TreePodDomes() {
                             ))}
                         </div>
 
-                        {/* Specs List */}
-                        <div className="pt-10 border-t border-black/10 grid grid-cols-2 gap-y-4">
-                            {specs.map((spec, i) => (
-                                <div key={i} className="flex items-center gap-3 text-xs md:text-sm font-black text-text-sub uppercase tracking-wider">
-                                    <span className="w-2 h-2 bg-primary rounded-full shadow-sm"></span>
-                                    {spec}
-                                </div>
-                            ))}
-                        </div>
+
 
                         <div className="pt-12 flex flex-col sm:flex-row gap-6">
                             <Link

@@ -2,9 +2,24 @@
 
 import Image from "next/image";
 import { Wifi, Waves, Flame, Utensils, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
 
 
 export default function DomoAmenities() {
+    const [desayunoIndex, setDesayunoIndex] = useState(0);
+    const desayunoImages = [
+        "/images/DesayunoTreepod.jpg",
+        "/images/Desayunotreepod2.jpg",
+        "/images/desayunotreepod3.jpg"
+    ];
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDesayunoIndex((prev) => (prev + 1) % desayunoImages.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, [desayunoImages.length]);
+
     const amenities = [
         {
             icon: "hot_tub",
@@ -23,11 +38,20 @@ export default function DomoAmenities() {
             size: "small"
         },
         {
+            icon: "auto_awesome",
+            title: "Desayuno Artesanal",
+            description: "Productos locales y pan amasado entregados en tu domo. (Valor por persona)",
+            tag: "Opcional",
+            image: desayunoImages[desayunoIndex],
+            size: "small",
+            isDynamic: true
+        },
+        {
             icon: "outdoor_grill",
-            title: "Cocina Equipada",
-            description: "Frigobar, microondas y loza completa para total autonomía.",
-            tag: "Autonomía",
-            image: "/images/real/CocinaDomo.jpeg",
+            title: "Cena Privada",
+            description: "Una propuesta artesanal para cerrar el día en la intimidad de tu refugio. ($25.000 por persona)",
+            tag: "Opcional",
+            image: "/images/CenaAlmuerzotreepod.jpg",
             size: "small"
         },
         {
@@ -41,7 +65,7 @@ export default function DomoAmenities() {
     ];
 
     return (
-        <section className="py-16 md:py-20 border-t border-white/5" id="servicios">
+        <section className="py-20 md:py-32 border-t border-white/5" id="servicios">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                     <div className="max-w-2xl">
@@ -64,46 +88,69 @@ export default function DomoAmenities() {
                 </div>
 
                 {/* Bento Grid Styling */}
-                <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 lg:gap-6 h-auto md:h-[600px]">
+                <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 lg:gap-6 h-auto md:h-[900px]">
                     {amenities.map((item, index) => (
                         <div
                             key={index}
-                            className={`group relative rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 
+                            className={`group flex flex-col rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 bg-surface border border-black/5
                                 ${index === 0 ? 'md:col-span-2 md:row-span-1' : ''}
                                 ${index === 1 ? 'md:col-span-1 md:row-span-1' : ''}
-                                ${index === 2 ? 'md:col-span-1 md:row-span-1' : ''}
-                                ${index === 3 ? 'md:col-span-4 md:row-span-1' : ''}
+                                ${index === 2 ? 'md:col-span-1 md:row-span-1 border-2 border-primary/20' : ''}
+                                ${index === 3 ? 'md:col-span-2 md:row-span-1' : ''}
+                                ${index === 4 ? 'md:col-span-2 md:row-span-1' : ''}
                             `}
                         >
-                            <Image
-                                src={item.image}
-                                alt={item.title}
-                                fill
-                                className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                            />
-
-                            {/* Overlay Style - Aura: Premium Gradients for visibility */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:via-black/70 transition-all duration-500"></div>
-
-                            {/* Tag */}
-                            <div className="absolute top-6 left-6 z-10">
-                                <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
-                                    {item.tag}
-                                </span>
+                            {/* Image Section */}
+                            <div className="relative h-[240px] md:h-full overflow-hidden shrink-0">
+                                {(item as any).isDynamic ? (
+                                    <div className="h-full w-full">
+                                        {desayunoImages.map((img, i) => (
+                                            <div
+                                                key={i}
+                                                className={`absolute inset-0 transition-opacity duration-1000 ${i === desayunoIndex ? 'opacity-100' : 'opacity-0'}`}
+                                            >
+                                                <Image
+                                                    src={img}
+                                                    alt={`${item.title} - ${i + 1}`}
+                                                    fill
+                                                    className="object-cover transition-transform duration-[4s] group-hover:scale-110"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <Image
+                                        src={item.image}
+                                        alt={item.title}
+                                        fill
+                                        className={`object-cover transition-transform duration-[2s] group-hover:scale-110 ${item.title === "Cena Privada" ? 'object-[center_75%]' : ''}`}
+                                    />
+                                )}
                             </div>
 
-                            <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col justify-end text-white z-10 bg-gradient-to-t from-black/95 via-black/40 to-transparent min-h-[60%] transition-all duration-500">
+                            {/* Content Section - Aura: Clean area for text */}
+                            <div className="p-8 flex flex-col justify-center bg-white border-t border-black/5 min-h-[160px]">
                                 <div className="flex items-center gap-4 mb-3">
-                                    {item.icon === "wifi" && <Wifi className="text-primary w-7 h-7" strokeWidth={2.5} />}
-                                    {item.icon === "hot_tub" && <Waves className="text-primary w-7 h-7" strokeWidth={2.5} />}
-                                    {item.icon === "fireplace" && <Flame className="text-primary w-7 h-7" strokeWidth={2.5} />}
-                                    {item.icon === "outdoor_grill" && <Utensils className="text-primary w-7 h-7" strokeWidth={2.5} />}
-                                    {item.icon === "auto_awesome" && <Sparkles className="text-primary w-7 h-7" strokeWidth={2.5} />}
-                                    <h4 className="text-2xl md:text-3xl font-display font-bold !text-white [text-shadow:_0_2px_15px_rgba(0,0,0,1)]">{item.title}</h4>
+                                    {item.icon === "wifi" && <Wifi className="text-primary w-6 h-6" strokeWidth={2.5} />}
+                                    {item.icon === "hot_tub" && <Waves className="text-primary w-6 h-6" strokeWidth={2.5} />}
+                                    {item.icon === "fireplace" && <Flame className="text-primary w-6 h-6" strokeWidth={2.5} />}
+                                    {(item.icon === "outdoor_grill" || item.title === "Cena del Bosque") && <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />}
+                                    {item.icon === "auto_awesome" && item.title !== "Cena del Bosque" && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
+                                    <h4 className="text-xl md:text-2xl font-display font-bold text-text-main leading-tight">{item.title}</h4>
                                 </div>
-                                <p className="text-base md:text-lg !text-white leading-relaxed font-bold md:max-w-[95%] [text-shadow:_0_2px_8px_rgba(0,0,0,1)]">
+                                <p className="text-sm md:text-base text-text-sub leading-relaxed font-bold">
                                     {item.description}
                                 </p>
+                                {(item as any).isDynamic && (
+                                    <div className="flex gap-1 mt-4">
+                                        {desayunoImages.map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className={`h-1 rounded-full transition-all duration-500 ${i === desayunoIndex ? 'w-6 bg-primary' : 'w-2 bg-white/30'}`}
+                                            ></div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}

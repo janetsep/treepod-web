@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, total, estado, fuente } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, total, monto_pagado, estado, fuente, mensaje } = body;
 
         // Validación básica
         if (!fecha_inicio || !fecha_fin || !domo_id) {
@@ -19,8 +19,10 @@ export async function POST(request: Request) {
             apellido,
             email,
             total,
+            monto_pagado: monto_pagado || 0,
             estado: estado || 'pendiente',
             fuente: fuente || 'manual_admin',
+            mensaje: mensaje || null,
             updated_at: new Date().toISOString()
         };
 

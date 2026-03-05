@@ -123,16 +123,16 @@ h6 {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .h2-display {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
+  letter-spacing: 0;
 }
 
 .h3-display {
@@ -179,4 +179,227 @@ h6 {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 🚀 ACCIONES HOY STYLES */
+
+/* Cambio #1: Hero Badge (Rediseño Premium y Visibilidad Máxima) */
+@keyframes badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+
+  /* Pequeño rebote para llamar la atención */
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 14px 32px;
+  border-radius: 999px;
+  margin-bottom: 32px;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--primary);
+  /* Contraste absoluto con Cyan C */
+  border: 3px solid var(--primary);
+  box-shadow: 0 20px 50px -15px rgba(0, 173, 239, 0.5),
+    0 5px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: badge-pop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  z-index: 50;
+}
+
+.hero-badge:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 30px 60px -12px rgba(0, 173, 239, 0.7);
+  background: #f0fbff;
+}
+
+.hero-badge .star {
+  font-size: 18px;
+  letter-spacing: -2px;
+  color: #FFD700 !important;
+  /* Oro vibrante */
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+@media (max-width: 768px) {
+  .hero-badge {
+    font-size: 11px;
+    padding: 12px 24px;
+    margin-bottom: 28px;
+    gap: 8px;
+    border-width: 2px;
+  }
+
+  .hero-badge .star {
+    font-size: 14px;
+  }
+}
+
+/* Cambio #2: Checkout Stepper */
+.checkout-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border: 2px solid #e0e0e0;
+}
+
+.step.step-active .step-circle {
+  background: #0098D4;
+  color: white;
+  border-color: #0098D4;
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: #e0e0e0;
+  margin: 0 8px;
+}
+
+.step-label {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .checkout-stepper {
+    gap: 6px;
+  }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .step-line {
+    width: 20px;
+  }
+}
+
+/* Cambio #3: Extras Cards */
+.extra-card-enhanced h3 {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #2C3E50 !important;
+  margin: 12px 0 !important;
+}
+
+.extra-card-enhanced p {
+  font-size: 14px !important;
+  color: #666 !important;
+  margin-bottom: 12px !important;
+  line-height: 1.4 !important;
+}
+
+.extra-price-large {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  color: #0098D4 !important;
+  margin: 16px 0 !important;
+}
+
+/* Cambio #4: Hero CTA (Destacado Premium) */
+.cta-hero {
+  padding: 20px 56px;
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 15px 35px -10px rgba(0, 173, 239, 0.6),
+    0 5px 15px rgba(0, 0, 0, 0.15);
+  min-width: 320px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cta-hero:hover {
+  background: var(--primary-dark);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 173, 239, 0.8),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cta-hero::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cta-hero:hover::after {
+  left: 120%;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .cta-hero {
+    width: 90%;
+    min-width: auto;
+    padding: 18px 32px;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+  }
 }

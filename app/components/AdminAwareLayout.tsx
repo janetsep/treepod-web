@@ -5,7 +5,6 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import TopBar from "./TopBar";
 import WhatsAppButton from "./WhatsAppButton";
-import LeadMagnet from "./LeadMagnet";
 
 export default function AdminAwareLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -23,7 +22,6 @@ export default function AdminAwareLayout({ children }: { children: React.ReactNo
         <>
             <TopBar />
             <Navbar />
-            {!isMundialRoute && <LeadMagnet />}
             <WhatsAppButton />
             {children}
             <Footer />

@@ -133,8 +133,8 @@ export default function AdminDashboard() {
             if (!stats[monthKey]) stats[monthKey] = { count: 0, total: 0, confirmed: 0 };
 
             stats[monthKey].count += 1;
-            if (r.estado === 'pagado') {
-                stats[monthKey].total += (r.total || 0);
+            stats[monthKey].total += (r.monto_pagado || 0);
+            if (r.estado === 'pagado' || r.estado === 'confirmado') {
                 stats[monthKey].confirmed += 1;
             }
         });
@@ -186,77 +186,77 @@ export default function AdminDashboard() {
 
                 {/* KPI Cards: RESUMEN GENERAL */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary">
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Próximas Llegadas</p>
-                        <p className="text-xs text-gray-400 mb-2">Reservas desde HOY</p>
-                        <p className="text-3xl font-bold text-primary">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md">
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
+                        <p className="text-3xl font-display font-black text-primary">
                             {upcomingReservations.length}
                         </p>
+                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500">
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Ingresos Confirmados</p>
-                        <p className="text-xs text-gray-400 mb-2">Total Histórico (Pagado)</p>
-                        <p className="text-3xl font-bold text-green-600">
-                            ${validReservas.filter(r => r.estado === 'pagado').reduce((acc, curr) => acc + (curr.total || 0), 0).toLocaleString()}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500 transition-all hover:shadow-md">
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Reales</p>
+                        <p className="text-3xl font-display font-black text-green-600">
+                            ${validReservas.reduce((acc, curr) => acc + (curr.monto_pagado || 0), 0).toLocaleString()}
                         </p>
+                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Abonos y pagos totales recibidos</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-400">
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Pendientes Pago</p>
-                        <p className="text-xs text-gray-400 mb-2">Requiere seguimiento</p>
-                        <p className="text-3xl font-bold text-yellow-600">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-400 transition-all hover:shadow-md">
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Pendientes Pago</p>
+                        <p className="text-3xl font-display font-black text-yellow-600">
                             {validReservas.filter(r => r.estado === 'pendiente_pago' || r.estado === 'pendiente').length}
                         </p>
+                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Requieren seguimiento comercial</p>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 opacity-70">
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Historial Pasado</p>
-                        <p className="text-xs text-gray-400 mb-2">Estadías finalizadas</p>
-                        <p className="text-3xl font-bold text-gray-600">
-                            {pastReservations.length}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 transition-all opacity-80 hover:opacity-100">
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Proyectados</p>
+                        <p className="text-3xl font-display font-black text-gray-600">
+                            ${validReservas.filter(r => r.estado !== 'cancelada').reduce((acc, curr) => acc + (curr.total || 0), 0).toLocaleString()}
                         </p>
+                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Total si todas se pagaran al 100%</p>
                     </div>
                 </div>
 
                 {/* MONTHLY SUMMARY ROW - COLLAPSIBLE */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                     <button
                         onClick={() => setExpandedFinancial(!expandedFinancial)}
                         className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
                     >
-                        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                            <BarChart3 className="w-5 h-5 text-gold" />
-                            Resumen Financiero por Mes
+                        <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                            <BarChart3 className="w-6 h-6 text-primary" />
+                            Resumen Financiero Mensual
                         </h2>
-                        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${expandedFinancial ? 'rotate-180' : ''}`} />
+                        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedFinancial ? 'rotate-180' : ''}`} />
                     </button>
 
                     {expandedFinancial && (
-                        <div className="overflow-x-auto p-2 animate-fade-in-down">
+                        <div className="overflow-x-auto p-4 animate-fade-in">
                             <table className="w-full text-left">
-                                <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-bold tracking-widest">
+                                <thead className="text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
                                     <tr>
-                                        <th className="px-6 py-3 rounded-l-lg">Mes</th>
-                                        <th className="px-6 py-3">Reservas Totales</th>
-                                        <th className="px-6 py-3">Confirmadas</th>
-                                        <th className="px-6 py-3 rounded-r-lg text-right">Ingresos (Pagado)</th>
+                                        <th className="px-6 py-4">Mes</th>
+                                        <th className="px-6 py-4 text-center">Reservas</th>
+                                        <th className="px-6 py-4 text-center">Confirmadas</th>
+                                        <th className="px-6 py-4 text-right">Ingresos Recaudados</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {monthlyStats.map((stat, idx) => (
-                                        <tr key={idx} className="hover:bg-gray-50/50">
-                                            <td className="px-6 py-4 font-bold capitalize text-primary">{stat.label}</td>
-                                            <td className="px-6 py-4 text-sm">{stat.count}</td>
-                                            <td className="px-6 py-4 text-sm">
-                                                <span className="px-2 py-1 bg-green-100 text-green-700 rounded-md font-bold text-xs">
-                                                    {stat.confirmed}
+                                        <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                            <td className="px-6 py-4 font-bold text-gray-900 capitalize">{stat.label}</td>
+                                            <td className="px-6 py-4 text-sm text-center font-medium text-gray-500">{stat.count}</td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-black text-[10px] uppercase tracking-wider">
+                                                    {stat.confirmed} OK
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 font-bold text-gray-900 text-right">
+                                            <td className="px-6 py-4 font-black text-primary text-right text-lg">
                                                 ${stat.total.toLocaleString()}
                                             </td>
                                         </tr>
                                     ))}
                                     {monthlyStats.length === 0 && (
-                                        <tr><td colSpan={4} className="p-8 text-center text-gray-400 text-sm">Aún no hay datos suficientes.</td></tr>
+                                        <tr><td colSpan={4} className="p-12 text-center text-gray-400 text-sm font-bold italic">No hay datos financieros registrados aún.</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -265,16 +265,16 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Calendar View */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                            <Calendar className="w-5 h-5 text-primary" />
-                            Disponibilidad Visual
+                        <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                            <Calendar className="w-6 h-6 text-primary" />
+                            Ocupación del Refugio
                         </h2>
                     </div>
-                    <div className="p-6">
+                    <div className="p-8">
                         {loading ? (
-                            <div className="h-40 flex items-center justify-center text-gray-400">Cargando calendario...</div>
+                            <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
                         ) : (
                             <DomoCalendar reservas={reservas} domos={domos} />
                         )}
@@ -282,120 +282,122 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* List View */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-gray-800">Gestión de Reservas</h2>
-                        <button onClick={loadData} className="text-primary hover:underline text-sm font-bold flex items-center gap-1">
-                            <RefreshCw className="w-4 h-4" /> Actualizar
+                        <h2 className="text-xl font-display font-black text-gray-800">Maestro de Reservas</h2>
+                        <button onClick={loadData} className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all">
+                            <RefreshCw className="w-3.5 h-3.5" /> Actualizar Datos
                         </button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-bold tracking-widest">
+                            <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
                                 <tr>
-                                    <th className="px-6 py-4">Huésped</th>
-                                    <th className="px-6 py-4">Fechas</th>
-                                    <th className="px-6 py-4">Domo</th>
-                                    <th className="px-6 py-4">Total</th>
-                                    <th className="px-6 py-4">Estado</th>
-                                    <th className="px-6 py-4 text-right">Acciones</th>
+                                    <th className="px-8 py-5">Huésped / Referencia</th>
+                                    <th className="px-6 py-5">Estancia</th>
+                                    <th className="px-6 py-5">Domo</th>
+                                    <th className="px-6 py-5">Finanzas (Pagado/Total)</th>
+                                    <th className="px-6 py-5">Estado</th>
+                                    <th className="px-8 py-5 text-right">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 text-sm">
+                            <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-6 py-10 text-center text-gray-400">Cargando datos...</td></tr>
-                                ) : reservas.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-6 py-10 text-center text-gray-400">No hay reservas registradas.</td></tr>
+                                    <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
+                                ) : validReservas.length === 0 ? (
+                                    <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros activos.</td></tr>
                                 ) : validReservas.map((reserva) => {
                                     const clientName = reserva.clientes?.nombre
                                         ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
                                         : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
 
-                                    const clientEmail = reserva.clientes?.email || reserva.email || "Email pendiente";
+                                    const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
                                     const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
 
                                     return (
-                                        <tr key={reserva.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="font-bold text-gray-900">{clientName}</div>
+                                        <tr key={reserva.id} className="hover:bg-gray-50/50 transition-colors group">
+                                            <td className="px-8 py-5">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <div className="font-extrabold text-gray-900 text-base">{clientName}</div>
                                                     {isVip && (
-                                                        <span className="bg-gold text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-widest shadow-sm">VIP</span>
+                                                        <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
                                                     )}
                                                 </div>
-                                                <div className="text-xs text-gray-500">{clientEmail}</div>
-                                                <div className="text-[10px] text-gray-400 uppercase mt-1 flex gap-1 items-center">
-                                                    COD: <span className="font-bold text-primary">{reserva.id.slice(-5).toUpperCase()}</span>
-                                                    <span className="mx-1 text-gray-200">|</span>
-                                                    ID: ...{reserva.id.slice(-6)}
+                                                <div className="text-xs text-gray-500 font-medium mb-2">{clientEmail}</div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(-5).toUpperCase()}</span>
                                                     <button
                                                         onClick={() => openEditReserva(reserva)}
-                                                        className="ml-2 text-primary hover:underline flex items-center gap-0.5"
+                                                        className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
                                                     >
-                                                        <Pencil className="w-3.5 h-3.5" />
-                                                        Editar
+                                                        <Pencil className="w-3 h-3" />
+                                                        Editar Ficha
                                                     </button>
                                                 </div>
+                                                {reserva.mensaje && (
+                                                    <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
+                                                        "{reserva.mensaje}"
+                                                    </div>
+                                                )}
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <div className="text-gray-700 font-medium">
-                                                    {reserva.fecha_inicio} <span className="text-gray-300 mx-1">→</span> {reserva.fecha_fin}
+                                            <td className="px-6 py-5">
+                                                <div className="text-gray-800 font-bold text-sm">
+                                                    {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                    <span className="text-gray-300 mx-2">→</span>
+                                                    {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
                                                 </div>
-                                                <div className="text-xs text-gray-400 mt-1">
-                                                    {/* Calculate nights if needed */}
-                                                    Creada: {new Date(reserva.created_at).toLocaleDateString()}
+                                                <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
+                                                    Creada el {new Date(reserva.created_at).toLocaleDateString()}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <span className="px-3 py-1 bg-gray-100 rounded-full text-xs font-bold text-gray-600 whitespace-nowrap">
-                                                    {reserva.domos?.nombre || "Sin asignar"}
+                                            <td className="px-6 py-5">
+                                                <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
+                                                    {reserva.domos?.nombre || "N/A"}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 font-bold text-gray-900">
-                                                ${(reserva.total || 0).toLocaleString()}
+                                            <td className="px-6 py-5">
+                                                <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
+                                                    ${(reserva.monto_pagado || 0).toLocaleString()}
+                                                </div>
+                                                <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
+                                                    de ${(reserva.total || 0).toLocaleString()}
+                                                </div>
+                                                {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
+                                                    <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-primary"
+                                                            style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
+                                                        ></div>
+                                                    </div>
+                                                )}
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(reserva.estado)}`}>
-                                                    {reserva.estado}
+                                            <td className="px-6 py-5">
+                                                <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
+                                                    {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
                                                 </span>
                                                 {reserva.fuente && (
-                                                    <div className="text-[9px] uppercase tracking-widest text-gray-400 mt-1 text-center">
+                                                    <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
                                                         {reserva.fuente}
                                                     </div>
                                                 )}
                                             </td>
-                                            <td className="px-6 py-4 text-right">
+                                            <td className="px-8 py-5 text-right">
                                                 {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && (
-                                                    <div className="flex justify-end gap-2">
+                                                    <div className="flex justify-end gap-3 translate-x-2 opacity-100 group-hover:translate-x-0 transition-all">
                                                         <button
                                                             onClick={() => confirmReserva(reserva.id)}
                                                             disabled={actionLoading === reserva.id}
-                                                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
-                                                            title="Confirmar Pago Manual"
+                                                            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
                                                         >
-                                                            {actionLoading === reserva.id ? (
-                                                                "..."
-                                                            ) : (
-                                                                <>
-                                                                    <CheckCircle2 className="w-3.5 h-3.5" />
-                                                                    Confirmar
-                                                                </>
-                                                            )}
+                                                            {actionLoading === reserva.id ? "..." : "Confirmar"}
                                                         </button>
                                                         <button
                                                             onClick={() => cancelReserva(reserva.id)}
                                                             disabled={actionLoading === reserva.id}
-                                                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
-                                                            title="Dar de Baja"
+                                                            className="flex items-center justify-center w-10 h-10 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all"
+                                                            title="Anular Reserva"
                                                         >
-                                                            {actionLoading === reserva.id ? (
-                                                                "..."
-                                                            ) : (
-                                                                <>
-                                                                    <XCircle className="w-3.5 h-3.5" />
-                                                                    Baja
-                                                                </>
-                                                            )}
+                                                            {actionLoading === reserva.id ? "..." : <XCircle className="w-5 h-5" />}
                                                         </button>
                                                     </div>
                                                 )}

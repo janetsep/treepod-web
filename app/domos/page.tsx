@@ -51,22 +51,19 @@ export default function DomosPage() {
 
                     {/* Left: Editorial Text */}
                     <div className="space-y-10 order-2 md:order-1">
-                        <div className="inline-block mb-4">
+                        <div className="space-y-4">
                             <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                                El Concepto
+                                Por qué TreePod
                             </span>
+                            <h1 className="text-2xl md:text-3xl font-display text-text-main">Habitar la Naturaleza con Propósito</h1>
                         </div>
                         <p className="text-3xl md:text-5xl font-display leading-tight text-text-main">
-                            "Diseñados para desaparecer en el paisaje. Una <span className="text-primary italic-display">esfera perfecta</span> que te protege del clima mientras te mantiene conectado."
-                        </p>
-                        <div className="h-1.5 w-24 bg-primary"></div>
-                        <p className="text-text-sub text-lg md:text-xl leading-relaxed font-bold">
-                            Geometría sagrada que permite una circulación de aire eficiente y una resistencia estructural única ante la nieve del invierno.
+                            "La geometría de nuestros domos no es solo diseño; es <span className="text-primary italic-display">filosofía</span>. Integra comodidad en el bosque nativo de manera que respeta cada árbol, cada estación, cada suspiro de la cordillera."
                         </p>
                     </div>
 
                     {/* Right: Sketch Image (Static) */}
-                    <div className="relative h-[400px] md:h-[550px] w-full order-1 md:order-2 bg-surface rounded-[3.5rem] p-4 md:p-8 shadow-2xl border border-black/5 flex items-center justify-center overflow-hidden">
+                    <div className="relative h-[400px] md:h-[550px] w-full order-1 md:order-2 bg-surface rounded-[3rem] p-4 md:p-8 shadow-2xl border border-black/5 flex items-center justify-center overflow-hidden">
                         <div className="absolute inset-0 bg-white opacity-40"></div>
 
                         {/* Sketch (Always Visible) */}
@@ -87,23 +84,22 @@ export default function DomosPage() {
                 {/* 3. Zig-Zag Details (The Experience) */}
                 <div className="space-y-24 md:space-y-32">
 
+
                     {/* Block A: Dormitorio / Descanso */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-                        <div className="rounded-[2rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-2 grid-rows-2 gap-2 h-[500px]">
-                            {/* Main Image: Bed & View */}
+                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-2 grid-rows-2 gap-2 h-[500px]">
                             <div className="col-span-2 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/interiors/interior-1.jpg"
-                                    alt="Cama matrimonial con Vista al Bosque"
+                                    src="/images/hero/interior-domo-acogedor-105-2.jpg"
+                                    alt="Refugio TreePod con cama de alta densidad y vistas al bosque"
                                     fill
-                                    className="object-cover object-bottom transition-transform duration-[3s] group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                 />
                             </div>
-                            {/* Sub Image 1: Top View */}
                             <div className="col-span-1 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/interiors/interior-3.jpg"
-                                    alt="Vista Aérea Interior Domo"
+                                    src="/images/hero/interior-domo-acogedor-95-2.jpg"
+                                    alt="Detalle interior de descanso"
                                     fill
                                     className="object-cover transition-transform duration-[3s] group-hover:scale-105"
                                 />
@@ -111,18 +107,21 @@ export default function DomosPage() {
                             {/* Sub Image 2: Table Detail */}
                             <div className="col-span-1 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/interiors/interior-2.jpg"
-                                    alt="Zona de Estar y Desayuno"
+                                    src="/images/comidadomoafuerapizza.jpg"
+                                    alt="Cena o Almuerzo en la terraza del Domo"
                                     fill
                                     className="object-cover transition-transform duration-[3s] group-hover:scale-105"
                                 />
                             </div>
                         </div>
                         <div className="space-y-8 order-2 md:order-2">
-                            <span className="subtitle-caps">El Descanso</span>
+                            <span className="subtitle-caps">Descanso Real</span>
                             <h3 className="h2-display text-text-main leading-tight">Refugio <span className="italic-display">Cálido</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Cada domo cuenta con una cama matrimonial de alta gama vestida con sábanas de algodón y plumón de ganso. La estructura geodésica permite una circulación de aire óptima, manteniendo el calor generado por la <strong className="text-primary">estufa a pellet</strong> de última generación.
+                                Cama matrimonial vestida con sábanas de alta densidad. Despierta con energía después de un sueño profundo rodeado de bosque nativo y sonidos de la naturaleza.
+                            </p>
+                            <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
+                                No pasarás frío aunque afuera esté nevando; la geometría del domo mantiene el calor de la estufa a pellet de última generación con carga programada.
                             </p>
                             <ul className="space-y-4 pt-4">
                                 <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
@@ -141,10 +140,10 @@ export default function DomosPage() {
                     {/* Block B: Baño & Cocina */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
                         <div className="space-y-8 order-2 md:order-1">
-                            <span className="subtitle-caps">Autonomía</span>
+                            <span className="subtitle-caps">Independencia Total</span>
                             <h3 className="h2-display text-text-main leading-tight">Equipamiento <span className="italic-display">Completo</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                No sacrificamos comodidad. Disfruta de un baño completo integrado con agua caliente constante y presión. La cocina está equipada con lo esencial para que prepares desde un café matutino hasta una cena íntima.
+                                Siéntete en un refugio autónomo en medio del bosque nativo. Cada domo cuenta con baño completo integrado y el equipamiento necesario para disfrutar sin depender de nada más.
                             </p>
                             <ul className="space-y-4 pt-4">
                                 <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
@@ -158,32 +157,26 @@ export default function DomosPage() {
                                 </li>
                             </ul>
                         </div>
-                        <div className="rounded-[2rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] relative group">
+                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] relative group">
                             <Image
                                 src="/images/real/CocinaDomo.jpeg"
                                 alt="Cocina y Kitchenette Real en Domo TreePod"
                                 fill
                                 className="object-cover transition-transform duration-[3s] group-hover:scale-105"
                             />
-                            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/60 to-transparent">
-                                <p className="text-white text-sm font-medium">Cocina equipada para tu autonomía</p>
-                            </div>
                         </div>
                     </div>
 
                     {/* Block C: Exterior / Tinaja */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-                        <div className="rounded-[2rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-1 md:grid-cols-2 gap-4 h-[500px]">
+                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-1 md:grid-cols-2 gap-4 h-[500px]">
                             <div className="relative group overflow-hidden">
                                 <Image
-                                    src="/images/wellness/Tinaja3.jpeg"
-                                    alt="Terraza Exterior"
+                                    src="/images/domo3Verano1.jpg"
+                                    alt="Vista exterior Domo TreePod en verano"
                                     fill
                                     className="object-cover transition-transform duration-[3s] group-hover:scale-105"
                                 />
-                                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-                                    <p className="text-white text-xs font-bold uppercase tracking-widest">Terraza</p>
-                                </div>
                             </div>
                             <div className="relative group overflow-hidden">
                                 <Image
@@ -192,16 +185,13 @@ export default function DomosPage() {
                                     fill
                                     className="object-cover transition-transform duration-[3s] group-hover:scale-105"
                                 />
-                                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-                                    <p className="text-white text-xs font-bold uppercase tracking-widest">Tinaja</p>
-                                </div>
                             </div>
                         </div>
                         <div className="space-y-8 order-2 md:order-2">
                             <span className="subtitle-caps">Vida al Aire Libre</span>
                             <h3 className="h2-display text-text-main leading-tight">Terraza y <span className="italic-display">Tinaja</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Tu espacio se extiende al exterior. Cada domo posee su propia terraza elevada entre los árboles. Opcionalmente, puedes solicitar el servicio de <strong className="text-primary">Tinaja Caliente (Hot Tub)</strong> para uso personal y relajación total.
+                                Tu espacio se extiende al bosque. Cada domo posee su propia terraza elevada y tinajas de ciprés con agua termal de Chillán para un relajo personal.
                             </p>
                             <div className="bg-primary/5 p-8 rounded-[2rem] border-2 border-primary/10 mt-6 shadow-sm">
                                 <h4 className="text-primary font-black uppercase tracking-[0.2em] text-[11px] mb-3">Servicio Adicional</h4>
@@ -219,7 +209,7 @@ export default function DomosPage() {
 
                 {/* 4. Technical Specs (The Whitepod Grid) */}
                 <div className="">
-                    <h3 className="h3-display mb-12 text-center text-white">Ficha Técnica</h3>
+                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha Técnica</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
                         <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
@@ -273,19 +263,28 @@ export default function DomosPage() {
             <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
                 <div className="container mx-auto max-w-6xl flex flex-row justify-between items-center gap-4 md:gap-6">
                     {/* Price structure visible across all devices, stacked nicely on mobile */}
-                    <div className="flex flex-col items-start gap-1">
-                        <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/60">Desde</span>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-xl md:text-3xl font-display font-black text-primary">
-                                {price2NightsPerNight ? `$${price2NightsPerNight}` : "$98.000"}
-                            </span>
-                            <span className="text-[10px] md:text-sm text-text-sub font-bold italic-display">/noche</span>
+                    <div className="flex flex-col items-start">
+                        <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/50">Tarifa para 2 personas</span>
+                        <div className="flex items-center gap-1 md:gap-2">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-base md:text-2xl font-display font-black text-primary">
+                                    $145.000
+                                </span>
+                                <span className="text-[8px] md:text-[10px] text-text-sub font-bold italic-display">/noche (1n)</span>
+                            </div>
+                            <span className="text-text-sub/30 text-lg">·</span>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-base md:text-2xl font-display font-black text-primary">
+                                    $130.000
+                                </span>
+                                <span className="text-[8px] md:text-[10px] text-text-sub font-bold italic-display">/noche (2n+)</span>
+                            </div>
                         </div>
                     </div>
 
                     <Link
                         href="/disponibilidad"
-                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-black py-4 px-4 sm:px-8 md:px-12 rounded-2xl text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 md:gap-4"
+                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-black py-4 px-4 sm:px-8 md:px-12 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 md:gap-4"
                     >
                         <span>Reservar Ahora</span>
                         <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />

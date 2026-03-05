@@ -78,7 +78,7 @@ export default function LeadMagnet() {
                 onClick={handleClose}
             ></div>
 
-            <div className="relative bg-surface dark:bg-background-dark w-full max-w-4xl rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.8)] transform transition-all animate-fade-in-up flex flex-col md:flex-row border border-white/10 z-10">
+            <div className="relative bg-surface dark:bg-background-dark w-full max-w-4xl rounded-[3.5rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.8)] transform transition-all animate-fade-in-up flex flex-col md:flex-row border border-white/10 z-10">
                 {/* Decorative close button */}
                 <button
                     onClick={handleClose}
@@ -119,13 +119,13 @@ export default function LeadMagnet() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="Tu mejor correo electrónico"
-                                        className="w-full px-5 py-4 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl text-base focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-text-main-light dark:text-white placeholder:text-text-sub-light/50 dark:placeholder:text-text-sub-dark/50"
+                                        className="w-full px-5 py-4 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl text-base focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none text-text-main-light dark:text-white placeholder:text-text-sub-light/50 dark:placeholder:text-text-sub-dark/50"
                                     />
                                     <Mail className="absolute right-5 top-1/2 -translate-y-1/2 text-primary/50 group-focus-within:text-primary transition-colors w-5 h-5" />
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-primary hover:bg-primary-dark text-white font-black py-4 md:py-5 rounded-2xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] text-[10px] md:text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3"
+                                    className="w-full bg-primary hover:bg-primary-dark text-white font-black py-4 md:py-5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] text-[10px] md:text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3"
                                 >
                                     Quiero mi descuento
                                     <ArrowRight className="w-4 h-4" />

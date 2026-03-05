@@ -62,16 +62,6 @@ export default function Ubicacion() {
           {/* Map Side - Professional Embed */}
           <div className="lg:w-2/3 w-full">
             <div className="relative group">
-              {/* Floating Highlight Card */}
-              <div className="absolute top-6 left-6 z-20 hidden md:block group-hover:-translate-y-1 transition-transform duration-500">
-                <div className="bg-black/40 p-5 rounded-[2rem] border border-white/20 shadow-2xl backdrop-blur-xl max-w-[240px]">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>
-                    <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Destino Final</span>
-                  </div>
-                  <h4 className="text-xl font-display font-bold !text-white mb-0 leading-tight [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">Glamping Domos TreePod</h4>
-                </div>
-              </div>
 
               {/* The Map Frame */}
               <div className="w-full h-[500px] md:h-[600px] rounded-[3rem] shadow-2xl overflow-hidden border-8 border-white/5 relative">

@@ -1,7 +1,6 @@
 import NotForEveryone from "./components/NotForEveryone";
 import Hero from "./components/Hero";
 import TreePodDomes from "./components/TreePodDomes";
-import SeasonalSelector from "./components/SeasonalSelector";
 import DomoAmenities from "./components/DomoAmenities";
 import News from "./components/News";
 import Testimonios from "./components/Testimonios";
@@ -12,7 +11,7 @@ export default function Home() {
   return (
     <main className="min-h-screen font-display">
       <Hero />
-      <div className="space-y-0">
+      <div className="space-y-12 md:space-y-24">
         <div id="concepto"><NotForEveryone /></div>
 
         {/* Separator between Concept and Domes */}
@@ -26,15 +25,9 @@ export default function Home() {
           <hr className="border-t border-black/10" />
         </div>
 
-        <SeasonalSelector />
+        <div id="servicios" className="hidden lg:block"><DomoAmenities /></div>
 
-        <div className="container mx-auto px-6 max-w-7xl">
-          <hr className="border-t border-black/10" />
-        </div>
-
-        <div id="servicios"><DomoAmenities /></div>
-
-        <div className="container mx-auto px-6 max-w-7xl">
+        <div className="container mx-auto px-6 max-w-7xl hidden lg:block">
           <hr className="border-t border-black/10" />
         </div>
 

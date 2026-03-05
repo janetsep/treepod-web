@@ -88,11 +88,6 @@ export default function PaquetesPage() {
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         className="object-cover transition-transform duration-[2s] group-hover:scale-110"
                                     />
-                                    <div className="absolute top-8 left-8">
-                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white drop-shadow-[0_2px_5px_rgba(0,0,0,1)]">
-                                            {extra.category}
-                                        </span>
-                                    </div>
                                 </div>
                                 <div className="flex-1 p-8 md:p-12 flex flex-col justify-between">
                                     <div className="space-y-6">

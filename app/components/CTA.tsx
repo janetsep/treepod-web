@@ -9,7 +9,7 @@ export default function CTA() {
 
       <TrackedLink
         href="/disponibilidad"
-        className="inline-block px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-opacity-90 transition-all shadow-md"
+        className="inline-block px-10 py-5 bg-primary text-white rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all shadow-md text-sm"
         eventName="click_ver_disponibilidad_home"
       >
         Ver disponibilidad

@@ -41,7 +41,7 @@ export default function ContactoPage() {
                         {/* Left Column: Information & Map */}
                         <div className="lg:col-span-5 space-y-10">
                             <div className="space-y-6">
-                                <div className="group flex items-center gap-6 p-6 rounded-[2rem] bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
                                     <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
                                         <Phone className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
@@ -52,7 +52,7 @@ export default function ContactoPage() {
                                     </div>
                                 </div>
 
-                                <div className="group flex items-center gap-6 p-6 rounded-[2rem] bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
                                     <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
                                         <Mail className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
@@ -63,7 +63,7 @@ export default function ContactoPage() {
                                     </div>
                                 </div>
 
-                                <div className="group flex items-center gap-6 p-6 rounded-[2rem] bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
                                     <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
                                         <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
@@ -76,13 +76,13 @@ export default function ContactoPage() {
                             </div>
 
                             {/* Map Card - Optimized for Mobile */}
-                            <div className="relative aspect-[4/3] md:aspect-video w-full rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/50 bg-white group hover:scale-[1.02] transition-transform duration-700">
+                            <div className="relative aspect-[4/3] md:aspect-video w-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/50 bg-white group hover:scale-[1.02] transition-transform duration-700">
                                 <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''} />
 
                                 {/* Always visible on mobile, hover on desktop */}
-                                <div className="absolute top-4 left-4 right-4 md:top-auto md:bottom-6 md:left-6 md:right-6 md:p-5 p-4 bg-white/95 backdrop-blur-xl rounded-[1.5rem] border border-black/5 flex items-center justify-between shadow-2xl md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-20">
+                                <div className="absolute top-4 left-4 right-4 md:top-auto md:bottom-6 md:left-6 md:right-6 md:p-5 p-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-black/5 flex items-center justify-between shadow-2xl md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-20">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                                             <MapPin className="text-primary w-5 h-5" strokeWidth={3} />
                                         </div>
                                         <div>
@@ -114,7 +114,7 @@ export default function ContactoPage() {
 
                         {/* Right Column: Premium Form */}
                         <div className="lg:col-span-7">
-                            <div className="bg-white p-8 md:p-14 rounded-[3.5rem] shadow-2xl border border-black/5 relative overflow-hidden">
+                            <div className="bg-white p-8 md:p-14 rounded-[2rem] shadow-2xl border border-black/5 relative overflow-hidden">
                                 {/* Subtle Light Accents */}
                                 <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
                                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -ml-24 -mb-24 blur-[60px]"></div>
@@ -179,7 +179,7 @@ export default function ContactoPage() {
                                                 name="name"
                                                 placeholder="Ej. Juan Pérez"
                                                 required
-                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-2xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
                                             />
                                         </div>
                                         <div className="space-y-2.5">
@@ -189,14 +189,14 @@ export default function ContactoPage() {
                                                 name="email"
                                                 placeholder="juan@correo.com"
                                                 required
-                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-2xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
                                             />
                                         </div>
                                     </div>
                                     <div className="space-y-2.5">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">¿Qué necesitas consultar?</label>
                                         <div className="relative">
-                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-2xl h-14 px-6 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer">
+                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer">
                                                 <option>Información de Disponibilidad</option>
                                                 <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
                                                 <option>Convenios Corporativos</option>
@@ -215,12 +215,12 @@ export default function ContactoPage() {
                                             rows={5}
                                             placeholder="Escribe aquí tu consulta..."
                                             required
-                                            className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-[2rem] p-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none resize-none"
+                                            className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl p-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none resize-none"
                                         ></textarea>
                                     </div>
 
                                     <div className="space-y-6 pt-4">
-                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
                                             {status === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
                                             {!status || status !== 'loading' && <Send className="w-4 h-4" />}
                                         </button>

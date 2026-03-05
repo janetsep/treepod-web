@@ -43,7 +43,6 @@ export default function Navbar() {
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
-        { name: "Paquetes & Extras", href: "/paquetes" },
         { name: "Servicios", href: "/servicios" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
@@ -136,7 +135,7 @@ export default function Navbar() {
                                         setIsMobileMenuOpen(false);
                                         router.push('/disponibilidad');
                                     }}
-                                    className="block bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 rounded-full text-base uppercase tracking-[0.2em] shadow-xl w-full"
+                                    className="block bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 rounded-2xl text-base uppercase tracking-[0.2em] shadow-xl w-full"
                                 >
                                     Reservar Ahora
                                 </button>

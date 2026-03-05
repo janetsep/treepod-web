@@ -56,18 +56,6 @@ export default function News() {
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         src={item.image}
                                     />
-                                    <div className="absolute top-6 left-6">
-                                        <span className={`text-[9px] font-black tracking-widest uppercase px-4 py-1.5 rounded-full shadow-lg ${item.href ? 'bg-gold text-white' : 'bg-primary text-white'}`}>
-                                            {item.tag}
-                                        </span>
-                                    </div>
-                                    {item.href && (
-                                        <div className="absolute top-6 right-6">
-                                            <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full border border-white/40">
-                                                Ver Landing
-                                            </span>
-                                        </div>
-                                    )}
                                 </div>
                                 <div className="p-8 flex flex-col grow">
                                     <h3 className="font-display font-bold text-xl mb-4 text-text-main group-hover:text-primary transition-colors leading-tight">

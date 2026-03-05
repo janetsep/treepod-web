@@ -19,8 +19,8 @@ export default function ServicesPage() {
             title: "Gastronomía Local",
             subtitle: "Sabor de la Tierra",
             description: "Disfruta de una experiencia culinaria rústica y auténtica: desde un asado en el quincho hasta desayunos cordilleranos con productos frescos del valle. El sabor de lo real.",
-            image: "/images/interiors/interior-1.jpg",
-            alt: "Terraza exterior equipada para disfrutar gastronomía al aire libre",
+            image: "/images/real/DesayunoTreePod.jpg",
+            alt: "Desayuno artesanal servido en Domo TreePod",
             features: ["Quincho & Asados", "Desayuno del Valle", "Vinos de la Zona"]
         },
         {

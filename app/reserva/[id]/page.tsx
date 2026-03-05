@@ -8,7 +8,8 @@ import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
 import Image from "next/image";
 import { TrackingService } from "@/services/TrackingService";
-import { Hourglass, CheckCircle2, AlertCircle, TimerOff, Lock, Timer } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, Lock, MapPin, Sparkles, User, Info, Hourglass, AlertCircle, TimerOff, Timer } from "lucide-react";
+import Stepper from "../../components/Stepper";
 
 function diffMinutes(from: Date, to: Date) {
   return Math.max(0, Math.ceil((to.getTime() - from.getTime()) / 60000));
@@ -261,18 +262,9 @@ function ReservaContent({ id }: { id: string }) {
       <div className="container mx-auto px-4 md:px-6 py-4 lg:py-6 max-w-5xl">
         <div className="space-y-10">
 
-          {/* Progress Bar Compact */}
-          <div className="max-w-md mx-auto">
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-[0.2em]">
-                <span className="text-text-main-light/40 dark:text-text-main-dark/40">1. Detalles</span>
-                <span className="text-primary">2. Pago</span>
-                <span className="text-text-sub-light/40 dark:text-text-sub-dark/40">3. Confirmación</span>
-              </div>
-              <div className="relative h-1 w-full bg-gray-100 dark:bg-surface-dark rounded-full overflow-hidden">
-                <div className="absolute top-0 left-0 h-full bg-primary transition-all duration-700 ease-out rounded-full" style={{ width: '66%' }}></div>
-              </div>
-            </div>
+          {/* Cambio #2: Checkout Stepper */}
+          <div className="mb-0">
+            <Stepper activeStep={2} />
           </div>
 
           <header className="text-center space-y-4">
@@ -377,14 +369,38 @@ function ReservaContent({ id }: { id: string }) {
                           <span>Incluido</span>
                         </div>
 
-                        <div className="pt-4 flex justify-between items-end border-t border-dashed border-gray-200 mt-2">
-                          <div>
-                            <span className="block text-[9px] font-black text-text-main-light uppercase tracking-widest leading-none mb-1">Total a Pagar</span>
-                            <span className="text-[9px] text-text-sub-light/60 uppercase">Moneda Local (CLP)</span>
+                        <div className="pt-4 space-y-4 border-t border-dashed border-gray-200 mt-2">
+                          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-text-sub-light px-1">
+                            <span>Total Estadía</span>
+                            <span>${total.toLocaleString("es-CL")}</span>
                           </div>
-                          <div className="text-3xl sm:text-4xl font-display font-black text-primary leading-[1.2] flex items-baseline whitespace-nowrap py-4">
-                            <span className="text-lg sm:text-2xl mr-2 text-primary/60 font-sans">$</span>
-                            {total.toLocaleString("es-CL")}
+
+                          <div className="bg-primary/5 p-5 rounded-[1.5rem] border border-primary/10 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
+                              <Sparkles className="w-8 h-8 text-primary" />
+                            </div>
+                            <div className="flex justify-between items-end relative z-10">
+                              <div className="flex flex-col">
+                                <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
+                                <span className="text-[9px] text-text-sub-light/70 font-medium leading-tight">Para confirmar y garantizar<br />tu reserva inmediata</span>
+                              </div>
+                              <div className="text-3xl sm:text-4xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
+                                <span className="text-lg sm:text-2xl mr-1.5 text-primary/70 font-sans">$</span>
+                                {Math.round(total * 0.5).toLocaleString("es-CL")}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center text-[10px] text-text-sub-light/80 px-2">
+                            <span className="flex items-center gap-2 font-medium">
+                              <Info className="w-3.5 h-3.5 text-primary/60" />
+                              Saldo a pagar en check-in (50%)
+                            </span>
+                            <span className="font-black text-text-main-light">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
+                          </div>
+
+                          <div className="text-[10px] text-primary/90 bg-primary/5 px-4 py-3 rounded-xl text-center font-bold leading-relaxed border border-primary/5">
+                            Pagas el 50% hoy vía Webpay. El saldo restante se cancela directamente al inicio de tu estadía.
                           </div>
                         </div>
                       </>
