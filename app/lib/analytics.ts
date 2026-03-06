@@ -23,7 +23,11 @@ export type AnalyticsEventName =
   | "view_mundial_page"
   | "click_reservar_mundial"
   | "click_whatsapp_mundial"
-  | "begin_checkout_mundial";
+  | "begin_checkout_mundial"
+  | "view_semana_santa_page"
+  | "click_reservar_semana_santa"
+  | "click_whatsapp_semana_santa"
+  | "begin_checkout_semana_santa";
 
 declare global {
   interface Window {
