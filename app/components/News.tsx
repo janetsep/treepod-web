@@ -3,6 +3,22 @@ import Link from "next/link";
 export default function News() {
     const activities = [
         {
+            image: "/images/exteriors/domo-exterior-arrival.jpg",
+            title: "Mundial UCI MTB 2026",
+            description: "Alojamiento exclusivo para competidores y equipos durante el UCI Mountain Bike World Championships.",
+            tag: "Evento Mundial",
+            details: "⭐ Ver Pack Especial Domos y Recuperación",
+            href: "/mundial-mtb-nevados-chillan-2026"
+        },
+        {
+            image: "/images/EquipamientoParaTuEstadia/Tinaja5.jpg",
+            title: "Semana Santa 2026",
+            description: "Vive un fin de semana sagrado de descanso real. Tinajas de ciprés privadas bajo el cielo estrellado y el silencio absoluto del bosque.",
+            tag: "Evento Especial",
+            details: "🧘 Reserva tu Refugio de Descanso",
+            href: "/semana-santa-2026"
+        },
+        {
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBqsbwWLwYH9OTmmwRGTC1khmaeUKNJEOoehlnkDbhxZ9eiVTw_1BXMHfnvo7rFLRLH21zVlKUP9MWlJbRj5Yux_dVwnobxV77Zw8FiQDXZpaECKb5-f05zTDNC6hBYT8uKmvhEjcbme3Y5b9lPV6o-1xsuVwkn6BbKJaV9L3RpK9fRzglqIzPJ9YLaL2buWMIw2nwrGbETzBx35iVYeOdN3PU_voROtg6kLWVADcoERZXhYkPTBum4lAe7wy-5INp7K1rVENpyFLs", // Ski photo
             title: "Nevados de Chillán",
             description: "A solo minutos de TreePod, disfruta del mejor centro de esquí del sur de Chile. Pistas para todos los niveles, snowpark y las famosas aguas termales volcánicas.",
@@ -15,31 +31,17 @@ export default function News() {
             description: "Las Trancas es sede de carreras de Trail Running y MTB de nivel mundial. Entrena o compite en la Garganta del Diablo y senderos épicos.",
             tag: "Deporte Outdoor",
             details: "Competiciones anuales y rutas para todos los niveles."
-        },
-        {
-            image: "/images/hero/interior-domo-acogedor-105-2.jpg",
-            title: "Panoramas y Sabores",
-            description: "Panoramas ideales todo el año. Disfruta de la gastronomía local, fiestas costumbristas y la vibrante vida de montaña.",
-            tag: "Vida Social",
-            details: "Restaurantes, ferias locales y eventos en el valle."
-        },
-        {
-            image: "/images/exteriors/domo-exterior-arrival.jpg",
-            title: "Mundial UCI MTB 2026",
-            description: "Alojamiento exclusivo para competidores y equipos durante el UCI Mountain Bike World Championships.",
-            tag: "Evento Mundial",
-            details: "⭐ Ver Pack Especial Doms y Recuperación",
-            href: "/mundial-mtb-nevados-chillan-2026"
         }
     ];
 
     return (
-        <section className="hidden md:block py-24 md:py-32 bg-white">
+        <section className="hidden md:block py-12 md:py-20 bg-white border-t border-black/[0.06]">
             <div className="container mx-auto px-6 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div className="max-w-xl">
-                        <div className="inline-block mb-4">
-                            <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">Actividades</span>
+                        <div className="inline-flex items-center gap-2 mb-4">
+                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Actividades</span>
                         </div>
                         <h2 className="h2-display text-text-main leading-tight mb-6">Lo que se viene en el Valle</h2>
                         <p className="text-lg md:text-xl text-text-sub font-bold max-w-lg leading-relaxed">Conoce y reserva tu lugar para los eventos y actividades imperdibles de la temporada.</p>
