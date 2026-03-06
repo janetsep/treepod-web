@@ -47,7 +47,7 @@ export default function DomoAmenities() {
         {
             icon: "sparkles",
             title: "Equipos de Limpieza",
-            description: "Tecnología autónoma (robots blanco y negro) que mantiene el piso de madera impecable de forma silenciosa durante tu estadía.",
+            description: "Tecnología de IRobot autónoma disponibles para la limpieza durante tu estadía.",
             tag: "Tecnología",
             images: robotImages,
             size: "large"
