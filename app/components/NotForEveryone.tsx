@@ -4,15 +4,16 @@ import { MapPin } from "lucide-react";
 
 export default function NotForEveryone() {
     return (
-        <section className="py-12 md:py-20 bg-white" id="concepto">
+        <section className="py-12 md:py-20 bg-white border-t border-black/[0.06]" id="concepto">
             <div className="container mx-auto px-6 max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
 
                     {/* Logic & Vision - Pluma Style */}
                     <div className="lg:col-span-5 space-y-12">
                         <div className="space-y-4">
-                            <div className="inline-block">
-                                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
+                            <div className="inline-flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
                             </div>
 
                             <h2 className="h2-display text-text-main">
@@ -23,35 +24,47 @@ export default function NotForEveryone() {
 
 
 
-                        <div className="space-y-14">
-                            <article className="space-y-4 group">
-                                <h4 className="text-base font-black uppercase tracking-[0.2em] text-text-main flex items-center gap-4">
-                                    <span className="w-10 h-1 bg-primary transition-all group-hover:w-16"></span>
-                                    Eficiencia Térmica
-                                </h4>
-                                <p className="text-text-sub text-lg leading-relaxed font-bold">
-                                    La forma geodésica reduce la superficie de contacto con el exterior, manteniendo el calor por más tiempo mientras disfrutas del sonido del bosque.
-                                </p>
+                        <div className="space-y-10">
+                            <article className="flex gap-6 group items-start">
+                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
+                                        Eficiencia Térmica
+                                    </h4>
+                                    <p className="text-text-sub text-base font-bold leading-snug">
+                                        Máximo ahorro de calor y temperatura estable bajo la nieve.
+                                    </p>
+                                </div>
                             </article>
 
-                            <article className="space-y-4 group">
-                                <h4 className="text-base font-black uppercase tracking-[0.2em] text-text-main flex items-center gap-4">
-                                    <span className="w-10 h-1 bg-primary transition-all group-hover:w-16"></span>
-                                    Amplitud Sin Columnas
-                                </h4>
-                                <p className="text-text-sub text-lg leading-relaxed font-bold">
-                                    Sin pilares internos, el domo ofrece libertad de movimiento y una sensación de amplitud que te conecta inmediatamente con el entorno.
-                                </p>
+                            <article className="flex gap-6 group items-start">
+                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
+                                        Amplitud Real
+                                    </h4>
+                                    <p className="text-text-sub text-base font-bold leading-snug">
+                                        Libertad total de movimiento sin columnas ni pilares.
+                                    </p>
+                                </div>
                             </article>
 
-                            <article className="space-y-4 group">
-                                <h4 className="text-base font-black uppercase tracking-[0.2em] text-text-main flex items-center gap-4">
-                                    <span className="w-10 h-1 bg-primary transition-all group-hover:w-16"></span>
-                                    Resistencia Extrema
-                                </h4>
-                                <p className="text-text-sub text-lg leading-relaxed font-bold">
-                                    Diseñada para soportar vientos cordilleranos y cargas de nieve, permitiéndote dormir en paz en la estructura más fuerte conocida.
-                                </p>
+                            <article className="flex gap-6 group items-start">
+                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
+                                        Resistencia Extrema
+                                    </h4>
+                                    <p className="text-text-sub text-base font-bold leading-snug">
+                                        Estructura antisísmica diseñada para los vientos del valle.
+                                    </p>
+                                </div>
                             </article>
                         </div>
                     </div>
@@ -66,8 +79,8 @@ export default function NotForEveryone() {
                             />
                         </div>
                         <div className="text-center">
-                            <p className="inline-block text-sm font-black tracking-[0.2em] text-text-sub uppercase">
-                                Nuestro Glamping
+                            <p className="inline-block text-sm font-black tracking-[0.2em] text-primary uppercase">
+                                DISTRIBUCIÓN DE NUESTRO GLAMPING
                             </p>
                         </div>
                     </div>

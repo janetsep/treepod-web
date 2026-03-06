@@ -6,8 +6,8 @@ export default function DistribucionEstrategica() {
         <section className="py-24 bg-white overflow-hidden" id="distribucion">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16 space-y-4">
-                    <h2 className="text-4xl md:text-5xl font-display font-medium text-text-main tracking-tight">
-                        Distribución <span className="italic font-light">Estratégica</span>
+                    <h2 className="text-4xl md:text-5xl font-display font-black text-primary tracking-tight uppercase">
+                        DISTRIBUCIÓN DE NUESTRO GLAMPING
                     </h2>
                 </div>
 
