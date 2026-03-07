@@ -16,6 +16,8 @@ interface Reserva {
     nombre: string;
     apellido: string;
     email: string;
+    telefono: string;
+    adultos: number;
     total: number;
     monto_pagado?: number;
     estado: string;
@@ -28,7 +30,7 @@ interface ReservaModalProps {
     onClose: () => void;
     onSave: () => void;
     domos: Domo[];
-    reservaToEdit?: Reserva | null;
+    reservaToEdit?: any | null;
 }
 
 export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaToEdit }: ReservaModalProps) {
@@ -39,6 +41,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         nombre: "",
         apellido: "",
         email: "",
+        telefono: "",
+        adultos: 2,
         total: 0,
         monto_pagado: 0,
         estado: "pagado",
@@ -55,14 +59,16 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     fecha_inicio: reservaToEdit.fecha_inicio || "",
                     fecha_fin: reservaToEdit.fecha_fin || "",
                     domo_id: reservaToEdit.domo_id || "",
-                    nombre: reservaToEdit.nombre || "",
-                    apellido: reservaToEdit.apellido || "",
-                    email: reservaToEdit.email || "",
+                    nombre: reservaToEdit.nombre || reservaToEdit.clientes?.nombre || "",
+                    apellido: reservaToEdit.apellido || reservaToEdit.clientes?.apellido || "",
+                    email: reservaToEdit.email || reservaToEdit.clientes?.email || "",
+                    telefono: reservaToEdit.telefono || reservaToEdit.clientes?.telefono || "",
+                    adultos: reservaToEdit.adultos || 2,
                     total: reservaToEdit.total || 0,
-                    monto_pagado: (reservaToEdit as any).monto_pagado || 0,
+                    monto_pagado: reservaToEdit.monto_pagado || 0,
                     estado: reservaToEdit.estado || "pendiente",
                     fuente: reservaToEdit.fuente || "manual_admin",
-                    mensaje: (reservaToEdit as any).mensaje || ""
+                    mensaje: reservaToEdit.notas || reservaToEdit.mensaje || ""
                 });
             } else {
                 setFormData({
@@ -72,6 +78,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     nombre: "",
                     apellido: "",
                     email: "",
+                    telefono: "",
+                    adultos: 2,
                     total: 0,
                     monto_pagado: 0,
                     estado: "pagado",
@@ -111,14 +119,24 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 overflow-y-auto">
             <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-fade-in my-8 border border-gray-100">
-                <div className="bg-gray-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                <div className="bg-gray-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white">
                     <div>
                         <h3 className="font-display font-black text-2xl text-gray-900 leading-tight">
                             {reservaToEdit ? "Editar Ficha de Reserva" : "Nueva Reserva Manual"}
                         </h3>
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
+                        {formData.id && (
+                            <div className="mt-2 flex items-center gap-2">
+                                <span className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">Código Asignado:</span>
+                                <span className="px-3 py-1 bg-primary text-white rounded-lg font-mono text-xs font-black shadow-md shadow-primary/20">
+                                    #{formData.id.slice(0, 8).toUpperCase()}
+                                </span>
+                            </div>
+                        )}
+                        {!formData.id && (
+                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
+                        )}
                     </div>
-                    <button onClick={onClose} className="p-2 bg-white text-gray-400 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90">
+                    <button onClick={onClose} className="p-2 bg-white text-gray-400 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -170,9 +188,16 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
                     {/* Sección: Huésped */}
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Huésped</h4>
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Huésped</h4>
+                            </div>
+                            {formData.id && (
+                                <div className="px-3 py-1 bg-gray-900 text-white rounded-lg font-mono text-[10px] font-black flex items-center gap-2">
+                                    <span className="opacity-50 text-[8px]">ID:</span> #{formData.id.slice(0, 8).toUpperCase()}
+                                </div>
+                            )}
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
@@ -195,7 +220,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     placeholder="Apellido"
                                 />
                             </div>
-                            <div className="space-y-1.5 md:col-span-2">
+                            <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Email</label>
                                 <input
                                     type="email"
@@ -205,16 +230,80 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     placeholder="huésped@correo.com"
                                 />
                             </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Teléfono</label>
+                                <input
+                                    type="tel"
+                                    value={formData.telefono}
+                                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                    className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold transition-all outline-none"
+                                    placeholder="+56 9 ..."
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Sección: Finanzas y Estado */}
+                    {/* Sección: Detalles y Origen */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Pagos y Estado</h4>
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Configuración y Origen</h4>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">N° Personas (Adultos)</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="5"
+                                    value={formData.adultos}
+                                    onChange={(e) => setFormData({ ...formData, adultos: Number(e.target.value) })}
+                                    className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold transition-all outline-none"
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Plataforma / Fuente</label>
+                                <select
+                                    required
+                                    value={formData.fuente}
+                                    onChange={(e) => setFormData({ ...formData, fuente: e.target.value })}
+                                    className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold transition-all outline-none appearance-none"
+                                >
+                                    <option value="web">Web (Directo)</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="airbnb">Airbnb</option>
+                                    <option value="booking">Booking.com</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="manual_admin">Manual Admin</option>
+                                </select>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Estado Reserva</label>
+                                <select
+                                    required
+                                    value={formData.estado}
+                                    onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
+                                    className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold transition-all outline-none appearance-none"
+                                >
+                                    <option value="pagado">Pagado Total</option>
+                                    <option value="confirmado">Confirmada (Ocupado)</option>
+                                    <option value="pendiente_pago">Abono Pendiente</option>
+                                    <option value="pendiente">Manual Pendiente</option>
+                                    <option value="cancelada">Cancelada / Baja</option>
+                                    <option value="bloqueado">Bloqueo Técnico</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sección: Finanzas */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Finanzas</h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Total Reserva ($)</label>
                                 <input
@@ -232,21 +321,6 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     onChange={(e) => setFormData({ ...formData, monto_pagado: Number(e.target.value) })}
                                     className="w-full p-3.5 bg-green-50/50 border border-green-100 rounded-2xl text-sm font-black text-green-700 transition-all outline-none"
                                 />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Estado</label>
-                                <select
-                                    required
-                                    value={formData.estado}
-                                    onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
-                                    className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold transition-all outline-none appearance-none"
-                                >
-                                    <option value="pagado">Pagado Total</option>
-                                    <option value="pendiente_pago">Abono Pendiente</option>
-                                    <option value="pendiente">Manual Pendiente</option>
-                                    <option value="confirmado">Confirmada</option>
-                                    <option value="bloqueado">Bloqueo Admin</option>
-                                </select>
                             </div>
                         </div>
                     </div>

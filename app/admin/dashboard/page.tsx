@@ -104,7 +104,7 @@ export default function DashboardAdmin() {
                 .eq("tipo", "ingreso")
                 .gte("fecha_movimiento", startOfMonth);
 
-            const ingresos = movimientos?.reduce((acc, curr) => acc + (Number(curr.monto) || 0), 0) || 0;
+            const ingresos = movimientos?.reduce((acc: number, curr: any) => acc + (Number(curr.monto) || 0), 0) || 0;
 
             // 2. Fetch Reservas Detalladas
             const { data: reservasActivas, count: ocupacion } = await supabase
@@ -135,7 +135,7 @@ export default function DashboardAdmin() {
                     .gte("fecha_movimiento", m.start)
                     .lt("fecha_movimiento", m.end);
 
-                const total = movs?.reduce((a, b) => a + (Number(b.monto) || 0), 0) || 0;
+                const total = movs?.reduce((a: number, b: any) => a + (Number(b.monto) || 0), 0) || 0;
 
                 const { count: resCount } = await supabase
                     .from("reservas")

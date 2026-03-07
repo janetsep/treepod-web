@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import DomoCalendar from "./components/DomoCalendar";
 import ReservaModal from "./components/ReservaModal";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle } from "lucide-react";
+import TarifasConsole from "./components/TarifasConsole";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2 } from "lucide-react";
 
 export default function AdminDashboard() {
+    const [view, setView] = useState<'reservas' | 'tarifas'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -63,10 +65,40 @@ export default function AdminDashboard() {
                 alert("Reserva cancelada correctamente");
                 fetchReservas(); // Refresh
             } else {
-                alert("Error: " + data.error);
+                alert(`❌ ERROR AL ANULAR:\n${data.error}`);
             }
         } catch (e) {
-            alert("Error de conexión");
+            alert("Error de conexión al intentar anular.");
+        } finally {
+            setActionLoading(null);
+        }
+    }
+
+    async function deleteReserva(id: string, estado: string, montoPagado: number) {
+        const isConfirmed = estado === 'pagado' && montoPagado > 0;
+        const msg = isConfirmed
+            ? `⚠️ Esta reserva tiene pago confirmado de $${montoPagado.toLocaleString()}. ¿Estás SEGURA que deseas eliminarla permanentemente? Esta acción es IRREVERSIBLE.`
+            : `¿Eliminar permanentemente este registro? Esta acción es irreversible.`;
+
+        if (!confirm(msg)) return;
+
+        setActionLoading(id);
+        try {
+            const res = await fetch("/api/admin/reservas/eliminar", {
+                method: "POST",
+                body: JSON.stringify({ reservaId: id })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                // Remover de la lista sin recargar
+                setReservas(prev => prev.filter(r => r.id !== id));
+                alert("Registro eliminado permanentemente.");
+            } else {
+                alert(`❌ ERROR AL ELIMINAR:\n${data.error}\n\nDetalles: ${data.details || 'N/A'}`);
+            }
+        } catch (e) {
+            alert("Error de conexión al intentar eliminar.");
         } finally {
             setActionLoading(null);
         }
@@ -84,8 +116,59 @@ export default function AdminDashboard() {
             const data = await res.json();
 
             if (res.ok) {
-                alert("Reserva confirmada exitosamente");
                 fetchReservas();
+
+                // Oferta de agregar al calendario
+                const reserva = reservas.find(r => r.id === id);
+                const quiereCalendario = confirm("✅ Reserva confirmada.\n\n¿Deseas agregar esta reserva a Google Calendar?");
+
+                if (quiereCalendario && reserva) {
+                    const clientName = reserva.clientes?.nombre
+                        ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
+                        : `${reserva.nombre || "Huésped"} ${reserva.apellido || ""}`;
+                    const email = reserva.clientes?.email || reserva.email || "";
+
+                    const startDate = reserva.fecha_inicio?.replace(/-/g, "");
+                    const endDate = reserva.fecha_fin?.replace(/-/g, "");
+                    const title = encodeURIComponent(`🏕 TreePod — ${clientName.trim()}`);
+
+                    // Obtener desglose real de tarifas por tramo desde el RPC
+                    let desgloseLinea = "";
+                    try {
+                        const precioRes = await fetch("/api/calcular-precio", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                entrada: reserva.fecha_inicio,
+                                salida: reserva.fecha_fin,
+                                adultos: reserva.adultos || 2
+                            })
+                        });
+                        const precioData = await precioRes.json();
+                        if (precioData.desglose) {
+                            desgloseLinea = `\nTarifas aplicadas:\n${precioData.desglose}`;
+                        }
+                    } catch (_) { }
+
+                    const fechaIn = new Date(reserva.fecha_inicio);
+                    const fechaOut = new Date(reserva.fecha_fin);
+                    const noches = Math.round((fechaOut.getTime() - fechaIn.getTime()) / (1000 * 60 * 60 * 24));
+
+                    const details = encodeURIComponent(
+                        `Reserva confirmada\n` +
+                        `Huésped: ${clientName.trim()}\n` +
+                        (email ? `Email: ${email}\n` : '') +
+                        `Adultos: ${reserva.adultos || '—'}\n` +
+                        `Noches: ${noches}` +
+                        desgloseLinea + `\n` +
+                        `Total: $${(reserva.total || 0).toLocaleString('es-CL')}\n` +
+                        `Abonado: $${(reserva.monto_pagado || 0).toLocaleString('es-CL')}`
+                    );
+                    const location = encodeURIComponent("TreePod — Nevados de Chillán, Chile");
+
+                    const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+                    window.open(calUrl, "_blank");
+                }
             } else {
                 alert("Error: " + data.error);
             }
@@ -108,8 +191,8 @@ export default function AdminDashboard() {
 
     // Helper: Validar reserva real (Excluir carritos abandonados sin datos)
     const isValidReserva = (r: any) => {
-        // Si está cancelada, fuera.
-        if (r.estado === 'cancelada') return false;
+        // Mostrar canceladas para tener historial
+        // if (r.estado === 'cancelada') return false; 
 
         // Si está en proceso de pago (pendiente_pago) PERO no tiene email, es un carrito abandonado pre-checkout.
         // El usuario pidió "definitivamente no son reservas".
@@ -117,7 +200,6 @@ export default function AdminDashboard() {
 
         return true;
     };
-
     const validReservas = reservas.filter(isValidReserva);
 
     // Helper: Resumen Mensual
@@ -169,14 +251,18 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-display font-bold text-gray-900">Panel de Control: TreePod</h1>
-                    <div className="flex items-center gap-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                            Admin Logueado · <span className="text-green-500">Online</span>
-                        </span>
+                    <div>
+                        <h1 className="text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
+                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con DomoTreePod.cl</p>
+                    </div>
+                    <div className="flex items-center gap-6">
+                        <div className="hidden md:flex flex-col text-right">
+                            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Estado Sistema</span>
+                            <span className="text-xs font-bold text-green-500">Operativo · Online</span>
+                        </div>
                         <button
                             onClick={openNewReserva}
-                            className="px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-sm font-bold shadow-lg flex items-center gap-2 transition-all hover:scale-105"
+                            className="px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-[1.2rem] text-sm font-black shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1 active:scale-95"
                         >
                             <Plus className="w-4 h-4" />
                             Nueva Reserva
@@ -184,240 +270,292 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* KPI Cards: RESUMEN GENERAL */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md">
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
-                        <p className="text-3xl font-display font-black text-primary">
-                            {upcomingReservations.length}
-                        </p>
-                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500 transition-all hover:shadow-md">
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Reales</p>
-                        <p className="text-3xl font-display font-black text-green-600">
-                            ${validReservas.reduce((acc, curr) => acc + (curr.monto_pagado || 0), 0).toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Abonos y pagos totales recibidos</p>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-400 transition-all hover:shadow-md">
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Pendientes Pago</p>
-                        <p className="text-3xl font-display font-black text-yellow-600">
-                            {validReservas.filter(r => r.estado === 'pendiente_pago' || r.estado === 'pendiente').length}
-                        </p>
-                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Requieren seguimiento comercial</p>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 transition-all opacity-80 hover:opacity-100">
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Proyectados</p>
-                        <p className="text-3xl font-display font-black text-gray-600">
-                            ${validReservas.filter(r => r.estado !== 'cancelada').reduce((acc, curr) => acc + (curr.total || 0), 0).toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Total si todas se pagaran al 100%</p>
-                    </div>
-                </div>
-
-                {/* MONTHLY SUMMARY ROW - COLLAPSIBLE */}
-                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                {/* Tabs de Navegación Premium */}
+                <div className="flex gap-2 bg-gray-200/50 p-1.5 rounded-[1.8rem] w-fit">
                     <button
-                        onClick={() => setExpandedFinancial(!expandedFinancial)}
-                        className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                        onClick={() => setView('reservas')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'reservas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
                     >
-                        <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
-                            <BarChart3 className="w-6 h-6 text-primary" />
-                            Resumen Financiero Mensual
-                        </h2>
-                        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedFinancial ? 'rotate-180' : ''}`} />
+                        <LayoutDashboard className="w-4 h-4" />
+                        Dashboard
                     </button>
+                    <button
+                        onClick={() => setView('tarifas')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'tarifas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <TrendingUp className="w-4 h-4" />
+                        Tarifas y Precios
+                    </button>
+                </div>
 
-                    {expandedFinancial && (
-                        <div className="overflow-x-auto p-4 animate-fade-in">
-                            <table className="w-full text-left">
-                                <thead className="text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
-                                    <tr>
-                                        <th className="px-6 py-4">Mes</th>
-                                        <th className="px-6 py-4 text-center">Reservas</th>
-                                        <th className="px-6 py-4 text-center">Confirmadas</th>
-                                        <th className="px-6 py-4 text-right">Ingresos Recaudados</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {monthlyStats.map((stat, idx) => (
-                                        <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="px-6 py-4 font-bold text-gray-900 capitalize">{stat.label}</td>
-                                            <td className="px-6 py-4 text-sm text-center font-medium text-gray-500">{stat.count}</td>
-                                            <td className="px-6 py-4 text-center">
-                                                <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-black text-[10px] uppercase tracking-wider">
-                                                    {stat.confirmed} OK
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 font-black text-primary text-right text-lg">
-                                                ${stat.total.toLocaleString()}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {monthlyStats.length === 0 && (
-                                        <tr><td colSpan={4} className="p-12 text-center text-gray-400 text-sm font-bold italic">No hay datos financieros registrados aún.</td></tr>
-                                    )}
-                                </tbody>
-                            </table>
+                {view === 'tarifas' ? (
+                    <TarifasConsole />
+                ) : (
+                    <>
+                        {/* KPI Cards: RESUMEN GENERAL */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
+                                <p className="text-3xl font-display font-black text-primary">
+                                    {upcomingReservations.length}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500 transition-all hover:shadow-md">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Reales</p>
+                                <p className="text-3xl font-display font-black text-green-600">
+                                    ${validReservas.reduce((acc: number, curr: any) => acc + (curr.monto_pagado || 0), 0).toLocaleString()}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Abonos y pagos totales recibidos</p>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-400 transition-all hover:shadow-md">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Pendientes Pago</p>
+                                <p className="text-3xl font-display font-black text-yellow-600">
+                                    {validReservas.filter(r => r.estado === 'pendiente_pago' || r.estado === 'pendiente').length}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Requieren seguimiento comercial</p>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 transition-all opacity-80 hover:opacity-100">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Proyectados</p>
+                                <p className="text-3xl font-display font-black text-gray-600">
+                                    ${validReservas.filter(r => r.estado !== 'cancelada').reduce((acc: number, curr: any) => acc + (curr.total || 0), 0).toLocaleString()}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Total si todas se pagaran al 100%</p>
+                            </div>
                         </div>
-                    )}
-                </div>
 
-                {/* Calendar View */}
-                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-6 border-b border-gray-100">
-                        <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
-                            <Calendar className="w-6 h-6 text-primary" />
-                            Ocupación del Refugio
-                        </h2>
-                    </div>
-                    <div className="p-8">
-                        {loading ? (
-                            <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
-                        ) : (
-                            <DomoCalendar reservas={reservas} domos={domos} />
-                        )}
-                    </div>
-                </div>
+                        {/* MONTHLY SUMMARY ROW - COLLAPSIBLE */}
+                        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                            <button
+                                onClick={() => setExpandedFinancial(!expandedFinancial)}
+                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                            >
+                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                                    <BarChart3 className="w-6 h-6 text-primary" />
+                                    Resumen Financiero Mensual
+                                </h2>
+                                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedFinancial ? 'rotate-180' : ''}`} />
+                            </button>
 
-                {/* List View */}
-                <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                        <h2 className="text-xl font-display font-black text-gray-800">Maestro de Reservas</h2>
-                        <button onClick={loadData} className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all">
-                            <RefreshCw className="w-3.5 h-3.5" /> Actualizar Datos
-                        </button>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
-                                <tr>
-                                    <th className="px-8 py-5">Huésped / Referencia</th>
-                                    <th className="px-6 py-5">Estancia</th>
-                                    <th className="px-6 py-5">Domo</th>
-                                    <th className="px-6 py-5">Finanzas (Pagado/Total)</th>
-                                    <th className="px-6 py-5">Estado</th>
-                                    <th className="px-8 py-5 text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            {expandedFinancial && (
+                                <div className="overflow-x-auto p-4 animate-fade-in">
+                                    <table className="w-full text-left">
+                                        <thead className="text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
+                                            <tr>
+                                                <th className="px-6 py-4">Mes</th>
+                                                <th className="px-6 py-4 text-center">Reservas</th>
+                                                <th className="px-6 py-4 text-center">Confirmadas</th>
+                                                <th className="px-6 py-4 text-right">Ingresos Recaudados</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-50">
+                                            {monthlyStats.map((stat, idx) => (
+                                                <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                                    <td className="px-6 py-4 font-bold text-gray-900 capitalize">{stat.label}</td>
+                                                    <td className="px-6 py-4 text-sm text-center font-medium text-gray-500">{stat.count}</td>
+                                                    <td className="px-6 py-4 text-center">
+                                                        <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-black text-[10px] uppercase tracking-wider">
+                                                            {stat.confirmed} OK
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-black text-primary text-right text-lg">
+                                                        ${stat.total.toLocaleString()}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {monthlyStats.length === 0 && (
+                                                <tr><td colSpan={4} className="p-12 text-center text-gray-400 text-sm font-bold italic">No hay datos financieros registrados aún.</td></tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Calendar View */}
+                        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 border-b border-gray-100">
+                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                                    <Calendar className="w-6 h-6 text-primary" />
+                                    Ocupación del Refugio
+                                </h2>
+                            </div>
+                            <div className="p-8">
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
-                                ) : validReservas.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros activos.</td></tr>
-                                ) : validReservas.map((reserva) => {
-                                    const clientName = reserva.clientes?.nombre
-                                        ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
-                                        : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
+                                    <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
+                                ) : (
+                                    <DomoCalendar reservas={reservas} domos={domos} />
+                                )}
+                            </div>
+                        </div>
 
-                                    const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
-                                    const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
-
-                                    return (
-                                        <tr key={reserva.id} className="hover:bg-gray-50/50 transition-colors group">
-                                            <td className="px-8 py-5">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <div className="font-extrabold text-gray-900 text-base">{clientName}</div>
-                                                    {isVip && (
-                                                        <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
-                                                    )}
-                                                </div>
-                                                <div className="text-xs text-gray-500 font-medium mb-2">{clientEmail}</div>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(-5).toUpperCase()}</span>
-                                                    <button
-                                                        onClick={() => openEditReserva(reserva)}
-                                                        className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
-                                                    >
-                                                        <Pencil className="w-3 h-3" />
-                                                        Editar Ficha
-                                                    </button>
-                                                </div>
-                                                {reserva.mensaje && (
-                                                    <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
-                                                        "{reserva.mensaje}"
-                                                    </div>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                <div className="text-gray-800 font-bold text-sm">
-                                                    {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
-                                                    <span className="text-gray-300 mx-2">→</span>
-                                                    {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
-                                                </div>
-                                                <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
-                                                    Creada el {new Date(reserva.created_at).toLocaleDateString()}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
-                                                    {reserva.domos?.nombre || "N/A"}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
-                                                    ${(reserva.monto_pagado || 0).toLocaleString()}
-                                                </div>
-                                                <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
-                                                    de ${(reserva.total || 0).toLocaleString()}
-                                                </div>
-                                                {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
-                                                    <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
-                                                        <div
-                                                            className="h-full bg-primary"
-                                                            style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
-                                                        ></div>
-                                                    </div>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
-                                                    {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
-                                                </span>
-                                                {reserva.fuente && (
-                                                    <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
-                                                        {reserva.fuente}
-                                                    </div>
-                                                )}
-                                            </td>
-                                            <td className="px-8 py-5 text-right">
-                                                {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && (
-                                                    <div className="flex justify-end gap-3 translate-x-2 opacity-100 group-hover:translate-x-0 transition-all">
-                                                        <button
-                                                            onClick={() => confirmReserva(reserva.id)}
-                                                            disabled={actionLoading === reserva.id}
-                                                            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
-                                                        >
-                                                            {actionLoading === reserva.id ? "..." : "Confirmar"}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => cancelReserva(reserva.id)}
-                                                            disabled={actionLoading === reserva.id}
-                                                            className="flex items-center justify-center w-10 h-10 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all"
-                                                            title="Anular Reserva"
-                                                        >
-                                                            {actionLoading === reserva.id ? "..." : <XCircle className="w-5 h-5" />}
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </td>
+                        {/* List View */}
+                        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                                <h2 className="text-xl font-display font-black text-gray-800">Maestro de Reservas</h2>
+                                <button onClick={loadData} className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all">
+                                    <RefreshCw className="w-3.5 h-3.5" /> Actualizar Datos
+                                </button>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
+                                        <tr>
+                                            <th className="px-8 py-5">Huésped / Referencia</th>
+                                            <th className="px-6 py-5">Estancia</th>
+                                            <th className="px-6 py-5">Domo</th>
+                                            <th className="px-6 py-5">Finanzas (Pagado/Total)</th>
+                                            <th className="px-6 py-5">Estado</th>
+                                            <th className="px-8 py-5 text-right">Acciones</th>
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {loading ? (
+                                            <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
+                                        ) : validReservas.length === 0 ? (
+                                            <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros activos.</td></tr>
+                                        ) : validReservas.map((reserva) => {
+                                            const clientName = reserva.clientes?.nombre
+                                                ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
+                                                : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
 
-                <ReservaModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    domos={domos}
-                    onSave={loadData}
-                    reservaToEdit={editingReserva}
-                />
+                                            const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
+                                            const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
+
+                                            return (
+                                                <tr key={reserva.id} className="hover:bg-gray-50/50 transition-colors group">
+                                                    <td className="px-8 py-5">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <div className="font-extrabold text-gray-900 text-base">{clientName} <span className="ml-2 bg-gray-100/80 text-gray-500 text-[9px] px-2 py-0.5 rounded-lg font-black uppercase tracking-tighter">{reserva.adultos || 2} personas</span></div>
+                                                            {isVip && (
+                                                                <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex flex-col gap-0.5 mb-2">
+                                                            <div className="text-xs text-gray-400 font-medium">{clientEmail}</div>
+                                                            {(reserva.telefono || reserva.clientes?.telefono) && (
+                                                                <div className="text-[10px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
+                                                                    📞 {reserva.telefono || reserva.clientes?.telefono}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
+                                                            <button
+                                                                onClick={() => openEditReserva(reserva)}
+                                                                className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
+                                                            >
+                                                                <Pencil className="w-3 h-3" />
+                                                                Editar Ficha
+                                                            </button>
+                                                        </div>
+                                                        {(reserva.notas || reserva.mensaje) && (
+                                                            <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
+                                                                "{reserva.notas || reserva.mensaje}"
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className="text-gray-800 font-bold text-sm">
+                                                            {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                            <span className="text-gray-300 mx-2">→</span>
+                                                            {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
+                                                            Creada el {new Date(reserva.created_at).toLocaleDateString()}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
+                                                            {reserva.domos?.nombre || "N/A"}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
+                                                            ${(reserva.monto_pagado || 0).toLocaleString()}
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
+                                                            de ${(reserva.total || 0).toLocaleString()}
+                                                        </div>
+                                                        {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
+                                                            <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
+                                                                <div
+                                                                    className="h-full bg-primary"
+                                                                    style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
+                                                                ></div>
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
+                                                            {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
+                                                        </span>
+                                                        {reserva.fuente && (
+                                                            <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
+                                                                {reserva.fuente}
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-8 py-5 text-right">
+                                                        <div className="flex justify-end items-center gap-2">
+                                                            {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
+                                                                <button
+                                                                    onClick={() => confirmReserva(reserva.id)}
+                                                                    disabled={actionLoading === reserva.id}
+                                                                    className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
+                                                                >
+                                                                    {actionLoading === reserva.id ? "..." : "Confirmar"}
+                                                                </button>
+                                                            )}
+                                                            {reserva.estado !== 'cancelada' && (
+                                                                <button
+                                                                    onClick={() => cancelReserva(reserva.id)}
+                                                                    disabled={actionLoading === reserva.id}
+                                                                    className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-orange-100"
+                                                                    title="Anular Reserva"
+                                                                >
+                                                                    {actionLoading === reserva.id ? "..." : (
+                                                                        <>
+                                                                            <XCircle className="w-4 h-4" />
+                                                                            <span>Anular</span>
+                                                                        </>
+                                                                    )}
+                                                                </button>
+                                                            )}
+                                                            <button
+                                                                onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
+                                                                disabled={actionLoading === reserva.id}
+                                                                className="flex items-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-500 hover:text-white text-red-500 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-red-100 group/del"
+                                                                title="Eliminar registro permanentemente"
+                                                            >
+                                                                {actionLoading === reserva.id ? "..." : (
+                                                                    <>
+                                                                        <Trash2 className="w-4 h-4" />
+                                                                        <span>Borrar</span>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <ReservaModal
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                            domos={domos}
+                            onSave={loadData}
+                            reservaToEdit={editingReserva}
+                        />
+                    </>
+                )}
             </div>
         </div>
     );
 }
+

@@ -30,7 +30,7 @@ export default function TreePodDomes() {
 
 
     return (
-        <section className="py-20 md:py-32 relative overflow-hidden bg-white" id="domos">
+        <section className="py-12 md:py-20 relative overflow-hidden bg-white border-t border-black/[0.06]" id="domos">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
 
@@ -66,65 +66,44 @@ export default function TreePodDomes() {
                     </div>
 
                     {/* Text Section (Pluma Style) */}
-                    <div className="lg:col-span-5 space-y-12">
+                    <div className="lg:col-span-5 space-y-10">
                         <article className="space-y-6">
                             <header className="space-y-4">
                                 <div className="inline-flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                    <span className="text-primary text-[10px] font-bold tracking-[0.2em] uppercase">Habitabilidad</span>
+                                    <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                    <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Habitabilidad</span>
                                 </div>
                                 <h2 className="h2-display text-text-main">
                                     Arquitectura que <br />
                                     <span className="text-primary italic-display">Respira Contigo</span>
                                 </h2>
                             </header>
-
-                            {/* Text removed for simplicity as per user request */}
                         </article>
 
-                        {/* Practical Highlights (Benefit Translator) */}
-                        <div className="space-y-14">
-                            {highlights.map((item, idx) => (
-                                <div key={idx} className="flex gap-6 group">
-                                    <div className="pt-1.5">
-                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
-                                            <CheckCircle2 className="text-primary w-6 h-6" strokeWidth={3} />
-                                        </div>
+                        {/* Practical Highlights (Standardized) */}
+                        <div className="space-y-10">
+                            {[
+                                { title: "Autonomía Total", desc: "Baño completo integrado y tinajas privadas en cada domo." },
+                                { title: "Calor Seguro", desc: "Estufa a pellet programada para un confort seco y constante." },
+                                { title: "Descanso Real", desc: "Camas de alta densidad rodeadas de la calma del bosque." }
+                            ].map((item, idx) => (
+                                <div key={idx} className="flex gap-6 group items-start">
+                                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                                        <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
                                     </div>
                                     <div className="space-y-2">
-                                        <h4 className="font-bold text-lg uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
+                                        <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
                                             {item.title}
                                         </h4>
-                                        <p className="text-base md:text-lg font-bold text-text-sub leading-snug">
-                                            {item.benefit}
-                                        </p>
-                                        <p className="text-sm text-text-sub/70 font-medium italic">
-                                            {item.proof}
+                                        <p className="text-text-sub text-base font-bold leading-snug">
+                                            {item.desc}
                                         </p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-
-
-
-                        <div className="pt-12 flex flex-col sm:flex-row gap-6">
-                            <Link
-                                href="/disponibilidad"
-                                className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-black py-6 px-14 rounded-2xl shadow-[0_20px_40px_-10px_rgba(5,150,105,0.4)] transition-all transform hover:-translate-y-1 active:scale-95 tracking-[0.2em] text-xs uppercase"
-                            >
-                                Ver Disponibilidad
-                            </Link>
-                            <Link
-                                href="/galeria"
-                                className="inline-flex items-center justify-center bg-transparent border-2 border-black/20 hover:border-primary text-text-main hover:text-primary font-black py-6 px-14 rounded-2xl transition-all tracking-[0.2em] text-xs uppercase"
-                            >
-                                Ver Galería
-                            </Link>
-                        </div>
                     </div>
                 </div>
-
             </div>
         </section>
     );

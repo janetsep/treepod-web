@@ -180,6 +180,7 @@ function ReservaContent({ id }: { id: string }) {
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-display font-bold tracking-tight">¡Reserva <span className="text-gold italic-display">Confirmada</span>!</h1>
+            <p className="text-sm font-black text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-2026-{reserva.id.split('-')[0].toUpperCase()}</p>
             <p className="text-text-sub-light dark:text-text-sub-dark font-light leading-relaxed">
               Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main-light dark:text-text-main-dark">{reserva.email}</span>.
             </p>
@@ -316,7 +317,7 @@ function ReservaContent({ id }: { id: string }) {
                 <div className="pt-6 border-t border-gray-100 dark:border-gray-800 space-y-3">
                   {/* Desglose Matemático Correcto */}
                   {(() => {
-                    const totalExtras = reserva.reserva_servicios?.reduce((acc, s) => acc + s.total, 0) || 0;
+                    const totalExtras = reserva.reserva_servicios?.reduce((acc: number, s: any) => acc + s.total, 0) || 0;
                     const subtotalDomoConDescuento = total - totalExtras;
                     const subtotalDomoOriginal = reserva.precio_original || subtotalDomoConDescuento;
                     const tarifaPorNoche = Math.round(subtotalDomoOriginal / diffDays);

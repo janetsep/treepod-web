@@ -57,6 +57,14 @@ export default function TerminosPage() {
                         <li>En caso de pérdida de pertenencias personales, te sugerimos cerrar apropiadamente tu domo al salir de excursión, puesto que no podemos responsabilizarnos de eventualidades por descuido humano comprobable en el entorno del predio.</li>
                     </ul>
 
+                    <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">6. Política Pet Friendly</h2>
+                    <p>En TreePod las mascotas son parte de la familia, sin embargo su estancia está sujeta a los siguientes criterios para asegurar la armonía del refugio:</p>
+                    <ul className="list-disc pl-6 space-y-2 mb-6">
+                        <li><strong>Criterios de Aceptación:</strong> Se permite el ingreso de mascotas previa consulta al momento de la reserva. Nos reservamos el derecho de ingreso según raza, tamaño o comportamiento previo informado.</li>
+                        <li><strong>Responsabilidad del Dueño:</strong> El huésped es responsable absoluto de la conducta, limpieza y posibles daños que la mascota pueda causar tanto en el interior del domo como en las áreas comunes y bosque nativo.</li>
+                        <li><strong>Convivencia:</strong> Las mascotas no deben alterar la tranquilidad de otros huéspedes ni afectar la fauna silvestre local.</li>
+                    </ul>
+
                     <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 mt-6 font-bold text-text-main">
                         <p className="mb-2">¿Tienes alguna duda sobre nuestras condiciones?</p>
                         <p>Escríbenos y estaremos dispuestos a ayudarte y aclarar cada detalle a través de <strong>info@domostreepod.cl</strong></p>

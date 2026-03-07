@@ -3,7 +3,7 @@ import { Mountain, Utensils, Fuel } from "lucide-react";
 
 export default function Ubicacion() {
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden bg-white" id="ubicacion">
+    <section className="py-12 md:py-20 relative overflow-hidden bg-white border-t border-black/[0.06]" id="ubicacion">
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
@@ -12,8 +12,8 @@ export default function Ubicacion() {
           <div className="lg:w-1/3 space-y-10">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 mb-4">
-                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Estratégico</span>
+                <span className="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Estratégico</span>
               </div>
               <h2 className="h2-display leading-[1.0] text-text-main">
                 Punto de <br />

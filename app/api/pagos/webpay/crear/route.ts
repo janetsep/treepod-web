@@ -142,7 +142,7 @@ export async function POST(req: Request) {
           error: "Reserva no encontrada",
           idBuscado: reservaId,
           totalReservas: todasLasReservas?.length || 0,
-          ultimasReservas: todasLasReservas?.map(r => ({
+          ultimasReservas: todasLasReservas?.map((r: any) => ({
             id: r.id,
             estado: r.estado,
             total: r.total

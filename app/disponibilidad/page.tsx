@@ -14,11 +14,13 @@ type ResultadoPrecio = {
   precio_noche: number;
   noches: number;
   total: number;
-  precio_original?: number; // Added this line
+  desglose?: string;
+  precio_original?: number;
   descuento_aplicado?: {
     tipo: string;
     monto: number;
     porcentaje: string;
+    motivos?: Array<{ motivo: string; monto: number }>;
   };
 };
 
@@ -153,9 +155,14 @@ function DisponibilidadContent() {
         }),
       });
 
-      console.log("📥 Respuesta recibida:", res.status);
-      const data = await res.json();
-      console.log("📦 Datos recibidos:", data);
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error("❌ Falló parseo de JSON. Respuesta recibida:", text.substring(0, 200));
+        throw new Error(`Error del servidor (no JSON). Los primeros caracteres son: ${text.substring(0, 50)}`);
+      }
 
       if (!res.ok) {
         throw new Error(data?.error || `Error al calcular precio (HTTP ${res.status})`);
@@ -284,11 +291,11 @@ function DisponibilidadContent() {
         </header>
 
         {/* THREE COLUMN HUD LAYOUT (CALENDAR - EXTRAS - SUMMARY) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-6 lg:gap-8 pt-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pt-4 items-start">
 
           {/* COL 1: Step 1 - Calendar */}
           {!isMundialEvent && (
-            <div className="lg:col-span-1 xl:col-span-4 space-y-4">
+            <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="px-2">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
@@ -372,7 +379,7 @@ function DisponibilidadContent() {
 
           {/* COL 2: Step 2 - Extras */}
           {!isMundialEvent && (
-            <div className="lg:col-span-1 xl:col-span-4 space-y-4">
+            <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="px-2 flex justify-between items-center">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -399,15 +406,15 @@ function DisponibilidadContent() {
 
                   if (s.nombre.toLowerCase().includes("desayuno")) {
                     displayNombre = "Despierta en el Bosque";
-                    displayDescripcion = "Café orgánico con vistas al bosque desde tu terraza";
+                    displayDescripcion = "Café orgánico y productos locales con vistas al bosque";
                     displayImage = "/images/DesayunoTreepod.jpg";
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
-                    displayNombre = "Baño Privado Bajo las Estrellas";
-                    displayDescripcion = "Relajo absoluto en agua caliente bajo el cielo nativo";
+                    displayNombre = "Baño en el Bosque (Tinaja)";
+                    displayDescripcion = "Relajo absoluto al aire libre cruzando la pasarela por el bosque nativo";
                     displayImage = "/images/wellness/Tinaja5.jpg";
                   } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena")) {
                     displayNombre = "Cena Privada";
-                    displayDescripcion = "Una velada mágica preparada especialmente para ustedes. ($25.000 por persona)";
+                    displayDescripcion = "Una velada mágica preparada especialmente para ustedes en la intimidad del bosque";
                     displayImage = "/images/comidadomoafuerapizza.jpg";
                   }
 
@@ -518,7 +525,7 @@ function DisponibilidadContent() {
           )}
 
           {/* COL 3: Final Summary */}
-          <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-3 xl:col-span-8 xl:col-start-3' : 'lg:col-span-2 xl:col-span-4'}`}>
+          <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
             <div className="bg-white rounded-[2rem] border border-black/5 overflow-hidden shadow-xl">
               <div className="bg-primary/5 p-6 border-b border-black/5 flex justify-between items-center">
                 <div className="flex items-center gap-3">
@@ -600,9 +607,23 @@ function DisponibilidadContent() {
                         <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadia Total</span>
                         <span className="text-2xl font-display font-bold text-text-main">{resultado.noches} {resultado.noches === 1 ? 'Noche' : 'Noches'}</span>
                       </div>
-                      <div className="flex justify-between items-center text-xs text-text-sub font-medium">
-                        <span>Valor base por noche</span>
-                        <span>${(resultado.precio_noche || 0).toLocaleString("es-CL")}</span>
+                      <div className="space-y-3 mt-4">
+                        <div className="flex justify-between items-center text-xs text-text-sub font-medium">
+                          <span>Valor base promedio</span>
+                          <span>${(resultado.precio_noche || 0).toLocaleString("es-CL")}</span>
+                        </div>
+
+                        {resultado.desglose && (
+                          <div className="mt-4 pt-4 border-t border-primary/10 space-y-2">
+                            <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Detalle por temporada</p>
+                            {resultado.desglose.split('|').map((item: string, idx: number) => (
+                              <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
+                                <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{item.split(':')[0]}</span>
+                                <span className="font-medium">{item.split(':').slice(1).join(':').trim()}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -666,7 +687,7 @@ function DisponibilidadContent() {
                           <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest leading-none mb-1">Total Estadía</span>
                           <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">Iva Incluido</span>
                         </div>
-                        <div className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
+                        <div key={calcularTotalConServicios()} className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap animate-fade-in">
                           <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
                           {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                         </div>
@@ -733,7 +754,7 @@ function DisponibilidadContent() {
             <div className="bg-white/95 backdrop-blur-2xl border border-black/10 p-5 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center justify-between gap-6 ring-1 ring-black/5">
               <div className="flex flex-col min-w-0 pr-4">
                 <span className="text-[10px] font-black text-text-sub/60 uppercase tracking-widest leading-none mb-1">Total</span>
-                <div className="text-xl sm:text-3xl font-display font-black text-primary whitespace-nowrap leading-tight flex items-baseline">
+                <div key={calcularTotalConServicios()} className="text-xl sm:text-3xl font-display font-black text-primary whitespace-nowrap leading-tight flex items-baseline animate-fade-in">
                   <span className="text-lg mr-1 text-primary/60 font-sans">$</span>
                   {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                 </div>

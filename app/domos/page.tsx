@@ -52,10 +52,11 @@ export default function DomosPage() {
                     {/* Left: Editorial Text */}
                     <div className="space-y-10 order-2 md:order-1">
                         <div className="space-y-4">
-                            <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                                Por qué TreePod
-                            </span>
-                            <h1 className="text-2xl md:text-3xl font-display text-text-main">Habitar la Naturaleza con Propósito</h1>
+                            <div className="inline-flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
+                            </div>
+                            <h1 className="h1-display text-text-main !text-left">Habitar la Naturaleza <br /> <span className="text-primary italic-display">con Propósito</span></h1>
                         </div>
                         <p className="text-3xl md:text-5xl font-display leading-tight text-text-main">
                             "La geometría de nuestros domos no es solo diseño; es <span className="text-primary italic-display">filosofía</span>. Integra comodidad en el bosque nativo de manera que respeta cada árbol, cada estación, cada suspiro de la cordillera."
@@ -77,9 +78,6 @@ export default function DomosPage() {
 
                 </div>
 
-                <div className="container mx-auto px-6 max-w-7xl mb-24 md:mb-32">
-                    <hr className="border-t border-black/10" />
-                </div>
 
                 {/* 3. Zig-Zag Details (The Experience) */}
                 <div className="space-y-24 md:space-y-32">
@@ -101,7 +99,7 @@ export default function DomosPage() {
                                     src="/images/hero/interior-domo-acogedor-95-2.jpg"
                                     alt="Detalle interior de descanso"
                                     fill
-                                    className="object-cover transition-transform duration-[3s] group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                 />
                             </div>
                             {/* Sub Image 2: Table Detail */}
@@ -110,15 +108,18 @@ export default function DomosPage() {
                                     src="/images/comidadomoafuerapizza.jpg"
                                     alt="Cena o Almuerzo en la terraza del Domo"
                                     fill
-                                    className="object-cover transition-transform duration-[3s] group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                 />
                             </div>
                         </div>
                         <div className="space-y-8 order-2 md:order-2">
-                            <span className="subtitle-caps">Descanso Real</span>
+                            <div className="inline-flex items-center gap-2">
+                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Descanso Real</span>
+                            </div>
                             <h3 className="h2-display text-text-main leading-tight">Refugio <span className="italic-display">Cálido</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Cama matrimonial vestida con sábanas de alta densidad. Despierta con energía después de un sueño profundo rodeado de bosque nativo y sonidos de la naturaleza.
+                                Cama matrimonial para un descanso profundo. Despierta con energía mientras escuchas el bosque nativo y los sonidos de la naturaleza.
                             </p>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
                                 No pasarás frío aunque afuera esté nevando; la geometría del domo mantiene el calor de la estufa a pellet de última generación con carga programada.
@@ -140,7 +141,10 @@ export default function DomosPage() {
                     {/* Block B: Baño & Cocina */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
                         <div className="space-y-8 order-2 md:order-1">
-                            <span className="subtitle-caps">Independencia Total</span>
+                            <div className="inline-flex items-center gap-2">
+                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Independencia Total</span>
+                            </div>
                             <h3 className="h2-display text-text-main leading-tight">Equipamiento <span className="italic-display">Completo</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
                                 Siéntete en un refugio autónomo en medio del bosque nativo. Cada domo cuenta con baño completo integrado y el equipamiento necesario para disfrutar sin depender de nada más.
@@ -180,7 +184,7 @@ export default function DomosPage() {
                             </div>
                             <div className="relative group overflow-hidden">
                                 <Image
-                                    src="/images/wellness/Tinaja1.jpg"
+                                    src="/images/wellness/Tinaja5.jpg"
                                     alt="Tinaja Caliente"
                                     fill
                                     className="object-cover transition-transform duration-[3s] group-hover:scale-105"
@@ -188,10 +192,13 @@ export default function DomosPage() {
                             </div>
                         </div>
                         <div className="space-y-8 order-2 md:order-2">
-                            <span className="subtitle-caps">Vida al Aire Libre</span>
+                            <div className="inline-flex items-center gap-2">
+                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Vida al Aire Libre</span>
+                            </div>
                             <h3 className="h2-display text-text-main leading-tight">Terraza y <span className="italic-display">Tinaja</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Tu espacio se extiende al bosque. Cada domo posee su propia terraza elevada y tinajas de ciprés con agua termal de Chillán para un relajo personal.
+                                Tu estadía se conecta con la naturaleza. A través de una pasarela por el bosque nativo, accedes a nuestras terrazas al aire libre y tinajas de ciprés con agua termal para un relajo profundo bajo las estrellas.
                             </p>
                             <div className="bg-primary/5 p-8 rounded-[2rem] border-2 border-primary/10 mt-6 shadow-sm">
                                 <h4 className="text-primary font-black uppercase tracking-[0.2em] text-[11px] mb-3">Servicio Adicional</h4>
@@ -203,9 +210,6 @@ export default function DomosPage() {
                     </div>
                 </div>
 
-                <div className="container mx-auto px-6 max-w-7xl mt-32 mb-16">
-                    <hr className="border-t border-black/10" />
-                </div>
 
                 {/* 4. Technical Specs (The Whitepod Grid) */}
                 <div className="">
@@ -216,14 +220,14 @@ export default function DomosPage() {
                                 <Ruler className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
                             <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Dimensiones</h4>
-                            <p className="text-base text-text-sub font-bold">38 m² Interior<br />20 m² Terraza</p>
+                            <p className="text-base text-text-sub font-bold">38 m² Interior<br />8 m² Terraza</p>
                         </div>
                         <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
                                 <Users className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
                             <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Capacidad</h4>
-                            <p className="text-base text-text-sub font-bold">Máx. 4 Adultos<br />(Ideal Parejas e Hijos)</p>
+                            <p className="text-base text-text-sub font-bold">Máx. 4 Adultos</p>
                         </div>
                         <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
@@ -245,7 +249,7 @@ export default function DomosPage() {
                                     <Waves className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                                 </div>
                                 <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Tinajas</h4>
-                                <p className="text-base text-text-sub font-bold">2 Tinajas en Bosque<br />Uso Personalizado</p>
+                                <p className="text-base text-text-sub font-bold">Tinajas al Aire Libre<br />Acceso por Pasarela</p>
                             </div>
                             <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
                                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
@@ -253,6 +257,13 @@ export default function DomosPage() {
                                 </div>
                                 <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Áreas Comunes</h4>
                                 <p className="text-base text-text-sub font-bold">Quincho para Asados<br />Invernadero Nativo</p>
+                            </div>
+                            <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
+                                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
+                                    <div className="text-primary text-2xl font-black">🐾</div>
+                                </div>
+                                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Pet Friendly</h4>
+                                <p className="text-base text-text-sub font-bold">Mascotas Bienvenidas<br />(Bajo criterios específicos)</p>
                             </div>
                         </div>
                     </div>
@@ -264,20 +275,16 @@ export default function DomosPage() {
                 <div className="container mx-auto max-w-6xl flex flex-row justify-between items-center gap-4 md:gap-6">
                     {/* Price structure visible across all devices, stacked nicely on mobile */}
                     <div className="flex flex-col items-start">
-                        <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-text-sub/50">Tarifa para 2 personas</span>
-                        <div className="flex items-center gap-1 md:gap-2">
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-base md:text-2xl font-display font-black text-primary">
-                                    $145.000
-                                </span>
-                                <span className="text-[8px] md:text-[10px] text-text-sub font-bold italic-display">/noche (1n)</span>
+                        <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-text-sub/60 mb-1.5">Tarifa para 2 personas</span>
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+                            <div className="flex items-center gap-2.5">
+                                <span className="text-xl md:text-2xl font-black text-primary">$145.000</span>
+                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ 1 noche</span>
                             </div>
-                            <span className="text-text-sub/30 text-lg">·</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-base md:text-2xl font-display font-black text-primary">
-                                    $130.000
-                                </span>
-                                <span className="text-[8px] md:text-[10px] text-text-sub font-bold italic-display">/noche (2n+)</span>
+                            <div className="hidden sm:block h-4 w-[1px] bg-black/10"></div>
+                            <div className="flex items-center gap-2.5">
+                                <span className="text-xl md:text-2xl font-black text-primary">$130.000</span>
+                                <span className="text-[11px] font-bold text-primary leading-none">/ 2+ noches</span>
                             </div>
                         </div>
                     </div>

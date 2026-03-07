@@ -23,7 +23,7 @@ export async function POST(request: Request) {
             });
         }
 
-        const domosPosibles = domosComp.map((d) => d.id);
+        const domosPosibles = domosComp.map((d: any) => d.id);
 
         // 2. Buscar ocupación (reservas activas)
         const { data: ocupadosRes, error: resErr } = await supabase
@@ -43,11 +43,11 @@ export async function POST(request: Request) {
             .gt("fecha_fin", entrada);
 
         const idOcupados = new Set([
-            ...(ocupadosRes || []).map((r) => r.domo_id),
-            ...(ocupadosBloq || []).map((b) => b.domo_id),
+            ...(ocupadosRes || []).map((r: any) => r.domo_id),
+            ...(ocupadosBloq || []).map((b: any) => b.domo_id),
         ]);
 
-        const disponibles = domosComp.filter((d) => !idOcupados.has(d.id));
+        const disponibles = domosComp.filter((d: any) => !idOcupados.has(d.id));
 
         if (disponibles.length === 0) {
             return NextResponse.json({
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             disponible: true,
-            domos: disponibles.map(d => d.nombre),
+            domos: disponibles.map((d: any) => d.nombre),
             cotizacion: precioData ? precioData[0] : null,
             politicas: "Entrada 15:00, Salida 12:00. Incluye tinaja exclusiva.",
             whatsapp_cta: "https://wa.me/56989208256"

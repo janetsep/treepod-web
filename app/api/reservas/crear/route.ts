@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No hay domos con esa capacidad disponible" }, { status: 400 });
     }
 
-    const domosPosibles = domosComp.map(d => d.id);
+    const domosPosibles = domosComp.map((d: any) => d.id);
 
     // 2. Buscar ocupación (reservas activas)
     // Traemos las reservas que coinciden en fecha y domo, sin filtrar estado aún en DB para poder validar expiración
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     // - Pagadas/Confirmadas/Pendiente (manual) SIEMPRE ocupan.
     // - Pendientes de pago (Web): SOLO ocupan si el cliente ya ingresó sus datos (email).
     //   Si no hay email, es un carrito vacío/abandonado y NO debe bloquear el calendario.
-    const ocupadosRes = (rawConflicts || []).filter(r => {
+    const ocupadosRes = (rawConflicts || []).filter((r: any) => {
       // Estados firmes bloquean siempre
       if (['pagado', 'confirmado', 'pendiente'].includes(r.estado)) return true;
 
@@ -91,11 +91,11 @@ export async function POST(req: Request) {
       .gt("fecha_fin", entrada);
 
     const idOcupados = new Set([
-      ...ocupadosRes.map(r => r.domo_id),
-      ...(ocupadosBloq || []).map(b => b.domo_id)
+      ...ocupadosRes.map((r: any) => r.domo_id),
+      ...(ocupadosBloq || []).map((b: any) => b.domo_id)
     ]);
 
-    const domoDisponible = domosComp.find(d => !idOcupados.has(d.id));
+    const domoDisponible = domosComp.find((d: any) => !idOcupados.has(d.id));
 
     if (!domoDisponible) {
       return NextResponse.json({ error: "Lo sentimos, ya no quedan domos disponibles para estas fechas" }, { status: 409 });

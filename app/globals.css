@@ -70,6 +70,20 @@ h6 {
 }
 
 /* Animations (Restored) */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -204,41 +218,39 @@ h6 {
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  background: white;
-  padding: 14px 32px;
-  border-radius: 999px;
-  margin-bottom: 32px;
-  font-size: 14px;
+  gap: 16px;
+  background: transparent;
+  padding: 10px 0;
+  margin-bottom: 40px;
+  font-size: 18px;
+  /* Un poco más grande para legibilidad */
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--primary);
-  /* Contraste absoluto con Cyan C */
-  border: 3px solid var(--primary);
-  box-shadow: 0 20px 50px -15px rgba(0, 173, 239, 0.5),
-    0 5px 15px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.25em;
+  color: white;
+  /* Sombra negra profunda y nítida para contraste absoluto contra fondos claros */
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
   animation: badge-pop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   z-index: 50;
 }
 
 .hero-badge:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 30px 60px -12px rgba(0, 173, 239, 0.7);
-  background: #f0fbff;
+  transform: translateY(-4px);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 1);
 }
 
 .hero-badge .star {
-  font-size: 18px;
-  letter-spacing: -2px;
+  font-size: 24px;
+  /* Estrellas más grandes */
+  letter-spacing: 4px;
   color: #FFD700 !important;
-  /* Oro vibrante */
-  text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  /* Sombra negra detrás de las estrellas para que no se pierdan en el blanco */
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.8));
 }
 
 @media (max-width: 768px) {
@@ -264,6 +276,11 @@ h6 {
   margin-bottom: 32px;
   padding: 24px 0;
   border-bottom: 1px solid #f0f0f0;
+}
+
+section,
+.section-padding {
+  @apply py-12 md:py-20;
 }
 
 .step {

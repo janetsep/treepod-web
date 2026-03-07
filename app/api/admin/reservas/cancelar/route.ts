@@ -20,9 +20,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Reserva no encontrada" }, { status: 404 });
         }
 
-        if (reserva.estado === "pagado") {
-            return NextResponse.json({ error: "No se puede cancelar una reserva ya pagada desde aquí. Requiere reembolso." }, { status: 409 });
-        }
+        // Eliminamos restricción de 'pagado' por solicitud del usuario para permitir anulación administrativa total
 
         // 2. Ejecutar cancelación (Admin Force)
         const { error: updateError } = await supabaseAdmin

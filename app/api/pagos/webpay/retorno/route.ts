@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { FinanceService } from "@/services/FinanceService";
 import { NotificationService } from "@/services/NotificationService";
+import { trackServerPurchase } from "@/lib/server-analytics";
 
 const config = {
   commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "597055555532",
@@ -117,7 +118,7 @@ async function handleReturn(req: Request) {
 
     const { data: reserva, error: reservaError } = await supabase
       .from("reservas")
-      .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin")
+      .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin, adultos")
       .eq("payment_intent_id", token)
       .single();
 
@@ -128,6 +129,15 @@ async function handleReturn(req: Request) {
       });
       return NextResponse.redirect(new URL("/disponibilidad?error=reserva_no_encontrada", baseUrl), 303);
     }
+
+    const { data: reservaServicios } = await supabase
+      .from("reserva_servicios")
+      .select("servicios(nombre)")
+      .eq("reserva_id", reserva.id);
+
+    const extrasNames = (reservaServicios || [])
+      .map((rs: any) => rs.servicios?.nombre)
+      .filter(Boolean);
 
     const isApproved = commit.response_code === 0;
 
@@ -161,6 +171,24 @@ async function handleReturn(req: Request) {
         });
         console.log("💰 Movimiento financiero registrado exitosamente via FinanceService");
 
+        // 🎯 Lógica de Medición de Servidor (GA4 Measurement Protocol)
+        // Se ejecuta ANTES del redirect para asegurar que el dato se envíe si el usuario cierra la pestaña
+        try {
+          await trackServerPurchase({
+            transaction_id: token || reserva.id,
+            value: commit.amount || 0,
+            currency: 'CLP',
+            items: [{
+              item_id: 'reserva_treepod',
+              item_name: 'Reserva TreePod',
+              price: commit.amount || 0,
+              quantity: 1
+            }]
+          });
+        } catch (analyticsError) {
+          console.error("⚠️ Error disparando medición de servidor:", analyticsError);
+        }
+
         // Disparar Email de Bienvenida (Conserjería Digital)
         const guestName = `${reserva.nombre || 'Huésped'} ${reserva.apellido || ''}`.trim();
         // Nota: Fechas podrían formatearse mejor si tuviéramos date-fns, usaremos string simple por robustez
@@ -170,8 +198,10 @@ async function handleReturn(req: Request) {
           reserva.email,
           guestName,
           dateRange,
-          "https://maps.app.goo.gl/treepod-location-placeholder",
-          reserva.id.slice(-5)
+          "https://maps.app.goo.gl/uX3f7N8CqU7XN2Xv9",
+          reserva.id.slice(-5),
+          reserva.adultos,
+          extrasNames
         );
 
       } catch (error) {

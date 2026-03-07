@@ -10,32 +10,18 @@ export default function ContactoPage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     return (
         <div className="bg-surface-light font-sans text-text-main min-h-screen">
-            {/* Hero Section */}
-            <section className="relative h-[45vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-                <Image
-                    src="/images/exteriors/hero-night-2.jpg"
-                    alt="Contacto TreePod"
-                    fill
-                    className="object-cover scale-105 animate-slow-zoom"
-                    priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-surface-light"></div>
-                <div className="relative z-10 text-center px-6 pt-32 animate-fade-in-up">
-                    <div className="inline-block mb-4">
-                        <span className="text-white text-[10px] font-black tracking-[0.4em] uppercase">Contacto</span>
-                    </div>
-                    <h1 className="h1-display text-white mb-6 [text-shadow:_0_2px_20px_rgba(0,0,0,0.5)]">
-                        Hablemos de <br />
-                        <span className="text-primary italic-display">Tu Escapada</span>
-                    </h1>
-                    <p className="text-lg md:text-xl text-white/95 max-w-2xl mx-auto font-bold leading-relaxed drop-shadow-md">
-                        Nuestro equipo está listo para ayudarte a diseñar el retiro perfecto en el corazón de Valle Las Trancas.
-                    </p>
-                </div>
-            </section>
-
-            <main className="container mx-auto px-4 md:px-10 lg:px-20 py-16 md:py-24">
+            <main className="container mx-auto px-4 md:px-10 lg:px-20 pt-32 pb-16 md:pt-40 md:pb-24">
                 <div className="max-w-6xl mx-auto">
+                    {/* Standardized Header Section */}
+                    <div className="mb-16 md:mb-24">
+                        <div className="inline-flex items-center gap-2 mb-4">
+                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
+                        </div>
+                        <h1 className="h1-display text-text-main !text-left">
+                            Hablemos de <span className="text-primary italic-display">Tu Escapada</span>
+                        </h1>
+                    </div>
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
 
                         {/* Left Column: Information & Map */}
@@ -46,8 +32,8 @@ export default function ContactoPage() {
                                         <Phone className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="subtitle-caps !text-[10px] mb-1 opacity-70">Consultas</h3>
-                                        <p className="text-xl font-black text-text-main">+56 9 8464 3307</p>
+                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</h3>
+                                        <a href="tel:+56984643307" className="text-xl font-black text-text-main hover:text-primary transition-colors">+56 9 8464 3307</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Atención todos los días</p>
                                     </div>
                                 </div>
@@ -57,8 +43,8 @@ export default function ContactoPage() {
                                         <Mail className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="subtitle-caps !text-[10px] mb-1 opacity-70">Email Oficial</h3>
-                                        <p className="text-xl font-black text-text-main">info@domostreepod.cl</p>
+                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</h3>
+                                        <a href="mailto:info@domostreepod.cl" className="text-xl font-black text-text-main hover:text-primary transition-colors">info@domostreepod.cl</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Respuesta en menos de 24h</p>
                                     </div>
                                 </div>
@@ -68,7 +54,7 @@ export default function ContactoPage() {
                                         <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="subtitle-caps !text-[10px] mb-1 opacity-70">Ubicación Norte</h3>
+                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación Norte</h3>
                                         <p className="text-xl font-black text-text-main">Ruta N-55, Km 72</p>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Valle Las Trancas, Ñuble</p>
                                     </div>
