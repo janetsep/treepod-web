@@ -66,8 +66,8 @@ export default function Hero() {
 
 
         <h1 className="h1-display mb-12 md:mb-20 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white !leading-[1.1]">
-          <span className="!text-white border-b-4 border-primary pb-2">Glamping en Valle Las Trancas</span><br />
-          <span className="text-primary drop-shadow-[0_4px_12px_rgba(0,0,0,1)] italic-display block mt-4 md:mt-6 !font-bold text-2xl md:text-4xl">Alojamiento en Domo Geodésico</span>
+          <span className="!text-white border-b-4 border-primary pb-2">Glamping TreePod | Temporada 2026</span><br />
+          <span className="text-primary drop-shadow-[0_4px_12px_rgba(0,0,0,1)] italic-display block mt-4 md:mt-6 !font-bold text-2xl md:text-4xl">Semana Santa en Valle Las Trancas</span>
         </h1>
 
 
