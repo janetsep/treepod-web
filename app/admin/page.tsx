@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import DomoCalendar from "./components/DomoCalendar";
 import ReservaModal from "./components/ReservaModal";
 import TarifasConsole from "./components/TarifasConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2 } from "lucide-react";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search } from "lucide-react";
 
 export default function AdminDashboard() {
     const [view, setView] = useState<'reservas' | 'tarifas'>('reservas');
@@ -14,10 +14,13 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [expandedFinancial, setExpandedFinancial] = useState(false);
+    const [expandedReservas, setExpandedReservas] = useState(true);
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingReserva, setEditingReserva] = useState<any | null>(null);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         loadData();
@@ -93,12 +96,54 @@ export default function AdminDashboard() {
             if (res.ok) {
                 // Remover de la lista sin recargar
                 setReservas(prev => prev.filter(r => r.id !== id));
+                setSelectedIds(prev => prev.filter(sid => sid !== id));
                 alert("Registro eliminado permanentemente.");
             } else {
                 alert(`❌ ERROR AL ELIMINAR:\n${data.error}\n\nDetalles: ${data.details || 'N/A'}`);
             }
         } catch (e) {
             alert("Error de conexión al intentar eliminar.");
+        } finally {
+            setActionLoading(null);
+        }
+    }
+
+    async function bulkDelete() {
+        const count = selectedIds.length;
+        if (count === 0) return;
+
+        const msg = `⚠️ ¿Estás SEGURA que deseas eliminar PERMANENTEMENTE estas ${count} reservas? Esta acción es IRREVERSIBLE y borrará todos los registros asociados.`;
+        if (!confirm(msg)) return;
+
+        setActionLoading('bulk-delete');
+        try {
+            let successCount = 0;
+            let errors = [];
+
+            // Ejecutamos uno por uno para asegurar el flujo de la API de borrado que ya existe
+            for (const id of selectedIds) {
+                const res = await fetch("/api/admin/reservas/eliminar", {
+                    method: "POST",
+                    body: JSON.stringify({ reservaId: id })
+                });
+                if (res.ok) successCount++;
+                else {
+                    const data = await res.json();
+                    errors.push(`ID ${id.slice(0, 8)}: ${data.error}`);
+                }
+            }
+
+            if (successCount > 0) {
+                setReservas(prev => prev.filter(r => !selectedIds.includes(r.id)));
+                setSelectedIds([]);
+                alert(`Se eliminaron ${successCount} registros correctamente.`);
+            }
+
+            if (errors.length > 0) {
+                alert(`No se pudieron eliminar ${errors.length} registros:\n\n${errors.join('\n')}`);
+            }
+        } catch (e) {
+            alert("Error de conexión durante el proceso de borrado masivo.");
         } finally {
             setActionLoading(null);
         }
@@ -201,6 +246,13 @@ export default function AdminDashboard() {
         return true;
     };
     const validReservas = reservas.filter(isValidReserva);
+    const filteredReservas = validReservas.filter(r => {
+        if (!searchTerm) return true;
+        const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""}`.toLowerCase();
+        const email = (r.email || r.clientes?.email || "").toLowerCase();
+        const search = searchTerm.toLowerCase();
+        return clientName.includes(search) || email.includes(search) || r.id.toLowerCase().includes(search);
+    });
 
     // Helper: Resumen Mensual
     const getMonthlyStats = () => {
@@ -389,159 +441,222 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        {/* List View */}
+                        {/* List View - COLLAPSIBLE */}
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                                <h2 className="text-xl font-display font-black text-gray-800">Maestro de Reservas</h2>
-                                <button onClick={loadData} className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all">
-                                    <RefreshCw className="w-3.5 h-3.5" /> Actualizar Datos
-                                </button>
-                            </div>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left">
-                                    <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
-                                        <tr>
-                                            <th className="px-8 py-5">Huésped / Referencia</th>
-                                            <th className="px-6 py-5">Estancia</th>
-                                            <th className="px-6 py-5">Domo</th>
-                                            <th className="px-6 py-5">Finanzas (Pagado/Total)</th>
-                                            <th className="px-6 py-5">Estado</th>
-                                            <th className="px-8 py-5 text-right">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {loading ? (
-                                            <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
-                                        ) : validReservas.length === 0 ? (
-                                            <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros activos.</td></tr>
-                                        ) : validReservas.map((reserva) => {
-                                            const clientName = reserva.clientes?.nombre
-                                                ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
-                                                : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
+                            <button
+                                onClick={() => setExpandedReservas(!expandedReservas)}
+                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                            >
+                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                                    <LayoutDashboard className="w-6 h-6 text-primary" />
+                                    Maestro de Reservas
+                                </h2>
+                                <div className="flex items-center gap-4">
+                                    {selectedIds.length > 0 && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); bulkDelete(); }}
+                                            disabled={actionLoading === 'bulk-delete'}
+                                            className="px-4 py-2 bg-red-100 text-red-600 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/10"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                            Borrar Seleccionados ({selectedIds.length})
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); loadData(); }}
+                                        className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all"
+                                    >
+                                        <RefreshCw className="w-3.5 h-3.5" /> Actualizar
+                                    </button>
+                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedReservas ? 'rotate-180' : ''}`} />
+                                </div>
+                            </button>
 
-                                            const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
-                                            const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
+                            <div className={`transition-all duration-500 ease-in-out ${expandedReservas ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                                <div className="p-6 border-b border-gray-100 bg-gray-50/30 flex flex-wrap items-center gap-4">
+                                    <div className="relative flex-1 min-w-[300px]">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar por nombre, email o ID de reserva..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                        Registros: {filteredReservas.length} / {validReservas.length}
+                                    </div>
+                                </div>
 
-                                            return (
-                                                <tr key={reserva.id} className="hover:bg-gray-50/50 transition-colors group">
-                                                    <td className="px-8 py-5">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <div className="font-extrabold text-gray-900 text-base">{clientName} <span className="ml-2 bg-gray-100/80 text-gray-500 text-[9px] px-2 py-0.5 rounded-lg font-black uppercase tracking-tighter">{reserva.adultos || 2} personas</span></div>
-                                                            {isVip && (
-                                                                <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex flex-col gap-0.5 mb-2">
-                                                            <div className="text-xs text-gray-400 font-medium">{clientEmail}</div>
-                                                            {(reserva.telefono || reserva.clientes?.telefono) && (
-                                                                <div className="text-[10px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
-                                                                    📞 {reserva.telefono || reserva.clientes?.telefono}
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
+                                            <tr>
+                                                <th className="px-8 py-5 w-[50px]">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                                        checked={filteredReservas.length > 0 && selectedIds.length === filteredReservas.length}
+                                                        onChange={(e) => {
+                                                            if (e.target.checked) setSelectedIds(filteredReservas.map(r => r.id));
+                                                            else setSelectedIds([]);
+                                                        }}
+                                                    />
+                                                </th>
+                                                <th className="px-4 py-5 font-black">Huésped / Referencia</th>
+                                                <th className="px-6 py-5 font-black">Estancia</th>
+                                                <th className="px-6 py-5 font-black">Domo</th>
+                                                <th className="px-6 py-5 font-black">Finanzas</th>
+                                                <th className="px-6 py-5 font-black">Estado</th>
+                                                <th className="px-8 py-5 text-right font-black">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {loading ? (
+                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
+                                            ) : filteredReservas.length === 0 ? (
+                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros.</td></tr>
+                                            ) : filteredReservas.map((reserva) => {
+                                                const clientName = reserva.clientes?.nombre
+                                                    ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
+                                                    : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
+
+                                                const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
+                                                const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
+
+                                                return (
+                                                    <tr key={reserva.id} className={`hover:bg-gray-50/50 transition-colors group ${selectedIds.includes(reserva.id) ? 'bg-primary/[0.03]' : ''}`}>
+                                                        <td className="px-8 py-5">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                                                checked={selectedIds.includes(reserva.id)}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) setSelectedIds(prev => [...prev, reserva.id]);
+                                                                    else setSelectedIds(prev => prev.filter(id => id !== reserva.id));
+                                                                }}
+                                                            />
+                                                        </td>
+                                                        <td className="px-4 py-5">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <div className="font-extrabold text-gray-900 text-base">{clientName} <span className="ml-2 bg-gray-100/80 text-gray-500 text-[9px] px-2 py-0.5 rounded-lg font-black uppercase tracking-tighter">{reserva.adultos || 2} personas</span></div>
+                                                                {isVip && (
+                                                                    <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex flex-col gap-0.5 mb-2">
+                                                                <div className="text-xs text-gray-400 font-medium">{clientEmail}</div>
+                                                                {(reserva.telefono || reserva.clientes?.telefono) && (
+                                                                    <div className="text-[10px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
+                                                                        📞 {reserva.telefono || reserva.clientes?.telefono}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
+                                                                <button
+                                                                    onClick={() => openEditReserva(reserva)}
+                                                                    className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
+                                                                >
+                                                                    <Pencil className="w-3 h-3" />
+                                                                    Editar Ficha
+                                                                </button>
+                                                            </div>
+                                                            {(reserva.notas || reserva.mensaje) && (
+                                                                <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
+                                                                    "{reserva.notas || reserva.mensaje}"
                                                                 </div>
                                                             )}
-                                                        </div>
-                                                        <div className="flex items-center gap-3">
-                                                            <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
-                                                            <button
-                                                                onClick={() => openEditReserva(reserva)}
-                                                                className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
-                                                            >
-                                                                <Pencil className="w-3 h-3" />
-                                                                Editar Ficha
-                                                            </button>
-                                                        </div>
-                                                        {(reserva.notas || reserva.mensaje) && (
-                                                            <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
-                                                                "{reserva.notas || reserva.mensaje}"
+                                                        </td>
+                                                        <td className="px-6 py-5">
+                                                            <div className="text-gray-800 font-bold text-sm">
+                                                                {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                                <span className="text-gray-300 mx-2">→</span>
+                                                                {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
                                                             </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className="text-gray-800 font-bold text-sm">
-                                                            {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
-                                                            <span className="text-gray-300 mx-2">→</span>
-                                                            {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
-                                                        </div>
-                                                        <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
-                                                            Creada el {new Date(reserva.created_at).toLocaleDateString()}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
-                                                            {reserva.domos?.nombre || "N/A"}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
-                                                            ${(reserva.monto_pagado || 0).toLocaleString()}
-                                                        </div>
-                                                        <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
-                                                            de ${(reserva.total || 0).toLocaleString()}
-                                                        </div>
-                                                        {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
-                                                            <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
-                                                                <div
-                                                                    className="h-full bg-primary"
-                                                                    style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
-                                                                ></div>
+                                                            <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
+                                                                Creada el {new Date(reserva.created_at).toLocaleDateString()}
                                                             </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
-                                                            {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
-                                                        </span>
-                                                        {reserva.fuente && (
-                                                            <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
-                                                                {reserva.fuente}
+                                                        </td>
+                                                        <td className="px-6 py-5">
+                                                            <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
+                                                                {reserva.domos?.nombre || "N/A"}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-5">
+                                                            <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
+                                                                ${(reserva.monto_pagado || 0).toLocaleString()}
                                                             </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-8 py-5 text-right">
-                                                        <div className="flex justify-end items-center gap-2">
-                                                            {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
-                                                                <button
-                                                                    onClick={() => confirmReserva(reserva.id)}
-                                                                    disabled={actionLoading === reserva.id}
-                                                                    className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
-                                                                >
-                                                                    {actionLoading === reserva.id ? "..." : "Confirmar"}
-                                                                </button>
+                                                            <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
+                                                                de ${(reserva.total || 0).toLocaleString()}
+                                                            </div>
+                                                            {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
+                                                                <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
+                                                                    <div
+                                                                        className="h-full bg-primary"
+                                                                        style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
+                                                                    ></div>
+                                                                </div>
                                                             )}
-                                                            {reserva.estado !== 'cancelada' && (
+                                                        </td>
+                                                        <td className="px-6 py-5">
+                                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
+                                                                {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
+                                                            </span>
+                                                            {reserva.fuente && (
+                                                                <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
+                                                                    {reserva.fuente}
+                                                                </div>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-8 py-5 text-right">
+                                                            <div className="flex justify-end items-center gap-2">
+                                                                {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
+                                                                    <button
+                                                                        onClick={() => confirmReserva(reserva.id)}
+                                                                        disabled={actionLoading === reserva.id}
+                                                                        className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
+                                                                    >
+                                                                        {actionLoading === reserva.id ? "..." : "Confirmar"}
+                                                                    </button>
+                                                                )}
+                                                                {reserva.estado !== 'cancelada' && (
+                                                                    <button
+                                                                        onClick={() => cancelReserva(reserva.id)}
+                                                                        disabled={actionLoading === reserva.id}
+                                                                        className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-orange-100"
+                                                                        title="Anular Reserva"
+                                                                    >
+                                                                        {actionLoading === reserva.id ? "..." : (
+                                                                            <>
+                                                                                <XCircle className="w-4 h-4" />
+                                                                                <span>Anular</span>
+                                                                            </>
+                                                                        )}
+                                                                    </button>
+                                                                )}
                                                                 <button
-                                                                    onClick={() => cancelReserva(reserva.id)}
+                                                                    onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
                                                                     disabled={actionLoading === reserva.id}
-                                                                    className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-orange-100"
-                                                                    title="Anular Reserva"
+                                                                    className="flex items-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-500 hover:text-white text-red-500 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-red-100 group/del"
+                                                                    title="Eliminar registro permanentemente"
                                                                 >
                                                                     {actionLoading === reserva.id ? "..." : (
                                                                         <>
-                                                                            <XCircle className="w-4 h-4" />
-                                                                            <span>Anular</span>
+                                                                            <Trash2 className="w-4 h-4" />
+                                                                            <span>Borrar</span>
                                                                         </>
                                                                     )}
                                                                 </button>
-                                                            )}
-                                                            <button
-                                                                onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
-                                                                disabled={actionLoading === reserva.id}
-                                                                className="flex items-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-500 hover:text-white text-red-500 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-red-100 group/del"
-                                                                title="Eliminar registro permanentemente"
-                                                            >
-                                                                {actionLoading === reserva.id ? "..." : (
-                                                                    <>
-                                                                        <Trash2 className="w-4 h-4" />
-                                                                        <span>Borrar</span>
-                                                                    </>
-                                                                )}
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
