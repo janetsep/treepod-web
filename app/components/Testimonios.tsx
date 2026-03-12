@@ -4,10 +4,11 @@ import Script from "next/script";
 
 export default function Testimonios() {
   return (
-    <section className="py-20 md:py-32 bg-white" id="testimonios">
+    <section className="py-12 md:py-20 bg-white border-t border-black/[0.06]" id="testimonios">
       <div className="container mx-auto px-6 text-center max-w-7xl">
-        <div className="inline-block mb-4">
-          <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Huéspedes</span>
+        <div className="inline-flex items-center gap-2 mb-4">
+          <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+          <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Huéspedes</span>
         </div>
 
         <h2 className="h2-display mb-10 text-text-main">

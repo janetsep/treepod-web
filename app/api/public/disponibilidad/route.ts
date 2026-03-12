@@ -50,7 +50,7 @@ export async function GET(request: Request) {
         const days = eachDayOfInterval({ start: fromDate, end: toDate });
 
         // Filtrar reservas válidas
-        const validReservations = (reservas || []).filter(r => {
+        const validReservations = (reservas || []).filter((r: any) => {
             if (['pagado', 'confirmado', 'pendiente'].includes(r.estado)) return true;
             if (r.estado === 'pendiente_pago' && r.email) return true;
             return false;
@@ -58,25 +58,16 @@ export async function GET(request: Request) {
 
         const allBlocks = [...validReservations, ...(bloqueos || [])];
 
-        const MUNDIAL_NIGHTS = ['2026-03-26', '2026-03-27', '2026-03-28'];
-
         days.forEach(day => {
             const dayStr = format(day, "yyyy-MM-dd");
 
-            // Bloquear explícitamente las noches del mundial
-            if (MUNDIAL_NIGHTS.includes(dayStr)) {
-                blockedDates.push(dayStr);
-                return;
-            }
-
             // Contar cuántos domos están ocupados este día
             // Un día está ocupado si cae en [fecha_inicio, fecha_fin) -> NO incluye fecha_fin (checkout)
-            // Pero ojo: fecha_fin de una reserva ES la fecha de checkout. Esa noche NO la usa.
             // Así que logicamente: fecha_inicio <= day < fecha_fin
 
             const occupiedCount = new Set();
 
-            allBlocks.forEach(block => {
+            allBlocks.forEach((block: any) => {
                 const start = block.fecha_inicio; // string YYYY-MM-DD
                 const end = block.fecha_fin;     // string YYYY-MM-DD
 

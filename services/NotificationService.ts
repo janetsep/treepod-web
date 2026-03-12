@@ -7,7 +7,7 @@ export const NotificationService = {
   /**
    * Envía correo de bienvenida al huésped
    */
-  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string) {
+  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string, guestsCount?: number, extras?: string[]) {
     if (!to || !to.includes('@')) {
       console.warn('❌ Email inválido para notificación:', to);
       return;
@@ -25,44 +25,60 @@ export const NotificationService = {
     try {
       // 1. Correo al Huésped - Usando el dominio de onboarding de Resend para pruebas
       await resend.emails.send({
-        from: 'TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
         to: [recipient],
-        subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu refugio en Las Trancas te espera 🌲`,
+        subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera.`,
         html: `
-          <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-            ${testEmail ? `<p style="background: #ffecb3; padding: 10px; border-radius: 5px;">🚧 <strong>MODO TEST</strong><br>Este correo iba dirigido a: ${to}</p>` : ''}
-            <div style="text-align: center; margin-bottom: 20px;">
-               <h1 style="color: #D4AF37; margin-bottom: 5px;">Bienvenido a TreePod</h1>
-               <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 10px; color: #666;">Refugio de Montaña</p>
+            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+                ${testEmail ? `<p style="background: #ffecb3; padding: 10px; border-radius: 5px;">🚧 <strong>MODO TEST</strong><br>Este correo iba dirigido a: ${to}</p>` : ''}
+                
+                <div style="text-align: center; margin-bottom: 30px; padding-top: 20px;">
+                    <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="Logo TreePod" style="width: 140px; height: auto; margin-bottom: 20px;" />
+                    <h1 style="color: #00ADEF; margin-bottom: 5px; font-size: 20px; text-transform: uppercase;">Bienvenidos a Glamping Domos TreePod</h1>
+                    <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 11px; color: #666; margin: 0; font-weight: bold;">REFUGIO DE MONTAÑA</p>
+                </div>
+
+                <div style="padding: 0 20px;">
+                    <p>Hola <strong>${guestName}</strong>,</p>
+                    <p>Estamos contentos de confirmar su estadía en nuestro glamping. Prepararemos todo para que su experiencia sea de un encuentro real con la naturaleza.</p>
+                    
+                    <div style="background-color: #f9f9f9; padding: 25px; border-radius: 12px; margin: 30px 0; border: 1px solid #eee;">
+                        <h4 style="margin: 0 0 15px 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Datos de la reserva</h4>
+                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Código de Reserva:</strong> #${shortId?.toUpperCase() || 'S/N'}</p>
+                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Fechas:</strong> ${bookingDates}</p>
+                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Huéspedes:</strong> ${guestsCount || 1} ${guestsCount === 1 ? 'persona' : 'personas'}</p>
+                        ${extras && extras.length > 0 ? `
+                        <p style="margin: 10px 0 0 0; font-size: 15px;"><strong>Servicios Adicionales:</strong></p>
+                        <ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 14px; color: #555;">
+                            ${extras.map(ex => `<li>${ex}</li>`).join('')}
+                        </ul>
+                        ` : ''}
+                        <p style="margin: 15px 0 0 0; font-size: 15px;"><strong>Ubicación:</strong> Valle Las Trancas, Km 72</p>
+                    </div>
+
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">Cómo llegar</h3>
+                    <p style="line-height: 1.6; color: #555;">Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${googleMapsLink}" style="color: #fff; background-color: #1a1a1a; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 15px;">Ver Ubicación en Maps</a>
+                    </div>
+                    
+                    <p style="font-size: 14px; color: #777; line-height: 1.6;">
+                        * El enlace de Google Maps funciona en todos los dispositivos con conexión a internet y te guiará paso a paso hasta nuestra entrada.
+                    </p>
+
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;" />
+                    <div style="text-align: center;">
+                        <p style="font-size: 13px; color: #888;">Si tienes alguna emergencia en ruta, contáctanos al WhatsApp de recepción.<br/>¡Nos vemos pronto en la montaña!</p>
+                    </div>
+                </div>
             </div>
-            <p>Hola <strong>${guestName}</strong>,</p>
-            <p>Estamos felices de confirmarte que tu estancia en el bosque está asegurada. Hemos preparado todo para que tu experiencia sea de encuentro real con la naturaleza.</p>
-            <div style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #D4AF37; margin: 20px 0;">
-              ${shortId ? `<p style="margin: 0 0 10px 0;"><strong>🆔 Código de Reserva:</strong> <span style="color: #00ADEF; font-weight: bold;">#${shortId.toUpperCase()}</span></p>` : ''}
-              <p style="margin: 0;"><strong>📅 Fechas:</strong> ${bookingDates}</p>
-              <p style="margin: 10px 0 0;"><strong>📍 Ubicación:</strong> Valle Las Trancas, Km 72</p>
-            </div>
-            <h3>🗺️ Cómo llegar</h3>
-            <p>Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
-            <p><a href="${googleMapsLink}" style="color: #fff; background-color: #1a1a1a; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Ver Ubicación en Maps</a></p>
-            <h3>📖 Guía del Huésped</h3>
-            <p>Para asegurar tu confort, hemos preparado una guía digital completa con:</p>
-            <ul>
-              <li>Clave de acceso y WiFi de alta velocidad</li>
-              <li>Instrucciones de uso de la tinaja</li>
-              <li>Recomendaciones locales y restaurantes</li>
-            </ul>
-            <p><a href="https://domostreepod.cl/guia-huesped" style="color: #00ADEF; font-weight: bold; text-decoration: underline;">Ver Guía Digital del Huésped</a></p>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
-            <p style="font-size: 12px; color: #888;">Si tienes alguna emergencia en ruta, contáctanos al WhatsApp de recepción.<br/>¡Nos vemos pronto en la montaña!</p>
-          </div>
         `
       });
 
       // 2. Correo de Alerta al Administrador
-      const adminEmail = process.env.ADMIN_EMAIL || 'info@domostreepod.cl';
+      const adminEmail = 'janetsep@gmail.com';
       await resend.emails.send({
-        from: 'TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
         to: [adminEmail],
         subject: `🚨 ¡NUEVA RESERVA WEB! - ${guestName}`,
         html: `
@@ -88,11 +104,11 @@ export const NotificationService = {
    * Envía notificación de nuevo contacto al administrador
    */
   async sendContactNotification(data: { name: string, email: string, subject: string, message: string }) {
-    const adminEmail = process.env.ADMIN_EMAIL || 'info@domostreepod.cl';
+    const adminEmail = 'janetsep@gmail.com';
 
     try {
       await resend.emails.send({
-        from: 'TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
         to: [adminEmail],
         subject: `Nuevo Contacto: ${data.subject} - ${data.name}`,
         html: `
@@ -108,9 +124,14 @@ export const NotificationService = {
       });
       console.log(`📧 Notificación de contacto enviada a ${adminEmail} (via onboarding@resend.dev)`);
       return { success: true };
-    } catch (error) {
-      console.error('🔥 Error enviando notificación de contacto:', error);
-      return { success: false, error };
+    } catch (error: any) {
+      console.error('🔥 Error enviando notificación de contacto:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        details: error
+      });
+      return { success: false, error: error.message };
     }
   },
 

@@ -66,26 +66,28 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Newsletter / CTA */}
-                    <div className="flex flex-col gap-8">
-                        <h4 className="h4-display text-white"><span className="italic-display">Únete a la Experiencia</span></h4>
-                        <p className="text-white/80 text-sm leading-relaxed">
-                            Recibe historias del valle y beneficios especiales para tu próxima pausa.
-                        </p>
-                        <div className="relative group">
-                            <input
-                                type="email"
-                                placeholder="Tu email"
-                                className="w-full bg-white/10 border-2 border-white/10 rounded-2xl h-16 px-6 text-base focus:border-primary/50 outline-none transition-all text-white font-bold"
-                            />
-                            <button className="absolute right-2 top-2 h-12 px-8 bg-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all text-white shadow-xl shadow-primary/20">
-                                Suscribir
-                            </button>
+                    {/* Sello SERNATUR */}
+                    <div className="flex flex-col gap-6">
+                        <h4 className="h4-display text-white"><span className="italic-display">Confianza</span></h4>
+                        <div className="flex flex-col gap-6 bg-white/5 p-6 rounded-[2rem] border border-white/10 transition-all hover:bg-white/10 group">
+                            <div className="bg-white p-3 rounded-xl flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                                <Image
+                                    src="/images/branding/sello-sernatur-sin-fecha.png"
+                                    alt="Servicio Turístico Registrado SERNATUR"
+                                    width={160}
+                                    height={50}
+                                    className="h-10 md:h-12 w-auto object-contain"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-white text-[11px] tracking-widest font-black uppercase italic-display opacity-80">Servicio Registrado</span>
+                                <span className="text-primary text-[14px] font-black uppercase tracking-tight">N° 36806</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
+                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
                     <p>© {new Date().getFullYear()} TreePod. Glamping de Montaña.</p>
                     <div className="flex gap-10">
                         <Link href="/privacidad" className="hover:text-primary transition-colors">Privacidad</Link>

@@ -7,7 +7,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 
 export default function AdminLogin() {
-    const [mode, setMode] = useState<'login' | 'signup'>('login');
+    const [mode, setMode] = useState<'login' | 'signup' | 'forgot-password'>('login');
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -29,21 +29,39 @@ export default function AdminLogin() {
                 });
                 if (error) throw error;
                 router.push("/admin");
-            } else {
+            } else if (mode === 'signup') {
                 const { error, data } = await supabase.auth.signUp({
                     email,
                     password,
                 });
                 if (error) throw error;
+
+                // Notificar a Janet sobre el nuevo registro (vía API segura)
+                try {
+                    await fetch("/api/admin/security-alert", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ type: 'signup', email })
+                    });
+                } catch (e) {
+                    console.error("Error al notificar registro:", e);
+                }
+
                 if (data.user && !data.session) {
-                    setMessage("¡Cuenta creada! Por favor revisa tu correo para confirmar tu cuenta.");
+                    setMessage("¡Cuenta creada! Se ha notificado a la administración para su aprobación.");
                 } else {
-                    // Auto login if confirmation not required
                     router.push("/admin");
                 }
+            } else {
+                // Forgot Password mode
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/admin/reset-password`,
+                });
+                if (error) throw error;
+                setMessage("Se ha enviado un correo para restablecer tu contraseña.");
             }
         } catch (err: any) {
-            setError(err.message || "Error de autenticación");
+            setError(err.message || "Error en el proceso");
         } finally {
             setLoading(false);
         }
@@ -54,10 +72,11 @@ export default function AdminLogin() {
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100 space-y-6">
                 <div className="text-center space-y-2">
                     <h1 className="text-2xl font-display font-bold text-gray-900">
-                        {mode === 'login' ? 'TreePod Admin' : 'Crear Cuenta Admin'}
+                        {mode === 'login' ? 'TreePod Admin' : mode === 'signup' ? 'Crear Cuenta' : 'Recuperar Acceso'}
                     </h1>
                     <p className="text-sm text-gray-500">
-                        {mode === 'login' ? 'Ingresa tus credenciales para acceder' : 'Registra un nuevo usuario administrador'}
+                        {mode === 'login' ? 'Ingresa tus credenciales para acceder' :
+                            mode === 'signup' ? 'Registra un nuevo usuario administrador' : 'Ingresa tu correo para recibir un enlace de recuperación'}
                     </p>
                 </div>
 
@@ -73,17 +92,20 @@ export default function AdminLogin() {
                             placeholder="admin@treepod.cl"
                         />
                     </div>
-                    <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contraseña</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                            placeholder="••••••••"
-                        />
-                    </div>
+
+                    {mode !== 'forgot-password' && (
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contraseña</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                    )}
 
                     {error && (
                         <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg font-medium flex items-center gap-2">
@@ -104,17 +126,41 @@ export default function AdminLogin() {
                         disabled={loading}
                         className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                     >
-                        {loading ? "Procesando..." : (mode === 'login' ? "Iniciar Sesión" : "Registrar Administrador")}
+                        {loading ? "Procesando..." : (
+                            mode === 'login' ? "Iniciar Sesión" :
+                                mode === 'signup' ? "Registrar Administrador" : "Enviar Enlace Recu-peración"
+                        )}
                     </button>
                 </form>
 
-                <div className="text-center pt-2">
-                    <button
-                        onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(null); setMessage(null); }}
-                        className="text-sm text-primary font-bold hover:underline"
-                    >
-                        {mode === 'login' ? '¿No tienes cuenta? Crear una' : '¿Ya tienes cuenta? Iniciar Sesión'}
-                    </button>
+                <div className="text-center pt-2 space-y-3">
+                    {mode === 'login' && (
+                        <button
+                            onClick={() => { setMode('forgot-password'); setError(null); setMessage(null); }}
+                            className="block w-full text-xs text-gray-400 hover:text-primary transition-colors font-medium"
+                        >
+                            ¿Has olvidado tu contraseña?
+                        </button>
+                    )}
+
+                    {/* Solo permitimos ver el link de registro si se pasa un parámetro secreto por URL para seguridad */}
+                    {typeof window !== 'undefined' && window.location.search.includes('treepod_signup_enabled=true') && (
+                        <button
+                            onClick={() => {
+                                if (mode === 'login') setMode('signup');
+                                else setMode('login');
+                                setError(null);
+                                setMessage(null);
+                            }}
+                            className="text-sm text-primary font-bold hover:underline"
+                        >
+                            {mode === 'login' ? '¿No tienes cuenta? Crear una' : 'Volver al Inicio de Sesión'}
+                        </button>
+                    )}
+
+                    {mode === 'login' && typeof window !== 'undefined' && !window.location.search.includes('treepod_signup_enabled=true') && (
+                        <p className="text-xs text-gray-400">Sistema restringido a administradores autorizados.</p>
+                    )}
                 </div>
             </div>
         </div>

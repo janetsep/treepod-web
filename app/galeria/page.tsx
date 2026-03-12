@@ -19,29 +19,35 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/domo3Verano1.jpg", alt: "Domo TreePod en plenitud del verano", aspect: "landscape" },
     { src: "/images/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
     { src: "/images/domoaereo.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
+    { src: "/images/exteriors/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait" },
+    { src: "/images/exteriors/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
 
     // --- EXPERIENCIA & WELLNESS ---
-    { src: "/images/real/DesayunoTreePod.jpg", alt: "Desayuno artesanal servido en el domo", aspect: "landscape" },
+    { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", aspect: "landscape" },
     { src: "/images/wellness/Tinaja3.jpeg", alt: "Relajación absoluta en nuestra tinaja privada", aspect: "landscape" },
-    { src: "/images/wellness/Tinaja1.jpg", alt: "Bienestar inmerso en el bosque nativo", aspect: "portrait" },
+    { src: "/images/wellness/Tinaja5.jpg", alt: "Bienestar inmerso en el bosque nativo", aspect: "portrait" },
+    { src: "/images/wellness/Tinaja4.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
     { src: "/images/domopiscinainvierno.jpg", alt: "Atmósfera invernal junto a la piscina", aspect: "landscape" },
 
     // --- INTERIORES REALES ---
+    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
     { src: "/images/real/CocinaDomo.jpeg", alt: "Kitchenette moderna y completamente equipada", aspect: "portrait" },
     { src: "/images/real/CocinaDomo3.jpeg", alt: "Detalles que hacen la diferencia en tu estancia", aspect: "landscape" },
     { src: "/images/real/CocinaDomo2.jpeg", alt: "Equipamiento premium para tu autonomía", aspect: "portrait" },
-    { src: "/images/domo-treepod-ok-12.jpg", alt: "Interior acogedor con vistas al bosque", aspect: "landscape" },
+    { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Rincón de lectura y descanso", aspect: "landscape" },
 
     // --- ATMOSFERA & NOCHE ---
     { src: "/images/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
+    { src: "/images/exteriors/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
     { src: "/images/exteriors/hero-night-2.jpg", alt: "Domo iluminado bajo el cielo estrellado", aspect: "square" },
     { src: "/images/exteriors/Las Trancas Cielo Noche.jpeg", alt: "Cielos infinitos de la montaña chillaneja", aspect: "landscape" },
     { src: "/images/exteriors/domo-exterior-arrival.jpg", alt: "Tu llegada al refugio en el bosque", aspect: "portrait" },
 
     // --- NATURALEZA ---
     { src: "/images/exteriors/Las Trancas Bosque Nativo.jpeg", alt: "Inmersión total en el bosque nativo", aspect: "landscape" },
+    { src: "/images/exteriors/Las Trancas Bosque Nativo 2.jpeg", alt: "Detalle de la flora silvestre", aspect: "portrait" },
+    { src: "/images/exteriors/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", aspect: "landscape" },
     { src: "/images/domoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/domo3verano2.jpg", alt: "Luz natural y entorno verde", aspect: "landscape" },
     { src: "/images/exteriors/noche-domo-iluminado-2-2.jpg", alt: "Serenidad nocturna en TreePod", aspect: "portrait" },
 ];
 
@@ -51,15 +57,13 @@ export default function GaleriaPage() {
             <main className="py-16 md:py-24 bg-white">
                 {/* Cabecera Editorial */}
                 <div className="container mx-auto px-6 md:px-10 mb-8 md:mb-12">
-                    <div className="inline-block mb-8">
-                        <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                            La Vida en el Bosque
-                        </span>
+                    <div className="inline-flex items-center gap-2 mb-4">
+                        <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                        <span className="text-primary text-base font-black tracking-[0.2em] uppercase">La Vida en el Bosque</span>
                     </div>
                     <h1 className="h1-display text-text-main leading-tight mb-6">
                         La Belleza de <span className="italic-display text-primary">lo Auténtico</span>
                     </h1>
-                    <div className="h-1.5 w-24 bg-primary mb-6"></div>
                     <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
                         Imágenes reales de tu futuro refugio. El bosque, la cama y la tranquilidad en su estado puro.
                     </p>
@@ -101,15 +105,13 @@ export default function GaleriaPage() {
                     </div>
                 </section>
 
-                <div className="container mx-auto px-6 max-w-7xl mt-32">
-                    <hr className="border-t border-black/10" />
-                </div>
 
                 <section id="estilo-vida" className="container mx-auto px-6 md:px-10 mt-32 pb-24">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
                         <div className="lg:col-span-5 space-y-8">
-                            <div className="inline-block mb-4">
-                                <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">Refugio Genuino</span>
+                            <div className="inline-flex items-center gap-2 mb-4">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Refugio Genuino</span>
                             </div>
                             <h2 className="h2-display text-text-main leading-tight">
                                 Espacios para <br /><span className="text-primary italic">Permanecer</span>

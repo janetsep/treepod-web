@@ -8,7 +8,7 @@ export default function WhatsAppButton() {
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
     const handleClick = () => {
-        TrackingService.sendEvent('Contact', {
+        TrackingService.sendEvent('whatsapp_click', {
             method: 'whatsapp',
             location: 'floating_button',
             category: 'lead'

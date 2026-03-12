@@ -10,12 +10,19 @@ function ConfirmacionContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const [reserva, setReserva] = useState<any>(null);
+    const [montoPagado, setMontoPagado] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const reservaId = searchParams.get('reserva_id');
         const amount = searchParams.get('amount');
         const transactionId = searchParams.get('transaction_id');
+
+        // Capturar el monto real pagado desde el query param de Transbank
+        if (amount) {
+            const parsed = parseInt(amount, 10);
+            if (!isNaN(parsed)) setMontoPagado(parsed);
+        }
 
         // Disparar evento purchase a GA4/GTM
         if (reservaId && amount && typeof window !== 'undefined') {
@@ -53,10 +60,10 @@ function ConfirmacionContent() {
         if (reservaId) {
             supabase
                 .from('reservas')
-                .select('*, domos(nombre)')
+                .select('*, domos(nombre), reserva_servicios(*, servicios(nombre))')
                 .eq('id', reservaId)
                 .single()
-                .then(({ data, error }) => {
+                .then(({ data, error }: { data: any, error: any }) => {
                     if (error) {
                         console.error('Error cargando reserva:', error);
                     } else {
@@ -147,31 +154,62 @@ function ConfirmacionContent() {
                                     <span className="text-text-main font-bold">{reserva.nombre} {reserva.apellido}</span>
                                 </div>
 
-                                <div className="mt-8 space-y-4">
-                                    <div className="flex justify-between items-end py-6 bg-primary/5 px-8 rounded-3xl border border-primary/10 relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 rotate-12">
-                                            <CheckCircle2 className="w-12 h-12 text-primary" />
-                                        </div>
-                                        <div>
-                                            <span className="block font-black text-primary uppercase tracking-[0.2em] text-[10px] mb-1">Abono Confirmado (50%)</span>
-                                            <span className="text-[9px] text-text-sub uppercase font-bold tracking-widest opacity-60">Pago vía Webpay</span>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="font-black text-3xl text-primary font-display leading-none">
-                                                ${reserva.monto_pagado?.toLocaleString('es-CL') || Math.round(reserva.total * 0.5).toLocaleString('es-CL')}
-                                            </span>
+                                {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
+                                    <div className="py-3 border-b border-black/5">
+                                        <span className="text-[10px] font-black text-text-sub uppercase tracking-widest block mb-2">Servicios Extra</span>
+                                        <div className="space-y-2">
+                                            {reserva.reserva_servicios.map((rs: any) => (
+                                                <div key={rs.id} className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-600 font-medium">
+                                                        {rs.cantidad}x {rs.servicios?.nombre || 'Servicio'}
+                                                    </span>
+                                                    <span className="text-text-main font-bold">
+                                                        ${(rs.total || 0).toLocaleString('es-CL')}
+                                                    </span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
+                                )}
 
-                                    <div className="flex justify-between items-center py-4 bg-black/[0.02] px-8 rounded-2xl border border-dashed border-black/10">
-                                        <span className="font-bold text-text-sub uppercase tracking-widest text-[10px] flex items-center gap-2">
-                                            <Info className="w-3.5 h-3.5 text-primary/60" />
-                                            Saldo Pendiente (50%)
-                                        </span>
-                                        <span className="font-black text-text-main text-lg">
-                                            ${(reserva.total - (reserva.monto_pagado || Math.round(reserva.total * 0.5))).toLocaleString('es-CL')}
-                                        </span>
-                                    </div>
+                                <div className="mt-8 space-y-4">
+                                    {/* Calcular monto real: priorizamos query param > DB > fallback 50% */}
+                                    {(() => {
+                                        const abono = montoPagado != null
+                                            ? montoPagado
+                                            : (reserva.monto_pagado != null && reserva.monto_pagado > 0)
+                                                ? reserva.monto_pagado
+                                                : Math.round(reserva.total * 0.5);
+                                        const saldo = reserva.total - abono;
+                                        return (
+                                            <>
+                                                <div className="flex justify-between items-end py-6 bg-primary/5 px-8 rounded-3xl border border-primary/10 relative overflow-hidden group">
+                                                    <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 rotate-12">
+                                                        <CheckCircle2 className="w-12 h-12 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <span className="block font-black text-primary uppercase tracking-[0.2em] text-[10px] mb-1">Abono Confirmado (50%)</span>
+                                                        <span className="text-[9px] text-text-sub uppercase font-bold tracking-widest opacity-60">Pago vía Webpay ✓</span>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <span className="font-black text-3xl text-primary font-display leading-none">
+                                                            ${abono.toLocaleString('es-CL')}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex justify-between items-center py-4 bg-black/[0.02] px-8 rounded-2xl border border-dashed border-black/10">
+                                                    <span className="font-bold text-text-sub uppercase tracking-widest text-[10px] flex items-center gap-2">
+                                                        <Info className="w-3.5 h-3.5 text-primary/60" />
+                                                        Saldo Pendiente (50%)
+                                                    </span>
+                                                    <span className="font-black text-text-main text-lg">
+                                                        ${saldo.toLocaleString('es-CL')}
+                                                    </span>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
 
                                     <div className="flex justify-between items-center px-8 pt-2">
                                         <span className="text-[10px] font-black text-text-sub/50 uppercase tracking-widest">Total Estadía</span>

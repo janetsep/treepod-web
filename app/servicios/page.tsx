@@ -10,26 +10,26 @@ export default function ServicesPage() {
         {
             title: "Bienestar & Spa",
             subtitle: "Rituales de Pureza",
-            description: "Sumérgete en nuestras tinajas de ciprés con sales termales y esencias naturales bajo el manto estelar de la cordillera. Un bálsamo para el alma y el cuerpo.",
+            description: "Cruza la pasarela por el bosque y sumérgete en nuestras tinajas de ciprés al aire libre. Con agua purificada mineralizada y bajo el manto estelar, es un bálsamo para el cuerpo.",
             image: "/images/wellness/Tinaja3.jpeg",
             alt: "Relajación total con vista al bosque nativo desde el refugio",
-            features: ["Tinajas de Ciprés", "Masajes Relajantes", "Aromaterapia"]
+            features: ["Tinajas al Aire Libre", "Agua Mineralizada", "Acceso por Pasarela"]
         },
         {
             title: "Gastronomía Local",
             subtitle: "Sabor de la Tierra",
             description: "Disfruta de una experiencia culinaria rústica y auténtica: desde un asado en el quincho hasta desayunos cordilleranos con productos frescos del valle. El sabor de lo real.",
-            image: "/images/real/DesayunoTreePod.jpg",
+            image: "/images/real/comidatreepod.jpg",
             alt: "Desayuno artesanal servido en Domo TreePod",
-            features: ["Quincho & Asados", "Desayuno del Valle", "Vinos de la Zona"]
+            features: ["Quincho & Asados", "Desayuno en el valle", "Hortalizas de invernadero"]
         },
         {
             title: "Aventura en el Valle",
             subtitle: "Espíritu de Montaña",
-            description: "Desde caminatas tranquilas por senderos milenarios hasta la adrenalina de la nieve. Tu base perfecta para vivir el entorno.",
+            description: "Desde caminatas tranquilas por senderos milenarios durante el verano hasta la adrenalina de la nieve. Tu base perfecta para vivir el entorno.",
             image: "/images/exteriors/domo-exterior-arrival.jpg",
             alt: "Exterior del domo TreePod rodeado de naturaleza y nieve",
-            features: ["Trekking Guiado (Servicio externo)", "Centro de Ski (Cercano)", "Vistas Panorámicas"]
+            features: ["Trekking Guiado (Servicio externo)", "Centro de Ski (Servicio externo cercano)", "Vistas Panorámicas"]
         }
     ];
 
@@ -41,15 +41,13 @@ export default function ServicesPage() {
             <main className="py-16 md:py-24 container mx-auto px-6 md:px-10">
                 {/* Título editorial */}
                 <div className="mb-16 md:mb-24">
-                    <div className="inline-block mb-4">
-                        <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                            Experiencias TreePod
-                        </span>
+                    <div className="inline-flex items-center gap-2 mb-4">
+                        <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                        <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Experiencias TreePod</span>
                     </div>
                     <h1 className="h1-display text-text-main leading-tight mb-6">
                         El Arte de <span className="italic-display text-primary">Habitar</span>
                     </h1>
-                    <div className="h-1.5 w-24 bg-primary mb-6"></div>
                     <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
                         Más que un lugar donde dormir, un santuario diseñado para revitalizar tus sentidos.
                     </p>
@@ -74,8 +72,9 @@ export default function ServicesPage() {
 
                             {/* Text side */}
                             <div className="w-full lg:w-1/2 space-y-10">
-                                <div className="inline-block mb-4">
-                                    <span className="text-primary text-[11px] font-black tracking-[0.2em] uppercase">{service.subtitle}</span>
+                                <div className="inline-flex items-center gap-2 mb-4">
+                                    <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                    <span className="text-primary text-base font-black tracking-[0.2em] uppercase">{service.subtitle}</span>
                                 </div>
                                 <h2 className="h2-display leading-tight text-text-main">
                                     {service.title}
@@ -101,11 +100,6 @@ export default function ServicesPage() {
                                 </div>
                             </div>
                         </div>
-                            {index < mainServices.length - 1 && (
-                                <div className="container mx-auto px-6 max-w-7xl pt-16">
-                                    <hr className="border-t border-black/10" />
-                                </div>
-                            )}
                         </>
                     ))}
                 </div>
