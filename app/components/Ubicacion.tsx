@@ -1,5 +1,5 @@
 import GoogleMapsSection from './GoogleMapsSection';
-import { Mountain, Utensils, Fuel } from "lucide-react";
+import { Mountain, Utensils, Fuel, Trees, Wine } from "lucide-react";
 
 export default function Ubicacion() {
   return (
@@ -15,24 +15,29 @@ export default function Ubicacion() {
                 <span className="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Estratégico</span>
               </div>
-              <h2 className="h2-display leading-[1.0] text-text-main">
-                Punto de <br />
-                <span className="text-primary italic-display">Partida</span>
+              <h2 className="h2-display leading-tight text-text-main">
+                En medio de la nada, pero a un <span className="text-primary italic-display">paso de todo</span> lo que importa
               </h2>
             </div>
 
-            <p className="text-text-sub font-bold leading-relaxed text-lg md:text-xl">
-              Ubicados en el Km 72 de la ruta a Nevados de Chillán, TreePod te sitúa en el centro del valle, pero te resguarda en la profundidad del bosque nativo.
-            </p>
-
             <div className="space-y-8 pt-4">
+              <div className="flex gap-5">
+                <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
+                  <Trees className="text-primary w-6 h-6" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Tu refugio secreto (pero fácil de llegar)</h4>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará, y no tendrás que sufrir por caminos imposibles para llegar.</p>
+                </div>
+              </div>
+
               <div className="flex gap-5">
                 <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
                   <Mountain className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Nevados de Chillán</h4>
-                  <p className="text-sm md:text-base text-text-sub font-bold">A solo 12 minutos del centro de Ski y termas.</p>
+                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">A solo 12 minutos de la nieve y las termas</h4>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Despierta, tómate un café y en lo que duran tus canciones favoritas en el auto ya estás esquiando o relajándote en el agua termal.</p>
                 </div>
               </div>
 
@@ -41,18 +46,18 @@ export default function Ubicacion() {
                   <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Gastronomía</h4>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Rodeados de los mejores restaurantes típicos del valle.</p>
+                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Come increíble (sin tener que cocinar)</h4>
+                  <p className="text-sm md:text-base text-text-sub font-bold">¿Cero ganas de ensuciar ollas? Perfecto. Estás a un paso de los mejores restaurantes típicos del valle para ir a comer a lo grande.</p>
                 </div>
               </div>
 
               <div className="flex gap-5">
                 <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
-                  <Fuel className="text-primary w-6 h-6" strokeWidth={2.5} />
+                  <Wine className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Servicios</h4>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Acceso rápido a minimarkets y servicios básicos.</p>
+                  <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">¿Olvidaste algo? Cero estrés</h4>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Tienes minimarkets justo al lado. Si se acaba el hielo, el vino o necesitas cualquier cosa básica, lo resuelves en un par de minutos.</p>
                 </div>
               </div>
             </div>

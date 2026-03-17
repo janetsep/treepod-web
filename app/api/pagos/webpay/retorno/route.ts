@@ -142,7 +142,7 @@ async function handleReturn(req: Request) {
     const isApproved = commit.response_code === 0;
 
     // Actualizar estado de la reserva
-    await supabase
+    const { error: dbUpdateError } = await supabase
       .from("reservas")
       .update({
         estado: isApproved ? "pagado" : "rechazado",
@@ -151,6 +151,11 @@ async function handleReturn(req: Request) {
         updated_at: new Date().toISOString(),
       })
       .eq("id", reserva.id);
+
+    if (dbUpdateError) {
+      console.error("❌ CRÍTICO: Webpay cobró pero falló update en Supabase:", dbUpdateError);
+      // Ojo: Si ya cobró, ¡el cliente confía en que pagó!
+    }
 
     // Si el pago es exitoso, registrar en finanzas via FinanceService
     if (isApproved) {

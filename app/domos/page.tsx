@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDomoBasePrice, getDomoPriceForNights } from "@/lib/pricing";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Ruler, Users, Wifi, ParkingCircle, Waves, Grid3X3, ArrowRight } from "lucide-react";
+import { CheckCircle2, Ruler, Users, Wifi, ParkingCircle, Waves, Grid3X3, ArrowRight, Cat } from "lucide-react";
+import SeasonRates from '../components/SeasonRates';
 
 
 export default function DomosPage() {
@@ -54,12 +55,12 @@ export default function DomosPage() {
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">TreePod es</span>
                             </div>
-                            <h1 className="h1-display text-text-main !text-left">Habitar la Naturaleza <br /> <span className="text-primary italic-display">con Propósito</span></h1>
+                            <h1 className="h1-display text-text-main !text-left">Tu lugar en el bosque, <br /> <span className="text-primary italic-display font-light">pensado para que no eches nada de menos</span></h1>
                         </div>
-                        <p className="text-3xl md:text-5xl font-display leading-tight text-text-main">
-                            "La geometría de nuestros domos no es solo diseño; es <span className="text-primary italic-display">filosofía</span>. Integra comodidad en el bosque nativo de manera que respeta cada árbol, cada estación, cada suspiro de la cordillera."
+                        <p className="text-2xl md:text-4xl font-display leading-tight text-text-main">
+                            Diseñamos este refugio para que puedas estar inmerso en la naturaleza salvaje, pero durmiendo en una cama increíble y con todas las comodidades de la ciudad. <span className="text-primary italic-display">Respetamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
                         </p>
                     </div>
 
@@ -105,7 +106,7 @@ export default function DomosPage() {
                             {/* Sub Image 2: Table Detail */}
                             <div className="col-span-1 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/comidadomoafuerapizza.jpg"
+                                    src="/images/Galeria/comidadomoafuerapizza.jpg"
                                     alt="Cena o Almuerzo en la terraza del Domo"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
@@ -115,26 +116,15 @@ export default function DomosPage() {
                         <div className="space-y-8 order-2 md:order-2">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Descanso Real</span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Afuera nevando, tú en polera</span>
                             </div>
-                            <h3 className="h2-display text-text-main leading-tight">Refugio <span className="italic-display">Cálido</span></h3>
+                            <h3 className="h2-display text-text-main leading-tight">Cama con vista <span className="italic-display">panorámica</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Cama matrimonial para un descanso profundo. Despierta con energía mientras escuchas el bosque nativo y los sonidos de la naturaleza.
+                                <strong>Cama con vista panorámica:</strong> Despierta con energía viendo y escuchando el bosque nativo directamente desde tu cama.
                             </p>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                No pasarás frío aunque afuera esté nevando; la geometría del domo mantiene el calor de la estufa a pellet de última generación con carga programada.
+                                <strong>Cero frío, calor 24/7:</strong> Olvídate del hielo de la cordillera. Tu refugio cuenta con una estufa a pellet automática de última generación. Afuera puede hacer un frío extremo, pero tú tendrás la temperatura perfecta todo el día y la noche.
                             </p>
-                            <ul className="space-y-4 pt-4">
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Calefacción 24/7 (Carga Fácil)
-                                </li>
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Aislamiento Térmico Certificado
-                                </li>
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Vistas Panorámicas desde la cama
-                                </li>
-                            </ul>
                         </div>
                     </div>
 
@@ -143,132 +133,107 @@ export default function DomosPage() {
                         <div className="space-y-8 order-2 md:order-1">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Independencia Total</span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Enciérrate y no salgas</span>
                             </div>
-                            <h3 className="h2-display text-text-main leading-tight">Equipamiento <span className="italic-display">Completo</span></h3>
+                            <h3 className="h2-display text-text-main leading-tight">Tienes absolutamente <span className="italic-display">todo lo que necesitas</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Siéntete en un refugio autónomo en medio del bosque nativo. Cada domo cuenta con baño completo integrado y el equipamiento necesario para disfrutar sin depender de nada más.
+                                Enciérrate y no salgas en todo el fin de semana si no quieres. Tienes absolutamente todo lo que necesitas para aislarte del mundo sin depender de nadie:
                             </p>
                             <ul className="space-y-4 pt-4">
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Baño Completo (Ducha Shower)
+                                <li className="flex items-center gap-4 group/item">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
+                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                    </div>
+                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Baño privado completo con ducha de agua caliente.</span>
                                 </li>
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Kitchenette Equipada
+                                <li className="flex items-center gap-4 group/item">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
+                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                    </div>
+                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Cocina equipada con frigobar.</span>
                                 </li>
-                                <li className="flex items-center gap-4 text-base md:text-lg text-text-main font-bold">
-                                    <CheckCircle2 className="text-primary w-6 h-6 shrink-0" strokeWidth={3} /> Frigobar y Utensilios
+                                <li className="flex items-center gap-4 group/item">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
+                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                    </div>
+                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Cafetera Nespresso y utensilios listos para usar.</span>
                                 </li>
                             </ul>
                         </div>
-                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] relative group">
-                            <Image
-                                src="/images/real/CocinaDomo.jpeg"
-                                alt="Cocina y Kitchenette Real en Domo TreePod"
-                                fill
-                                className="object-cover transition-transform duration-[3s] group-hover:scale-105"
-                            />
+                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] grid grid-cols-2 gap-2 relative group">
+                            <div className="relative overflow-hidden h-full">
+                                <Image
+                                    src="/images/real/CocinaDomo1.jpeg"
+                                    alt="Cocina y Kitchenette Real en Domo TreePod"
+                                    fill
+                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
+                                />
+                            </div>
+                            <div className="relative overflow-hidden h-full">
+                                <Image
+                                    src="/images/real/CocinaDomo.jpeg"
+                                    alt="Detalle Cocina"
+                                    fill
+                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Block C: Exterior / Tinaja */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-1 md:grid-cols-2 gap-4 h-[500px]">
-                            <div className="relative group overflow-hidden">
-                                <Image
-                                    src="/images/domo3Verano1.jpg"
-                                    alt="Vista exterior Domo TreePod en verano"
-                                    fill
-                                    className="object-cover transition-transform duration-[3s] group-hover:scale-105"
-                                />
-                            </div>
-                            <div className="relative group overflow-hidden">
-                                <Image
-                                    src="/images/wellness/Tinaja5.jpg"
-                                    alt="Tinaja Caliente"
-                                    fill
-                                    className="object-cover transition-transform duration-[3s] group-hover:scale-105"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-8 order-2 md:order-2">
-                            <div className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Vida al Aire Libre</span>
-                            </div>
-                            <h3 className="h2-display text-text-main leading-tight">Terraza y <span className="italic-display">Tinaja</span></h3>
-                            <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
-                                Tu estadía se conecta con la naturaleza. A través de una pasarela por el bosque nativo, accedes a nuestras terrazas al aire libre y tinajas de ciprés con agua termal para un relajo profundo bajo las estrellas.
-                            </p>
-                            <div className="bg-primary/5 p-8 rounded-[2rem] border-2 border-primary/10 mt-6 shadow-sm">
-                                <h4 className="text-primary font-black uppercase tracking-[0.2em] text-[11px] mb-3">Servicio Adicional</h4>
-                                <p className="text-base text-text-sub font-bold leading-relaxed">
-                                    Añade la experiencia de Tinaja Caliente al momento de reservar o solicítala a tu llegada (sujeto a disponibilidad).
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 
                 {/* 4. Technical Specs (The Whitepod Grid) */}
-                <div className="">
+                <div className="mt-24 md:mt-32">
                     <h3 className="h3-display mb-12 text-center text-text-main">Ficha Técnica</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-                        <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
                                 <Ruler className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Dimensiones</h4>
-                            <p className="text-base text-text-sub font-bold">38 m² Interior<br />8 m² Terraza</p>
+                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Tu Espacio</h4>
+                            <p className="text-base text-text-sub font-bold leading-snug">38 m² de interior<br />+ 8 m² de terraza privada.</p>
                         </div>
-                        <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
                                 <Users className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
                             <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Capacidad</h4>
-                            <p className="text-base text-text-sub font-bold">Máx. 4 Adultos</p>
+                            <p className="text-base text-text-sub font-bold leading-snug">Hasta 4 adultos cómodamente.</p>
                         </div>
-                        <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
                                 <Wifi className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Conectividad</h4>
-                            <p className="text-base text-text-sub font-bold">Starlink Satelital<br />Alta Velocidad</p>
+                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Internet (Starlink)</h4>
+                            <p className="text-base text-text-sub font-bold leading-snug">Alta velocidad. Perfecto si necesitas teletrabajar o ver una película sin cortes.</p>
                         </div>
-                        <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
                                 <ParkingCircle className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Exterior</h4>
-                            <p className="text-base text-text-sub font-bold">Estacionamiento<br />Pasarelas de Madera</p>
+                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Seguridad y Acceso</h4>
+                            <p className="text-base text-text-sub font-bold leading-snug">Estacionamiento privado y acceso seguro por pasarelas de madera.</p>
                         </div>
-                        <div className="space-y-2 text-center md:text-left col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-8 pt-8 border-t border-black/5">
-                            <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
-                                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                    <Waves className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                                </div>
-                                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Tinajas</h4>
-                                <p className="text-base text-text-sub font-bold">Tinajas al Aire Libre<br />Acceso por Pasarela</p>
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
+                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
+                                <Grid3X3 className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
-                            <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
-                                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                    <Grid3X3 className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                                </div>
-                                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Áreas Comunes</h4>
-                                <p className="text-base text-text-sub font-bold">Quincho para Asados<br />Invernadero Nativo</p>
+                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Áreas Comunes</h4>
+                            <p className="text-base text-text-sub font-bold leading-snug">Quincho listo para tus asados y un Invernadero Nativo para explorar.</p>
+                        </div>
+                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
+                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
+                                <Cat className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
                             </div>
-                            <div className="space-y-5 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl hover:bg-surface transition-colors">
-                                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                    <div className="text-primary text-2xl font-black">🐾</div>
-                                </div>
-                                <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Pet Friendly</h4>
-                                <p className="text-base text-text-sub font-bold">Mascotas Bienvenidas<br />(Bajo criterios específicos)</p>
-                            </div>
+                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Pet Friendly</h4>
+                            <p className="text-base text-text-sub font-bold leading-snug">Martin y Molly invitan a tu mascota (solo pedimos unas normas lógicas de convivencia).</p>
                         </div>
                     </div>
                 </div>
             </main >
+
+            <SeasonRates />
 
             {/* 5. Sticky Booking Bar / Footer CTA */}
             <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
@@ -279,12 +244,12 @@ export default function DomosPage() {
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
                             <div className="flex items-center gap-2.5">
                                 <span className="text-xl md:text-2xl font-black text-primary">$145.000</span>
-                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ 1 noche</span>
+                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ noche (Vie-Dom)</span>
                             </div>
                             <div className="hidden sm:block h-4 w-[1px] bg-black/10"></div>
                             <div className="flex items-center gap-2.5">
-                                <span className="text-xl md:text-2xl font-black text-primary">$130.000</span>
-                                <span className="text-[11px] font-bold text-primary leading-none">/ 2+ noches</span>
+                                <span className="text-xl md:text-2xl font-black text-primary">$123.250</span>
+                                <span className="text-[11px] font-bold text-primary leading-none">/ noche (Lun-Jue)</span>
                             </div>
                         </div>
                     </div>

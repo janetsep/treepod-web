@@ -11,16 +11,24 @@ type AvailabilityCalendarProps = {
     selectedRange: DateRange | undefined;
     onSelect: (range: DateRange | undefined) => void;
     className?: string;
+    defaultMonth?: Date;
 };
 
-export default function AvailabilityCalendar({ selectedRange, onSelect, className }: AvailabilityCalendarProps) {
+export default function AvailabilityCalendar({ selectedRange, onSelect, className, defaultMonth }: AvailabilityCalendarProps) {
     const [blockedDates, setBlockedDates] = useState<Date[]>([]);
     const [loading, setLoading] = useState(true);
     const [monthsToShow, setMonthsToShow] = useState(1);
+    const [month, setMonth] = useState<Date | undefined>(defaultMonth || startOfToday());
 
     useEffect(() => {
         setMonthsToShow(1);
     }, []);
+
+    useEffect(() => {
+        if (defaultMonth) {
+            setMonth(defaultMonth);
+        }
+    }, [defaultMonth]);
 
     useEffect(() => {
         const fetchAvailability = async () => {
@@ -152,6 +160,8 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
                 mode="range"
                 selected={selectedRange}
                 onSelect={onSelect}
+                month={month}
+                onMonthChange={setMonth}
                 min={1}
                 numberOfMonths={monthsToShow}
                 pagedNavigation

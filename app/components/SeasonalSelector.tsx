@@ -12,7 +12,7 @@ const SEASONS = [
         title: "Refugio Térmico",
         description: "La nieve cubre el valle mientras tú disfrutas del calor seco de la estufa a pellet. La eficiencia geodésica mantiene la temperatura ideal sin esfuerzo.",
         perk: "Estufa a pellet de alto rendimiento",
-        image: "/images/exteriors/hero-night-2.jpg", // Placeholder until snow image confirm
+        image: "/images/Galeria/hero-night-2.jpg", // Placeholder until snow image confirm
     },
     {
         id: "autumn",
@@ -21,7 +21,7 @@ const SEASONS = [
         title: "Paleta Dorada",
         description: "El bosque nativo se transforma. Es la época ideal para la tranquilidad y la contemplación desde la terraza exclusiva elevada.",
         perk: "Vistas panorámicas al bosque dorado",
-        image: "/images/exteriors/Las Trancas Bosque Nativo.jpeg",
+        image: "/images/Galeria/Las Trancas Bosque Nativo.jpeg",
     },
     {
         id: "summer",
@@ -30,7 +30,7 @@ const SEASONS = [
         title: "Frescura Natural",
         description: "El domo geodésico permite circulación de aire constante. Sombra natural y noches frescas garantizadas.",
         perk: "Aislación térmica inteligente",
-        image: "/images/exteriors/domo-exterior-arrival.jpg",
+        image: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg",
     },
     {
         id: "spring",
@@ -39,7 +39,7 @@ const SEASONS = [
         title: "Renacimiento",
         description: "El deshielo y el despertar de la fauna local. Vive la energía de la montaña en el centro estratégico de Las Trancas.",
         perk: "Proximidad a senderos de trekking",
-        image: "/images/exteriors/Las Trancas Camino entorno.jpeg",
+        image: "/images/Galeria/Las Trancas Camino entorno.jpeg",
     }
 ];
 
@@ -103,7 +103,7 @@ export default function SeasonalSelector() {
                                 src={activeSeason.image}
                                 alt={activeSeason.title}
                                 fill
-                                className="object-cover transition-transform duration-[5s] hover:scale-105"
+                                className="object-cover object-center transition-transform duration-[5s] hover:scale-105"
                                 sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70"></div>

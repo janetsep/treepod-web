@@ -5,6 +5,8 @@ import { TrackingService } from "@/services/TrackingService";
 import { X, Mail, ArrowRight, CheckCircle2 } from "lucide-react";
 
 
+import Image from "next/image";
+
 export default function LeadMagnet() {
     const [isOpen, setIsOpen] = useState(false);
     const [email, setEmail] = useState("");
@@ -51,7 +53,7 @@ export default function LeadMagnet() {
 
             if (response.ok) {
                 // Track Lead Event
-                TrackingService.sendEvent('Lead', {
+                TrackingService.sendEvent('generate_lead', {
                     method: 'lead_magnet_popup',
                     category: 'newsletter',
                     email_domain: email.split('@')[1]
@@ -88,10 +90,11 @@ export default function LeadMagnet() {
                 </button>
 
                 <div className="w-full md:w-5/12 h-48 md:h-auto relative overflow-hidden">
-                    <img
+                    <Image
                         src="/images/real/CocinaDomo2.jpeg"
                         alt="Interior Real del Domo TreePod"
-                        className="w-full h-full object-cover transition-transform duration-[10s] hover:scale-110"
+                        fill
+                        className="w-full h-full object-cover object-center transition-transform duration-[10s] hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-surface/10 dark:md:to-background-dark/10"></div>
                 </div>

@@ -14,49 +14,50 @@ export default function DomoAmenities() {
     const amenities = [
         {
             icon: "hot_tub",
-            title: "Tinaja de uso exclusivo o privado",
-            description: "En medio del bosque nativo, al aire libre para apreciar el entorno y acceso mediante una pasarela.",
+            title: "Mejora tu estadía con una tinaja caliente privada",
+            description: "¿Quieres llevar tu desconexión al siguiente nivel? Añade el acceso a tu propia tinaja al aire libre por $38000 y asegúrate de no querer salir del agua por lo que dura esta experiencia.",
             tag: "Bajo Reserva",
-            image: "/images/EquipamientoParaTuEstadia/Tinaja5.jpg",
-            size: "large"
+            image: "/images/wellness/Tinaja5.jpg",
+            size: "large",
+            objectPosition: "object-center"
         },
         {
             icon: "fireplace",
-            title: "Estufa a Pellet",
-            description: "Calor seco y constante. Olvídate de cargar leña o del humo en el interior.",
+            title: "Cero humo, cero frío",
+            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido y perfecto 24/7.",
             tag: "Confort",
             image: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
             size: "small"
         },
         {
             icon: "auto_awesome",
-            title: "Camas en Segundo Piso",
-            description: "Camas adicionales ubicadas en el altillo, directamente bajo la geometría geodésica del domo.",
+            title: "Duerme en lo alto del domo",
+            description: "Lugar y camas increíbles. Vas a descansar de verdad y despertar envuelto por la naturaleza.",
             tag: "Espacio",
             image: "/images/EquipamientoParaTuEstadia/interior-domo-acogedor-84-3.jpg",
             size: "small"
         },
         {
             icon: "coffee",
-            title: "Cafetera Nespresso",
-            description: "Cafetera Nespresso integrada en la kitchenette de tu domo para disfrutar de un buen café en la tranquilidad del bosque.",
+            title: "Tu café perfecto al despertar",
+            description: "Tienes tu propia Nespresso lista para ti. Imagínate tomarte un café bien caliente por la mañana escuchando solo los pájaros y el viento.",
             tag: "Confort",
             image: "/images/EquipamientoParaTuEstadia/DSC_6412DSC_6412.jpeg",
             size: "small"
         },
         {
             icon: "sparkles",
-            title: "Equipos de Limpieza",
-            description: "Tecnología de IRobot autónoma disponibles para la limpieza durante tu estadía.",
+            title: "Tú dedícate a no hacer nada",
+            description: "Olvídate de limpiar o barrer. Tienes un robot inteligente encargado de mantener todo impecable para que tú solo te preocupes de relajarte.",
             tag: "Tecnología",
             images: robotImages,
             size: "large"
         },
         {
             icon: "paw",
-            title: "Martin y Molly (Pet Friendly)",
-            description: "Nuestro equipo anfitrión te invita a traer a tu mascota bajo criterios de convivencia segura.",
-            tag: "Amigos",
+            title: "Tráete a tu mejor amigo (Pet Friendly)",
+            description: "Sabemos que es parte de la familia. Martin y Molly, nuestros anfitriones, los invitan a disfrutar del bosque juntos (solo te pedimos cumplir unas normas básicas y lógicas de convivencia para mantener la paz del lugar).",
+            tag: "Familia",
             image: "/images/EquipamientoParaTuEstadia/MartinMolly.JPG",
             size: "small"
         },
@@ -69,18 +70,18 @@ export default function DomoAmenities() {
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center gap-2 mb-6">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Equipamiento Real</span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">No traigas nada, aquí lo tienes todo</span>
                         </div>
                         <h2 className="h2-display leading-tight text-text-main">
-                            Equipamiento para tu <span className="text-primary italic-display">estadía</span>
+                            Diseñado para tu <span className="text-primary italic-display">relajo total</span>
                         </h2>
                         <p className="text-text-sub mt-6 text-lg md:text-xl font-bold max-w-xl">
-                            Espacios diseñados para tu autonomía y temperatura ideal en la cordillera.
+                            Donde lo único que te va a faltar es tiempo para seguir descansando.
                         </p>
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase text-text-sub/40">
-                            <span>Desliza para ver más</span>
+                            <span>DESLIZA PARA VER MÁS</span>
                             <div className="w-12 h-[2px] bg-primary/20"></div>
                         </div>
                     </div>
@@ -105,7 +106,7 @@ export default function DomoAmenities() {
                                                     src={img}
                                                     alt={`${item.title} ${imgIdx}`}
                                                     fill
-                                                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                                                    className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
                                                 />
                                             </div>
                                         ))}
@@ -115,7 +116,7 @@ export default function DomoAmenities() {
                                         src={item.image!}
                                         alt={item.title}
                                         fill
-                                        className={`object-cover transition-transform duration-[2s] group-hover:scale-110 ${item.title === "Cena Privada" ? 'object-[center_75%]' : ''}`}
+                                        className={`object-cover ${item.objectPosition || 'object-center'} transition-transform duration-[2s] group-hover:scale-110`}
                                     />
                                 )}
                             </div>

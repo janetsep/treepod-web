@@ -92,9 +92,11 @@ export default function GuestGuidePage() {
                             </p>
                             <ul className="space-y-3">
                                 {section.items.map((item, i) => (
-                                    <li key={i} className="flex items-start gap-3 text-sm font-medium text-white/90">
-                                        <CheckCircle2 className="text-primary w-4 h-4 mt-0.5" />
-                                        {item}
+                                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-white/90 group/item">
+                                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
+                                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                        </div>
+                                        <span className="transition-colors group-hover/item:text-white">{item}</span>
                                     </li>
                                 ))}
                             </ul>

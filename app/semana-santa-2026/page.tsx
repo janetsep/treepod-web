@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { ArrowRight, Waves, Coffee, Info, Check, Sparkles, Heart } from 'lucide-react';
+import { ArrowRight, Mountain, Waves, Coffee, Info, Check, Sparkles, Heart } from 'lucide-react';
 import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Semana Santa 2026 en TreePod | Valle Las Trancas',
-    description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente privada, bosque nativo y desconexión profunda en Nevados de Chillán.',
+    description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico en Nevados de Chillán.',
     openGraph: {
         title: 'Semana Santa 2026 en TreePod | Valle Las Trancas',
-        description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente privada, bosque nativo y desconexión profunda.',
-        images: ['/images/exteriors/domo-exterior-arrival.jpg'],
+        description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico.',
+        images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
     }
 };
 
@@ -24,205 +24,144 @@ export default function SemanaSantaPage() {
             <TrackView eventName="view_semana_santa_page" />
 
             {/* HERO SECTION */}
-            <section className="relative h-[80vh] min-h-[600px] text-white overflow-hidden flex items-center justify-center pt-20">
+            <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
-                        src="/images/exteriors/domo-exterior-arrival.jpg"
+                        src="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
                         alt="Semana Santa en TreePod"
                         fill
                         priority
-                        className="object-cover"
+                        className="object-cover object-center"
                         sizes="100vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70 z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 z-10"></div>
                 </div>
 
                 <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
-                    <div className="inline-block mb-6 md:mb-8 bg-primary/20 backdrop-blur-md border border-primary/30 px-6 py-2 rounded-full animate-fade-in-up">
+                    <div className="inline-block mb-8 bg-primary/20 backdrop-blur-md border border-primary/30 px-6 py-2 rounded-full animate-fade-in-up">
                         <span className="text-white text-xs font-black tracking-[0.2em] uppercase">
-                            Relajo · Bosque · Nevados de Chillán
+                            Semana Santa 2026 · Valle Las Trancas
                         </span>
                     </div>
 
-                    <h1 className="h1-display mb-6 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
-                        Semana Santa <br /><span className="text-primary italic">2026</span>
+                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
+                        Escapa del caos de Semana Santa <br className="hidden md:block" />
+                        y enciérrate en el bosque <span className="text-primary italic-display block md:inline">(con tu propia tinaja hirviendo)</span>
                     </h1>
 
-                    <p className="text-lg md:text-2xl text-white/95 font-bold mb-10 max-w-3xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Una invitación al descanso real en el corazón del bosque nativo.
+                    <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
+                        El 99% de la gente pasará sus vacaciones estresada en lugares llenos. <br className="hidden md:block" />
+                        Tú estarás en medio de la cordillera, sin escuchar a nadie y con el calor perfecto 24/7.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-lg mx-auto animate-fade-in-up delay-300">
+                    <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
                             eventName="click_reservar_semana_santa"
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all transform hover:-translate-y-1 shadow-2xl flex items-center justify-center gap-2 tracking-widest uppercase text-sm"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
-                            Reservar ahora <span className="font-normal opacity-80">(02–05 abril)</span>
-                            <ArrowRight size={18} />
+                            <span className="text-xl md:text-2xl">BLOQUEA TU REFUGIO AHORA</span>
+                            <span className="text-sm font-normal opacity-90">(02–05 Abril)</span>
                         </TrackedLink>
 
-                        <TrackedLink
-                            href={whatsappUrl}
-                            eventName="click_whatsapp_semana_santa"
-                            className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-4 px-8 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center"
-                        >
-                            Consultar por WhatsApp
-                        </TrackedLink>
+                        <div className="flex items-center gap-4">
+                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Dudas rápidas?</span>
+                            <TrackedLink
+                                href={whatsappUrl}
+                                eventName="click_whatsapp_semana_santa"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                            >
+                                Consultar disponibilidad por WhatsApp
+                            </TrackedLink>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* SECCIÓN 1 – LA EXPERIENCIA DE DESCANSO */}
-            <section className="py-20 md:py-32 bg-background-light">
+            {/* SECCIÓN 1 – BENEFICIOS */}
+            <section className="py-24 md:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">El Refugio <span className="italic-display text-primary">que Necesitas</span></h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-6"></div>
-                        <p className="text-text-sub text-lg font-bold">
-                            Olvida la rutina. Aquí el único sonido es el del viento entre los árboles y la calma de la cordillera.
-                        </p>
+                    <div className="text-center max-w-4xl mx-auto mb-20">
+                        <h2 className="h2-display text-text-main mb-6">Olvida la rutina. Tu único trabajo aquí será <span className="italic-display text-primary">descansar</span></h2>
+                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                         {[
-                            { icon: Sparkles, title: "Silencio Absoluto", desc: "Ubicación estratégica lejos del ruido para un descanso profundo." },
-                            { icon: Waves, title: "Relajo en Tinaja", desc: "Agua caliente bajo las estrellas en la privacidad de tu domo." },
-                            { icon: Coffee, title: "Mañanas Sin Prisa", desc: "Despierta con la luz natural y disfruta un café en tu terraza." },
-                            { icon: Heart, title: "Conexión Real", desc: "El escenario perfecto para reencontrarse con lo esencial." }
+                            { 
+                                icon: Mountain, 
+                                title: "El único sonido será el del viento", 
+                                desc: "Estás lo suficientemente lejos del bullicio para relajarte de verdad. Duerme hasta la hora que quieras y despierta rodeado de bosque nativo." 
+                            },
+                            { 
+                                icon: Waves, 
+                                title: "Tu propia Tinaja bajo las estrellas (Cero extraños)", 
+                                desc: "No compartas tu agua termal. Cruza tu pasarela exclusiva por el bosque y aíslate del mundo en tu propia tina de ciprés, siempre lista para ti (Reserva tu hora exclusiva sin compartir con otros)." 
+                            },
+                            { 
+                                icon: Info, 
+                                title: "Afuera hace frío, adentro estás en polera", 
+                                desc: "Olvídate de sufrir o pasar frío en la montaña. Tu domo tiene una estufa a pellet automática que mantiene el espacio cálido y perfecto de día y de noche." 
+                            },
+                            { 
+                                icon: Coffee, 
+                                title: "Mañanas sin prisa", 
+                                desc: "Despierta con la luz natural y tómate un café caliente en tu terraza exclusiva sin estrés." 
+                            },
+                            { 
+                                icon: Check, 
+                                title: "Aislado de todo, pero conectado (si quieres)", 
+                                desc: "Internet satelital Starlink de alta velocidad. Perfecto por si quieres subir fotos o ver una película por la noche sin cortes." 
+                            }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-                                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+                            <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
+                                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary flex-shrink-0 group-hover:scale-110 transition-transform">
                                     <item.icon size={32} strokeWidth={1.5} />
                                 </div>
-                                <h3 className="text-xl font-display font-black mb-3 text-text-main">{item.title}</h3>
-                                <p className="text-text-sub font-bold">{item.desc}</p>
+                                <div>
+                                    <h3 className="text-2xl font-display font-black mb-4 text-text-main leading-tight">{item.title}</h3>
+                                    <p className="text-text-sub text-lg font-bold leading-relaxed">{item.desc}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* SECCIÓN 2 – TINAJA Y BOSQUE */}
-            <section className="py-20 md:py-32 bg-white">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <div className="relative h-[500px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl">
-                            <Image
-                                src="/images/EquipamientoParaTuEstadia/Tinaja5.jpg"
-                                alt="Tinaja caliente privada en el bosque"
-                                fill
-                                className="object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        </div>
-
-                        <div>
-                            <div className="inline-block mb-6">
-                                <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                                    Bienestar Auténtico
-                                </span>
-                            </div>
-                            <h2 className="h2-display text-text-main mb-8">Tinaja Caliente <span className="italic-display text-primary">de Uso Exclusivo</span></h2>
-                            <p className="text-xl text-text-sub leading-relaxed font-bold mb-8">
-                                No compartas tu momento de relajo. En TreePod, cada domo cuenta con su propia tinaja de ciprés, lista para que disfrutes de un baño de agua termal en el horario que prefieras.
-                            </p>
-                            <ul className="space-y-4">
-                                {[
-                                    "Acceso mediante pasarela privada por el bosque",
-                                    "Uso exclusivo para los huéspedes de tu domo",
-                                    "Atmósfera única rodeada de árboles nativos"
-                                ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-text-main font-bold">
-                                        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
-                                            <Check size={16} strokeWidth={3} />
-                                        </div>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* SECCIÓN 3 – PACK SEMANA SANTA */}
-            <section className="py-20 md:py-32 bg-background-dark text-white relative border-t-8 border-primary">
+            {/* SECCIÓN 3 – URGENCIA Y CTA FINAL */}
+            <section className="py-20 md:py-24 bg-background-dark text-white relative border-t-8 border-primary">
                 <div className="container mx-auto px-6 md:px-10 relative z-10">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="h2-display text-white mb-6">Estadía <span className="italic text-primary drop-shadow-md">Semana Santa</span></h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-6"></div>
-                        <p className="text-white/80 text-lg font-bold">
-                            Asegura tu refugio con anticipación y vive un fin de semana sagrado de descanso.
+                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl text-center">
+                        
+                        <div className="inline-flex items-center gap-3 bg-primary/20 text-primary border border-primary/30 px-5 py-1.5 rounded-full mb-8">
+                            <Info size={18} />
+                            <span className="text-xs font-black uppercase tracking-widest">Atención: Cupos Limitados</span>
+                        </div>
+
+                        <h2 className="text-2xl md:text-4xl font-display font-black text-white mb-6 leading-tight">
+                            Semana Santa siempre colapsa en el Valle
+                        </h2>
+
+                        <p className="text-lg md:text-xl text-white/80 font-bold mb-6 leading-relaxed max-w-2xl mx-auto">
+                            Este es el fin de semana más buscado del año y tenemos una disponibilidad muy limitada. Si lo dejas para después, te quedarás atrapado en la ciudad o pagando de más por lugares repletos de gente.
                         </p>
-                    </div>
 
-                    <div className="bg-white/10 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl max-w-4xl mx-auto relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black uppercase tracking-widest py-2 px-6 rounded-bl-2xl">
-                            Cupos Limitados
-                        </div>
+                        <p className="text-primary text-xl font-black mb-10 italic">
+                            (Estadía exclusiva de mínimo 3 noches: 02 al 05 de abril)
+                        </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
-                            <ul className="space-y-6">
-                                <li className="flex items-start gap-4">
-                                    <div className="mt-1 flex-shrink-0 text-primary"><Check size={24} strokeWidth={3} /></div>
-                                    <div>
-                                        <h4 className="font-bold text-xl mb-1">Domo Geodésico</h4>
-                                        <p className="text-white/70 text-sm">Arquitectura única diseñada para maximizar el confort y la calidez.</p>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4">
-                                    <div className="mt-1 flex-shrink-0 text-primary"><Check size={24} strokeWidth={3} /></div>
-                                    <div>
-                                        <h4 className="font-bold text-xl mb-1">Calefacción Garantizada</h4>
-                                        <p className="text-white/70 text-sm">Estufa a pellet programada para mantener tu espacio siempre cálido.</p>
-                                    </div>
-                                </li>
-                            </ul>
+                        <TrackedLink
+                            href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
+                            eventName="click_reservar_semana_santa_final"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                        >
+                            <span className="text-lg md:text-xl">ASEGURA TU ESCAPE ANTES DE QUE SE AGOTEN</span>
+                        </TrackedLink>
 
-                            <ul className="space-y-6">
-                                <li className="flex items-start gap-4">
-                                    <div className="mt-1 flex-shrink-0 text-primary"><Waves size={24} strokeWidth={3} /></div>
-                                    <div>
-                                        <h4 className="font-bold text-xl mb-1">Tinaja Privada</h4>
-                                        <p className="text-white/70 text-sm">Tu propio spa de ciprés al aire libre incluido en tu estadía.</p>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4">
-                                    <div className="mt-1 flex-shrink-0 text-primary"><Coffee size={24} strokeWidth={3} /></div>
-                                    <div>
-                                        <h4 className="font-bold text-xl mb-1">Conectividad Starlink</h4>
-                                        <p className="text-white/70 text-sm">Internet satelital de alta velocidad por si necesitas estar conectado.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="mt-12 p-6 bg-black/40 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 uppercase">
-                            <div className="flex items-center gap-4 text-primary">
-                                <Info size={32} />
-                                <div className="font-black tracking-widest">
-                                    <span className="block text-white text-lg">Reserva Anticipada</span>
-                                    <span className="text-xs">Mínimo 3 noches (02 - 05 abril)</span>
-                                </div>
-                            </div>
-
-                            <div className="text-center md:text-right">
-                                <div className="inline-block bg-white text-black text-xs font-black tracking-widest py-2 px-4 rounded-full mb-2 animate-pulse">
-                                    ⚠️ Alta demanda para estas fechas
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-12 text-center">
-                            <TrackedLink
-                                href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
-                                eventName="click_reservar_semana_santa"
-                                className="w-full md:w-auto inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-2xl items-center justify-center gap-3 tracking-widest uppercase text-sm"
-                            >
-                                Reservar mi lugar ahora
-                                <ArrowRight size={20} />
-                            </TrackedLink>
+                        <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
+                            <span className="flex items-center gap-2"><Check size={12} /> Pago Verificado</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Entorno Natural</span>
                         </div>
                     </div>
                 </div>

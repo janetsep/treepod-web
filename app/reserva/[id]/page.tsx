@@ -417,6 +417,7 @@ function ReservaContent({ id }: { id: string }) {
                   src="/images/hero/interior-domo-acogedor-105-2.jpg"
                   layout="fill"
                   objectFit="cover"
+                  objectPosition="bottom"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white">

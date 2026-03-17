@@ -1,86 +1,65 @@
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import Link from "next/link";
 
 
 export default function NotForEveryone() {
     return (
         <section className="py-12 md:py-20 bg-white border-t border-black/[0.06]" id="concepto">
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
 
                     {/* Logic & Vision - Pluma Style */}
-                    <div className="lg:col-span-5 space-y-12">
+                    <div className="space-y-6">
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
                                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
                             </div>
 
-                            <h2 className="h2-display text-text-main">
-                                Habitar la Naturaleza <br />
-                                <span className="text-primary italic-display">con Propósito</span>
+                            <h2 className="h1-display text-text-main !text-left">
+                                Para tu <br />
+                                <span className="text-primary italic-display font-light text-nowrap">próxima escapada</span>
                             </h2>
                         </div>
 
+                        <div className="space-y-6 text-xl md:text-2xl font-display leading-tight text-text-main">
+                            <p>
+                                <strong>Olvídate del frío:</strong> Afuera puede estar helando, pero tu domo siempre estará a la temperatura perfecta para tu bienestar.
+                            </p>
+                            <p>
+                                <strong>Espacio de sobra para ti</strong>, para relajarte a tus anchas, sin chocar con nada.
+                            </p>
+                            <p>
+                                <strong>Refugio a prueba de todo:</strong> ¿Viento o tormentas en el valle? Da igual. Estás en una estructura 100% segura y diseñada para que no te preocupes por el clima.
+                            </p>
+                        </div>
 
-
-                        <div className="space-y-10">
-                            <article className="flex gap-6 group items-start">
-                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-                                </div>
-                                <div className="space-y-2">
-                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
-                                        Eficiencia Térmica
-                                    </h4>
-                                    <p className="text-text-sub text-base font-bold leading-snug">
-                                        Máximo ahorro de calor y temperatura estable bajo la nieve.
-                                    </p>
-                                </div>
-                            </article>
-
-                            <article className="flex gap-6 group items-start">
-                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-                                </div>
-                                <div className="space-y-2">
-                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
-                                        Amplitud Real
-                                    </h4>
-                                    <p className="text-text-sub text-base font-bold leading-snug">
-                                        Libertad total de movimiento sin columnas ni pilares.
-                                    </p>
-                                </div>
-                            </article>
-
-                            <article className="flex gap-6 group items-start">
-                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-                                </div>
-                                <div className="space-y-2">
-                                    <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
-                                        Resistencia Extrema
-                                    </h4>
-                                    <p className="text-text-sub text-base font-bold leading-snug">
-                                        Estructura antisísmica diseñada para los vientos del valle.
-                                    </p>
-                                </div>
-                            </article>
+                        <div className="pt-6 space-y-4">
+                            <Link 
+                                href="/disponibilidad"
+                                className="inline-flex items-center justify-center px-12 py-5 bg-primary text-white font-black text-sm md:text-base uppercase tracking-[0.2em] rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 shadow-xl"
+                            >
+                                Reservar mi escapada
+                            </Link>
+                            <p className="text-[10px] md:text-xs text-text-sub font-bold italic pl-2">
+                                Haz clic en el botón para reservar tu domo y comenzar a disfrutar.
+                            </p>
                         </div>
                     </div>
 
                     {/* Illustration Section */}
-                    <div className="lg:col-span-7 flex flex-col gap-6">
-                        <div className="relative group h-[400px] md:h-[650px] w-full rounded-[3.5rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border-8 border-black/5 bg-surface">
-                            <img
+                    <div className="flex flex-col gap-6 w-full max-w-lg lg:max-w-none ml-auto">
+                        <div className="relative group aspect-square w-full rounded-[3.5rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border-8 border-black/5 bg-surface">
+                            <Image
                                 src="/images/concept/croquis-aereo-nuevo.png"
                                 alt="Nuestro glamping - Ubicación estratégica"
-                                className="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
+                                fill
+                                className="object-contain object-center transition-transform duration-[10s] group-hover:scale-110"
                             />
                         </div>
                         <div className="text-center">
                             <p className="inline-block text-sm font-black tracking-[0.2em] text-primary uppercase">
-                                DISTRIBUCIÓN DE NUESTRO GLAMPING
+                                MAPA DE NUESTRO GLAMPING
                             </p>
                         </div>
                     </div>

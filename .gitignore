@@ -44,3 +44,6 @@ next-env.d.ts
 # Credentials
 google_credentials.json
 balmy-chain-*.json
+
+# Large Archives
+*.zip

@@ -43,6 +43,7 @@ export default function Navbar() {
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
+        { name: "Tarifas", href: "/#tarifas" },
         { name: "Servicios", href: "/servicios" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
@@ -52,6 +53,7 @@ export default function Navbar() {
     const mobileNavLinks = [
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
+        { name: "Tarifas", href: "/#tarifas" },
         { name: "Servicios", href: "/servicios" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
@@ -116,8 +118,8 @@ export default function Navbar() {
 
                 {/* MOBILE DROPDOWN */}
                 {isMobileMenuOpen && (
-                    <div className="lg:hidden fixed inset-0 top-0 h-screen w-full bg-white z-40 flex flex-col items-center justify-center p-8 animate-fade-in-up">
-                        <div className="flex flex-col space-y-8 text-center w-full max-w-sm mx-auto">
+                    <div className="lg:hidden fixed inset-0 top-0 h-screen w-full bg-white z-40 flex flex-col items-center justify-center p-8 animate-fade-in-up overflow-y-auto">
+                        <div className="flex flex-col space-y-6 text-center w-full max-w-sm mx-auto my-auto py-12">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}

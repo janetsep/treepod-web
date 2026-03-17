@@ -35,72 +35,81 @@ export default function TreePodDomes() {
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
-                    {/* Visual Section: Montage (Aura Style) */}
+                    {/* Visual Section: Montage (Centered and Balanced) */}
                     <div className="lg:col-span-7">
-                        <div className="relative">
-                            {/* Main Exterior Image */}
-                            <div className="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-[16/10] group">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Main Top Image: Refugio/Vista */}
+                            <div className="col-span-2 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-xl aspect-[16/9] group">
                                 <Image
-                                    alt="Domo TreePod en el bosque nativo de Las Trancas"
-                                    className="object-cover transition-transform duration-[5s] group-hover:scale-110"
-                                    src="/images/exteriors/domo-exterior-arrival.jpg"
+                                    alt="Tu santuario privado en el bosque"
+                                    className="object-cover object-center transition-transform duration-[5s] group-hover:scale-110"
+                                    src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg"
                                     fill
-                                    sizes="(max-width: 1024px) 100vw, 60vw"
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                             </div>
 
-                            <div className="absolute -bottom-10 -right-6 md:-right-12 w-1/2 aspect-video md:aspect-square rounded-3xl overflow-hidden shadow-2xl border-8 border-white/10 z-20 animate-float hidden md:block group/detail">
+                            {/* Bottom Left: Bed Detail (Descanso) */}
+                            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
                                 <Image
-                                    alt="Interior detallado del domo con vista al bosque"
-                                    className="object-cover transition-transform duration-700 group-hover/detail:scale-105"
-                                    src="/images/hero/interior-domo-acogedor-105-2.jpg"
+                                    alt="Camas confortables para un descanso real"
+                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                                    src="/images/interiors/interior-domo-acogedor-83-3.jpg"
                                     fill
-                                    sizes="25vw"
+                                    sizes="(max-width: 1024px) 50vw, 25vw"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                            </div>
+
+                            {/* Bottom Right: Stove Detail (Calor) */}
+                            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
+                                <Image
+                                    alt="Estufa a pellet para calor garantizado"
+                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                                    src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
+                                    fill
+                                    sizes="(max-width: 1024px) 50vw, 25vw"
+                                />
                             </div>
                         </div>
                     </div>
 
-                    {/* Text Section (Pluma Style) */}
-                    <div className="lg:col-span-5 space-y-10">
-                        <article className="space-y-6">
-                            <header className="space-y-4">
-                                <div className="inline-flex items-center gap-2">
-                                    <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                    <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Habitabilidad</span>
-                                </div>
-                                <h2 className="h2-display text-text-main">
-                                    Arquitectura que <br />
-                                    <span className="text-primary italic-display">Respira Contigo</span>
-                                </h2>
-                            </header>
-                        </article>
+                    {/* Text Section (Balanced & Equalized) */}
+                    <div className="lg:col-span-5 space-y-6">
+                        <div className="space-y-2">
+                            <div className="inline-flex items-center gap-2">
+                                <span className="text-primary text-[9px] font-black tracking-[0.3em] uppercase">• TU REFUGIO</span>
+                            </div>
+                            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold leading-tight text-text-main">
+                                Habita la calma <br />
+                                <span className="text-primary italic-display">en tu propio refugio</span>
+                            </h2>
+                        </div>
 
-                        {/* Practical Highlights (Standardized) */}
-                        <div className="space-y-10">
-                            {[
-                                { title: "Autonomía Total", desc: "Baño completo integrado y tinajas privadas en cada domo." },
-                                { title: "Calor Seguro", desc: "Estufa a pellet programada para un confort seco y constante." },
-                                { title: "Descanso Real", desc: "Camas de alta densidad rodeadas de la calma del bosque." }
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex gap-6 group items-start">
-                                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                                        <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h4 className="text-lg font-black uppercase tracking-tight text-text-main group-hover:text-primary transition-colors">
-                                            {item.title}
-                                        </h4>
-                                        <p className="text-text-sub text-base font-bold leading-snug">
-                                            {item.desc}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="space-y-6 text-text-main/80 text-base md:text-lg font-display leading-relaxed">
+                            <p>
+                                <strong>Tu propio santuario:</strong> Disfruta de la serenidad que mereces en un entorno reservado. Cuentas con baño completo integrado y sumérgete en tu tinaja exclusiva rodeado únicamente de bosque nativo.
+                            </p>
+                            <p>
+                                <strong>Calor perfecto 24/7:</strong> Tienes una estufa a pellet inteligente y programada para que el ambiente siempre esté cálido, seco y listo para tu bienestar.
+                            </p>
+                            <p>
+                                <strong>Duerme como nunca:</strong> Camas cómodas diseñadas para un descanso profundo, donde lo único que vas a percibir es la armonía y la calma de la naturaleza.
+                            </p>
+                        </div>
+
+                        <div className="pt-6 space-y-4">
+                            <Link 
+                                href="/disponibilidad"
+                                className="inline-flex items-center justify-center px-12 py-5 bg-primary text-white font-black text-sm md:text-base uppercase tracking-[0.2em] rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 shadow-xl"
+                            >
+                                Reservar mi Domo
+                            </Link>
+                            <p className="text-[10px] md:text-xs text-text-sub font-bold italic pl-2">
+                                Haz clic en el botón para reservar tu domo y comenzar a disfrutar.
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -14,14 +14,8 @@ export const TrackingService = {
             });
         }
 
-        // 2. Meta Pixel (Eventos estándar)
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-            (window as any).fbq('track', eventName, {
-                value: data.value || 0,
-                currency: 'CLP', // Adjusted to CLP as it is likely Chile
-                content_name: data.item_name
-            });
-        }
+        // Los eventos para Meta (Facebook) y Ads se gestionan ahora centralizadamente desde GTM
+        // cuando detecta el evento en el dataLayer. No duplicar tracking manual aquí.
 
         console.log(`[Tracking] Evento ${eventName} enviado con éxito.`, data);
     }

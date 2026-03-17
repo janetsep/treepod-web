@@ -30,11 +30,23 @@ export default function AdminLayout({
             } else {
                 const userEmail = session.user?.email || "";
 
-                // Whitelist de administradores autorizados
-                const isAuthorized =
-                    userEmail === "janetsep@gmail.com" ||
-                    userEmail.endsWith("@domostreepod.cl") ||
-                    userEmail === "fchavez@gmail.com"; // Agregamos a fchavez por si acaso, suele estar en el equipo
+                // Consultar en la tabla de administradores autorizados
+                const { data: adminData } = await supabase
+                    .from("authorized_admins")
+                    .select("*")
+                    .eq("email", userEmail)
+                    .single();
+
+                // Permitir también si termina en @domostreepod.cl (dominio corporativo)
+                const isCorporate = userEmail.endsWith("@domostreepod.cl");
+                const isAuthorized = !!adminData || isCorporate;
+
+                // Log del acceso
+                await supabase.from('admin_access_logs').insert({
+                    email: userEmail,
+                    action: isAuthorized ? 'access_granted' : 'access_denied',
+                    details: `Ruta: ${pathname} | Rol: ${adminData?.rol || (isCorporate ? 'corporate' : 'none')}`
+                });
 
                 if (isAuthorized) {
                     setAuthorized(true);

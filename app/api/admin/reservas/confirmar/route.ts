@@ -3,10 +3,25 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
     try {
-        const { reservaId } = await request.json();
+        const { reservaId, adminEmail } = await request.json();
 
-        if (!reservaId) {
-            return NextResponse.json({ error: "ID requerido" }, { status: 400 });
+        if (!reservaId || !adminEmail) {
+            return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
+        }
+
+        // Verificar permisos
+        const { data: adminData, error: adminError } = await supabaseAdmin
+            .from("authorized_admins")
+            .select("rol")
+            .eq("email", adminEmail)
+            .single();
+
+        if (adminError || !adminData) {
+            return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+        }
+
+        if (adminData.rol === 'viewer') {
+            return NextResponse.json({ error: "No tienes permisos para confirmar pagos" }, { status: 403 });
         }
 
         // Actualizar a estado PAGADO

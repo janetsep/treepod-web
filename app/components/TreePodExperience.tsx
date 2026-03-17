@@ -11,14 +11,17 @@ export default function TreePodExperience() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
 
                     <div className="space-y-10">
-                        <div className="inline-block mb-4">
-                            <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Características</span>
-                        </div>
+                        <div className="space-y-4">
+                            <div className="inline-flex items-center gap-2 mb-4">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Características</span>
+                            </div>
 
-                        <h2 className="text-4xl md:text-5xl font-display font-bold text-text-main leading-tight">
-                            Tu estadía en <br />
-                            <span className="text-primary italic">el Bosque</span>
-                        </h2>
+                            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-text-main leading-tight">
+                                Tu estadía en <br />
+                                <span className="text-primary italic-display font-light">el Bosque</span>
+                            </h2>
+                        </div>
 
                         <div className="space-y-10">
                             <div className="flex gap-6 items-start">
@@ -27,7 +30,7 @@ export default function TreePodExperience() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl md:text-2xl font-bold text-text-main mb-2 tracking-tight">Internet Satelital</h3>
-                                    <p className="text-text-sub leading-relaxed md:text-lg font-medium">Contamos con internet Starlink para cuando lo necesites, aunque el entorno invita a descansar.</p>
+                                    <p className="text-text-main text-base md:text-lg font-medium leading-relaxed">Contamos con internet Starlink para cuando lo necesites, aunque el entorno invita a descansar.</p>
                                 </div>
                             </div>
 
@@ -37,7 +40,7 @@ export default function TreePodExperience() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl md:text-2xl font-bold text-text-main mb-2 tracking-tight">Temperatura Ideal</h3>
-                                    <p className="text-text-sub leading-relaxed md:text-lg font-medium">El clima de montaña es intenso, por eso cada domo tiene estufa a pellet de fácil uso.</p>
+                                    <p className="text-text-main text-base md:text-lg font-medium leading-relaxed">El clima de montaña es intenso, por eso cada domo tiene estufa a pellet de fácil uso.</p>
                                 </div>
                             </div>
 
@@ -47,13 +50,13 @@ export default function TreePodExperience() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl md:text-2xl font-bold text-text-main mb-2 tracking-tight">Entorno Natural</h3>
-                                    <p className="text-text-sub leading-relaxed md:text-lg font-medium">Estamos inmersos en el valle. Escucharás el viento en los árboles y las aves locales.</p>
+                                    <p className="text-text-main text-base md:text-lg font-medium leading-relaxed">Estamos inmersos en el valle. Escucharás el viento en los árboles y las aves locales.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="relative group hidden md:block">
+                    <div className="relative group">
                         <div className="absolute -inset-6 bg-primary/5 rounded-[2rem] transform rotate-3 group-hover:rotate-1 transition-transform duration-700"></div>
                         <div className="absolute -inset-6 border border-primary/20 rounded-[2rem] transform -rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
                         <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] border border-black/10">

@@ -8,16 +8,15 @@ export default function Testimonios() {
       <div className="container mx-auto px-6 text-center max-w-7xl">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-          <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Huéspedes</span>
+          <span className="text-primary text-base font-black tracking-[0.2em] uppercase">El escape perfecto, vengas con quien vengas</span>
         </div>
 
         <h2 className="h2-display mb-10 text-text-main">
-          Experiencias <span className="text-primary italic">Reales</span>
+          No importa si buscas un fin de semana romántico, un viaje con niños sin estrés o desconectar de la rutina con amigos.
         </h2>
 
         <p className="text-lg md:text-xl text-text-sub mb-20 max-w-3xl mx-auto leading-relaxed font-bold">
-          La mejor manera de conocer TreePod es a través de quienes ya nos visitaron.
-          Compartimos opiniones verificadas de Google y redes sociales.
+          No nos creas a nosotros, mira lo que dicen quienes ya lo vivieron:
         </p>
 
         {/* Elfsight Reviews Widget - All-in-One - Standard Load */}

@@ -12,6 +12,7 @@ import Stepper from '../components/Stepper';
 type ResultadoPrecio = {
   temporada: string;
   precio_noche: number;
+  precio_promedio?: number;
   noches: number;
   total: number;
   desglose?: string;
@@ -50,29 +51,33 @@ function DisponibilidadContent() {
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState<Set<string>>(new Set());
   const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
-  const [cupon, setCupon] = useState("");
-  const [cuponAplicado, setCuponAplicado] = useState(false);
+
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const isMundialEvent = searchParams.get("event") === "mundial";
+  const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
 
   // Auto-scroll to results when calculating is done
   useEffect(() => {
-    if (resultado && resultsRef.current && !isMundialEvent) {
+    if (resultado && resultsRef.current && !isMundialEvent && !isSemanaSantaEvent) {
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
-  }, [resultado, isMundialEvent]);
+  }, [resultado, isMundialEvent, isSemanaSantaEvent]);
 
-  // Set default values if it's Mundial MTB event
+  // Set default values if it's Mundial MTB event or Semana Santa
   useEffect(() => {
     if (isMundialEvent) {
       setEntrada("2026-03-26");
       setSalida("2026-03-29");
       setAdultos(4);
+    } else if (isSemanaSantaEvent) {
+      setEntrada("2026-04-02");
+      setSalida("2026-04-05");
+      setAdultos(2);
     }
-  }, [isMundialEvent]);
+  }, [isMundialEvent, isSemanaSantaEvent]);
 
   // Prevent past dates and ensure logical range
   useEffect(() => {
@@ -151,7 +156,7 @@ function DisponibilidadContent() {
           entrada,
           salida,
           adultos,
-          cupon,
+          cupon: "",
         }),
       });
 
@@ -168,8 +173,7 @@ function DisponibilidadContent() {
         throw new Error(data?.error || `Error al calcular precio (HTTP ${res.status})`);
       }
       setResultado(data);
-      const tieneCupon = data.descuento_aplicado?.motivos?.some((m: any) => m.motivo.toLowerCase().includes("cupón"));
-      setCuponAplicado(!!tieneCupon);
+
     } catch (err: unknown) {
       console.error("❌ Error en calcularPrecio:", err);
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -204,13 +208,20 @@ function DisponibilidadContent() {
 
             const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
             const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
-            const multNoches = s.multiplicador_noches || isBreakfast || isDinner;
-            const nochesParaCalculo = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNoches ? (resultado.noches || 1) : 1);
+            const isTinaja = s.nombre.toLowerCase().includes("tinaja");
+
+            // Si es desayuno, multiplica por noches por defecto. 
+            // Si es cena o tinaja, por defecto es 1 noche a menos que esté en nochesPorServicio.
+            const multNoches = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
+            const nochesParaCalculo = nochesPorServicio[id] !== undefined 
+              ? nochesPorServicio[id] 
+              : (multNoches ? (resultado.noches || 1) : 1);
+            
             const cantidad = (s.multiplicador_personas ? adultos : 1) * nochesParaCalculo;
 
             return {
               id,
-              precio_unitario: s.precio,
+              precio_unitario: s.id === 'bdf8607f-f623-4faa-b04f-ad7f7c9ee6eb' ? 25000 : s.precio, // Cena Privada override
               cantidad,
               total: getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id])
             };
@@ -250,13 +261,16 @@ function DisponibilidadContent() {
   const getServiceCost = (s: Servicio, numAdultos: number, nochesEstadia: number, nochesEspecificas?: number) => {
     const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
     const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+    const isTinaja = s.nombre.toLowerCase().includes("tinaja");
 
     // Override de precio para Cena Privada como solicitó el usuario
-    const basePrecio = isDinner ? 25000 : s.precio;
+    const basePrecio = (s.id === 'bdf8607f-f623-4faa-b04f-ad7f7c9ee6eb' || isDinner) ? 25000 : s.precio;
 
-    // Si es cena y tiene noches especificas, usamos esas. Si no, usamos nochesEstadia si multNoches es true.
-    const multNoches = s.multiplicador_noches || isBreakfast || isDinner;
-    const nochesParaCalculo = nochesEspecificas !== undefined ? nochesEspecificas : (multNoches ? nochesEstadia : 1);
+    // Lógica de noches: Desayuno multiplica por defecto. Cena y Tinaja son 1 noche por defecto.
+    const multNochesDefault = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
+    const nochesParaCalculo = nochesEspecificas !== undefined 
+      ? nochesEspecificas 
+      : (multNochesDefault ? nochesEstadia : 1);
 
     return basePrecio * (s.multiplicador_personas ? numAdultos : 1) * nochesParaCalculo;
   };
@@ -351,6 +365,7 @@ function DisponibilidadContent() {
                       from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
                       to: salida ? new Date(salida + 'T12:00:00') : undefined
                     }}
+                    defaultMonth={entrada ? new Date(entrada + 'T12:00:00') : undefined}
                     onSelect={(range) => {
                       if (range?.from) {
                         const year = range.from.getFullYear();
@@ -402,24 +417,33 @@ function DisponibilidadContent() {
                   // Cambio #3: Emotional Copies mapping
                   let displayNombre = s.nombre;
                   let displayDescripcion = s.descripcion;
-                  let displayImage = s.image_url || "/images/placeholder.jpg";
-
+                  let displayImage = s.image_url;
+                            
                   if (s.nombre.toLowerCase().includes("desayuno")) {
-                    displayNombre = "Despierta en el Bosque";
-                    displayDescripcion = "Café orgánico y productos locales con vistas al bosque";
-                    displayImage = "/images/DesayunoTreepod.jpg";
+                      displayNombre = "Despierta en el Bosque";
+                      displayDescripcion = "Café orgánico con vistas al bosque desde tu terraza";
+                      displayImage = "/images/Galeria/DesayunoTreepod.jpg";
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
-                    displayNombre = "Baño en el Bosque (Tinaja)";
-                    displayDescripcion = "Relajo absoluto al aire libre cruzando la pasarela por el bosque nativo";
-                    displayImage = "/images/wellness/Tinaja5.jpg";
-                  } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena")) {
-                    displayNombre = "Cena Privada";
-                    displayDescripcion = "Una velada mágica preparada especialmente para ustedes en la intimidad del bosque";
-                    displayImage = "/images/comidadomoafuerapizza.jpg";
+                      displayNombre = "Baño Privado Bajo las Estrellas";
+                      displayDescripcion = "Relajo absoluto al aire libre cruzando la pasarela por el bosque nativo";
+                      displayImage = "/images/wellness/Tinaja1.jpg"; 
+                  } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("pack")) {
+                      displayNombre = "Cena Privada para Dos";
+                      displayDescripcion = "Una velada mágica preparada especialmente para ustedes en la intimidad del bosque";
+                      displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
                   }
 
-                  const isDinner = displayNombre.includes("Cena");
-                  const currentNoches = nochesPorServicio[s.id] || (resultado?.noches || 1);
+                  if (!displayImage) displayImage = "/images/Galeria/domonieve2.jpeg";
+
+                  const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+                  const isTinaja = s.nombre.toLowerCase().includes("tinaja");
+                  const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
+                  
+                  // Definimos cuántas noches mostrar por defecto en el tag
+                  const multNochesDefault = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
+                  const currentNoches = nochesPorServicio[s.id] !== undefined 
+                    ? nochesPorServicio[s.id] 
+                    : (multNochesDefault ? (resultado?.noches || 1) : 1);
 
                   return (
                     <div key={s.id} className="flex flex-col gap-2">
@@ -463,7 +487,7 @@ function DisponibilidadContent() {
                             <span className="text-[10px] text-text-sub font-black uppercase tracking-widest bg-black/5 px-2 py-0.5 rounded-full">
                               {s.multiplicador_personas ? 'por persona' : 'precio fijo'}
                             </span>
-                            {serviciosSeleccionados.has(s.id) && (s.multiplicador_noches || isDinner || s.nombre.toLowerCase().includes("desayuno")) && (
+                            {serviciosSeleccionados.has(s.id) && (s.multiplicador_noches || isDinner || isTinaja || isBreakfast) && (
                               <span className="text-[10px] text-primary font-black uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">
                                 x {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
                               </span>
@@ -472,10 +496,12 @@ function DisponibilidadContent() {
                         </div>
                       </div>
 
-                      {/* Selector de Noches para la Cena */}
-                      {serviciosSeleccionados.has(s.id) && isDinner && (
+                      {/* Selector de Noches para la Cena o Tinaja */}
+                      {serviciosSeleccionados.has(s.id) && (isDinner || isTinaja) && (
                         <div className="bg-white border border-primary/20 rounded-2xl p-4 mt-1 shadow-sm animate-fade-in mx-2">
-                          <p className="text-[10px] font-black text-text-sub uppercase tracking-widest mb-3">¿Prefieres la cena para toda tu estadía o solo algunas noches?</p>
+                          <p className="text-[10px] font-black text-text-sub uppercase tracking-widest mb-3">
+                            {isDinner ? "¿Prefieres la cena para toda tu estadía o solo algunas noches?" : "¿Cuántas noches de tinaja deseas disfrutar?"}
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             <button
                               onClick={(e) => {
@@ -566,24 +592,7 @@ function DisponibilidadContent() {
                   </div>
                 </div>
 
-                <div className="space-y-4 border-b border-black/5 pb-6">
-                  <div className="relative group">
-                    <Tag className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${cuponAplicado ? 'text-primary' : 'text-text-sub/40'}`} />
-                    <input
-                      type="text"
-                      placeholder="CÓDIGO DE CUPÓN"
-                      value={cupon}
-                      onChange={(e) => setCupon(e.target.value.toUpperCase())}
-                      className={`w-full bg-black/5 border transition-all h-12 pl-11 pr-4 rounded-xl text-[10px] font-black tracking-widest outline-none ${cuponAplicado ? 'border-primary/50 text-primary bg-primary/5' : 'border-black/10 focus:border-primary/30'}`}
-                    />
-                    <button
-                      onClick={calcularPrecio}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 bg-white border border-black/10 rounded-lg text-[9px] font-black uppercase tracking-widest hover:border-primary/30 transition-all active:scale-95"
-                    >
-                      Aplicar
-                    </button>
-                  </div>
-                </div>
+
 
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-xs font-bold animate-shake">
@@ -610,18 +619,48 @@ function DisponibilidadContent() {
                       <div className="space-y-3 mt-4">
                         <div className="flex justify-between items-center text-xs text-text-sub font-medium">
                           <span>Valor base promedio</span>
-                          <span>${(resultado.precio_noche || 0).toLocaleString("es-CL")}</span>
+                          <span>${(resultado.precio_promedio || resultado.precio_noche || 0).toLocaleString("es-CL")}</span>
                         </div>
 
                         {resultado.desglose && (
                           <div className="mt-4 pt-4 border-t border-primary/10 space-y-2">
                             <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Detalle por temporada</p>
-                            {resultado.desglose.split('|').map((item: string, idx: number) => (
-                              <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
-                                <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{item.split(':')[0]}</span>
-                                <span className="font-medium">{item.split(':').slice(1).join(':').trim()}</span>
-                              </div>
-                            ))}
+                            {(() => {
+                              const aggregated: Record<string, { name: string, nights: number, price: number, total: number, isRaw?: boolean }> = {};
+                              resultado.desglose.split('|').forEach((item: string) => {
+                                const parts = item.split(':');
+                                if (parts.length < 2) return;
+                                const name = parts[0].trim();
+                                const detail = parts.slice(1).join(':').trim();
+                                
+                                // Parse: "3 noches x $145000 = $435000"
+                                const match = detail.match(/(\d+)\s+noches?\s+x\s+\$(\d+)\s+=\s+\$(\d+)/);
+                                if (match) {
+                                  const nights = parseInt(match[1]);
+                                  const price = parseInt(match[2]);
+                                  const total = parseInt(match[3]);
+                                  const key = `${name}-${price}`;
+                                  
+                                  if (aggregated[key]) {
+                                    aggregated[key].nights += nights;
+                                    aggregated[key].total += total;
+                                  } else {
+                                    aggregated[key] = { name, nights, price, total };
+                                  }
+                                } else {
+                                  aggregated[item] = { name: item, nights: 0, price: 0, total: 0, isRaw: true };
+                                }
+                              });
+                              
+                              return Object.values(aggregated).map((data, idx) => (
+                                <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
+                                  <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{data.name}</span>
+                                  <span className="font-medium">
+                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price} = $${data.total}`}
+                                  </span>
+                                </div>
+                              ));
+                            })()}
                           </div>
                         )}
                       </div>

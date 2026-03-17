@@ -39,6 +39,16 @@ const nextConfig: NextConfig = {
         destination: '/galeria',
         permanent: true,
       },
+      {
+        source: '/reservas',
+        destination: '/disponibilidad',
+        permanent: true,
+      },
+      {
+        source: '/reserva',
+        destination: '/disponibilidad',
+        permanent: true,
+      },
     ];
   },
 };

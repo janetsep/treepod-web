@@ -15,19 +15,19 @@ interface GalleryImage {
 
 const GALLERY_IMAGES: GalleryImage[] = [
     // --- DESTACADAS (Domo & Landscape) ---
-    { src: "/images/Domoaereobuena1.jpeg", alt: "Vista aérea privilegiada de los domos en el bosque", aspect: "landscape" },
-    { src: "/images/domo3Verano1.jpg", alt: "Domo TreePod en plenitud del verano", aspect: "landscape" },
-    { src: "/images/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
-    { src: "/images/domoaereo.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
-    { src: "/images/exteriors/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait" },
-    { src: "/images/exteriors/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
+    { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea privilegiada de los domos en el bosque", aspect: "landscape" },
+    { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en plenitud del verano", aspect: "landscape" },
+    { src: "/images/Galeria/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
+    { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
+    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait" },
+    { src: "/images/Galeria/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
 
     // --- EXPERIENCIA & WELLNESS ---
     { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", aspect: "landscape" },
     { src: "/images/wellness/Tinaja3.jpeg", alt: "Relajación absoluta en nuestra tinaja privada", aspect: "landscape" },
     { src: "/images/wellness/Tinaja5.jpg", alt: "Bienestar inmerso en el bosque nativo", aspect: "portrait" },
-    { src: "/images/wellness/Tinaja4.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
-    { src: "/images/domopiscinainvierno.jpg", alt: "Atmósfera invernal junto a la piscina", aspect: "landscape" },
+    { src: "/images/wellness/Tinaja1.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
+    { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Atmósfera invernal junto a la piscina", aspect: "landscape" },
 
     // --- INTERIORES REALES ---
     { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
@@ -37,18 +37,18 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Rincón de lectura y descanso", aspect: "landscape" },
 
     // --- ATMOSFERA & NOCHE ---
-    { src: "/images/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
-    { src: "/images/exteriors/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
-    { src: "/images/exteriors/hero-night-2.jpg", alt: "Domo iluminado bajo el cielo estrellado", aspect: "square" },
-    { src: "/images/exteriors/Las Trancas Cielo Noche.jpeg", alt: "Cielos infinitos de la montaña chillaneja", aspect: "landscape" },
-    { src: "/images/exteriors/domo-exterior-arrival.jpg", alt: "Tu llegada al refugio en el bosque", aspect: "portrait" },
+    { src: "/images/Galeria/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
+    { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
+    { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo iluminado bajo el cielo estrellado", aspect: "square" },
+    { src: "/images/Galeria/Las Trancas Cielo Noche.jpeg", alt: "Cielos infinitos de la montaña chillaneja", aspect: "landscape" },
+    { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Tu llegada al refugio en el bosque", aspect: "portrait" },
 
     // --- NATURALEZA ---
-    { src: "/images/exteriors/Las Trancas Bosque Nativo.jpeg", alt: "Inmersión total en el bosque nativo", aspect: "landscape" },
-    { src: "/images/exteriors/Las Trancas Bosque Nativo 2.jpeg", alt: "Detalle de la flora silvestre", aspect: "portrait" },
-    { src: "/images/exteriors/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/domoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/exteriors/noche-domo-iluminado-2-2.jpg", alt: "Serenidad nocturna en TreePod", aspect: "portrait" },
+    { src: "/images/Galeria/Las Trancas Bosque Nativo.jpeg", alt: "Inmersión total en el bosque nativo", aspect: "landscape" },
+    { src: "/images/Galeria/Las Trancas Bosque Nativo 2.jpeg", alt: "Detalle de la flora silvestre", aspect: "portrait" },
+    { src: "/images/real/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", aspect: "landscape" },
+    { src: "/images/real/NOdomoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", aspect: "landscape" },
+    { src: "/images/Galeria/noche-domo-iluminado-2-2.jpg", alt: "Serenidad nocturna en TreePod", aspect: "portrait" },
 ];
 
 export default function GaleriaPage() {

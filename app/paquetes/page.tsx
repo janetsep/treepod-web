@@ -32,13 +32,22 @@ export default function PaquetesPage() {
                 if (error) throw error;
                 if (data) {
                     // Assign categories based on name for visual organization
-                    const withCategories = data.map((s: any) => ({
-                        ...s,
-                        category: s.nombre.toLowerCase().includes('pack') ? 'Romance & Especial' :
-                            s.nombre.toLowerCase().includes('tinaja') ? 'Bienestar' :
-                                s.nombre.toLowerCase().includes('desayuno') || s.nombre.toLowerCase().includes('asado') ? 'Gastronomía' : 'Servicios'
-                    }));
+                    const withCategories = data.map((s: any) => {
+                        let displayImage = s.image_url;
+                        if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/DesayunoTreepod.jpg";
+                        if (s.nombre.toLowerCase().includes('tinaja')) displayImage = "/images/wellness/Tinaja1.jpg";
+                        if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+
+                        return {
+                            ...s,
+                            image_url: displayImage || "/images/Galeria/domonieve2.jpeg",
+                            category: s.nombre.toLowerCase().includes('pack') ? 'Romance & Especial' :
+                                s.nombre.toLowerCase().includes('tinaja') ? 'Bienestar' :
+                                    s.nombre.toLowerCase().includes('desayuno') || s.nombre.toLowerCase().includes('asado') ? 'Gastronomía' : 'Servicios'
+                        };
+                    });
                     setServicios(withCategories);
+
                 }
             } catch (err) {
                 console.error("Error fetching services:", err);
@@ -83,7 +92,7 @@ export default function PaquetesPage() {
                                 <div className="w-full md:w-5/12 relative h-72 md:h-auto overflow-hidden">
                                     <Image
                                         alt={extra.nombre}
-                                        src={extra.image_url || "/images/placeholder.jpg"}
+                                        src={extra.image_url}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         className="object-cover transition-transform duration-[2s] group-hover:scale-110"

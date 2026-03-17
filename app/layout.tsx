@@ -41,6 +41,7 @@ const notoSans = Noto_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://domostreepod.cl'),
   title: 'TreePod | Refugio de Montaña en Valle Las Trancas',
   description: 'Tu pausa en el bosque nativo. Domos TreePod en Valle Las Trancas para vivir la montaña auténtica y descansar de verdad. Reserva tu refugio.',
   keywords: ['glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio'],

@@ -200,5 +200,55 @@ export const NotificationService = {
       console.error('🔥 Error enviando guía:', error);
       return { success: false, error };
     }
+  },
+
+  /**
+   * Envía alerta de seguridad al administrador
+   */
+  async sendSecurityAlert(type: string, data: { email: string, details?: any }) {
+    const adminEmail = 'janetsep@gmail.com';
+    try {
+      await resend.emails.send({
+        from: 'TreePod Security <onboarding@resend.dev>',
+        to: [adminEmail],
+        subject: `🚨 ALERTA DE SEGURIDAD: ${type}`,
+        html: `
+          <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #fee2e2; border-radius: 12px; overflow: hidden;">
+            <div style="background-color: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+               <h1 style="margin: 0; font-size: 24px;">Alerta de Seguridad</h1>
+               <p style="margin-top: 5px; opacity: 0.9;">Actividad sospechosa detectada</p>
+            </div>
+            
+            <div style="padding: 30px 20px;">
+              <p>Se ha detectado un evento que requiere su atención:</p>
+              
+              <div style="background-color: #fef2f2; border: 1px solid #fee2e2; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="margin-top: 0;"><strong>Tipo de Evento:</strong> ${type}</p>
+                <p><strong>Email Relacionado:</strong> ${data.email}</p>
+                <p><strong>Fecha/Hora:</strong> ${new Date().toLocaleString('es-CL')}</p>
+              </div>
+
+              ${data.details ? `
+                <p><strong>Detalles adicionales:</strong></p>
+                <pre style="background: #f1f5f9; padding: 15px; border-radius: 8px; font-size: 13px; overflow-x: auto;">${JSON.stringify(data.details, null, 2)}</pre>
+              ` : ''}
+
+              <div style="margin-top: 30px; text-align: center;">
+                <a href="https://domostreepod.cl/admin" style="background-color: #1a1a1a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Acceder al Panel Admin</a>
+              </div>
+            </div>
+            
+            <div style="background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 11px; color: #999;">
+              Este es un mensaje automático del sistema de monitoreo de Glamping TreePod.
+            </div>
+          </div>
+        `
+      });
+      console.log(`📧 Alerta de seguridad "${type}" enviada a ${adminEmail}`);
+      return { success: true };
+    } catch (error: any) {
+      console.error('🔥 Error enviando alerta de seguridad:', error);
+      return { success: false, error: error.message };
+    }
   }
 };

@@ -5,22 +5,29 @@ import { supabase } from "@/lib/supabase";
 import DomoCalendar from "./components/DomoCalendar";
 import ReservaModal from "./components/ReservaModal";
 import TarifasConsole from "./components/TarifasConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search } from "lucide-react";
+import UsersConsole from "./components/UsersConsole";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'usuarios'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [expandedFinancial, setExpandedFinancial] = useState(false);
     const [expandedReservas, setExpandedReservas] = useState(true);
+    const [expandedCalendar, setExpandedCalendar] = useState(false);
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingReserva, setEditingReserva] = useState<any | null>(null);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [adminRole, setAdminRole] = useState<string | null>(null);
+    const [adminEmail, setAdminEmail] = useState<string | null>(null);
+    const [sortConfig, setSortConfig] = useState<{ key: 'fecha_inicio' | 'fecha_fin', order: 'asc' | 'desc' } | null>(null);
+    const ITEMS_PER_PAGE = 30;
 
     useEffect(() => {
         loadData();
@@ -28,6 +35,17 @@ export default function AdminDashboard() {
 
     async function loadData() {
         setLoading(true);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+            setAdminEmail(session.user.email);
+            // Fetch role from table
+            const { data: adminData } = await supabase
+                .from("authorized_admins")
+                .select("rol")
+                .eq("email", session.user.email)
+                .single();
+            setAdminRole(adminData?.rol || (session.user.email.endsWith("@domostreepod.cl") ? "admin" : "viewer"));
+        }
         await Promise.all([fetchReservas(), fetchDomos()]);
         setLoading(false);
     }
@@ -60,7 +78,7 @@ export default function AdminDashboard() {
         try {
             const res = await fetch("/api/admin/reservas/cancelar", {
                 method: "POST",
-                body: JSON.stringify({ reservaId: id })
+                body: JSON.stringify({ reservaId: id, adminEmail })
             });
             const data = await res.json();
 
@@ -89,7 +107,7 @@ export default function AdminDashboard() {
         try {
             const res = await fetch("/api/admin/reservas/eliminar", {
                 method: "POST",
-                body: JSON.stringify({ reservaId: id })
+                body: JSON.stringify({ reservaId: id, adminEmail })
             });
             const data = await res.json();
 
@@ -124,7 +142,7 @@ export default function AdminDashboard() {
             for (const id of selectedIds) {
                 const res = await fetch("/api/admin/reservas/eliminar", {
                     method: "POST",
-                    body: JSON.stringify({ reservaId: id })
+                    body: JSON.stringify({ reservaId: id, adminEmail })
                 });
                 if (res.ok) successCount++;
                 else {
@@ -156,7 +174,7 @@ export default function AdminDashboard() {
         try {
             const res = await fetch("/api/admin/reservas/confirmar", {
                 method: "POST",
-                body: JSON.stringify({ reservaId: id })
+                body: JSON.stringify({ reservaId: id, adminEmail })
             });
             const data = await res.json();
 
@@ -248,11 +266,31 @@ export default function AdminDashboard() {
     const validReservas = reservas.filter(isValidReserva);
     const filteredReservas = validReservas.filter(r => {
         if (!searchTerm) return true;
-        const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""}`.toLowerCase();
+        const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""} ${r.nombre || ""} ${r.apellido || ""}`.toLowerCase();
         const email = (r.email || r.clientes?.email || "").toLowerCase();
         const search = searchTerm.toLowerCase();
         return clientName.includes(search) || email.includes(search) || r.id.toLowerCase().includes(search);
     });
+
+    // Sorting Logic
+    const sortedReservas = [...filteredReservas].sort((a, b) => {
+        if (!sortConfig) return 0;
+        const aValue = new Date(a[sortConfig.key]).getTime();
+        const bValue = new Date(b[sortConfig.key]).getTime();
+        return sortConfig.order === 'asc' ? aValue - bValue : bValue - aValue;
+    });
+
+    // Pagination Logic
+    const totalPages = Math.ceil(sortedReservas.length / ITEMS_PER_PAGE);
+    const paginatedReservas = sortedReservas.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    // Reset page when search changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
 
     // Helper: Resumen Mensual
     const getMonthlyStats = () => {
@@ -312,13 +350,15 @@ export default function AdminDashboard() {
                             <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Estado Sistema</span>
                             <span className="text-xs font-bold text-green-500">Operativo · Online</span>
                         </div>
-                        <button
-                            onClick={openNewReserva}
-                            className="px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-[1.2rem] text-sm font-black shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1 active:scale-95"
-                        >
-                            <Plus className="w-4 h-4" />
-                            Nueva Reserva
-                        </button>
+                        {adminRole !== 'viewer' && (
+                            <button
+                                onClick={openNewReserva}
+                                className="px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-[1.2rem] text-sm font-black shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1 active:scale-95"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Nueva Reserva
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -338,10 +378,21 @@ export default function AdminDashboard() {
                         <TrendingUp className="w-4 h-4" />
                         Tarifas y Precios
                     </button>
+                    {['admin', 'superadmin'].includes(adminRole || '') && (
+                        <button
+                            onClick={() => setView('usuarios')}
+                            className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'usuarios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            <Users className="w-4 h-4" />
+                            Accesos
+                        </button>
+                    )}
                 </div>
 
                 {view === 'tarifas' ? (
-                    <TarifasConsole />
+                    <TarifasConsole adminRole={adminRole} adminEmail={adminEmail} />
+                ) : view === 'usuarios' ? (
+                    <UsersConsole />
                 ) : (
                     <>
                         {/* KPI Cards: RESUMEN GENERAL */}
@@ -426,19 +477,25 @@ export default function AdminDashboard() {
 
                         {/* Calendar View */}
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-100">
+                            <button 
+                                onClick={() => setExpandedCalendar(!expandedCalendar)}
+                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                            >
                                 <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
                                     <Calendar className="w-6 h-6 text-primary" />
                                     Ocupación del Refugio
                                 </h2>
-                            </div>
-                            <div className="p-8">
-                                {loading ? (
-                                    <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
-                                ) : (
-                                    <DomoCalendar reservas={reservas} domos={domos} />
-                                )}
-                            </div>
+                                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedCalendar ? 'rotate-180' : ''}`} />
+                            </button>
+                            {expandedCalendar && (
+                                <div className="p-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    {loading ? (
+                                        <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
+                                    ) : (
+                                        <DomoCalendar reservas={reservas} domos={domos} />
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* List View - COLLAPSIBLE */}
@@ -452,7 +509,7 @@ export default function AdminDashboard() {
                                     Maestro de Reservas
                                 </h2>
                                 <div className="flex items-center gap-4">
-                                    {selectedIds.length > 0 && (
+                                    {selectedIds.length > 0 && ['admin', 'superadmin'].includes(adminRole || '') && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); bulkDelete(); }}
                                             disabled={actionLoading === 'bulk-delete'}
@@ -497,27 +554,72 @@ export default function AdminDashboard() {
                                                     <input
                                                         type="checkbox"
                                                         className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                                                        checked={filteredReservas.length > 0 && selectedIds.length === filteredReservas.length}
+                                                        checked={paginatedReservas.length > 0 && paginatedReservas.every(r => selectedIds.includes(r.id))}
                                                         onChange={(e) => {
-                                                            if (e.target.checked) setSelectedIds(filteredReservas.map(r => r.id));
-                                                            else setSelectedIds([]);
+                                                            if (e.target.checked) {
+                                                                const newIds = paginatedReservas.map(r => r.id);
+                                                                setSelectedIds(prev => Array.from(new Set([...prev, ...newIds])));
+                                                            } else {
+                                                                const pageIds = paginatedReservas.map(r => r.id);
+                                                                setSelectedIds(prev => prev.filter(id => !pageIds.includes(id)));
+                                                            }
                                                         }}
                                                     />
                                                 </th>
-                                                <th className="px-4 py-5 font-black">Huésped / Referencia</th>
-                                                <th className="px-6 py-5 font-black">Estancia</th>
-                                                <th className="px-6 py-5 font-black">Domo</th>
-                                                <th className="px-6 py-5 font-black">Finanzas</th>
-                                                <th className="px-6 py-5 font-black">Estado</th>
-                                                <th className="px-8 py-5 text-right font-black">Acciones</th>
+                                                <th className="px-5 py-3 font-black whitespace-nowrap">Huésped / Referencia</th>
+                                                <th className="px-4 py-3 font-black whitespace-nowrap">
+                                                    <div className="flex items-center gap-2">
+                                                        Estancia
+                                                        <div className="flex gap-2 items-center bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
+                                                            <div className="flex flex-col">
+                                                                <button 
+                                                                    onClick={() => setSortConfig({ key: 'fecha_inicio', order: 'asc' })}
+                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    title="Ordenar por Entrada (Asc)"
+                                                                >
+                                                                    <ChevronDown className="w-2.5 h-2.5 rotate-180" />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={() => setSortConfig({ key: 'fecha_inicio', order: 'desc' })}
+                                                                    className={`p-0 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    title="Ordenar por Entrada (Desc)"
+                                                                >
+                                                                    <ChevronDown className="w-2.5 h-2.5" />
+                                                                </button>
+                                                            </div>
+                                                            <div className="w-[1px] h-3 bg-gray-200"></div>
+                                                            <div className="flex flex-col">
+                                                                <button 
+                                                                    onClick={() => setSortConfig({ key: 'fecha_fin', order: 'asc' })}
+                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    title="Ordenar por Salida (Asc)"
+                                                                >
+                                                                    <ChevronDown className="w-2.5 h-2.5 rotate-180" />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={() => setSortConfig({ key: 'fecha_fin', order: 'desc' })}
+                                                                    className={`p-0 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    title="Ordenar por Salida (Desc)"
+                                                                >
+                                                                    <ChevronDown className="w-2.5 h-2.5" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <th className="px-4 py-3 font-black whitespace-nowrap">Domo</th>
+                                                <th className="px-4 py-3 font-black whitespace-nowrap text-center">Fuente</th>
+                                                <th className="px-4 py-3 font-black whitespace-nowrap">Finanzas</th>
+                                                <th className="px-4 py-3 font-black whitespace-nowrap">Estado</th>
+                                                <th className="px-5 py-3 text-right font-black whitespace-nowrap">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100">
                                             {loading ? (
                                                 <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
-                                            ) : filteredReservas.length === 0 ? (
+                                            ) : paginatedReservas.length === 0 ? (
                                                 <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros.</td></tr>
-                                            ) : filteredReservas.map((reserva) => {
+                                            ) : paginatedReservas.map((reserva) => {
                                                 const clientName = reserva.clientes?.nombre
                                                     ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
                                                     : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
@@ -538,30 +640,45 @@ export default function AdminDashboard() {
                                                                 }}
                                                             />
                                                         </td>
-                                                        <td className="px-4 py-5">
-                                                            <div className="flex items-center gap-2 mb-1">
-                                                                <div className="font-extrabold text-gray-900 text-base">{clientName} <span className="ml-2 bg-gray-100/80 text-gray-500 text-[9px] px-2 py-0.5 rounded-lg font-black uppercase tracking-tighter">{reserva.adultos || 2} personas</span></div>
+                                                        <td className="px-4 py-4">
+                                                            <div className="flex items-center gap-2 mb-0.5">
+                                                                <div className="font-extrabold text-gray-900 text-xs leading-none">{clientName}</div>
+                                                                <span className="bg-gray-100/80 text-gray-500 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{reserva.adultos || 2}p</span>
                                                                 {isVip && (
                                                                     <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
                                                                 )}
                                                             </div>
-                                                            <div className="flex flex-col gap-0.5 mb-2">
-                                                                <div className="text-xs text-gray-400 font-medium">{clientEmail}</div>
+                                                            <div className="flex flex-col gap-0 mb-1.5">
+                                                                <div className="text-[10px] text-gray-400 font-medium leading-tight">{clientEmail}</div>
                                                                 {(reserva.telefono || reserva.clientes?.telefono) && (
-                                                                    <div className="text-[10px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
-                                                                        📞 {reserva.telefono || reserva.clientes?.telefono}
+                                                                    <div className="text-[9px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
+                                                                        {reserva.telefono || reserva.clientes?.telefono}
                                                                     </div>
                                                                 )}
                                                             </div>
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
-                                                                <button
-                                                                    onClick={() => openEditReserva(reserva)}
-                                                                    className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-1 transition-colors"
-                                                                >
-                                                                    <Pencil className="w-3 h-3" />
-                                                                    Editar Ficha
-                                                                </button>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[8px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
+                                                                {reserva.comprobante_url && (
+                                                                    <a
+                                                                        href={reserva.comprobante_url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="flex items-center gap-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-[8px] font-black uppercase tracking-tighter hover:bg-green-200 transition-colors"
+                                                                        title="Ver Boleta / Comprobante"
+                                                                    >
+                                                                        <CheckCircle2 className="w-2.5 h-2.5" />
+                                                                        Boleta
+                                                                    </a>
+                                                                )}
+                                                                 {adminRole !== 'viewer' && (
+                                                                    <button
+                                                                        onClick={() => openEditReserva(reserva)}
+                                                                        className="text-[8px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-0.5 transition-colors"
+                                                                    >
+                                                                        <Pencil className="w-2.5 h-2.5" />
+                                                                        Editar
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                             {(reserva.notas || reserva.mensaje) && (
                                                                 <div className="mt-3 p-3 bg-yellow-50/50 border border-yellow-100 rounded-xl text-xs text-yellow-800 font-medium max-w-xs italic">
@@ -569,86 +686,87 @@ export default function AdminDashboard() {
                                                                 </div>
                                                             )}
                                                         </td>
-                                                        <td className="px-6 py-5">
-                                                            <div className="text-gray-800 font-bold text-sm">
+                                                        <td className="px-4 py-4">
+                                                            <div className="text-gray-800 font-bold text-[11px] whitespace-nowrap">
                                                                 {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
-                                                                <span className="text-gray-300 mx-2">→</span>
+                                                                <span className="text-gray-300 mx-1">→</span>
                                                                 {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
                                                             </div>
-                                                            <div className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1.5">
-                                                                Creada el {new Date(reserva.created_at).toLocaleDateString()}
+                                                            <div className="text-[8px] text-gray-400 font-black uppercase tracking-widest mt-0.5">
+                                                                In: {new Date(reserva.created_at).toLocaleDateString()}
                                                             </div>
                                                         </td>
-                                                        <td className="px-6 py-5">
-                                                            <span className="px-4 py-1.5 bg-gray-100 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
+                                                        <td className="px-4 py-4">
+                                                            <span className="px-2 py-1 bg-gray-100 rounded text-[8px] font-black text-gray-600 uppercase tracking-widest border border-gray-200 shadow-sm">
                                                                 {reserva.domos?.nombre || "N/A"}
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-5">
-                                                            <div className={`font-black text-base ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
+                                                        <td className="px-4 py-4 text-center">
+                                                            <div className="flex flex-col items-center justify-center gap-1">
+                                                                <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5 ${
+                                                                    reserva.fuente === 'web' ? 'bg-primary/5 text-primary border-primary/10' :
+                                                                    reserva.fuente === 'whatsapp' ? 'bg-green-50 text-green-600 border-green-100' :
+                                                                    reserva.fuente === 'airbnb' ? 'bg-rose-50 text-rose-600 border-rose-100' :
+                                                                    reserva.fuente === 'booking' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                                                    'bg-gray-100 text-gray-500 border-gray-200'
+                                                                }`}>
+                                                                    {reserva.fuente === 'web' && <Globe className="w-2.5 h-2.5" />}
+                                                                    {reserva.fuente === 'whatsapp' && <MessageCircle className="w-2.5 h-2.5" />}
+                                                                    {reserva.fuente === 'airbnb' && <Home className="w-2.5 h-2.5" />}
+                                                                    {reserva.fuente === 'booking' && <CreditCard className="w-2.5 h-2.5" />}
+                                                                    {reserva.fuente || 'web'}
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-4 py-4">
+                                                            <div className={`font-black text-xs ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
                                                                 ${(reserva.monto_pagado || 0).toLocaleString()}
                                                             </div>
-                                                            <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.05em] mt-1">
-                                                                de ${(reserva.total || 0).toLocaleString()}
+                                                            <div className="text-[8px] text-gray-400 font-black uppercase tracking-[0.05em] mt-0.5">
+                                                                / ${(reserva.total || 0).toLocaleString()}
                                                             </div>
-                                                            {reserva.monto_pagado > 0 && reserva.monto_pagado < reserva.total && (
-                                                                <div className="mt-2 h-1 w-20 bg-gray-100 rounded-full overflow-hidden">
-                                                                    <div
-                                                                        className="h-full bg-primary"
-                                                                        style={{ width: `${Math.min(100, (reserva.monto_pagado / reserva.total) * 100)}%` }}
-                                                                    ></div>
-                                                                </div>
-                                                            )}
                                                         </td>
-                                                        <td className="px-6 py-5">
-                                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
+                                                        <td className="px-4 py-4">
+                                                            <span className={`px-2 py-1 rounded text-[7px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
                                                                 {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
                                                             </span>
                                                             {reserva.fuente && (
-                                                                <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 mt-2">
+                                                                <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-300 mt-1">
                                                                     {reserva.fuente}
                                                                 </div>
                                                             )}
                                                         </td>
-                                                        <td className="px-8 py-5 text-right">
-                                                            <div className="flex justify-end items-center gap-2">
-                                                                {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
+                                                        <td className="px-5 py-4 text-right">
+                                                            <div className="flex justify-end items-center gap-1.5">
+                                                                 {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => confirmReserva(reserva.id)}
                                                                         disabled={actionLoading === reserva.id}
-                                                                        className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
+                                                                        className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
                                                                     >
                                                                         {actionLoading === reserva.id ? "..." : "Confirmar"}
                                                                     </button>
                                                                 )}
-                                                                {reserva.estado !== 'cancelada' && (
+                                                                {reserva.estado !== 'cancelada' && adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => cancelReserva(reserva.id)}
                                                                         disabled={actionLoading === reserva.id}
-                                                                        className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-orange-100"
+                                                                        className="p-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-lg transition-all border border-orange-100"
                                                                         title="Anular Reserva"
                                                                     >
-                                                                        {actionLoading === reserva.id ? "..." : (
-                                                                            <>
-                                                                                <XCircle className="w-4 h-4" />
-                                                                                <span>Anular</span>
-                                                                            </>
-                                                                        )}
+                                                                        <XCircle className="w-3.5 h-3.5" />
                                                                     </button>
                                                                 )}
-                                                                <button
-                                                                    onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
-                                                                    disabled={actionLoading === reserva.id}
-                                                                    className="flex items-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-500 hover:text-white text-red-500 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest border border-red-100 group/del"
-                                                                    title="Eliminar registro permanentemente"
-                                                                >
-                                                                    {actionLoading === reserva.id ? "..." : (
-                                                                        <>
-                                                                            <Trash2 className="w-4 h-4" />
-                                                                            <span>Borrar</span>
-                                                                        </>
-                                                                    )}
-                                                                </button>
+                                                                {['admin', 'superadmin'].includes(adminRole || '') && (
+                                                                    <button
+                                                                        onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
+                                                                        disabled={actionLoading === reserva.id}
+                                                                        className="p-1.5 bg-red-50 hover:bg-red-500 hover:text-white text-red-500 rounded-lg transition-all border border-red-100"
+                                                                        title="Eliminar registro"
+                                                                    >
+                                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -657,6 +775,55 @@ export default function AdminDashboard() {
                                         </tbody>
                                     </table>
                                 </div>
+
+                                {/* Pagination Controls */}
+                                {totalPages > 1 && (
+                                    <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
+                                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                            Página {currentPage} de {totalPages}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                                disabled={currentPage === 1}
+                                                className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
+                                            >
+                                                Anterior
+                                            </button>
+                                            <div className="flex gap-1">
+                                                {(() => {
+                                                    const delta = 2;
+                                                    const range = [];
+                                                    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+                                                        range.push(i);
+                                                    }
+
+                                                    if (currentPage - delta > 2) range.unshift('...');
+                                                    range.unshift(1);
+                                                    if (currentPage + delta < totalPages - 1) range.push('...');
+                                                    if (totalPages > 1) range.push(totalPages);
+
+                                                    return range.map((page, i) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                                                            className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${currentPage === page ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-gray-400 hover:text-gray-600 hover:bg-gray-50 border border-gray-100'} ${typeof page !== 'number' ? 'cursor-default border-none' : ''}`}
+                                                        >
+                                                            {page}
+                                                        </button>
+                                                    ));
+                                                })()}
+                                            </div>
+                                            <button
+                                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                                disabled={currentPage === totalPages}
+                                                className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
+                                            >
+                                                Siguiente
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -666,6 +833,8 @@ export default function AdminDashboard() {
                             domos={domos}
                             onSave={loadData}
                             reservaToEdit={editingReserva}
+                            adminEmail={adminEmail}
+                            adminRole={adminRole}
                         />
                     </>
                 )}

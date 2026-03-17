@@ -42,18 +42,8 @@ function ConfirmacionContent() {
                 }]
             });
 
-            // Meta Pixel (Facebook) - Tracking de Compra Real
-            if ((window as any).fbq) {
-                (window as any).fbq('track', 'Purchase', {
-                    value: parseFloat(amount),
-                    currency: 'CLP',
-                    content_name: 'Reserva TreePod',
-                    content_ids: ['reserva_treepod'],
-                    num_items: 1
-                });
-            }
-
-            console.log('✅ Eventos purchase (GA4/Meta) enviados a dataLayer y Pixel');
+            // Evento gestionado ahora vía GTM - No duplicar tracking directo aquí
+            console.log('✅ Evento purchase enviado a dataLayer');
         }
 
         // Cargar datos de la reserva

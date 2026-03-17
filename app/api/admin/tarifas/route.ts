@@ -32,9 +32,55 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { type, id, ...payload } = body;
+        const { type, id, adminEmail, ...payload } = body;
 
-        // ACCIÓN: CREAR TEMPORADA
+        // VERIFICACIÓN DE IDENTIDAD Y PERMISOS
+        if (!adminEmail) {
+            return NextResponse.json({ error: "Se requiere identificación de administrador" }, { status: 401 });
+        }
+
+        const { data: adminData } = await supabase
+            .from("authorized_admins")
+            .select("rol, nombre")
+            .eq("email", adminEmail)
+            .single();
+
+        if (!adminData) {
+            return NextResponse.json({ error: "Administrador no autorizado" }, { status: 403 });
+        }
+
+        const isViewer = adminData.rol === 'viewer';
+        const isWriter = adminData.rol === 'writer';
+        const isAdmin = ['admin', 'superadmin'].includes(adminData.rol);
+
+        // Bloqueo total para viewers en cualquier POST (modificación)
+        if (isViewer) {
+            return NextResponse.json({ error: "No tienes permisos para realizar cambios. Tu perfil es de solo lectura." }, { status: 403 });
+        }
+
+        // ACCIÓN: ELIMINAR TEMPORADA (Solo Admins)
+        if (type === 'delete_temporada') {
+            if (!isAdmin) {
+                return NextResponse.json({ error: "Solo administradores pueden eliminar temporadas." }, { status: 403 });
+            }
+            if (!id) return NextResponse.json({ error: "ID requerido" }, { status: 400 });
+            
+            await supabase.from("tarifas").delete().eq("temporada_id", id);
+            const { error } = await supabase.from("temporadas").delete().eq("id", id);
+            
+            if (error) throw error;
+
+            // Loggear acción
+            await supabase.from('admin_access_logs').insert({
+                email: adminEmail,
+                action: 'temporada_deleted',
+                details: `El administrador ${adminData.nombre} eliminó la temporada ID: ${id}`
+            });
+
+            return NextResponse.json({ success: true });
+        }
+
+        // ACCIÓN: CREAR TEMPORADA (Admin o Writer)
         if (type === 'create_temporada') {
             const { nombre, fecha_inicio, fecha_fin, prioridad } = payload;
             const { data: temporada, error: tError } = await supabase
@@ -68,23 +114,22 @@ export async function POST(request: Request) {
                 })));
 
             if (rError) throw rError;
-            return NextResponse.json({ success: true, data: temporada });
-        }
 
-        // ACCIÓN: ELIMINAR TEMPORADA
-        if (type === 'delete_temporada') {
-            if (!id) return NextResponse.json({ error: "ID requerido" }, { status: 400 });
-            await supabase.from("tarifas").delete().eq("temporada_id", id);
-            const { error } = await supabase.from("temporadas").delete().eq("id", id);
-            if (error) throw error;
-            return NextResponse.json({ success: true });
+            // Loggear acción
+            await supabase.from('admin_access_logs').insert({
+                email: adminEmail,
+                action: 'temporada_created',
+                details: `${adminData.nombre} creó la temporada: ${nombre}. Rango: ${fecha_inicio} a ${fecha_fin}`
+            });
+
+            return NextResponse.json({ success: true, data: temporada });
         }
 
         if (!id) {
             return NextResponse.json({ error: "ID es requerido" }, { status: 400 });
         }
 
-        // ACCIÓN: ACTUALIZAR TEMPORADA / PRIORIDAD
+        // ACCIÓN: ACTUALIZAR TEMPORADA / PRIORIDAD (Admin o Writer)
         if (type === 'temporada') {
             const { nombre, fecha_inicio, fecha_fin, prioridad } = payload;
             const { data, error } = await supabase
@@ -101,10 +146,18 @@ export async function POST(request: Request) {
                 .single();
 
             if (error) throw error;
+
+            // Loggear acción
+            await supabase.from('admin_access_logs').insert({
+                email: adminEmail,
+                action: 'temporada_updated',
+                details: `${adminData.nombre} actualizó la temporada: ${nombre || id}`
+            });
+
             return NextResponse.json({ success: true, data });
         }
 
-        // ACCIÓN: ACTUALIZAR TARIFA
+        // ACCIÓN: ACTUALIZAR TARIFA (Admin o Writer)
         const { precio_noche } = payload;
         if (precio_noche === undefined) {
             return NextResponse.json({ error: "Precio es requerido" }, { status: 400 });
@@ -120,6 +173,13 @@ export async function POST(request: Request) {
             .single();
 
         if (error) throw error;
+
+        // Loggear acción
+        await supabase.from('admin_access_logs').insert({
+            email: adminEmail,
+            action: 'tarifa_updated',
+            details: `${adminData.nombre} actualizó precio de tarifa ID: ${id} a $${precio_noche}`
+        });
 
         return NextResponse.json({ success: true, data });
     } catch (error: any) {

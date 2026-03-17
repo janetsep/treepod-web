@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 export default function Introduction() {
@@ -8,25 +9,30 @@ export default function Introduction() {
                 <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
                     <div className="w-full lg:w-1/2 relative group">
                         <div className="absolute -inset-4 bg-primary/10 rounded-[3rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <img
-                            alt="Vista frontal del domo TreePod bajo la nieve"
-                            className="relative rounded-[2.5rem] shadow-2xl w-full aspect-[4/3] object-cover"
-                            src="/images/exteriors/domo-exterior-arrival.jpg"
-                        />
+                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl w-full aspect-[4/3]">
+                            <Image
+                                alt="Vista frontal del domo TreePod bajo la nieve"
+                                className="object-cover object-center"
+                                src="/images/Galeria/domonieve2.jpeg"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                        </div>
                     </div>
 
                     <div className="w-full lg:w-1/2 space-y-8">
                         <div className="space-y-4">
-                            <div className="inline-block mb-4">
-                                <span className="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Nuestra Esencia</span>
+                            <div className="inline-flex items-center gap-2 mb-4">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Nuestra Esencia</span>
                             </div>
-                            <h2 className="h2-display leading-[1.1] text-text-main">
+                            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold leading-tight text-text-main">
                                 Donde la naturaleza <br />
-                                <span className="text-primary italic-display">marca el ritmo.</span>
+                                <span className="text-primary italic-display font-light">marca el ritmo.</span>
                             </h2>
                         </div>
 
-                        <div className="space-y-6 text-text-sub text-lg md:text-xl leading-relaxed font-bold">
+                        <div className="space-y-6 text-xl md:text-2xl font-display leading-tight text-text-main">
                             <p>
                                 TreePod te invita a vivir una experiencia diferente, en el corazón del bosque milenario.
                                 Nuestros domos están diseñados para ofrecerte calidez y refugio en plena armonía con el entorno nativo.

@@ -20,16 +20,27 @@ interface Temporada {
     prioridad: number;
 }
 
-export default function TarifasConsole() {
+export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: string | null, adminEmail: string | null }) {
     const [temporadas, setTemporadas] = useState<Temporada[]>([]);
     const [tarifas, setTarifas] = useState<Tarifa[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState<string | null>(null);
     const [selectedTemporadaId, setSelectedTemporadaId] = useState<string>("");
+    
+    const isViewer = adminRole === 'viewer';
+    const isAdmin = ['admin', 'superadmin'].includes(adminRole || '');
 
     // Estado para edición/creación de temporada
     const [editingTemporada, setEditingTemporada] = useState<Temporada | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+
+    // Paginación para temporadas (Rangos)
+    const [temporadaPage, setTemporadaPage] = useState(1);
+    const TEMPORADAS_PER_PAGE = 4;
+
+    // Reset de página de tarifas no es necesario si mostramos todas, 
+    // pero mantendremos la lógica por si en el futuro hay muchas. 
+    // Por ahora, el usuario quiere ver las 4 opciones de la matriz juntas.
 
     useEffect(() => {
         loadData();
@@ -64,7 +75,7 @@ export default function TarifasConsole() {
         try {
             const res = await fetch("/api/admin/tarifas", {
                 method: "POST",
-                body: JSON.stringify({ id, precio_noche: newPrice }),
+                body: JSON.stringify({ id, precio_noche: newPrice, adminEmail }),
             });
             if (!res.ok) throw new Error("Error al actualizar");
             setTarifas(prev => prev.map(t => t.id === id ? { ...t, precio_noche: newPrice } : t));
@@ -88,7 +99,8 @@ export default function TarifasConsole() {
                     nombre: editingTemporada.nombre,
                     fecha_inicio: editingTemporada.fecha_inicio,
                     fecha_fin: editingTemporada.fecha_fin,
-                    prioridad: editingTemporada.prioridad
+                    prioridad: editingTemporada.prioridad,
+                    adminEmail
                 }),
             });
             if (!res.ok) throw new Error("Error en servidor");
@@ -111,7 +123,7 @@ export default function TarifasConsole() {
         try {
             const res = await fetch("/api/admin/tarifas", {
                 method: "POST",
-                body: JSON.stringify({ type: 'delete_temporada', id: selectedTemporadaId }),
+                body: JSON.stringify({ type: 'delete_temporada', id: selectedTemporadaId, adminEmail }),
             });
             if (!res.ok) throw new Error("Error al eliminar");
 
@@ -132,7 +144,8 @@ export default function TarifasConsole() {
                 body: JSON.stringify({
                     type: 'temporada',
                     id,
-                    prioridad: currentPriority + delta
+                    prioridad: currentPriority + delta,
+                    adminEmail
                 }),
             });
             await loadData();
@@ -144,6 +157,13 @@ export default function TarifasConsole() {
     };
 
     const filteredTarifas = tarifas.filter(t => t.temporada_id === selectedTemporadaId);
+
+    // Lógica de paginación para Temporadas
+    const totalTemporadaPages = Math.ceil(temporadas.length / TEMPORADAS_PER_PAGE);
+    const paginatedTemporadas = temporadas.slice(
+        (temporadaPage - 1) * TEMPORADAS_PER_PAGE,
+        temporadaPage * TEMPORADAS_PER_PAGE
+    );
 
     if (loading) {
         return <div className="p-12 text-center text-gray-400 font-black italic animate-pulse">CARGANDO MAESTRO DE TARIFAS...</div>;
@@ -161,22 +181,24 @@ export default function TarifasConsole() {
                         </h2>
                         <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Gestión de rangos de fechas y prioridades</p>
                     </div>
-                    <button
-                        onClick={() => {
-                            setIsCreating(true);
-                            setEditingTemporada({
-                                id: '',
-                                nombre: "Nueva Temporada",
-                                fecha_inicio: new Date().toISOString().split('T')[0],
-                                fecha_fin: new Date().toISOString().split('T')[0],
-                                prioridad: 0
-                            });
-                        }}
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-black/10"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Añadir Rango
-                    </button>
+                    {!isViewer && (
+                        <button
+                            onClick={() => {
+                                setIsCreating(true);
+                                setEditingTemporada({
+                                    id: '',
+                                    nombre: "Nueva Temporada",
+                                    fecha_inicio: new Date().toISOString().split('T')[0],
+                                    fecha_fin: new Date().toISOString().split('T')[0],
+                                    prioridad: 0
+                                });
+                            }}
+                            className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-black/10"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Añadir Rango
+                        </button>
+                    )}
                 </div>
 
                 <div className="overflow-x-auto">
@@ -190,7 +212,7 @@ export default function TarifasConsole() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                            {temporadas.map((temp) => (
+                            {paginatedTemporadas.map((temp) => (
                                 <tr
                                     key={temp.id}
                                     className={`group transition-all hover:bg-gray-50/50 cursor-pointer ${selectedTemporadaId === temp.id ? 'bg-primary/5' : ''}`}
@@ -203,10 +225,12 @@ export default function TarifasConsole() {
                                     <td className="px-8 py-5">
                                         <div className="flex items-center gap-2">
                                             <span className="w-8 text-sm font-black text-gray-400">{temp.prioridad}</span>
-                                            <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                                                <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, 1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowUp size={12} /></button>
-                                                <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, -1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowDown size={12} /></button>
-                                            </div>
+                                            {!isViewer && (
+                                                <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                                    <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, 1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowUp size={12} /></button>
+                                                    <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, -1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowDown size={12} /></button>
+                                                </div>
+                                            )}
                                         </div>
                                     </td>
                                     <td className="px-8 py-5">
@@ -219,18 +243,43 @@ export default function TarifasConsole() {
                                         <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>
                                     </td>
                                     <td className="px-8 py-5 text-right">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); setSelectedTemporadaId(temp.id); handleDeleteTemporada(); }}
-                                            className="p-3 text-red-300 hover:text-red-500 hover:bg-white rounded-xl transition-all"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
+                                        {!isViewer && isAdmin && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setSelectedTemporadaId(temp.id); handleDeleteTemporada(); }}
+                                                className="p-3 text-red-300 hover:text-red-500 hover:bg-white rounded-xl transition-all"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+
+                {/* Paginación de Temporadas */}
+                {totalTemporadaPages > 1 && (
+                    <div className="p-6 bg-gray-50/30 border-t border-gray-50 flex justify-center items-center gap-4">
+                        <button
+                            onClick={() => setTemporadaPage(p => Math.max(1, p - 1))}
+                            disabled={temporadaPage === 1}
+                            className="p-2 bg-white border border-gray-100 rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-all shadow-sm"
+                        >
+                            <ArrowRight className="w-4 h-4 rotate-180" />
+                        </button>
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                            Página {temporadaPage} de {totalTemporadaPages}
+                        </span>
+                        <button
+                            onClick={() => setTemporadaPage(p => Math.min(totalTemporadaPages, p + 1))}
+                            disabled={temporadaPage === totalTemporadaPages}
+                            className="p-2 bg-white border border-gray-100 rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-all shadow-sm"
+                        >
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Panel de Edición Detallada */}
@@ -248,6 +297,7 @@ export default function TarifasConsole() {
                                 <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Nombre Descriptivo</label>
                                 <input
                                     type="text"
+                                    readOnly={isViewer}
                                     value={editingTemporada?.nombre || ''}
                                     onChange={(e) => setEditingTemporada(editingTemporada ? { ...editingTemporada, nombre: e.target.value } : null)}
                                     className="w-full p-4 bg-gray-50 border border-transparent rounded-2xl text-sm font-black focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all"
@@ -258,6 +308,7 @@ export default function TarifasConsole() {
                                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Check-in desde</label>
                                     <input
                                         type="date"
+                                        readOnly={isViewer}
                                         value={editingTemporada?.fecha_inicio || ''}
                                         onChange={(e) => setEditingTemporada(editingTemporada ? { ...editingTemporada, fecha_inicio: e.target.value } : null)}
                                         className="w-full p-4 bg-gray-50 border border-transparent rounded-2xl text-sm font-black focus:bg-white focus:border-primary outline-none transition-all"
@@ -267,20 +318,23 @@ export default function TarifasConsole() {
                                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Check-out hasta</label>
                                     <input
                                         type="date"
+                                        readOnly={isViewer}
                                         value={editingTemporada?.fecha_fin || ''}
                                         onChange={(e) => setEditingTemporada(editingTemporada ? { ...editingTemporada, fecha_fin: e.target.value } : null)}
                                         className="w-full p-4 bg-gray-50 border border-transparent rounded-2xl text-sm font-black focus:bg-white focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
-                            <button
-                                onClick={handleSaveTemporada}
-                                disabled={saving === 'temporada'}
-                                className="w-full py-5 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:scale-95 transition-all"
-                            >
-                                {saving === 'temporada' ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-5 h-5" />}
-                                {isCreating ? 'Crear Temporada' : 'Guardar Cambios'}
-                            </button>
+                            {!isViewer && (
+                                <button
+                                    onClick={handleSaveTemporada}
+                                    disabled={saving === 'temporada'}
+                                    className="w-full py-5 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:scale-95 transition-all"
+                                >
+                                    {saving === 'temporada' ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-5 h-5" />}
+                                    {isCreating ? 'Crear Temporada' : 'Guardar Cambios'}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -316,9 +370,10 @@ export default function TarifasConsole() {
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-black text-lg">$</span>
                                             <input
                                                 type="number"
+                                                readOnly={isViewer}
                                                 defaultValue={tarifa.precio_noche}
-                                                onBlur={(e) => handleUpdatePrice(tarifa.id, Number(e.target.value))}
-                                                className="w-full pl-10 pr-12 py-4 bg-gray-50 border-transparent border-2 rounded-2xl text-xl font-black text-gray-900 focus:bg-white focus:border-primary outline-none transition-all"
+                                                onBlur={(e) => !isViewer && handleUpdatePrice(tarifa.id, Number(e.target.value))}
+                                                className={`w-full pl-10 pr-12 py-4 border-transparent border-2 rounded-2xl text-xl font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
                                             />
                                             {saving === tarifa.id && (
                                                 <div className="absolute right-4 top-1/2 -translate-y-1/2">

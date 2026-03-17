@@ -3,15 +3,37 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
     try {
-        const { reservaId } = await request.json();
+        const { reservaId, adminEmail } = await request.json();
 
         if (!reservaId) {
             return NextResponse.json({ error: "ID requerido" }, { status: 400 });
         }
 
-        console.log(`🗑️ Iniciando proceso de eliminación para reserva: ${reservaId}`);
+        // 1. Verificar permisos del administrador
+        if (!adminEmail) {
+            return NextResponse.json({ error: "Se requiere identificación de administrador" }, { status: 401 });
+        }
 
-        // 1. Eliminar servicios asociados (FK constraint)
+        const { data: adminData } = await supabaseAdmin
+            .from("authorized_admins")
+            .select("rol, nombre")
+            .eq("email", adminEmail)
+            .single();
+
+        if (!adminData || !['admin', 'superadmin'].includes(adminData.rol)) {
+            return NextResponse.json({ error: "No tienes permisos para eliminar registros. Solo administradores pueden hacerlo." }, { status: 403 });
+        }
+
+        console.log(`🗑️ Eliminación por ${adminEmail}: reserva ${reservaId}`);
+
+        // Obtener datos de la reserva para el log antes de borrar
+        const { data: reservaInfo } = await supabaseAdmin
+            .from("reservas")
+            .select("nombre, apellido, fecha_inicio")
+            .eq("id", reservaId)
+            .single();
+
+        // 2. Eliminar servicios asociados (FK constraint)
         try {
             const { error: servError } = await supabaseAdmin
                 .from("reserva_servicios")
@@ -22,7 +44,7 @@ export async function POST(request: Request) {
             console.error("❌ Fallo crítico en paso 1 (servicios):", e);
         }
 
-        // 2. Eliminar movimientos financieros asociados (FK constraint)
+        // 3. Eliminar movimientos financieros asociados (FK constraint)
         try {
             const { error: finError } = await supabaseAdmin
                 .from("finanzas_movimientos")
@@ -33,7 +55,7 @@ export async function POST(request: Request) {
             console.error("❌ Fallo crítico en paso 2 (finanzas):", e);
         }
 
-        // 3. Eliminar lead_checkout
+        // 4. Eliminar lead_checkout
         try {
             await supabaseAdmin
                 .from("leads_checkout")
@@ -43,7 +65,7 @@ export async function POST(request: Request) {
             // Ignorable
         }
 
-        // 4. Intentar eliminar la reserva principal (ESTO ES LO MÁS IMPORTANTE)
+        // 5. Intentar eliminar la reserva principal
         const { error: deleteError } = await supabaseAdmin
             .from("reservas")
             .delete()
@@ -57,6 +79,13 @@ export async function POST(request: Request) {
                 code: deleteError.code
             }, { status: 500 });
         }
+
+        // Loggear la acción
+        await supabaseAdmin.from('admin_access_logs').insert({
+            email: adminEmail,
+            action: 'reservation_deleted',
+            details: `El administrador ${adminData.nombre} eliminó permanentemente la reserva de ${reservaInfo?.nombre} ${reservaInfo?.apellido} (Inicio: ${reservaInfo?.fecha_inicio}). ID: ${reservaId}`
+        });
 
         console.log(`✅ Reserva ${reservaId} eliminada exitosamente.`);
         return NextResponse.json({ ok: true });
