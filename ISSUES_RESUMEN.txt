@@ -1,0 +1,189 @@
+═════════════════════════════════════════════════════════════════════════════
+                    RESUMEN RÁPIDO DE ISSUES
+                      Domos TreePod - 5 Mar 2026
+═════════════════════════════════════════════════════════════════════════════
+
+INSTRUCCIÓN: Abre domostrepod.cl y revisa cada sección según esta lista.
+Marca con ✓ o ✗ lo que encuentres.
+
+═════════════════════════════════════════════════════════════════════════════
+🔴 CRÍTICO (Bloquea conversión) - FIX URGENTE
+═════════════════════════════════════════════════════════════════════════════
+
+[ ] ISSUE #13: IMÁGENES EXTRAS SIGUEN EN GRIS
+    Ubicación: Sección "Detalles que Elevan tu Estadía"
+    Debería: Fotos a COLOR de los 6 servicios
+    Actualmente: Imágenes gris/desaturadas
+    Impacto: -10-15% conversión en upsell
+    
+    ➜ Revisar: ¿Las 6 fotos son a color? ¿Se ve natural/profesional?
+
+[ ] ISSUE #23: STEPPER CHECKOUT NO EXISTE
+    Ubicación: Página /checkout
+    Debería: 3 círculos conectados (1. Estadía | 2. Pago | 3. Confirmación)
+    Actualmente: No hay indicador visual de progreso
+    Impacto: +5-7% abandono en checkout
+    
+    ➜ Revisar: ¿Ves un stepper/progress bar al abrir checkout?
+
+[ ] ISSUE #26: SIDEBAR NO ACTUALIZA EN TIEMPO REAL
+    Ubicación: Desktop checkout (lado derecho)
+    Debería: Mostrarse el total actualizado cuando cambias fechas/extras
+    Actualmente: Probablemente no se actualiza
+    Impacto: Confusión sobre precio final
+    
+    ➜ Revisar: Selecciona un domo → Cambia fechas → ¿Se actualiza el total?
+
+[ ] ISSUE #28: NÚMERO CONFIRMACIÓN NO ES ÚNICO
+    Ubicación: Página confirmación checkout (Step 3)
+    Debería: Número como #TREE-2026-0012345 (único por reserva)
+    Actualmente: Probablemente el mismo número para todas
+    Impacto: Confusión en seguimiento de reservas
+    
+    ➜ Revisar: Hace 2 reservas ficticias → ¿El número es diferente?
+
+═════════════════════════════════════════════════════════════════════════════
+🟠 ALTO (Afecta usabilidad) - FIX PRÓXIMAS 24H
+═════════════════════════════════════════════════════════════════════════════
+
+[ ] ISSUE #1: BADGE RATING NO VISIBLE
+    Ubicación: Hero section (parte superior)
+    Debería: "⭐ 4.9/5 - 200+ huéspedes" visible arriba del headline
+    Actualmente: No está visible o muy pequeño
+    Impacto: Pierde social proof inmediato
+    
+    ➜ Revisar: ¿Ves el badge de rating en el hero?
+
+[ ] ISSUE #6: SECCIÓN SOCIAL PROOF NO EXISTE
+    Ubicación: Debe estar DESPUÉS del hero, ANTES de extras
+    Debería: "Amado por 500+ Familias" con carrusel de testimonios
+    Actualmente: No aparece en la página
+    Impacto: Pierde construcción de confianza crítica
+    
+    ➜ Revisar: ¿Ves una sección con 4.9/5 rating y testimonios después del hero?
+
+[ ] ISSUE #18: GALERÍA SIGUE SIENDO SLIDER
+    Ubicación: Sección "La Belleza de lo Auténtico"
+    Debería: Masonry grid 3 columnas (desktop) + slider mobile
+    Actualmente: Slider simple que no impresiona
+    Impacto: Experiencia visual mediocre
+    
+    ➜ Revisar: ¿Es un slider horizontal? ¿O es grid masonry (imágenes de diferentes tamaños)?
+
+[ ] ISSUE #30: MOBILE CHECKOUT ROTO
+    Ubicación: Intenta hacer checkout desde móvil
+    Debería: Responsive, botones full-width, sin scroll horizontal
+    Actualmente: Probablemente se ve roto/misalineado
+    Impacto: 50% abandono en mobile
+    
+    ➜ Revisar: Abre el checkout en móvil → ¿Se ve bien?
+
+═════════════════════════════════════════════════════════════════════════════
+🟡 MEDIO (Mejoras importantes) - FIX PRÓXIMAS 2 SEMANAS
+═════════════════════════════════════════════════════════════════════════════
+
+[ ] ISSUE #3: CONTRASTE TEXTO BAJO EN HERO
+    Ubicación: Hero section - texto blanco sobre imagen
+    Debería: Contraste 4.5:1 mínimo (WCAG AA)
+    Actualmente: Texto difícil de leer, sin overlay suficiente
+    
+    ➜ Revisar: ¿El texto blanco se lee claramente sobre la imagen?
+
+[ ] ISSUE #4: BOTÓN MUY PEQUEÑO EN MOBILE
+    Ubicación: Hero CTA button en mobile
+    Debería: 48px height, 100% width, fácil de clickear
+    Actualmente: Probablemente <44px, difícil de clickear
+    
+    ➜ Revisar: Mobile hero button → ¿Es grande y fácil de tocar?
+
+[ ] ISSUE #14: COPY SIGUE SIENDO TÉCNICO
+    Ubicación: Sección extras (descripciones)
+    Debería: "Despierta con café y vistas al bosque" (emocional)
+    Actualmente: "Desayuno Campestre" (técnico, genérico)
+    
+    ➜ Revisar: Lee las descripciones de los extras → ¿Son emocionales o técnicas?
+
+[ ] ISSUE #15: PRECIO MUY PEQUEÑO
+    Ubicación: Extras cards
+    Debería: 28px, bold, azul (#0098D4) - muy destacado
+    Actualmente: Probablemente pequeño (<18px)
+    
+    ➜ Revisar: ¿El precio en las tarjetas extras es muy pequeño?
+
+[ ] ISSUE #39: CONTRASTE GENERAL BAJO
+    Ubicación: Todo el sitio
+    Debería: Mínimo 4.5:1 en textos, 3:1 en gráficos
+    Actualmente: Algunos textos grises sobre fondos claros
+    
+    ➜ Revisar: ¿Todo el texto es fácil de leer? ¿Hay textos borrosos?
+
+═════════════════════════════════════════════════════════════════════════════
+🟢 BAJO (Menores) - FIX CUANDO TENGAS TIEMPO
+═════════════════════════════════════════════════════════════════════════════
+
+[ ] ISSUE #5: IMAGEN HERO TARDA EN CARGAR
+[ ] ISSUE #16: BOTÓN "AGREGAR" NO FUNCIONA EN EXTRAS
+[ ] ISSUE #24: DATE PICKER CHECKOUT NO FUNCIONA
+[ ] ISSUE #31: ENLACES CONTACTO NO FUNCIONAN (tel:, whatsapp:)
+[ ] ISSUE #37: PÁGINA TARDA >3 SEGUNDOS EN CARGAR
+[ ] ISSUE #40: DASHBOARD NO ES ACCESIBLE (no hay login visible)
+
+═════════════════════════════════════════════════════════════════════════════
+📋 PROTOCOLO DE REVISIÓN
+═════════════════════════════════════════════════════════════════════════════
+
+PASO 1: REVISA EN DESKTOP (>1200px)
+  [ ] Abre domostrepod.cl en Chrome/Safari
+  [ ] Scroll down lentamente
+  [ ] Marca cada issue que encuentres con ✓ o ✗
+
+PASO 2: REVISA EN MOBILE (375px width)
+  [ ] Abre desde móvil o modo responsive (F12)
+  [ ] Revisa cada sección
+  [ ] Nota si hay layout roto o botones demasiado pequeños
+
+PASO 3: PRUEBA FUNCIONALIDAD
+  [ ] Intenta hacer una reserva completa
+  [ ] Revisa si los campos validan
+  [ ] Verifica que el total se actualice
+
+PASO 4: REVISA ADMIN
+  [ ] Intenta acceder a /admin o /dashboard
+  [ ] ¿Hay login?
+  [ ] ¿Puedes ver reservas?
+
+═════════════════════════════════════════════════════════════════════════════
+🎯 PRIORIZACIÓN DE FIXES
+═════════════════════════════════════════════════════════════════════════════
+
+SEMANA 1 (AHORA):
+  1. ISSUE #13 (imágenes extras en gris)
+  2. ISSUE #23 (stepper checkout)
+  3. ISSUE #26 (sidebar actualización)
+  4. ISSUE #1 (badge rating)
+
+SEMANA 2:
+  5. ISSUE #6 (social proof)
+  6. ISSUE #30 (mobile checkout)
+  7. ISSUE #18 (galería masonry)
+
+SEMANA 3:
+  8. Resto de issues
+
+═════════════════════════════════════════════════════════════════════════════
+CONTACTO PARA REVISAR
+═════════════════════════════════════════════════════════════════════════════
+
+Cuando hayas revisado todo, envía resumen con:
+  - ✓ = Está OK
+  - ✗ = Está roto/no existe
+  - ? = No está claro
+
+Ejemplo respuesta:
+  HERO: ✓ Badge ✓ Copy ✗ Botón pequeño mobile
+  SOCIAL PROOF: ✗ No existe
+  EXTRAS: ✗ Imágenes gris, ✗ Copy técnico, ✗ Precio pequeño
+  CHECKOUT: ✗ No hay stepper, ✗ Sidebar no actualiza
+  ... etc
+
+═════════════════════════════════════════════════════════════════════════════
