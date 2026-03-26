@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
     try {
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         }
 
         // 1. Buscar domos con capacidad suficiente
-        const { data: domosComp, error: domosErr } = await supabase
+        const { data: domosComp, error: domosErr } = await supabaseAdmin
             .from("domos")
             .select("id, nombre, capacidad")
             .eq("activo", true)
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         const domosPosibles = domosComp.map((d: any) => d.id);
 
         // 2. Buscar ocupación (reservas activas)
-        const { data: ocupadosRes, error: resErr } = await supabase
+        const { data: ocupadosRes, error: resErr } = await supabaseAdmin
             .from("reservas")
             .select("domo_id")
             .in("domo_id", domosPosibles)
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
             .gt("fecha_fin", entrada);
 
         // 3. Buscar bloqueos
-        const { data: ocupadosBloq, error: bloqErr } = await supabase
+        const { data: ocupadosBloq, error: bloqErr } = await supabaseAdmin
             .from("bloqueos_calendario")
             .select("domo_id")
             .in("domo_id", domosPosibles)
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
         }
 
         // 4. Calcular precio para el primer domo disponible
-        const { data: precioData, error: precioErr } = await supabase.rpc("calcular_precio", {
+        const { data: precioData, error: precioErr } = await supabaseAdmin.rpc("calcular_precio", {
             p_fecha_inicio: entrada,
             p_fecha_fin: salida,
             p_adultos: adultos || 2,

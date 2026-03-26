@@ -6,11 +6,13 @@ import News from "./components/News";
 import Testimonios from "./components/Testimonios";
 import Ubicacion from "./components/Ubicacion";
 import Galeria from "./components/Galeria";
-import SeasonRates from "./components/SeasonRates";
+
+import TrackView from "./components/TrackView";
 
 export default function Home() {
   return (
-    <main className="min-h-screen font-display">
+    <main className="min-h-screen font-sans">
+      <TrackView eventName="view_home" />
       <Hero />
       <div className="space-y-0">
         <div id="concepto"><NotForEveryone /></div>
@@ -18,7 +20,7 @@ export default function Home() {
         <div id="servicios"><DomoAmenities /></div>
         <div id="reviews"><Testimonios /></div>
         <div id="news"><News /></div>
-        <div id="tarifas"><SeasonRates /></div>
+        {/* Sección de tarifas removida - se maneja desde admin */}
         {/* <div id="galeria"><Galeria /></div> */}
         <div id="contacto"><Ubicacion /></div>
       </div>

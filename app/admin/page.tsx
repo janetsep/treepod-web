@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import DomoCalendar from "./components/DomoCalendar";
 import ReservaModal from "./components/ReservaModal";
 import TarifasConsole from "./components/TarifasConsole";
 import UsersConsole from "./components/UsersConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard } from "lucide-react";
+import ClientesConsole from "./components/ClientesConsole";
+import ServiciosConsole from "./components/ServiciosConsole";
+import PapeleraConsole from "./components/PapeleraConsole";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'usuarios'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'papelera'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -130,7 +134,7 @@ export default function AdminDashboard() {
         const count = selectedIds.length;
         if (count === 0) return;
 
-        const msg = `⚠️ ¿Estás SEGURA que deseas eliminar PERMANENTEMENTE estas ${count} reservas? Esta acción es IRREVERSIBLE y borrará todos los registros asociados.`;
+        const msg = `¿Mover ${count} reservas a la papelera? Podrás restaurarlas desde la pestaña Papelera.`;
         if (!confirm(msg)) return;
 
         setActionLoading('bulk-delete');
@@ -154,7 +158,7 @@ export default function AdminDashboard() {
             if (successCount > 0) {
                 setReservas(prev => prev.filter(r => !selectedIds.includes(r.id)));
                 setSelectedIds([]);
-                alert(`Se eliminaron ${successCount} registros correctamente.`);
+                alert(`Se movieron ${successCount} registros a la papelera.`);
             }
 
             if (errors.length > 0) {
@@ -378,6 +382,27 @@ export default function AdminDashboard() {
                         <TrendingUp className="w-4 h-4" />
                         Tarifas y Precios
                     </button>
+                    <button
+                        onClick={() => setView('servicios')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'servicios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <Settings className="w-4 h-4" />
+                        Servicios / Extras
+                    </button>
+                    <button
+                        onClick={() => setView('clientes')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'clientes' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <UserCircle className="w-4 h-4" />
+                        CRM / Clientes
+                    </button>
+                    <button
+                        onClick={() => setView('papelera')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <Trash2 className="w-4 h-4" />
+                        Papelera
+                    </button>
                     {['admin', 'superadmin'].includes(adminRole || '') && (
                         <button
                             onClick={() => setView('usuarios')}
@@ -387,12 +412,25 @@ export default function AdminDashboard() {
                             Accesos
                         </button>
                     )}
+                    <Link
+                        href="/admin/dashboard"
+                        className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-400 hover:text-gray-600 hover:bg-white/50"
+                    >
+                        <BarChart3 className="w-4 h-4" />
+                        Estadísticas
+                    </Link>
                 </div>
 
                 {view === 'tarifas' ? (
                     <TarifasConsole adminRole={adminRole} adminEmail={adminEmail} />
+                ) : view === 'servicios' ? (
+                    <ServiciosConsole adminRole={adminRole} />
                 ) : view === 'usuarios' ? (
                     <UsersConsole />
+                ) : view === 'clientes' ? (
+                    <ClientesConsole />
+                ) : view === 'papelera' ? (
+                    <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
                     <>
                         {/* KPI Cards: RESUMEN GENERAL */}
@@ -516,7 +554,7 @@ export default function AdminDashboard() {
                                             className="px-4 py-2 bg-red-100 text-red-600 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/10"
                                         >
                                             <Trash2 className="w-4 h-4" />
-                                            Borrar Seleccionados ({selectedIds.length})
+                                            Mover a Papelera ({selectedIds.length})
                                         </button>
                                     )}
                                     <button
@@ -557,11 +595,9 @@ export default function AdminDashboard() {
                                                         checked={paginatedReservas.length > 0 && paginatedReservas.every(r => selectedIds.includes(r.id))}
                                                         onChange={(e) => {
                                                             if (e.target.checked) {
-                                                                const newIds = paginatedReservas.map(r => r.id);
-                                                                setSelectedIds(prev => Array.from(new Set([...prev, ...newIds])));
+                                                                setSelectedIds(paginatedReservas.map(r => r.id));
                                                             } else {
-                                                                const pageIds = paginatedReservas.map(r => r.id);
-                                                                setSelectedIds(prev => prev.filter(id => !pageIds.includes(id)));
+                                                                setSelectedIds([]);
                                                             }
                                                         }}
                                                     />
@@ -685,15 +721,24 @@ export default function AdminDashboard() {
                                                                     "{reserva.notas || reserva.mensaje}"
                                                                 </div>
                                                             )}
+                                                            {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
+                                                                <div className="mt-2 flex flex-wrap gap-1">
+                                                                    {reserva.reserva_servicios.map((s: any) => (
+                                                                        <span key={s.id} className="bg-primary/8 text-primary border border-primary/20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tight">
+                                                                            {s.servicios?.nombre || 'Extra'}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            )}
                                                         </td>
                                                         <td className="px-4 py-4">
                                                             <div className="text-gray-800 font-bold text-[11px] whitespace-nowrap">
-                                                                {new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                                {(() => { const [y, m, d] = reserva.fecha_inicio.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' }); })()}
                                                                 <span className="text-gray-300 mx-1">→</span>
-                                                                {new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}
+                                                                {(() => { const [y, m, d] = reserva.fecha_fin.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' }); })()}
                                                             </div>
                                                             <div className="text-[8px] text-gray-400 font-black uppercase tracking-widest mt-0.5">
-                                                                In: {new Date(reserva.created_at).toLocaleDateString()}
+                                                                {String(reserva.fecha_inicio).substring(0, 4)}
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-4">
@@ -784,7 +829,7 @@ export default function AdminDashboard() {
                                         </div>
                                         <div className="flex gap-2">
                                             <button
-                                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                                onClick={() => { setCurrentPage(prev => Math.max(1, prev - 1)); setSelectedIds([]); }}
                                                 disabled={currentPage === 1}
                                                 className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
                                             >
@@ -806,7 +851,7 @@ export default function AdminDashboard() {
                                                     return range.map((page, i) => (
                                                         <button
                                                             key={i}
-                                                            onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                                                            onClick={() => { if (typeof page === 'number') { setCurrentPage(page); setSelectedIds([]); } }}
                                                             className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${currentPage === page ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-gray-400 hover:text-gray-600 hover:bg-gray-50 border border-gray-100'} ${typeof page !== 'number' ? 'cursor-default border-none' : ''}`}
                                                         >
                                                             {page}
@@ -815,7 +860,7 @@ export default function AdminDashboard() {
                                                 })()}
                                             </div>
                                             <button
-                                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                                onClick={() => { setCurrentPage(prev => Math.min(totalPages, prev + 1)); setSelectedIds([]); }}
                                                 disabled={currentPage === totalPages}
                                                 className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
                                             >

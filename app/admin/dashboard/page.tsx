@@ -14,19 +14,34 @@ import {
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Image from "next/image";
-import { Bell, Download, Star, DollarSign, BookOpen, Eye, MousePointerClick } from "lucide-react";
+import Link from "next/link";
+import { Bell, Download, Star, DollarSign, BookOpen, Eye, MousePointerClick, TrendingUp, Users, ShoppingCart, ArrowLeft } from "lucide-react";
 
 // Tipos para métricas
 type KpiData = {
     ingresosMes: number;
     ocupacion: number;
     roas: number;
+    leads: number;
     reservasRecientes: any[];
     detailedReservations: any[];
     analytics?: {
         activeUsers: number;
         sessions: number;
         engagementRate: number;
+        bounceRate?: number;
+        avgSessionDuration?: number;
+        events?: {
+            purchase: number;
+            begin_checkout: number;
+            view_disponibilidad: number;
+            select_fechas: number;
+            generate_lead: number;
+            click_reservar: number;
+            view_home: number;
+        };
+        conversionRate?: string;
+        trafficSources?: Array<{ channel: string; sessions: number; users: number }>;
     }
 };
 
@@ -36,6 +51,7 @@ export default function DashboardAdmin() {
         ingresosMes: 0,
         ocupacion: 0,
         roas: 0,
+        leads: 0,
         reservasRecientes: [],
         detailedReservations: [],
         analytics: { activeUsers: 0, sessions: 0, engagementRate: 0 }
@@ -109,10 +125,16 @@ export default function DashboardAdmin() {
             // 2. Fetch Reservas Detalladas
             const { data: reservasActivas, count: ocupacion } = await supabase
                 .from("reservas")
-                .select("*", { count: 'exact' })
+                .select("*, reserva_servicios(*, servicios(nombre))", { count: 'exact' })
                 .or('estado.eq.pagado,estado.eq.pending_transfer_confirmation,estado.eq.confirmado,estado.eq.pendiente_pago')
-                .order("created_at", { ascending: false }) // Las más nuevas primero
+                .order("created_at", { ascending: false })
                 .limit(20);
+
+            // Contar leads del formulario de contacto del mes actual
+            const { count: leadsCount } = await supabase
+                .from("contacto_mensajes")
+                .select("*", { count: 'exact', head: true })
+                .gte("created_at", startOfMonth);
 
             // 3. Datos Reales de Tendencia
             const months = [];
@@ -161,6 +183,7 @@ export default function DashboardAdmin() {
                 ingresosMes: ingresos,
                 ocupacion: ocupacion || 0,
                 roas: 4.2, // Mantener estático hasta tener integración Ads real
+                leads: leadsCount || 0,
                 reservasRecientes: trendData,
                 detailedReservations: reservasActivas || [],
                 analytics: analyticsData
@@ -185,6 +208,13 @@ export default function DashboardAdmin() {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <Link
+                        href="/admin"
+                        className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Volver al Admin
+                    </Link>
                     <button className="p-2 text-gray-400 hover:text-gray-800 transition-colors">
                         <Bell className="w-5 h-5" />
                     </button>
@@ -235,10 +265,10 @@ export default function DashboardAdmin() {
                         color="text-indigo-600"
                     />
                     <CardKpi
-                        title="ROAS Ads"
-                        value={`${data.roas}x`}
+                        title="Leads (Mes)"
+                        value={`${data.leads}`}
                         iconName="ads_click"
-                        sub="Retorno"
+                        sub="Formularios enviados"
                         color="text-purple-600"
                     />
                 </div>
@@ -295,11 +325,17 @@ export default function DashboardAdmin() {
                                                     <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold">{res.adultos}</span>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    {/* Placeholder para solicitudes - Lógica futura */}
-                                                    <div className="text-xs text-gray-400 italic">
-                                                        - Sin extras registrados -
-                                                        {/* Ejemplo visual: <span className="bg-purple-50 text-purple-600 px-2 py-1 rounded ml-2">Cena</span> */}
+                                                  {res.reserva_servicios && res.reserva_servicios.length > 0 ? (
+                                                    <div className="flex flex-wrap gap-1">
+                                                      {res.reserva_servicios.map((s: any) => (
+                                                        <span key={s.id} className="bg-purple-50 text-purple-700 border border-purple-100 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                                          {s.servicios?.nombre || 'Extra'}
+                                                        </span>
+                                                      ))}
                                                     </div>
+                                                  ) : (
+                                                    <span className="text-xs text-gray-300 italic">Sin extras</span>
+                                                  )}
                                                 </td>
                                                 <td className="px-6 py-4 font-bold text-gray-900">
                                                     ${res.total.toLocaleString("es-CL")}
@@ -319,6 +355,84 @@ export default function DashboardAdmin() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                {/* FUNNEL DE CONVERSIÓN + FUENTES DE TRÁFICO */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    {/* Funnel */}
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-primary" /> Funnel de Conversión (Mes)
+                        </h3>
+                        <div className="space-y-3">
+                            {[
+                                { label: 'Visitas Home', value: data.analytics?.events?.view_home || 0, color: 'bg-blue-500' },
+                                { label: 'Ver Disponibilidad', value: data.analytics?.events?.view_disponibilidad || 0, color: 'bg-indigo-500' },
+                                { label: 'Fechas Seleccionadas', value: data.analytics?.events?.select_fechas || 0, color: 'bg-violet-500' },
+                                { label: 'Inicio Checkout', value: data.analytics?.events?.begin_checkout || 0, color: 'bg-orange-500' },
+                                { label: 'Compras (Purchase)', value: data.analytics?.events?.purchase || 0, color: 'bg-emerald-500' },
+                            ].map((step, i, arr) => {
+                                const maxVal = arr[0].value || 1;
+                                const pct = Math.round((step.value / maxVal) * 100);
+                                return (
+                                    <div key={i}>
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span className="text-gray-500 font-medium">{step.label}</span>
+                                            <span className="font-bold text-gray-800">{step.value.toLocaleString('es-CL')} <span className="text-gray-400 font-normal">({pct}%)</span></span>
+                                        </div>
+                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                            <div className={`h-full ${step.color} rounded-full transition-all`} style={{ width: `${pct}%` }}></div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tasa de Conversión</span>
+                            <span className="text-lg font-black text-emerald-600">{data.analytics?.conversionRate || '0.0'}%</span>
+                        </div>
+                    </div>
+
+                    {/* Fuentes de tráfico */}
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
+                            <Users className="w-4 h-4 text-primary" /> Fuentes de Tráfico (28d)
+                        </h3>
+                        <div className="space-y-3">
+                            {data.analytics?.trafficSources && data.analytics.trafficSources.length > 0 ? (
+                                data.analytics.trafficSources.map((src, i) => {
+                                    const totalSessions = data.analytics?.sessions || 1;
+                                    const pct = Math.round((src.sessions / totalSessions) * 100);
+                                    const channelColors: Record<string, string> = {
+                                        'Organic Search': 'bg-green-500',
+                                        'Direct': 'bg-blue-500',
+                                        'Paid Search': 'bg-yellow-500',
+                                        'Organic Social': 'bg-pink-500',
+                                        'Paid Social': 'bg-purple-500',
+                                        'Referral': 'bg-orange-500',
+                                    };
+                                    const color = channelColors[src.channel] || 'bg-gray-400';
+                                    return (
+                                        <div key={i}>
+                                            <div className="flex justify-between text-xs mb-1">
+                                                <span className="text-gray-500 font-medium">{src.channel}</span>
+                                                <span className="font-bold text-gray-800">{src.sessions.toLocaleString('es-CL')} <span className="text-gray-400 font-normal">({pct}%)</span></span>
+                                            </div>
+                                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                <div className={`h-full ${color} rounded-full`} style={{ width: `${pct}%` }}></div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p className="text-xs text-gray-400 italic text-center py-4">Sin datos de tráfico disponibles</p>
+                            )}
+                        </div>
+                        <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Sesiones totales</span>
+                            <span className="text-lg font-black text-gray-800">{(data.analytics?.sessions || 0).toLocaleString('es-CL')}</span>
+                        </div>
                     </div>
                 </div>
 

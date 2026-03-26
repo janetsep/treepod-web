@@ -42,8 +42,23 @@ function ConfirmacionContent() {
                 }]
             });
 
-            // Evento gestionado ahora vía GTM - No duplicar tracking directo aquí
-            console.log('✅ Evento purchase enviado a dataLayer');
+            // Meta Pixel (Facebook) - Tracking de Compra Real
+            // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
+            if ((window as any).fbq) {
+                (window as any).fbq('track', 'Purchase', {
+                    value: parseFloat(amount),
+                    currency: 'CLP',
+                    content_name: 'Reserva TreePod',
+                    content_ids: ['reserva_treepod'],
+                    num_items: 1
+                });
+                console.log('✅ Meta Pixel Purchase event enviado:', { reservaId, amount });
+            } else {
+                console.warn('⚠️ fbq no disponible - Meta Pixel puede no estar cargado');
+            }
+
+            // Eventos gestionados vía GTM y Meta Pixel
+            console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel');
         }
 
         // Cargar datos de la reserva
@@ -105,16 +120,16 @@ function ConfirmacionContent() {
                 {/* Confirmación exitosa */}
                 <div className="bg-white/5 rounded-[3rem] shadow-2xl overflow-hidden border border-white/10 backdrop-blur-xl">
                     {/* Header con check verde */}
-                    <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 text-white p-12 text-center border-b border-white/10">
-                        <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/20">
-                            <span className="text-4xl">✓</span>
+                    <div className="bg-gradient-to-br from-green-500/10 via-emerald-500/5 to-transparent text-white p-12 text-center border-b border-white/10">
+                        <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-green-500/30 ring-8 ring-green-500/20">
+                            <span className="text-5xl">✓</span>
                         </div>
                         <h1 className="text-2xl md:text-3xl font-display font-bold mb-3">¡Reserva Confirmada!</h1>
                         <p className="text-sm md:text-base text-green-400 font-medium">Tu pago ha sido procesado exitosamente</p>
                     </div>
 
                     {/* Detalles de la reserva */}
-                    <div className="p-10 bg-white">
+                    <div className="p-10 bg-white rounded-b-[3rem]">
                         <div className="mb-8">
                             <h2 className="text-xl font-display font-bold mb-8 text-black uppercase tracking-widest text-center">Resumen del Refugio</h2>
 
@@ -232,9 +247,9 @@ function ConfirmacionContent() {
                         <div className="flex justify-center mb-10">
                             <button
                                 onClick={() => router.push('/')}
-                                className="w-full bg-primary text-white px-10 py-5 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/30"
+                                className="w-full bg-primary text-white px-10 py-5 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/30 flex items-center justify-center gap-3"
                             >
-                                Volver al Inicio
+                                Volver al Inicio →
                             </button>
                         </div>
 

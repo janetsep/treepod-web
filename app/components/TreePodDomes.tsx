@@ -45,7 +45,7 @@ export default function TreePodDomes() {
                                 <Image
                                     alt="Tu santuario privado en el bosque"
                                     className="object-cover object-center transition-transform duration-[5s] group-hover:scale-110"
-                                    src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg"
+                                    src="/images/Santuario1.jpeg"
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
@@ -57,7 +57,7 @@ export default function TreePodDomes() {
                                 <Image
                                     alt="Camas confortables para un descanso real"
                                     className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                                    src="/images/interiors/interior-domo-acogedor-83-3.jpg"
+                                    src="/images/Santuario2.jpg"
                                     fill
                                     sizes="(max-width: 1024px) 50vw, 25vw"
                                 />
@@ -67,8 +67,8 @@ export default function TreePodDomes() {
                             <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
                                 <Image
                                     alt="Estufa a pellet para calor garantizado"
-                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                                    src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
+                                    className="object-cover object-[50%_55%] scale-150 transition-transform duration-700 group-hover:scale-[1.6]"
+                                    src="/images/Santuario3.jpg"
                                     fill
                                     sizes="(max-width: 1024px) 50vw, 25vw"
                                 />
@@ -80,15 +80,15 @@ export default function TreePodDomes() {
                     <div className="lg:col-span-5 space-y-6">
                         <div className="space-y-2">
                             <div className="inline-flex items-center gap-2">
-                                <span className="text-primary text-[9px] font-black tracking-[0.3em] uppercase">• TU REFUGIO</span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">• TU REFUGIO</span>
                             </div>
-                            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold leading-tight text-text-main">
+                            <h2 className="h2-display leading-tight text-text-main">
                                 Habita la calma <br />
                                 <span className="text-primary italic-display">en tu propio refugio</span>
                             </h2>
                         </div>
 
-                        <div className="space-y-6 text-text-main/80 text-base md:text-lg font-display leading-relaxed">
+                        <div className="space-y-6 text-text-main/80 text-base md:text-lg leading-relaxed">
                             <p>
                                 <strong>Tu propio santuario:</strong> Disfruta de la serenidad que mereces en un entorno reservado. Cuentas con baño completo integrado y sumérgete en tu tinaja exclusiva rodeado únicamente de bosque nativo.
                             </p>

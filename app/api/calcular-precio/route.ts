@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
   try {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     console.log("🔗 Conectando a Supabase en:", supabaseUrl);
 
-    const { data, error } = await supabase.rpc(
+    const { data, error } = await supabaseAdmin.rpc(
       "calcular_precio",
       {
         p_fecha_inicio: entrada,
@@ -55,51 +55,13 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("✅ Precio base calculado:", data[0]);
-
-    // Lógica de Descuento por Anticipación (Revenue Management)
-    // Regla: 10% de descuento si la reserva es con más de 30 días de anticipación
-    const fechaReserva = new Date();
-    const diasAnticipacion = Math.ceil((new Date(entrada).getTime() - fechaReserva.getTime()) / (1000 * 60 * 60 * 24));
-
-    let precioFinal = data[0].total; // Asumiendo que el RPC retorna un objeto con campo 'total' o similar. 
-    // Nota: El RPC probablemente retorna el precio total. Ajustaremos el objeto de respuesta.
-    // Si data[0] es un número o un objeto, necesitamos asegurarnos.
-    // Revisando logs anteriores o asumiendo estructura estándar. 
-    // Vamos a trabajar sobre el objeto data[0] directamente
-    let respuestaPrecio = { ...data[0] };
-    const precioBase = respuestaPrecio.total;
-    let descuentoTotal = 0;
-    const motivosDescuento: { motivo: string; monto: number }[] = [];
-
-    // 1. Descuento por anticipación (> 30 días)
-    if (diasAnticipacion > 30) {
-      const descAnticipacion = Math.round(precioBase * 0.10);
-      descuentoTotal += descAnticipacion;
-      motivosDescuento.push({ motivo: `Anticipación (${diasAnticipacion} días)`, monto: descAnticipacion });
-    }
-
-    // 2. Descuento por cupón
-    if (cupon && cupon.toUpperCase() === "TREEPOD10") {
-      const descCupon = Math.round(precioBase * 0.10);
-      descuentoTotal += descCupon;
-      motivosDescuento.push({ motivo: "Cupón TREEPOD10 (10%)", monto: descCupon });
-    }
-
-    const total = precioBase - descuentoTotal;
-
-    console.log(`💰 Descuentos aplicados:`, motivosDescuento, ` - Total Descuento: ${descuentoTotal}`);
+    console.log("✅ Precio calculado:", data[0]);
 
     return NextResponse.json({
       success: true,
       ...data[0],
-      total,
-      precio_original: precioBase,
-      descuento_aplicado: descuentoTotal > 0 ? {
-        monto: descuentoTotal,
-        porcentaje: Math.round((descuentoTotal / precioBase) * 100),
-        motivos: motivosDescuento
-      } : null
+      precio_original: data[0].total,
+      descuento_aplicado: null
     });
   } catch (error: any) {
     console.error("❌ Error en calcular-precio:", error);

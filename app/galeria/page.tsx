@@ -11,6 +11,7 @@ interface GalleryImage {
     src: string;
     alt: string;
     aspect: Aspect;
+    objectPosition?: string;
 }
 
 const GALLERY_IMAGES: GalleryImage[] = [
@@ -19,7 +20,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en plenitud del verano", aspect: "landscape" },
     { src: "/images/Galeria/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait" },
+    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait", objectPosition: "center 30%" },
     { src: "/images/Galeria/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
 
     // --- EXPERIENCIA & WELLNESS ---
@@ -30,17 +31,17 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Atmósfera invernal junto a la piscina", aspect: "landscape" },
 
     // --- INTERIORES REALES ---
-    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
-    { src: "/images/real/CocinaDomo.jpeg", alt: "Kitchenette moderna y completamente equipada", aspect: "portrait" },
-    { src: "/images/real/CocinaDomo3.jpeg", alt: "Detalles que hacen la diferencia en tu estancia", aspect: "landscape" },
-    { src: "/images/real/CocinaDomo2.jpeg", alt: "Equipamiento premium para tu autonomía", aspect: "portrait" },
-    { src: "/images/hero/interior-domo-acogedor-95-2.jpg", alt: "Rincón de lectura y descanso", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Interior acogedor del domo", aspect: "portrait" },
+    { src: "/images/interiors/interior-domo-acogedor-66-2.jpg", alt: "Detalles que hacen la diferencia en tu estancia", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-76-2.jpg", alt: "Equipamiento premium para tu autonomía", aspect: "portrait" },
+    { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Rincón de lectura y descanso", aspect: "landscape" },
 
     // --- ATMOSFERA & NOCHE ---
     { src: "/images/Galeria/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
     { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
     { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo iluminado bajo el cielo estrellado", aspect: "square" },
-    { src: "/images/Galeria/Las Trancas Cielo Noche.jpeg", alt: "Cielos infinitos de la montaña chillaneja", aspect: "landscape" },
+    { src: "/images/Galeria/domo3noche1.jpeg", alt: "Cielos infinitos de la montaña chillaneja", aspect: "landscape" },
     { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Tu llegada al refugio en el bosque", aspect: "portrait" },
 
     // --- NATURALEZA ---
@@ -55,18 +56,20 @@ export default function GaleriaPage() {
     return (
         <div className="bg-white text-text-main transition-colors duration-300 font-sans min-h-screen">
             <main className="py-16 md:py-24 bg-white">
-                {/* Cabecera Editorial */}
-                <div className="container mx-auto px-6 md:px-10 mb-8 md:mb-12">
-                    <div className="inline-flex items-center gap-2 mb-4">
-                        <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                        <span className="text-primary text-base font-black tracking-[0.2em] uppercase">La Vida en el Bosque</span>
+                {/* Cabecera Editorial - Centered */}
+                <div className="flex flex-col items-center text-center mb-16 md:mb-24 px-6 md:px-10">
+                    <div className="max-w-4xl w-full">
+                        <div className="inline-flex items-center gap-2 mb-4">
+                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">La Vida en el Bosque</span>
+                        </div>
+                        <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-6">
+                            La Belleza de <span className="italic-display text-primary">lo Auténtico</span>
+                        </h1>
+                        <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed">
+                            Imágenes reales de tu futuro refugio. El bosque, la cama y la tranquilidad en su estado puro.
+                        </p>
                     </div>
-                    <h1 className="h1-display text-text-main leading-tight mb-6">
-                        La Belleza de <span className="italic-display text-primary">lo Auténtico</span>
-                    </h1>
-                    <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
-                        Imágenes reales de tu futuro refugio. El bosque, la cama y la tranquilidad en su estado puro.
-                    </p>
                 </div>
 
                 <section className="container mx-auto px-6 md:px-10">
@@ -86,7 +89,8 @@ export default function GaleriaPage() {
                                         src={img.src}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover object-center transform group-hover:scale-110 transition-transform duration-[2s] ease-out"
+                                        className="object-cover transform group-hover:scale-110 transition-transform duration-[2s] ease-out"
+                                        style={{ objectPosition: img.objectPosition || 'center' }}
                                     />
                                     {/* Overlay sutil para profundidad sin texto ni categorias */}
                                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -113,10 +117,10 @@ export default function GaleriaPage() {
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
                                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Refugio Genuino</span>
                             </div>
-                            <h2 className="h2-display text-text-main leading-tight">
-                                Espacios para <br /><span className="text-primary italic">Permanecer</span>
+                            <h2 className="h2-display text-text-main !text-3xl md:!text-5xl lg:!text-6xl leading-tight">
+                                Espacios para <br /><span className="text-primary italic-display">Permanecer</span>
                             </h2>
-                            <p className="text-xl text-text-sub leading-relaxed font-bold">
+                            <p className="text-lg md:text-xl text-text-sub leading-relaxed font-bold">
                                 Sin modelos, sin artificios. Lo que ves en estas fotos es exactamente lo que tocará tu piel cuando despiertes en el bosque.
                             </p>
                         </div>
@@ -126,7 +130,7 @@ export default function GaleriaPage() {
                                 <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center mb-10 mx-auto shadow-xl transform group-hover:rotate-12 transition-transform duration-500">
                                     <Sparkles className="text-primary w-10 h-10" strokeWidth={2.5} />
                                 </div>
-                                <h4 className="font-display font-black text-3xl mb-6 leading-tight text-text-main">Tu Escapada <br /> Comienza Aquí</h4>
+                                <h4 className="h3-display mb-6 text-text-main">Tu Escapada <br /> Comienza Aquí</h4>
                                 <p className="text-text-sub text-base md:text-lg mb-10 font-bold leading-relaxed max-w-md mx-auto">Selecciona tu fecha y asegura uno de nuestros domos exclusivos hoy mismo.</p>
                                 <Link href="/disponibilidad" className="bg-primary text-white px-12 py-5 rounded-2xl font-black tracking-widest uppercase text-xs hover:bg-primary-dark transition-all inline-block shadow-2xl">
                                     Ver Disponibilidad

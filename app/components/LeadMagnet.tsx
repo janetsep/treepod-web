@@ -91,7 +91,7 @@ export default function LeadMagnet() {
 
                 <div className="w-full md:w-5/12 h-48 md:h-auto relative overflow-hidden">
                     <Image
-                        src="/images/real/CocinaDomo2.jpeg"
+                        src="/images/interiors/interior-domo-acogedor-89-2.jpg"
                         alt="Interior Real del Domo TreePod"
                         fill
                         className="w-full h-full object-cover object-center transition-transform duration-[10s] hover:scale-110"

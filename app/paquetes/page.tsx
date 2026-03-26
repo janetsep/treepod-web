@@ -34,7 +34,7 @@ export default function PaquetesPage() {
                     // Assign categories based on name for visual organization
                     const withCategories = data.map((s: any) => {
                         let displayImage = s.image_url;
-                        if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/DesayunoTreepod.jpg";
+                        if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/Desayuno.jpg";
                         if (s.nombre.toLowerCase().includes('tinaja')) displayImage = "/images/wellness/Tinaja1.jpg";
                         if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
 
@@ -100,7 +100,7 @@ export default function PaquetesPage() {
                                 </div>
                                 <div className="flex-1 p-8 md:p-12 flex flex-col justify-between">
                                     <div className="space-y-6">
-                                        <h3 className="text-3xl font-display font-bold text-text-main tracking-tight">{extra.nombre}</h3>
+                                        <h3 className="h3-display text-text-main">{extra.nombre}</h3>
                                         <p className="text-text-sub text-lg leading-relaxed font-bold">
                                             {extra.descripcion}
                                         </p>
@@ -137,8 +137,8 @@ export default function PaquetesPage() {
                 <div className="mt-20 text-center bg-surface rounded-[4rem] p-12 md:p-20 border border-black/5 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                     <div className="relative z-10">
-                        <h3 className="h2-display mb-8 text-text-main">¿Tienes algo <span className="text-primary italic">especial</span> en mente?</h3>
-                        <p className="text-text-sub text-xl md:text-2xl mb-14 max-w-2xl mx-auto leading-relaxed font-bold">
+                        <h3 className="h2-display mb-8 text-text-main">¿Tienes algo <span className="text-primary italic-display">especial</span> en mente?</h3>
+                        <p className="text-text-sub text-lg md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-bold">
                             Podemos ayudarte a organizar cumpleaños, aniversarios o sorpresas personalizadas. Escríbenos y nuestro equipo lo hará realidad.
                         </p>
                         <Link href="/contacto" className="bg-primary text-white px-16 py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:bg-primary-dark transition-all transform hover:scale-105 shadow-2xl shadow-primary/40 inline-block">

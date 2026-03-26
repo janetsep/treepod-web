@@ -8,8 +8,8 @@ export default function Galeria() {
     { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos" },
     { src: "/images/Galeria/domonieve2.jpeg", alt: "Domo en la nieve" },
     { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada" },
-    { src: "/images/hero/interior-domo-acogedor-105-2.jpg", alt: "Interior del domo" },
-    { src: "/images/real/CocinaDomo2.jpeg", alt: "Cocina equipada" },
+    { src: "/images/interiors/interior-domo-acogedor-78-2.jpg", alt: "Interior del domo" },
+    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Cocina equipada" },
     { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Acceso al domo" },
   ];
 

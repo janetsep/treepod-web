@@ -1,13 +1,13 @@
 "use client";
 
 import { Suspense, useEffect, useState, use, useRef } from "react";
-import { supabase } from "@/lib/supabase";
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import PagarButton from "../../components/PagarButton";
 import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
 import Image from "next/image";
 import { TrackingService } from "@/services/TrackingService";
+import { trackEvent } from "../../lib/analytics";
 import { ArrowLeft, CheckCircle2, ChevronRight, Lock, MapPin, Sparkles, User, Info, Hourglass, AlertCircle, TimerOff, Timer } from "lucide-react";
 import Stepper from "../../components/Stepper";
 
@@ -62,24 +62,22 @@ function ReservaContent({ id }: { id: string }) {
 
   useEffect(() => {
     async function fetchReserva() {
-      const { data, error } = await supabase
-        .from("reservas")
-        .select(`
-          *,
-          reserva_servicios (
-            *,
-            servicios (nombre)
-          )
-        `)
-        .eq("id", id)
-        .single();
+      const res = await fetch(`/api/reservas/obtener?id=${id}`);
+      const data = res.ok ? await res.json() : null;
 
-      if (error || !data) {
+      if (!data) {
         setReserva(null);
         setLoading(false);
       } else {
         setReserva(data as any);
         setLoading(false);
+
+        trackEvent("view_reserva", {
+          reserva_id: id,
+          estado: data.estado,
+          total: data.total,
+          noches: Math.ceil(Math.abs(new Date(data.fecha_fin).getTime() - new Date(data.fecha_inicio).getTime()) / (1000 * 60 * 60 * 24))
+        });
 
         // Calculate minutes left
         const createdAt = new Date(data.created_at);
@@ -118,6 +116,17 @@ function ReservaContent({ id }: { id: string }) {
     }
   }, [reserva, statusParam]);
 
+  const paymentViewSent = useRef(false);
+  useEffect(() => {
+    const guestComplete = !!(reserva?.nombre && reserva?.apellido && reserva?.email);
+    if (guestComplete && reserva && !paymentViewSent.current) {
+      paymentViewSent.current = true;
+      trackEvent("select_payment_method", {
+        reserva_id: id,
+        amount: Math.round(reserva.total * 0.5)
+      });
+    }
+  }, [reserva, id]);
 
   if (loading) {
     return (
@@ -414,7 +423,7 @@ function ReservaContent({ id }: { id: string }) {
               <div className="relative h-48 rounded-[2rem] overflow-hidden shadow-lg hidden lg:block">
                 <Image
                   alt="Domo TreePod interior"
-                  src="/images/hero/interior-domo-acogedor-105-2.jpg"
+                  src="/images/interiors/interior-domo-acogedor-89-2.jpg"
                   layout="fill"
                   objectFit="cover"
                   objectPosition="bottom"

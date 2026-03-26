@@ -8,8 +8,10 @@ export async function GET() {
             .select(`
         *,
         domos (nombre),
-        clientes (id, nombre, apellido, email, vip_tier)
+        clientes (id, nombre, apellido, email, telefono, rut, vip_tier),
+        reserva_servicios (id, cantidad, precio_unitario, total, servicios (id, nombre))
       `)
+            .is("deleted_at", null)
             .order("fecha_inicio", { ascending: false });
 
         if (error) {

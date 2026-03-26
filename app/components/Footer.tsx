@@ -11,13 +11,13 @@ export default function Footer() {
         <footer className="bg-[#030506] text-white pt-24 pb-12 transition-colors duration-300">
             <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
             <div className="container mx-auto px-6 md:px-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 mb-16">
                     {/* Logo & About */}
                     <div className="flex flex-col gap-8">
                         <Link href="/" className="inline-block group">
                             <Logo className="h-16 w-auto transition-transform duration-300 group-hover:scale-105" variant="white" />
                         </Link>
-                        <p className="text-white/95 text-base md:text-lg leading-relaxed max-w-sm font-bold">
+                        <p className="text-white/95 text-lg md:text-xl leading-relaxed max-w-sm font-bold">
                             Tu refugio en el corazón de Valle Las Trancas. Naturaleza, bienestar y calidez en un solo lugar.
                         </p>
                         <div className="flex gap-4">
@@ -37,7 +37,7 @@ export default function Footer() {
 
                     <div className="flex flex-col gap-8">
                         <h4 className="h4-display text-white"><span className="italic-display">Navegación</span></h4>
-                        <ul className="flex flex-col gap-5 text-lg text-white/90 font-bold">
+                        <ul className="flex flex-col gap-5 text-lg md:text-xl text-white/90 font-bold">
                             <li><Link href="/domos" className="hover:text-primary transition-colors">Nuestros Domos</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-primary transition-colors">Ubicación & Contacto</Link></li>
@@ -47,9 +47,9 @@ export default function Footer() {
                     {/* Contact Info */}
                     <div className="flex flex-col gap-8">
                         <h4 className="h4-display text-white"><span className="italic-display">Contacto</span></h4>
-                        <ul className="flex flex-col gap-6 text-lg text-white/90 font-bold">
+                        <ul className="flex flex-col gap-6 text-lg md:text-xl text-white/90 font-bold">
                             <li className="flex items-start gap-4">
-                                <MapPin className="text-primary w-6 h-6 shrink-0" strokeWidth={2.5} />
+                                <MapPin className="text-primary w-6 h-6 shrink-0 mt-1" strokeWidth={2.5} />
                                 <div>
                                     <span className="text-white font-black tracking-tight">Ruta N-55, Km 72,</span><br />
                                     <span className="text-white/70">Valle Las Trancas, Pinto, Chile</span>
@@ -65,25 +65,22 @@ export default function Footer() {
                             </li>
                         </ul>
                     </div>
+                </div>
 
-                    {/* Sello SERNATUR */}
-                    <div className="flex flex-col gap-6">
-                        <h4 className="h4-display text-white"><span className="italic-display">Confianza</span></h4>
-                        <div className="flex flex-col gap-6 bg-white/5 p-6 rounded-[2rem] border border-white/10 transition-all hover:bg-white/10 group">
-                            <div className="bg-white p-3 rounded-xl flex items-center justify-center shrink-0 shadow-lg group-hover:scale-105 transition-transform duration-500">
-                                <Image
-                                    src="/images/branding/sello-sernatur-sin-fecha.png"
-                                    alt="Servicio Turístico Registrado SERNATUR"
-                                    width={160}
-                                    height={50}
-                                    className="h-10 md:h-12 w-auto object-contain"
-                                />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <span className="text-white text-[11px] tracking-widest font-black uppercase italic-display opacity-80">Servicio Registrado</span>
-                                <span className="text-primary text-[14px] font-black uppercase tracking-tight">N° 36806</span>
-                            </div>
-                        </div>
+                {/* Sello SERNATUR - Centrado en nueva línea */}
+                <div className="flex flex-col items-center gap-6 mb-16 py-10 border-t border-white/10">
+                    <div className="bg-white p-6 rounded-2xl flex items-center justify-center shadow-lg">
+                        <Image
+                            src="/images/branding/sello-sernatur-sin-fecha.png"
+                            alt="Servicio Turístico Registrado SERNATUR"
+                            width={300}
+                            height={100}
+                            className="h-24 md:h-32 w-auto object-contain"
+                        />
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <span className="text-white/60 text-sm tracking-widest font-black uppercase">Servicio Registrado</span>
+                        <span className="text-primary text-3xl md:text-4xl font-black uppercase tracking-tight">N° 36806</span>
                     </div>
                 </div>
 

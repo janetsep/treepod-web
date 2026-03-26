@@ -10,18 +10,25 @@ export default function TrackedLink({
   children,
   eventName,
   params,
+  secondEventName,
+  secondParams,
 }: {
   href: string;
   className?: string;
   children: ReactNode;
   eventName: AnalyticsEventName;
   params?: Record<string, unknown>;
+  secondEventName?: AnalyticsEventName;
+  secondParams?: Record<string, unknown>;
 }) {
   return (
     <Link
       href={href}
       className={className}
-      onClick={() => trackEvent(eventName, params)}
+      onClick={() => {
+        trackEvent(eventName, params);
+        if (secondEventName) trackEvent(secondEventName, secondParams);
+      }}
     >
       {children}
     </Link>

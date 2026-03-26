@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: Request) {
   try {
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     // Actually I'll use ReplacementContent for the insertion part too.
 
     // 1. Buscar domos con capacidad suficiente
-    const { data: domosComp, error: domosErr } = await supabase
+    const { data: domosComp, error: domosErr } = await supabaseAdmin
       .from("domos")
       .select("id, nombre")
       .eq("activo", true)
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
     // 2. Buscar ocupación (reservas activas)
     // Traemos las reservas que coinciden en fecha y domo, sin filtrar estado aún en DB para poder validar expiración
-    const { data: rawConflicts, error: resErr } = await supabase
+    const { data: rawConflicts, error: resErr } = await supabaseAdmin
       .from("reservas")
       .select("domo_id, estado, expires_at, email")
       .in("domo_id", domosPosibles)
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     });
 
     // 3. Buscar bloqueos
-    const { data: ocupadosBloq, error: bloqErr } = await supabase
+    const { data: ocupadosBloq, error: bloqErr } = await supabaseAdmin
       .from("bloqueos_calendario")
       .select("domo_id")
       .in("domo_id", domosPosibles)
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
       fuente: "WEB_NEW_PRICING"
     };
 
-    let { data, error } = await supabase
+    let { data, error } = await supabaseAdmin
       .from("reservas")
       .insert({
         ...insertPayload,
@@ -129,7 +129,7 @@ export async function POST(req: Request) {
     // Fallback en caso de que las columnas de descuento aún no existan en la DB
     if (error && (error.message.includes("column") || error.code === '42703')) {
       console.warn("⚠️ Las columnas de descuento no existen en la tabla 'reservas'. Reintentando inserción básica.");
-      const retry = await supabase
+      const retry = await supabaseAdmin
         .from("reservas")
         .insert(insertPayload)
         .select("id")
@@ -160,7 +160,7 @@ export async function POST(req: Request) {
         total: s.total
       }));
 
-      const { error: servErr } = await supabase
+      const { error: servErr } = await supabaseAdmin
         .from("reserva_servicios")
         .insert(serviciosInsert);
 

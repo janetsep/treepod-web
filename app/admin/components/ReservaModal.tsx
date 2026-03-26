@@ -9,6 +9,13 @@ interface Domo {
     nombre: string;
 }
 
+interface Servicio {
+    id: string;
+    nombre: string;
+    precio: number;
+    activo: boolean;
+}
+
 interface Reserva {
     id?: string;
     fecha_inicio: string;
@@ -25,6 +32,7 @@ interface Reserva {
     fuente?: string;
     mensaje?: string;
     comprobante_url?: string;
+    rut?: string;
 }
 
 interface ReservaModalProps {
@@ -35,6 +43,48 @@ interface ReservaModalProps {
     reservaToEdit?: any | null;
     adminEmail: string | null;
     adminRole: string | null;
+}
+
+function downloadICS(
+    fechaInicio: string,
+    fechaFin: string,
+    nombre: string,
+    apellido: string,
+    domoId: string,
+    domos: Domo[],
+    extrasNombres: string[]
+): void {
+    const domoNombre = domos.find((d) => d.id === domoId)?.nombre || "Domo";
+    const icsDate = (d: string) => d.replace(/-/g, "");
+    const extrasLine = extrasNombres.length > 0
+        ? `\\nExtras: ${extrasNombres.join(", ")}`
+        : "";
+    const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//TreePod Glamping//Admin//ES",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        `DTSTART;VALUE=DATE:${icsDate(fechaInicio)}`,
+        `DTEND;VALUE=DATE:${icsDate(fechaFin)}`,
+        `SUMMARY:Reserva ${domoNombre} - ${nombre} ${apellido}`.trim(),
+        `DESCRIPTION:Huésped: ${nombre} ${apellido}\\nDomo: ${domoNombre}\\nUbicación: Valle Las Trancas\\, Km 72${extrasLine}`,
+        `LOCATION:Valle Las Trancas\\, Km 72\\, Región del Ñuble\\, Chile`,
+        `UID:treepod-${Date.now()}@domostreepod.cl`,
+        "STATUS:CONFIRMED",
+        "END:VEVENT",
+        "END:VCALENDAR",
+    ].join("\r\n");
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `reserva-${domoNombre}-${nombre}.ics`.replace(/\s+/g, "-");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaToEdit, adminEmail, adminRole }: ReservaModalProps) {
@@ -53,13 +103,20 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         estado: "pagado",
         fuente: "manual_admin",
         mensaje: "",
-        comprobante_url: ""
+        comprobante_url: "",
+        rut: ""
     });
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [serviciosDisponibles, setServiciosDisponibles] = useState<Servicio[]>([]);
+    const [serviciosSeleccionados, setServiciosSeleccionados] = useState<string[]>([]);
+    const [loadingServicios, setLoadingServicios] = useState(false);
+    const [savedReservaData, setSavedReservaData] = useState<{ id: string; nombre: string; domoId: string } | null>(null);
 
     useEffect(() => {
         if (isOpen) {
+            setSavedReservaData(null);
+
             if (reservaToEdit) {
                 setFormData({
                     id: reservaToEdit.id,
@@ -76,7 +133,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     estado: reservaToEdit.estado || "pendiente",
                     fuente: reservaToEdit.fuente || "manual_admin",
                     mensaje: reservaToEdit.notas || reservaToEdit.mensaje || "",
-                    comprobante_url: reservaToEdit.comprobante_url || ""
+                    comprobante_url: reservaToEdit.comprobante_url || "",
+                    rut: reservaToEdit.rut || reservaToEdit.clientes?.rut || ""
                 });
             } else {
                 setFormData({
@@ -93,11 +151,57 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     estado: "pagado",
                     fuente: "manual_admin",
                     mensaje: "",
-                    comprobante_url: ""
+                    comprobante_url: "",
+                    rut: ""
                 });
+                setServiciosSeleccionados([]);
+            }
+
+            // Cargar servicios disponibles
+            setLoadingServicios(true);
+            fetch("/api/admin/servicios")
+                .then((r) => r.json())
+                .then((data) => {
+                    const activos = (data.servicios || []).filter((s: Servicio) => s.activo);
+                    setServiciosDisponibles(activos);
+                })
+                .catch(() => setServiciosDisponibles([]))
+                .finally(() => setLoadingServicios(false));
+
+            // Pre-seleccionar servicios ya asignados en edición (desde datos del API, sin Supabase anon)
+            if (reservaToEdit?.reserva_servicios && Array.isArray(reservaToEdit.reserva_servicios)) {
+                const ids = reservaToEdit.reserva_servicios
+                    .map((rs: any) => rs.servicios?.id || rs.servicio_id)
+                    .filter(Boolean);
+                setServiciosSeleccionados(ids);
             }
         }
     }, [isOpen, reservaToEdit, domos]);
+
+    // Auto-completar datos si el cliente ya existe (CRM Lookup)
+    useEffect(() => {
+        if (!isOpen || reservaToEdit || !formData.email || formData.email.length < 5 || !formData.email.includes('@')) return;
+
+        const timer = setTimeout(async () => {
+            const { data: client } = await supabase
+                .from("clientes")
+                .select("*")
+                .eq("email", formData.email)
+                .single();
+
+            if (client) {
+                setFormData(prev => ({
+                    ...prev,
+                    nombre: prev.nombre || client.nombre || "",
+                    apellido: prev.apellido || client.apellido || "",
+                    telefono: prev.telefono || client.telefono || "",
+                    rut: prev.rut || client.rut || ""
+                }));
+            }
+        }, 800);
+
+        return () => clearTimeout(timer);
+    }, [formData.email, isOpen, reservaToEdit]);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -129,6 +233,12 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         }
     };
 
+    const toggleServicio = (id: string) => {
+        setServiciosSeleccionados((prev) =>
+            prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+        );
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -136,13 +246,24 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         try {
             const res = await fetch("/api/admin/reservas/guardar", {
                 method: "POST",
-                body: JSON.stringify({ ...formData, adminEmail }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados }),
             });
             const data = await res.json();
 
             if (res.ok) {
-                onSave();
-                onClose();
+                const isNew = !reservaToEdit;
+                if (isNew) {
+                    setSavedReservaData({
+                        id: data.data?.id || "",
+                        nombre: `${formData.nombre} ${formData.apellido}`.trim(),
+                        domoId: formData.domo_id,
+                    });
+                    onSave();
+                } else {
+                    onSave();
+                    onClose();
+                }
             } else {
                 alert("Error: " + data.error);
             }
@@ -151,6 +272,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleCalendarClose = () => {
+        setSavedReservaData(null);
+        onClose();
     };
 
     const inputClasses = `w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`;
@@ -289,6 +415,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     placeholder="+56 9 ..."
                                 />
                             </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">RUT / Identificación</label>
+                                <input
+                                    type="text"
+                                    value={formData.rut || ''}
+                                    onChange={(e) => setFormData({ ...formData, rut: e.target.value })}
+                                    readOnly={isViewer}
+                                    className={inputClasses}
+                                    placeholder="12.345.678-9"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -380,6 +517,59 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </div>
                     </div>
 
+                    {/* Sección: Servicios Adicionales */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Servicios Adicionales</h4>
+                        </div>
+                        {loadingServicios ? (
+                            <div className="flex items-center gap-2 py-3 text-gray-400">
+                                <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                                <span className="text-xs font-bold">Cargando servicios...</span>
+                            </div>
+                        ) : serviciosDisponibles.length === 0 ? (
+                            <p className="text-xs text-gray-400 font-bold py-2">No hay servicios adicionales disponibles.</p>
+                        ) : (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {serviciosDisponibles.map((servicio) => {
+                                    const selected = serviciosSeleccionados.includes(servicio.id);
+                                    return (
+                                        <button
+                                            key={servicio.id}
+                                            type="button"
+                                            disabled={isViewer}
+                                            onClick={() => toggleServicio(servicio.id)}
+                                            className={`rounded-2xl p-4 text-left transition-all border-2 ${
+                                                selected
+                                                    ? "bg-primary/5 border-primary shadow-sm shadow-primary/10"
+                                                    : "bg-gray-50 border-gray-100 hover:border-gray-200"
+                                            } ${isViewer ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+                                        >
+                                            <div className="flex items-start justify-between gap-2">
+                                                <span className={`text-xs font-black leading-tight ${selected ? "text-primary" : "text-gray-700"}`}>
+                                                    {servicio.nombre}
+                                                </span>
+                                                <div className={`w-4 h-4 rounded-md border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all ${
+                                                    selected ? "bg-primary border-primary" : "border-gray-300"
+                                                }`}>
+                                                    {selected && (
+                                                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <p className={`text-[10px] font-black mt-1.5 ${selected ? "text-primary/70" : "text-gray-400"}`}>
+                                                ${servicio.precio.toLocaleString()}
+                                            </p>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
                     {/* Sección: Notas Detalle */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-2">
@@ -409,7 +599,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     </a>
                                 )}
                             </label>
-                            
+
                             <div className="flex gap-2">
                                 <div className="flex-1 relative">
                                     <input
@@ -452,29 +642,73 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     </label>
                                 </div>
                             </div>
-                            
+
                             <p className="text-[9px] text-gray-400 font-bold italic pl-1 italic">
                                 Puedes pegar un link de Google Drive directamente o subir un archivo (PDF/IMG) desde tu dispositivo.
                             </p>
                         </div>
                     </div>
 
-                    <div className="pt-4 flex gap-4">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-black uppercase tracking-widest text-xs rounded-2xl transition-all"
-                        >
-                            Descartar
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={loading || isViewer}
-                            className="flex-3 py-4 bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-widest text-sm rounded-2xl shadow-xl shadow-primary/20 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
-                        >
-                            {loading ? "Sincronizando..." : isViewer ? "Vista de Solo Lectura" : reservaToEdit ? "Actualizar Registro" : "Crear Reserva"}
-                        </button>
-                    </div>
+                    {/* Paso post-guardado: agregar al calendario (solo nuevas reservas) */}
+                    {savedReservaData ? (
+                        <div className="pt-4 rounded-2xl bg-gray-50 border border-gray-100 p-6 space-y-4">
+                            <div>
+                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Reserva creada</p>
+                                <h4 className="font-black text-gray-900 text-lg leading-tight">
+                                    ¿Agregar esta reserva a tu calendario?
+                                </h4>
+                                <p className="text-xs text-gray-400 font-bold mt-1">
+                                    Descarga el archivo .ics para abrirlo en Apple Calendar, Outlook u otro.
+                                </p>
+                            </div>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        downloadICS(
+                                            formData.fecha_inicio,
+                                            formData.fecha_fin,
+                                            formData.nombre,
+                                            formData.apellido,
+                                            formData.domo_id,
+                                            domos,
+                                            serviciosDisponibles
+                                                .filter(s => serviciosSeleccionados.includes(s.id))
+                                                .map(s => s.nombre)
+                                        );
+                                        handleCalendarClose();
+                                    }}
+                                    className="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg shadow-green-600/20 transition-all flex items-center justify-center gap-2"
+                                >
+                                    📅 Descargar para Calendario
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleCalendarClose}
+                                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-black uppercase tracking-widest text-xs rounded-2xl transition-all"
+                                >
+                                    No, cerrar
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="pt-4 flex gap-4">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-black uppercase tracking-widest text-xs rounded-2xl transition-all"
+                            >
+                                Descartar
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading || isViewer}
+                                className="flex-3 py-4 bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-widest text-sm rounded-2xl shadow-xl shadow-primary/20 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
+                            >
+                                {loading ? "Sincronizando..." : isViewer ? "Vista de Solo Lectura" : reservaToEdit ? "Actualizar Registro" : "Crear Reserva"}
+                            </button>
+                        </div>
+                    )}
                 </form>
             </div>
         </div>

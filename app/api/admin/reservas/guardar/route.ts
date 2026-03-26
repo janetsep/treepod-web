@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { NotificationService } from "@/services/NotificationService";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, adminEmail } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, adminEmail, servicios_seleccionados } = body;
         
         // Validación básica
         if (!fecha_inicio || !fecha_fin || !domo_id) {
@@ -100,11 +101,84 @@ export async function POST(request: Request) {
             details: `El usuario ${adminData.nombre} (${adminData.rol}) ${isUpdate ? 'editó' : 'creó'} una reserva para ${nombre} ${apellido}. ID: ${id || result.data.id}${changeDetails}`
         });
 
+        // Insertar/actualizar servicios seleccionados en reserva_servicios
+        const reservaId = id || result.data.id;
+        if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
+            if (isUpdate) {
+                await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
+            }
+
+            const { data: serviciosData } = await supabaseAdmin
+                .from("servicios")
+                .select("id, nombre, precio")
+                .in("id", servicios_seleccionados);
+
+            if (serviciosData && serviciosData.length > 0) {
+                const registros = serviciosData.map((servicio) => ({
+                    reserva_id: reservaId,
+                    servicio_id: servicio.id,
+                    cantidad: 1,
+                    precio_unitario: servicio.precio,
+                    total: servicio.precio,
+                }));
+                await supabaseAdmin.from("reserva_servicios").insert(registros);
+            }
+        } else if (isUpdate) {
+            // Si se envió array vacío en una actualización, borrar los servicios existentes
+            if (Array.isArray(servicios_seleccionados)) {
+                await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
+            }
+        }
+
+        // Enviar notificación por email solo cuando es una reserva nueva
+        if (!isUpdate) {
+            const { data: domoData } = await supabaseAdmin
+                .from("domos")
+                .select("nombre")
+                .eq("id", domo_id)
+                .single();
+
+            // Obtener nombres de servicios para el correo/ICS
+            let extrasNombres: string[] = [];
+            if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
+                const { data: extrasData } = await supabaseAdmin
+                    .from("servicios")
+                    .select("nombre")
+                    .in("id", servicios_seleccionados);
+                extrasNombres = (extrasData || []).map((s: any) => s.nombre);
+            }
+
+            await NotificationService.sendAdminManualReservationNotification({
+                guestName: `${nombre} ${apellido}`.trim(),
+                guestEmail: email || '',
+                domoNombre: domoData?.nombre || 'Domo',
+                fechaInicio: fecha_inicio,
+                fechaFin: fecha_fin,
+                adultos: adultos || 2,
+                total: total ? Number(total) : 0,
+                montoPagado: monto_pagado ? Number(monto_pagado) : 0,
+                estado: estado || 'pendiente',
+                fuente: fuente || 'manual_admin',
+                reservaId: result.data.id,
+                adminEmail: adminEmail,
+                sendGuestEmail: !!email,
+                extras: extrasNombres,
+            }).catch(err => console.error('Error enviando notificación:', err));
+        }
+
         // Opcional: Crear/Actualizar Cliente en CRM
         if (email) {
-            await supabaseAdmin.from("clientes").upsert({
-                email, nombre, apellido, telefono, updated_at: new Date().toISOString()
-            }, { onConflict: "email" });
+            const { data: client } = await supabaseAdmin.from("clientes").upsert({
+                email, 
+                nombre, 
+                apellido, 
+                telefono, 
+                updated_at: new Date().toISOString()
+            }, { onConflict: "email" }).select("id").single();
+
+            if (client?.id) {
+                await supabaseAdmin.from("reservas").update({ cliente_id: client.id }).eq("id", id || result.data.id);
+            }
         }
 
         return NextResponse.json({ ok: true, data: result.data });

@@ -174,6 +174,20 @@ function DisponibilidadContent() {
       }
       setResultado(data);
 
+      trackEvent("select_fechas", {
+        entrada,
+        salida,
+        noches: data.noches,
+        temporada: data.temporada,
+        total: data.total
+      });
+      trackEvent("view_pricing_result", {
+        precio_noche: data.precio_noche,
+        total: data.total,
+        temporada: data.temporada,
+        noches: data.noches
+      });
+
     } catch (err: unknown) {
       console.error("❌ Error en calcularPrecio:", err);
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -221,7 +235,7 @@ function DisponibilidadContent() {
 
             return {
               id,
-              precio_unitario: s.id === 'bdf8607f-f623-4faa-b04f-ad7f7c9ee6eb' ? 25000 : s.precio, // Cena Privada override
+              precio_unitario: s.precio,
               cantidad,
               total: getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id])
             };
@@ -263,8 +277,7 @@ function DisponibilidadContent() {
     const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
     const isTinaja = s.nombre.toLowerCase().includes("tinaja");
 
-    // Override de precio para Cena Privada como solicitó el usuario
-    const basePrecio = (s.id === 'bdf8607f-f623-4faa-b04f-ad7f7c9ee6eb' || isDinner) ? 25000 : s.precio;
+    const basePrecio = s.precio;
 
     // Lógica de noches: Desayuno multiplica por defecto. Cena y Tinaja son 1 noche por defecto.
     const multNochesDefault = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
@@ -422,7 +435,7 @@ function DisponibilidadContent() {
                   if (s.nombre.toLowerCase().includes("desayuno")) {
                       displayNombre = "Despierta en el Bosque";
                       displayDescripcion = "Café orgánico con vistas al bosque desde tu terraza";
-                      displayImage = "/images/Galeria/DesayunoTreepod.jpg";
+                      displayImage = "/images/Galeria/Desayuno.jpg";
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
                       displayNombre = "Baño Privado Bajo las Estrellas";
                       displayDescripcion = "Relajo absoluto al aire libre cruzando la pasarela por el bosque nativo";
@@ -703,7 +716,11 @@ function DisponibilidadContent() {
                             const s = servicios.find(srv => srv.id === id);
                             if (!s) return null;
                             const costo = getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id]);
-                            const nochesSrv = nochesPorServicio[id] || (s.multiplicador_noches || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("desayuno") ? resultado.noches : 1);
+                            const isBreakfastSrv = s.nombre.toLowerCase().includes("desayuno");
+                            const isDinnerSrv = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+                            const isTinajaSrv = s.nombre.toLowerCase().includes("tinaja");
+                            const multNochesDefaultSrv = (s.multiplicador_noches || isBreakfastSrv) && !isDinnerSrv && !isTinajaSrv;
+                            const nochesSrv = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNochesDefaultSrv ? resultado.noches : 1);
                             return (
                               <div key={id} className="flex justify-between items-start gap-4 text-sm py-1">
                                 <span className="text-text-sub font-medium flex items-start gap-3">

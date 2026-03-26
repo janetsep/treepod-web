@@ -1,26 +1,29 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
 import GoogleMapsSection from '../components/GoogleMapsSection';
 import { Phone, Mail, MapPin, Send, MessageCircle, Check } from 'lucide-react';
 import { useState } from 'react';
+import TrackView from '../components/TrackView';
+import { trackEvent } from '../lib/analytics';
 
 export default function ContactoPage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     return (
         <div className="bg-surface-light font-sans text-text-main min-h-screen">
+            <TrackView eventName="view_contacto" />
             <main className="container mx-auto px-4 md:px-10 lg:px-20 pt-32 pb-16 md:pt-40 md:pb-24">
                 <div className="max-w-6xl mx-auto">
-                    {/* Standardized Header Section */}
-                    <div className="mb-16 md:mb-24">
-                        <div className="inline-flex items-center gap-2 mb-4">
-                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
+                    {/* Standardized Header Section - Centered */}
+                    <div className="flex flex-col items-center text-center mb-16 md:mb-24">
+                        <div className="max-w-4xl w-full">
+                            <div className="inline-flex items-center gap-2 mb-4">
+                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
+                            </div>
+                            <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15]">
+                                Hablemos de <span className="text-primary italic-display">Tu Escapada</span>
+                            </h1>
                         </div>
-                        <h1 className="h1-display text-text-main !text-left">
-                            Hablemos de <span className="text-primary italic-display">Tu Escapada</span>
-                        </h1>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
 
@@ -106,10 +109,10 @@ export default function ContactoPage() {
                                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -ml-24 -mb-24 blur-[60px]"></div>
 
                                 <div className="relative z-10 mb-10 text-center md:text-left">
-                                    <h2 className="text-3xl md:text-4xl font-display font-bold text-text-main mb-3">
+                                    <h2 className="h2-display text-text-main mb-3 !leading-tight">
                                         Envíanos un <span className="text-primary italic-display">Mensaje</span>
                                     </h2>
-                                    <p className="text-text-sub font-bold text-base">
+                                    <p className="text-text-sub font-bold text-lg md:text-xl">
                                         ¿Dudas sobre el clima, servicios o reservas especiales?
                                     </p>
                                 </div>
@@ -133,6 +136,7 @@ export default function ContactoPage() {
                                         });
 
                                         if (response.ok) {
+                                            trackEvent('generate_lead', { subject: formData.get('subject') as string, page: 'contacto' });
                                             setStatus('success');
                                             (e.target as HTMLFormElement).reset();
                                         } else {
@@ -220,6 +224,7 @@ export default function ContactoPage() {
                                             href="https://wa.me/56984643307?text=Hola%20TreePod,%20vengo%20de%20la%20web%20y%20necesito%20información."
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            onClick={() => trackEvent('click_whatsapp_contacto', { page: 'contacto' })}
                                             className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(37,211,102,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
                                         >
                                             Hablar por WhatsApp

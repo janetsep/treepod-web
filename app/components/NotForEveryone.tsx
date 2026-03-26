@@ -22,7 +22,7 @@ export default function NotForEveryone() {
                             </h2>
                         </div>
 
-                        <div className="space-y-6 text-xl md:text-2xl font-display leading-tight text-text-main">
+                        <div className="space-y-6 text-base md:text-lg leading-relaxed text-text-main">
                             <p>
                                 <strong>Olvídate del frío:</strong> Afuera puede estar helando, pero tu domo siempre estará a la temperatura perfecta para tu bienestar.
                             </p>

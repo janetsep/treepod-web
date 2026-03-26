@@ -43,7 +43,6 @@ export default function Navbar() {
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
-        { name: "Tarifas", href: "/#tarifas" },
         { name: "Servicios", href: "/servicios" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
@@ -53,7 +52,6 @@ export default function Navbar() {
     const mobileNavLinks = [
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
-        { name: "Tarifas", href: "/#tarifas" },
         { name: "Servicios", href: "/servicios" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
@@ -89,24 +87,40 @@ export default function Navbar() {
                     </div>
 
                     {!isDisponibilidadPage && (
-                        <button
-                            onClick={() => router.push('/disponibilidad')}
-                            className="px-12 py-4.5 rounded-full font-black text-xs tracking-[0.2em] uppercase transition-all transform hover:scale-105 shadow-xl bg-primary text-white hover:bg-primary-dark shadow-primary/30"
-                        >
-                            Reservar
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => router.push('/disponibilidad')}
+                                className="px-12 py-4.5 rounded-full font-black text-xs tracking-[0.2em] uppercase transition-all transform hover:scale-105 shadow-xl bg-primary text-white hover:bg-primary-dark shadow-primary/30"
+                            >
+                                Reservar
+                            </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-7 h-5 rounded-sm shadow-md flex-shrink-0" aria-label="Bandera de Chile">
+                                <rect width="30" height="10" fill="#fff"/>
+                                <rect y="10" width="30" height="10" fill="#D52B1E"/>
+                                <rect width="10" height="10" fill="#0039A6"/>
+                                <polygon points="5,2 5.9,4.7 8.8,4.7 6.4,6.3 7.3,9 5,7.3 2.7,9 3.6,6.3 1.2,4.7 4.1,4.7" fill="#fff"/>
+                            </svg>
+                        </div>
                     )}
                 </div>
 
                 {/* MOBILE ACTIONS */}
                 <div className="lg:hidden flex items-center gap-4 relative z-50">
                     {!isDisponibilidadPage && (
-                        <button
-                            onClick={() => router.push('/disponibilidad')}
-                            className="px-8 py-3.5 rounded-full font-black text-xs tracking-widest uppercase bg-primary text-white shadow-xl shadow-primary/20"
-                        >
-                            Reservar
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => router.push('/disponibilidad')}
+                                className="px-8 py-3.5 rounded-full font-black text-xs tracking-widest uppercase bg-primary text-white shadow-xl shadow-primary/20"
+                            >
+                                Reservar
+                            </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-6 h-4 rounded-sm shadow-md flex-shrink-0" aria-label="Bandera de Chile">
+                                <rect width="30" height="10" fill="#fff"/>
+                                <rect y="10" width="30" height="10" fill="#D52B1E"/>
+                                <rect width="10" height="10" fill="#0039A6"/>
+                                <polygon points="5,2 5.9,4.7 8.8,4.7 6.4,6.3 7.3,9 5,7.3 2.7,9 3.6,6.3 1.2,4.7 4.1,4.7" fill="#fff"/>
+                            </svg>
+                        </div>
                     )}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

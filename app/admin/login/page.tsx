@@ -128,7 +128,7 @@ export default function AdminLogin() {
                     >
                         {loading ? "Procesando..." : (
                             mode === 'login' ? "Iniciar Sesión" :
-                                mode === 'signup' ? "Registrar Administrador" : "Enviar Enlace Recu-peración"
+                                mode === 'signup' ? "Registrar Administrador" : "Enviar Enlace de Recuperación"
                         )}
                     </button>
                 </form>

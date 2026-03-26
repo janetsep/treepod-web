@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: Request) {
     try {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         }
 
         // Update reservation status
-        const { error } = await supabase
+        const { error } = await supabaseAdmin
             .from("reservas")
             .update({
                 estado: "pending_transfer_confirmation",

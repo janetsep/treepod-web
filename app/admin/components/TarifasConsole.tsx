@@ -1,7 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, RefreshCw, AlertCircle, TrendingUp, Users, Calendar, ArrowRight, Plus, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import { Save, RefreshCw, TrendingUp, Users, ArrowRight, Plus, Trash2 } from "lucide-react";
+
+const PRIORIDADES = [
+    { label: "Alta", value: 3 },
+    { label: "Media", value: 2 },
+    { label: "Baja", value: 1 },
+];
+
+function getPrioLabel(val: number) {
+    return PRIORIDADES.find(p => p.value === val)?.label ?? String(val);
+}
+
+function getPrioColor(val: number) {
+    if (val >= 3) return "bg-red-50 text-red-600";
+    if (val === 2) return "bg-yellow-50 text-yellow-600";
+    return "bg-gray-100 text-gray-500";
+}
 
 interface Tarifa {
     id: string;
@@ -75,12 +91,14 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
         try {
             const res = await fetch("/api/admin/tarifas", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, precio_noche: newPrice, adminEmail }),
             });
-            if (!res.ok) throw new Error("Error al actualizar");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Error al actualizar");
             setTarifas(prev => prev.map(t => t.id === id ? { ...t, precio_noche: newPrice } : t));
-        } catch (error) {
-            alert("No se pudo actualizar el precio");
+        } catch (error: any) {
+            alert("No se pudo actualizar el precio: " + error.message);
         } finally {
             setSaving(null);
         }
@@ -93,6 +111,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
             const actionType = isCreating ? 'create_temporada' : 'temporada';
             const res = await fetch("/api/admin/tarifas", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     type: actionType,
                     id: editingTemporada.id,
@@ -103,54 +122,38 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                     adminEmail
                 }),
             });
-            if (!res.ok) throw new Error("Error en servidor");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Error en servidor");
 
             await loadData();
             setIsCreating(false);
             alert(isCreating ? "Temporada creada" : "Cambios guardados");
-        } catch (error) {
-            alert("Error al procesar la solicitud");
+        } catch (error: any) {
+            alert("Error: " + error.message);
         } finally {
             setSaving(null);
         }
     };
 
-    const handleDeleteTemporada = async () => {
-        if (!selectedTemporadaId) return;
+    const handleDeleteTemporada = async (idToDelete?: string) => {
+        const targetId = idToDelete || selectedTemporadaId;
+        if (!targetId) return;
         if (!confirm("¿Seguro que deseas eliminar esta temporada y todas sus tarifas? Esta acción es irreversible.")) return;
 
         setSaving('delete');
         try {
             const res = await fetch("/api/admin/tarifas", {
                 method: "POST",
-                body: JSON.stringify({ type: 'delete_temporada', id: selectedTemporadaId, adminEmail }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: 'delete_temporada', id: targetId, adminEmail }),
             });
-            if (!res.ok) throw new Error("Error al eliminar");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Error al eliminar");
 
             setSelectedTemporadaId("");
             await loadData();
         } catch (error) {
             alert("No se pudo eliminar");
-        } finally {
-            setSaving(null);
-        }
-    };
-
-    const handlePriorityChange = async (id: string, currentPriority: number, delta: number) => {
-        setSaving(`prio-${id}`);
-        try {
-            await fetch("/api/admin/tarifas", {
-                method: "POST",
-                body: JSON.stringify({
-                    type: 'temporada',
-                    id,
-                    prioridad: currentPriority + delta,
-                    adminEmail
-                }),
-            });
-            await loadData();
-        } catch (error) {
-            console.error("Error updating priority");
         } finally {
             setSaving(null);
         }
@@ -223,15 +226,9 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     }}
                                 >
                                     <td className="px-8 py-5">
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-8 text-sm font-black text-gray-400">{temp.prioridad}</span>
-                                            {!isViewer && (
-                                                <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                                                    <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, 1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowUp size={12} /></button>
-                                                    <button onClick={(e) => { e.stopPropagation(); handlePriorityChange(temp.id, temp.prioridad, -1); }} className="p-1 hover:bg-white rounded-md text-gray-400 hover:text-primary transition-all"><ArrowDown size={12} /></button>
-                                                </div>
-                                            )}
-                                        </div>
+                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${getPrioColor(temp.prioridad)}`}>
+                                            {getPrioLabel(temp.prioridad)}
+                                        </span>
                                     </td>
                                     <td className="px-8 py-5">
                                         <div className="font-black text-gray-900 group-hover:text-primary transition-all">{temp.nombre}</div>
@@ -240,12 +237,19 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                         </div>
                                     </td>
                                     <td className="px-8 py-5 text-[10px] font-bold">
-                                        <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>
+                                        {(() => {
+                                            const today = new Date();
+                                            const inicio = new Date(temp.fecha_inicio);
+                                            const fin = new Date(temp.fecha_fin);
+                                            if (today < inicio) return <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full">Próxima</span>;
+                                            if (today > fin) return <span className="px-3 py-1 bg-gray-100 text-gray-400 rounded-full">Vencida</span>;
+                                            return <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>;
+                                        })()}
                                     </td>
                                     <td className="px-8 py-5 text-right">
                                         {!isViewer && isAdmin && (
                                             <button
-                                                onClick={(e) => { e.stopPropagation(); setSelectedTemporadaId(temp.id); handleDeleteTemporada(); }}
+                                                onClick={(e) => { e.stopPropagation(); handleDeleteTemporada(temp.id); }}
                                                 className="p-3 text-red-300 hover:text-red-500 hover:bg-white rounded-xl transition-all"
                                             >
                                                 <Trash2 size={16} />
@@ -325,6 +329,28 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     />
                                 </div>
                             </div>
+                            <div>
+                                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Prioridad</label>
+                                <div className="flex gap-2">
+                                    {PRIORIDADES.map((p) => (
+                                        <button
+                                            key={p.value}
+                                            type="button"
+                                            disabled={isViewer}
+                                            onClick={() => setEditingTemporada(editingTemporada ? { ...editingTemporada, prioridad: p.value } : null)}
+                                            className={`flex-1 py-3 rounded-2xl text-xs font-black uppercase tracking-widest border-2 transition-all ${
+                                                editingTemporada?.prioridad === p.value
+                                                    ? p.value >= 3 ? "bg-red-500 border-red-500 text-white"
+                                                    : p.value === 2 ? "bg-yellow-400 border-yellow-400 text-white"
+                                                    : "bg-gray-400 border-gray-400 text-white"
+                                                    : "bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-300"
+                                            } ${isViewer ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                        >
+                                            {p.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                             {!isViewer && (
                                 <button
                                     onClick={handleSaveTemporada}
@@ -350,18 +376,26 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {filteredTarifas.map((tarifa) => (
+                            {[
+                                { label: "Tarifa 1 Noche", noches: 1 },
+                                { label: "Tarifa 2+ Noches", noches: 2 },
+                            ].map(({ label, noches }) => {
+                                const grupo = filteredTarifas
+                                    .filter(t => t.noches_min === noches)
+                                    .sort((a, b) => a.adultos - b.adultos);
+                                if (grupo.length === 0) return null;
+                                return (
+                                    <div key={noches}>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400 px-1 mb-3">{label}</p>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                            {grupo.map((tarifa) => (
                                     <div key={tarifa.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm group hover:border-primary/20 transition-all">
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-2xl font-black text-gray-900">{tarifa.adultos}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">Adultos</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">Ad.</span>
                                                 </div>
-                                                <p className="text-[9px] font-black uppercase text-primary/60 mt-1">
-                                                    {tarifa.noches_min === 1 ? 'Tarifa Base' : `Reserva mín ${tarifa.noches_min} noches`}
-                                                </p>
                                             </div>
                                             <span className="text-[8px] font-mono text-gray-300">#{tarifa.id.slice(-6)}</span>
                                         </div>
@@ -382,8 +416,11 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                             )}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </div>

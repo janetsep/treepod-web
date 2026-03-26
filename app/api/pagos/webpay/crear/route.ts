@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 // Configuración
 const config = {
@@ -63,6 +63,11 @@ async function createTransaction(amount: number, buyOrder: string, sessionId: st
 }
 
 function getBaseUrl(req: Request) {
+  // En producción, siempre usar NEXT_PUBLIC_BASE_URL para que Transbank retorne al dominio correcto
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL;
+  }
+
   const proto = req.headers.get("x-forwarded-proto") ?? "http";
   const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
 
@@ -99,7 +104,7 @@ export async function POST(req: Request) {
 
     // 1. Verificar conexión y listar todas las reservas
     console.log('🔌 Verificando conexión con Supabase...');
-    const { data: todasLasReservas, error: errorReservas } = await supabase
+    const { data: todasLasReservas, error: errorReservas } = await supabaseAdmin
       .from('reservas')
       .select('id, total, estado, created_at')
       .order('created_at', { ascending: false })
@@ -120,7 +125,7 @@ export async function POST(req: Request) {
 
     // 2. Buscar la reserva específica
     console.log(`🔍 Buscando reserva con ID: ${reservaId}`);
-    const { data: reserva, error: reservaError } = await supabase
+    const { data: reserva, error: reservaError } = await supabaseAdmin
       .from('reservas')
       .select('*')
       .eq('id', reservaId.trim())
@@ -207,7 +212,7 @@ export async function POST(req: Request) {
 
     // 4. Actualizar la reserva
     console.log('🔄 Actualizando estado de la reserva...');
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from("reservas")
       .update({
         metodo_pago_inicial: "webpay",
@@ -244,7 +249,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: "Error al procesar el pago",
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        details: errorMessage
       },
       { status: 500 }
     );

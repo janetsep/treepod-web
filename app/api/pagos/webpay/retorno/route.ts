@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { FinanceService } from "@/services/FinanceService";
 import { NotificationService } from "@/services/NotificationService";
 import { trackServerPurchase } from "@/lib/server-analytics";
+import { trackMetaConversion } from "@/lib/meta-capi";
+import { recordConversion, extractUTMParams, extractClientInfo } from "@/lib/track-conversion";
 
 const config = {
   commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "597055555532",
@@ -49,6 +51,11 @@ async function commitTransaction(token: string): Promise<WebpayCommitResponse> {
 }
 
 function getBaseUrl(req: Request) {
+  // En producción, siempre usar NEXT_PUBLIC_BASE_URL para que Transbank retorne al dominio correcto
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL;
+  }
+
   const proto = req.headers.get("x-forwarded-proto") ?? "http";
   const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
 
@@ -116,7 +123,7 @@ async function handleReturn(req: Request) {
       amount: commit.amount,
     });
 
-    const { data: reserva, error: reservaError } = await supabase
+    const { data: reserva, error: reservaError } = await supabaseAdmin
       .from("reservas")
       .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin, adultos")
       .eq("payment_intent_id", token)
@@ -130,7 +137,7 @@ async function handleReturn(req: Request) {
       return NextResponse.redirect(new URL("/disponibilidad?error=reserva_no_encontrada", baseUrl), 303);
     }
 
-    const { data: reservaServicios } = await supabase
+    const { data: reservaServicios } = await supabaseAdmin
       .from("reserva_servicios")
       .select("servicios(nombre)")
       .eq("reserva_id", reserva.id);
@@ -142,12 +149,13 @@ async function handleReturn(req: Request) {
     const isApproved = commit.response_code === 0;
 
     // Actualizar estado de la reserva
-    const { error: dbUpdateError } = await supabase
+    const { error: dbUpdateError } = await supabaseAdmin
       .from("reservas")
       .update({
         estado: isApproved ? "pagado" : "rechazado",
         pagado: isApproved ? 1 : 0,
         monto_pagado: isApproved ? commit.amount ?? null : 0,
+        numero_transaccion: isApproved ? token : null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", reserva.id);
@@ -192,6 +200,58 @@ async function handleReturn(req: Request) {
           });
         } catch (analyticsError) {
           console.error("⚠️ Error disparando medición de servidor:", analyticsError);
+        }
+
+        // 📊 Meta Conversions API (CAPI) - CRÍTICO para Meta Ads optimization
+        // Envía conversión directamente a Meta para que pueda optimizar las campañas
+        try {
+          const clientInfo = extractClientInfo(Object.fromEntries(req.headers));
+          const utmParams = extractUTMParams(Object.fromEntries(req.headers));
+
+          await trackMetaConversion({
+            transaction_id: token || reserva.id,
+            value: commit.amount || 0,
+            currency: 'CLP',
+            content_name: 'Reserva TreePod',
+            content_ids: ['reserva_treepod'],
+            num_items: 1,
+            email: reserva.email,
+            first_name: reserva.nombre,
+            last_name: reserva.apellido,
+            event_source_url: 'https://www.domostreepod.cl/confirmacion',
+            ...clientInfo,
+            ...utmParams
+          });
+          console.log("🎯 Meta CAPI: Conversión enviada para optimización de anuncios");
+        } catch (metaError) {
+          console.error("⚠️ Error enviando a Meta CAPI:", metaError);
+        }
+
+        // 💾 Registrar conversión en Supabase (conversiones table)
+        // Esto permite análisis histórico y atribución
+        try {
+          const clientInfo = extractClientInfo(Object.fromEntries(req.headers));
+          const utmParams = extractUTMParams(Object.fromEntries(req.headers));
+
+          await recordConversion({
+            transaction_id: token || reserva.id,
+            reserva_id: reserva.id,
+            value: commit.amount || 0,
+            currency: 'CLP',
+            conversion_type: 'purchase',
+            source: utmParams.utm_source || 'direct',
+            utm_source: utmParams.utm_source,
+            utm_medium: utmParams.utm_medium,
+            utm_campaign: utmParams.utm_campaign,
+            utm_content: utmParams.utm_content,
+            utm_term: utmParams.utm_term,
+            user_agent: clientInfo.user_agent,
+            ip_address: clientInfo.ip_address,
+            conversion_timestamp: new Date().toISOString()
+          });
+          console.log("💾 Conversión registrada en Supabase para análisis");
+        } catch (conversionError) {
+          console.error("⚠️ Error registrando conversión en Supabase:", conversionError);
         }
 
         // Disparar Email de Bienvenida (Conserjería Digital)

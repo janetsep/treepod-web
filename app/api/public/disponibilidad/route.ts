@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { addDays, eachDayOfInterval, format, parseISO, startOfDay } from "date-fns";
 
 export async function GET(request: Request) {
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
         const toDate = parseISO(toStr);
 
         // 1. Obtener total de domos activos
-        const { data: domos, error: domosErr } = await supabase
+        const { data: domos, error: domosErr } = await supabaseAdmin
             .from("domos")
             .select("id")
             .eq("activo", true);
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
         // 2. Obtener reservas en el rango
         // Filtramos estados que bloquean realmente: pagado, confirmado.
         // Los pendientes solo si tienen email (intención real), similar a crear_reserva logic.
-        const { data: reservas, error: resErr } = await supabase
+        const { data: reservas, error: resErr } = await supabaseAdmin
             .from("reservas")
             .select("fecha_inicio, fecha_fin, domo_id, estado, email")
             .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago"])
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         if (resErr) throw resErr;
 
         // 3. Obtener bloqueos manuales
-        const { data: bloqueos, error: bloqErr } = await supabase
+        const { data: bloqueos, error: bloqErr } = await supabaseAdmin
             .from("bloqueos_calendario")
             .select("fecha_inicio, fecha_fin, domo_id")
             .lt("fecha_inicio", toStr)

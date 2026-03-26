@@ -80,14 +80,19 @@ export const NotificationService = {
       await resend.emails.send({
         from: 'Glamping Domos TreePod <onboarding@resend.dev>',
         to: [adminEmail],
-        subject: `🚨 ¡NUEVA RESERVA WEB! - ${guestName}`,
+        subject: `NUEVA RESERVA WEB - ${guestName}`,
         html: `
-          <div style="font-family: sans-serif; color: #333;">
-            <h2>Nueva Reserva Confirmada via Webpay</h2>
-            ${shortId ? `<p><strong>Código (5 dígitos):</strong> <span style="font-size: 1.2em; font-weight: bold; color: #00ADEF;">${shortId.toUpperCase()}</span></p>` : ''}
+          <div style="font-family: sans-serif; color: #333; max-width: 600px;">
+            <div style="text-align: center; padding: 20px 0 10px 0;">
+              <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto;" />
+            </div>
+            <h2 style="color: #00ADEF;">Nueva Reserva Confirmada via Webpay</h2>
+            ${shortId ? `<p><strong>Código:</strong> <span style="font-size: 1.2em; font-weight: bold; color: #00ADEF;">#${shortId.toUpperCase()}</span></p>` : ''}
             <p><strong>Huésped:</strong> ${guestName} (${to})</p>
             <p><strong>Fechas:</strong> ${bookingDates}</p>
-            <p><strong>Monto:</strong> Ver en panel admin</p>
+            <p><strong>Personas:</strong> ${guestsCount || 1} ${(guestsCount || 1) === 1 ? 'persona' : 'personas'}</p>
+            ${extras && extras.length > 0 ? `<p><strong>Extras contratados:</strong> ${extras.join(', ')}</p>` : ''}
+            <p><strong>Estado:</strong> Pago confirmado vía Webpay</p>
             <hr />
             <p><a href="https://domostreepod.cl/admin" style="color: #00ADEF;">Ir al Panel de Administración</a></p>
           </div>
@@ -155,7 +160,7 @@ export const NotificationService = {
       await resend.emails.send({
         from: 'TreePod <onboarding@resend.dev>',
         to: [recipient],
-        subject: '🎁 Tu Guía de Retiro en la Montaña + Regalo Especial',
+        subject: 'Tu Guía de Retiro en la Montaña + Regalo Especial',
         html: `
           <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #00ADEF; padding: 40px 20px; text-align: center; color: white;">
@@ -174,7 +179,7 @@ export const NotificationService = {
               <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
               
               <div style="background-color: #f0faff; border: 2px dashed #00ADEF; padding: 25px; border-radius: 12px; text-align: center;">
-                <h3 style="color: #00ADEF; margin-top: 0;">🎁 Tu Regalo de Bienvenida</h3>
+                <h3 style="color: #00ADEF; margin-top: 0;">Tu Regalo de Bienvenida</h3>
                 <p style="margin-bottom: 20px;">Utiliza este código en tu primera reserva y obtén un <strong>10% de descuento</strong> sobre la tarifa base:</p>
                 <div style="background: white; padding: 10px 20px; display: inline-block; font-family: monospace; font-size: 24px; font-weight: bold; color: #1a1a1a; letter-spacing: 2px; border: 1px solid #ddd;">
                    TREEPOD10
@@ -203,6 +208,159 @@ export const NotificationService = {
   },
 
   /**
+   * Envía notificación de reserva creada desde el admin, con ICS para el calendario
+   */
+  async sendAdminManualReservationNotification(data: {
+    guestName: string;
+    guestEmail: string;
+    domoNombre: string;
+    fechaInicio: string;
+    fechaFin: string;
+    adultos: number;
+    total: number;
+    montoPagado: number;
+    estado: string;
+    fuente: string;
+    reservaId: string;
+    adminEmail: string;
+    sendGuestEmail: boolean;
+    extras?: string[];
+  }) {
+    const adminTo = 'janetsep@gmail.com';
+    const shortId = data.reservaId.slice(0, 8).toUpperCase();
+
+    // Formatear fechas para mostrar
+    const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const fechaInicioLabel = fmt(data.fechaInicio);
+    const fechaFinLabel = fmt(data.fechaFin);
+
+    // Calcular noches
+    const msPerDay = 86400000;
+    const noches = Math.round((new Date(data.fechaFin).getTime() - new Date(data.fechaInicio).getTime()) / msPerDay);
+
+    // Generar ICS
+    const icsDate = (d: string) => d.replace(/-/g, '');
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//TreePod Glamping//Admin//ES',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `DTSTART;VALUE=DATE:${icsDate(data.fechaInicio)}`,
+      `DTEND;VALUE=DATE:${icsDate(data.fechaFin)}`,
+      `SUMMARY:Reserva ${data.domoNombre} - ${data.guestName}`,
+      `DESCRIPTION:Huésped: ${data.guestName}\\nEmail: ${data.guestEmail}\\nCódigo: #${shortId}\\nAdultos: ${data.adultos}\\nTotal: $${data.total.toLocaleString('es-CL')}\\nPagado: $${data.montoPagado.toLocaleString('es-CL')}\\nFuente: ${data.fuente}${data.extras && data.extras.length > 0 ? `\\nExtras: ${data.extras.join(', ')}` : ''}`,
+      `LOCATION:Valle Las Trancas\\, Km 72\\, Región del Ñuble\\, Chile`,
+      `UID:treepod-${data.reservaId}@domostreepod.cl`,
+      `STATUS:CONFIRMED`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const icsBase64 = Buffer.from(icsContent).toString('base64');
+
+    const estadoLabel: Record<string, string> = {
+      pagado: 'Pagado Total',
+      confirmado: 'Confirmado',
+      pendiente_pago: 'Abono Pendiente',
+      pendiente: 'Pendiente',
+      cancelada: 'Cancelada',
+      bloqueado: 'Bloqueo Técnico',
+    };
+
+    try {
+      // Email al admin con ICS
+      await resend.emails.send({
+        from: 'TreePod Admin <onboarding@resend.dev>',
+        to: [adminTo],
+        subject: `Nueva Reserva Manual: ${data.guestName} - ${data.domoNombre}`,
+        attachments: [{ filename: `reserva-${shortId}.ics`, content: icsBase64 }],
+        html: `
+          <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="text-align: center; padding: 24px 20px 16px;">
+              <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 16px;" />
+            </div>
+            <div style="background: #00ADEF; padding: 24px 20px; text-align: center; border-radius: 12px 12px 0 0;">
+              <h1 style="color: white; margin: 0; font-size: 22px;">Nueva Reserva Creada</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 13px;">Creada manualmente desde el panel de administración</p>
+            </div>
+            <div style="padding: 30px 20px; border: 1px solid #eee; border-top: none; border-radius: 0 0 12px 12px;">
+              <div style="background: #f9f9f9; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Código</p>
+                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #00ADEF; font-family: monospace;">#${shortId}</p>
+              </div>
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                <tr><td style="padding: 8px 0; color: #666; width: 40%;">Domo</td><td style="padding: 8px 0; font-weight: bold;">${data.domoNombre}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Huésped</td><td style="padding: 8px 0; font-weight: bold;">${data.guestName}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;">${data.guestEmail || '—'}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Check-in</td><td style="padding: 8px 0; font-weight: bold;">${fechaInicioLabel}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Check-out</td><td style="padding: 8px 0; font-weight: bold;">${fechaFinLabel}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Noches</td><td style="padding: 8px 0;">${noches}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Adultos</td><td style="padding: 8px 0;">${data.adultos}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Total</td><td style="padding: 8px 0; font-weight: bold;">$${data.total.toLocaleString('es-CL')}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Pagado</td><td style="padding: 8px 0; color: #16a34a; font-weight: bold;">$${data.montoPagado.toLocaleString('es-CL')}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Estado</td><td style="padding: 8px 0;">${estadoLabel[data.estado] || data.estado}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Fuente</td><td style="padding: 8px 0;">${data.fuente}</td></tr>
+              </table>
+              <div style="background: #e0f7fa; border-radius: 8px; padding: 14px; margin-top: 20px; font-size: 13px; color: #006064;">
+                Se adjunta un archivo <strong>.ics</strong> — ábrelo para agregar esta reserva a tu calendario de Google, Apple o Outlook.
+              </div>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="https://domostreepod.cl/admin" style="background: #1a1a1a; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 14px;">Ver en Panel Admin</a>
+              </div>
+            </div>
+          </div>
+        `
+      });
+
+      // Email al huésped (si tiene email y se pidió enviarlo)
+      if (data.sendGuestEmail && data.guestEmail && data.guestEmail.includes('@')) {
+        await resend.emails.send({
+          from: 'Glamping Domos TreePod <onboarding@resend.dev>',
+          to: [data.guestEmail],
+          subject: `¡Tu reserva en TreePod está confirmada! #${shortId}`,
+          html: `
+            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+              <div style="text-align: center; padding: 30px 20px;">
+                <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 20px;" />
+                <h1 style="color: #00ADEF; font-size: 20px; margin: 0;">¡Reserva Confirmada!</h1>
+                <p style="color: #666; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;">Glamping Domos TreePod · Valle Las Trancas</p>
+              </div>
+              <div style="padding: 0 20px 30px;">
+                <p>Hola <strong>${data.guestName}</strong>,</p>
+                <p>Nos alegra confirmar tu reserva en nuestro glamping. Aquí tienes el resumen:</p>
+                <div style="background: #f9f9f9; border-radius: 12px; padding: 24px; margin: 20px 0;">
+                  <p style="margin: 0 0 10px 0;"><strong>Código de Reserva:</strong> <span style="color: #00ADEF; font-family: monospace; font-size: 18px;">#${shortId}</span></p>
+                  <p style="margin: 0 0 10px 0;"><strong>Domo:</strong> ${data.domoNombre}</p>
+                  <p style="margin: 0 0 10px 0;"><strong>Check-in:</strong> ${fechaInicioLabel}</p>
+                  <p style="margin: 0 0 10px 0;"><strong>Check-out:</strong> ${fechaFinLabel}</p>
+                  <p style="margin: 0 0 10px 0;"><strong>Huéspedes:</strong> ${data.adultos} ${data.adultos === 1 ? 'persona' : 'personas'}</p>
+                  ${data.extras && data.extras.length > 0 ? `
+                  <p style="margin: 10px 0 0 0;"><strong>Servicios adicionales:</strong></p>
+                  <ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 14px; color: #555;">
+                    ${data.extras.map(ex => `<li>${ex}</li>`).join('')}
+                  </ul>` : ''}
+                </div>
+                <p>Si tienes alguna consulta, puedes contactarnos por WhatsApp o responder este correo.</p>
+                <p style="margin-top: 30px;">¡Nos vemos pronto en la montaña!<br/><strong>El equipo de TreePod</strong></p>
+              </div>
+              <div style="background: #f1f5f9; padding: 16px; text-align: center; font-size: 11px; color: #999;">
+                © ${new Date().getFullYear()} TreePod Glamping · Valle Las Trancas, Chile
+              </div>
+            </div>
+          `
+        });
+      }
+
+      console.log(`📧 Notificación de reserva manual enviada al admin y al huésped.`);
+      return { success: true };
+    } catch (error: any) {
+      console.error('🔥 Error enviando notificación de reserva manual:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  /**
    * Envía alerta de seguridad al administrador
    */
   async sendSecurityAlert(type: string, data: { email: string, details?: any }) {
@@ -211,7 +369,7 @@ export const NotificationService = {
       await resend.emails.send({
         from: 'TreePod Security <onboarding@resend.dev>',
         to: [adminEmail],
-        subject: `🚨 ALERTA DE SEGURIDAD: ${type}`,
+        subject: `ALERTA DE SEGURIDAD: ${type}`,
         html: `
           <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #fee2e2; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #ef4444; padding: 30px 20px; text-align: center; color: white;">

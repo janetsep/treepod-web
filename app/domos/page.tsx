@@ -5,7 +5,6 @@ import Link from "next/link";
 import { getDomoBasePrice, getDomoPriceForNights } from "@/lib/pricing";
 import { useEffect, useState } from "react";
 import { CheckCircle2, Ruler, Users, Wifi, ParkingCircle, Waves, Grid3X3, ArrowRight, Cat } from "lucide-react";
-import SeasonRates from '../components/SeasonRates';
 
 
 export default function DomosPage() {
@@ -47,36 +46,35 @@ export default function DomosPage() {
             <main className="container mx-auto px-4 md:px-12 lg:px-24 py-16 md:py-24">
 
                 {/* SECTION: Concept & Architecture with Background */}
-                {/* SECTION: Concept & Architecture - Split View */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center mb-32">
-
-                    {/* Left: Editorial Text */}
-                    <div className="space-y-10 order-2 md:order-1">
-                        <div className="space-y-4">
-                            <div className="inline-flex items-center gap-2">
-                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">TreePod es</span>
-                            </div>
-                            <h1 className="h1-display text-text-main !text-left">Tu lugar en el bosque, <br /> <span className="text-primary italic-display font-light">pensado para que no eches nada de menos</span></h1>
+                {/* SECTION: Concept & Architecture - Centered Intro to match Home aesthetic */}
+                <div className="flex flex-col items-center text-center mb-16 md:mb-24 px-4 md:px-10">
+                    <div className="max-w-4xl w-full">
+                        <div className="inline-flex items-center gap-2 mb-4">
+                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">TreePod es</span>
                         </div>
-                        <p className="text-2xl md:text-4xl font-display leading-tight text-text-main">
-                            Diseñamos este refugio para que puedas estar inmerso en la naturaleza salvaje, pero durmiendo en una cama increíble y con todas las comodidades de la ciudad. <span className="text-primary italic-display">Respetamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
+                        <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
+                            Tu lugar en el bosque, <br className="hidden md:block" />
+                            <span className="text-primary italic-display font-light">pensado para que no eches nada de menos</span>
+                        </h1>
+                        <p className="text-lg md:text-xl leading-relaxed text-text-main font-bold">
+                            Diseñamos este refugio para que puedas estar inmerso en la naturaleza salvaje, pero durmiendo en una cama increíble y con todas las comodidades de la ciudad. <br className="hidden md:block" />
+                            <span className="text-primary italic-display">Respetamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
                         </p>
                     </div>
+                </div>
 
-                    {/* Right: Sketch Image (Static) */}
-                    <div className="relative h-[400px] md:h-[550px] w-full order-1 md:order-2 bg-surface rounded-[3rem] p-4 md:p-8 shadow-2xl border border-black/5 flex items-center justify-center overflow-hidden">
-                        <div className="absolute inset-0 bg-white opacity-40"></div>
+                {/* Architecture Sketch - Balanced in centered layout */}
+                <div className="relative h-[300px] md:h-[500px] w-full max-w-5xl mx-auto mb-32 bg-surface rounded-[3rem] p-4 md:p-8 shadow-2xl border border-black/5 flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-white opacity-40"></div>
 
-                        {/* Sketch (Always Visible) */}
-                        <Image
-                            src="/images/concept/concept-bg-real.png"
-                            alt="Croquis Arquitectónico Domo"
-                            fill
-                            className="object-contain mix-blend-multiply opacity-100 p-8 z-10"
-                        />
-                    </div>
-
+                    {/* Sketch (Always Visible) */}
+                    <Image
+                        src="/images/concept/concept-bg-real.png"
+                        alt="Croquis Arquitectónico Domo"
+                        fill
+                        className="object-contain mix-blend-multiply opacity-100 p-8 z-10"
+                    />
                 </div>
 
 
@@ -89,7 +87,7 @@ export default function DomosPage() {
                         <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-2 grid-rows-2 gap-2 h-[500px]">
                             <div className="col-span-2 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/hero/interior-domo-acogedor-105-2.jpg"
+                                    src="/images/interiors/interior-domo-acogedor-78-2.jpg"
                                     alt="Refugio TreePod con cama de alta densidad y vistas al bosque"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
@@ -97,7 +95,7 @@ export default function DomosPage() {
                             </div>
                             <div className="col-span-1 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/hero/interior-domo-acogedor-95-2.jpg"
+                                    src="/images/interiors/interior-domo-acogedor-21-4.jpg"
                                     alt="Detalle interior de descanso"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
@@ -106,8 +104,8 @@ export default function DomosPage() {
                             {/* Sub Image 2: Table Detail */}
                             <div className="col-span-1 row-span-1 relative group overflow-hidden">
                                 <Image
-                                    src="/images/Galeria/comidadomoafuerapizza.jpg"
-                                    alt="Cena o Almuerzo en la terraza del Domo"
+                                    src="/images/interiors/interior-domo-acogedor-89-2.jpg"
+                                    alt="Interior acogedor del domo TreePod"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                 />
@@ -118,7 +116,7 @@ export default function DomosPage() {
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Afuera nevando, tú en polera</span>
                             </div>
-                            <h3 className="h2-display text-text-main leading-tight">Cama con vista <span className="italic-display">panorámica</span></h3>
+                            <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Cama con vista <span className="italic-display">panorámica</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
                                 <strong>Cama con vista panorámica:</strong> Despierta con energía viendo y escuchando el bosque nativo directamente desde tu cama.
                             </p>
@@ -135,7 +133,7 @@ export default function DomosPage() {
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Enciérrate y no salgas</span>
                             </div>
-                            <h3 className="h2-display text-text-main leading-tight">Tienes absolutamente <span className="italic-display">todo lo que necesitas</span></h3>
+                            <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Tienes absolutamente <span className="italic-display">todo lo que necesitas</span></h3>
                             <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
                                 Enciérrate y no salgas en todo el fin de semana si no quieres. Tienes absolutamente todo lo que necesitas para aislarte del mundo sin depender de nadie:
                             </p>
@@ -163,7 +161,7 @@ export default function DomosPage() {
                         <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] grid grid-cols-2 gap-2 relative group">
                             <div className="relative overflow-hidden h-full">
                                 <Image
-                                    src="/images/real/CocinaDomo1.jpeg"
+                                    src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
                                     alt="Cocina y Kitchenette Real en Domo TreePod"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
@@ -171,8 +169,8 @@ export default function DomosPage() {
                             </div>
                             <div className="relative overflow-hidden h-full">
                                 <Image
-                                    src="/images/real/CocinaDomo.jpeg"
-                                    alt="Detalle Cocina"
+                                    src="/images/interiors/CafeteraNespresso.jpg"
+                                    alt="Cafetera Nespresso en el domo"
                                     fill
                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                 />
@@ -233,7 +231,7 @@ export default function DomosPage() {
                 </div>
             </main >
 
-            <SeasonRates />
+            {/* Sección de tarifas removida - se maneja desde admin */}
 
             {/* 5. Sticky Booking Bar / Footer CTA */}
             <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
@@ -244,12 +242,7 @@ export default function DomosPage() {
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
                             <div className="flex items-center gap-2.5">
                                 <span className="text-xl md:text-2xl font-black text-primary">$145.000</span>
-                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ noche (Vie-Dom)</span>
-                            </div>
-                            <div className="hidden sm:block h-4 w-[1px] bg-black/10"></div>
-                            <div className="flex items-center gap-2.5">
-                                <span className="text-xl md:text-2xl font-black text-primary">$123.250</span>
-                                <span className="text-[11px] font-bold text-primary leading-none">/ noche (Lun-Jue)</span>
+                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ noche</span>
                             </div>
                         </div>
                     </div>

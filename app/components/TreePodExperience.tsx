@@ -61,7 +61,7 @@ export default function TreePodExperience() {
                         <div className="absolute -inset-6 border border-primary/20 rounded-[2rem] transform -rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
                         <div className="relative rounded-[2rem] overflow-hidden shadow-2xl aspect-[4/5] border border-black/10">
                             <img
-                                src="/images/hero/interior-domo-acogedor-105-2.jpg"
+                                src="/images/interiors/interior-domo-acogedor-78-2.jpg"
                                 alt="Vista tranquila desde un domo TreePod"
                                 className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
                             />

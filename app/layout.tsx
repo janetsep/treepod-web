@@ -4,6 +4,7 @@ import './globals.css';
 import Script from 'next/script';
 import AdminAwareLayout from './components/AdminAwareLayout';
 import MicrosoftClarity from './components/MicrosoftClarity';
+import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
 
 
 const geistSans = Geist({
@@ -42,13 +43,20 @@ const notoSans = Noto_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://domostreepod.cl'),
-  title: 'TreePod | Refugio de Montaña en Valle Las Trancas',
+  title: 'Domos TreePod | Refugio de Montaña en Valle Las Trancas',
   description: 'Tu pausa en el bosque nativo. Domos TreePod en Valle Las Trancas para vivir la montaña auténtica y descansar de verdad. Reserva tu refugio.',
   keywords: ['glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio'],
+  icons: {
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
-    title: 'TreePod | Refugio de Montaña en Valle Las Trancas',
+    title: 'Domos TreePod | Refugio de Montaña en Valle Las Trancas',
     description: 'Recupera tu energía real. Domos inmersos en el bosque para vivir la montaña auténtica.',
-    images: ['/images/hero/interior-domo-acogedor-105-2.jpg'],
+    images: ['/images/hero/domo-treepod-ok-12.jpg'],
     locale: 'es_CL',
     type: 'website',
   },
@@ -75,6 +83,25 @@ export default function RootLayout({
             `}
           </Script>
         )}
+
+        {/* Meta Pixel - Tracking Conversiones */}
+        {process.env.NEXT_PUBLIC_PIXEL_ID && (
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${process.env.NEXT_PUBLIC_PIXEL_ID}');
+              fbq('track', 'PageView');
+              console.log('🟢 Meta Pixel initialized: ${process.env.NEXT_PUBLIC_PIXEL_ID}');
+            `}
+          </Script>
+        )}
       </head>
       <body
         suppressHydrationWarning
@@ -95,6 +122,7 @@ export default function RootLayout({
         <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
 
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
+        <AuthRecoveryRedirect />
         <AdminAwareLayout>
           {children}
         </AdminAwareLayout>

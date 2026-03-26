@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "ID requerido" }, { status: 400 });
     }
 
-    const { data: reserva, error: readError } = await supabase
+    const { data: reserva, error: readError } = await supabaseAdmin
       .from("reservas")
       .select("id, estado, payment_intent_id")
       .eq("id", reservaId)
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from("reservas")
       .update({ estado: "cancelada", updated_at: new Date().toISOString() })
       .eq("id", reservaId);

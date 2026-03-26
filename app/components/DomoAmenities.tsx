@@ -42,12 +42,12 @@ export default function DomoAmenities() {
             title: "Tu café perfecto al despertar",
             description: "Tienes tu propia Nespresso lista para ti. Imagínate tomarte un café bien caliente por la mañana escuchando solo los pájaros y el viento.",
             tag: "Confort",
-            image: "/images/EquipamientoParaTuEstadia/DSC_6412DSC_6412.jpeg",
+            image: "/images/interiors/CafeteraNespresso.jpg",
             size: "small"
         },
         {
             icon: "sparkles",
-            title: "Tú dedícate a no hacer nada",
+            title: "Tú dedícate a hacer nada!",
             description: "Olvídate de limpiar o barrer. Tienes un robot inteligente encargado de mantener todo impecable para que tú solo te preocupes de relajarte.",
             tag: "Tecnología",
             images: robotImages,
@@ -55,10 +55,11 @@ export default function DomoAmenities() {
         },
         {
             icon: "paw",
-            title: "Tráete a tu mejor amigo (Pet Friendly)",
+            title: "Trae a tu mejor amigo (Pet Friendly)",
             description: "Sabemos que es parte de la familia. Martin y Molly, nuestros anfitriones, los invitan a disfrutar del bosque juntos (solo te pedimos cumplir unas normas básicas y lógicas de convivencia para mantener la paz del lugar).",
             tag: "Familia",
-            image: "/images/EquipamientoParaTuEstadia/MartinMolly.JPG",
+            images: ["/images/MollyMartin.jpg", "/images/MartinMolly.JPG"],
+            imagePositions: ["object-[50%_30%]", "object-[60%_40%]"],
             size: "small"
         },
     ];
@@ -66,8 +67,8 @@ export default function DomoAmenities() {
     return (
         <section className="py-12 md:py-20 border-t border-black/[0.06]" id="servicios">
             <div className="container mx-auto px-6">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-                    <div className="max-w-2xl">
+                <div className="flex flex-col items-center text-center mb-16">
+                    <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-6">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
                             <span className="text-primary text-base font-black tracking-[0.2em] uppercase">No traigas nada, aquí lo tienes todo</span>
@@ -75,15 +76,9 @@ export default function DomoAmenities() {
                         <h2 className="h2-display leading-tight text-text-main">
                             Diseñado para tu <span className="text-primary italic-display">relajo total</span>
                         </h2>
-                        <p className="text-text-sub mt-6 text-lg md:text-xl font-bold max-w-xl">
+                        <p className="text-text-sub mt-6 text-lg md:text-xl font-bold">
                             Donde lo único que te va a faltar es tiempo para seguir descansando.
                         </p>
-                    </div>
-                    <div className="hidden md:block">
-                        <div className="flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase text-text-sub/40">
-                            <span>DESLIZA PARA VER MÁS</span>
-                            <div className="w-12 h-[2px] bg-primary/20"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -106,7 +101,7 @@ export default function DomoAmenities() {
                                                     src={img}
                                                     alt={`${item.title} ${imgIdx}`}
                                                     fill
-                                                    className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
+                                                    className={`object-cover ${item.imagePositions?.[imgIdx] || 'object-center'} transition-transform duration-[2s] group-hover:scale-110`}
                                                 />
                                             </div>
                                         ))}
@@ -131,7 +126,7 @@ export default function DomoAmenities() {
                                     {item.icon === "paw" && <span className="text-primary text-2xl">🐾</span>}
                                     {(item.icon === "outdoor_grill" || item.title === "Cena Privada") && <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
-                                    <h4 className="text-xl md:text-2xl font-display font-bold text-text-main leading-tight">{item.title}</h4>
+                                    <h4 className="h4-display text-text-main">{item.title}</h4>
                                 </div>
                                 <p className="text-sm md:text-base text-text-sub leading-relaxed font-bold">
                                     {item.description}

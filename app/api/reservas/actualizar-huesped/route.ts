@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: Request) {
     try {
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
 
         // 1. CRM Update (Supabase)
         let isVip = false;
+        let clienteId: string | null = null;
 
         try {
             const clientData = {
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
                 updated_at: new Date().toISOString()
             };
 
-            const { data: clientResult, error: clientError } = await supabase
+            const { data: clientResult, error: clientError } = await supabaseAdmin
                 .from("clientes")
                 .upsert(clientData, { onConflict: "email" })
                 .select("vip_tier, id")
@@ -35,24 +36,34 @@ export async function POST(req: Request) {
 
             if (clientError) {
                 console.warn("⚠️ CRM Warning:", clientError.message);
-            } else if (clientResult && clientResult.vip_tier && clientResult.vip_tier !== 'Standard') {
-                isVip = true;
-                console.log(`🌟 VIP Detectado: ${email}`);
+            } else if (clientResult) {
+                clienteId = clientResult.id;
+                if (clientResult.vip_tier && clientResult.vip_tier !== 'Standard') {
+                    isVip = true;
+                    console.log(`🌟 VIP Detectado: ${email}`);
+                }
             }
         } catch (crmErr) {
             console.error("⚠️ CRM Logic check failed:", crmErr);
         }
 
         // 2. Reserva Update y Fetch para Lead
-        const { data: reservaActualizada, error: updateError } = await supabase
+        const updateData: any = {
+            nombre,
+            apellido,
+            email,
+            is_vip_booking: isVip,
+            updated_at: new Date().toISOString(),
+        };
+
+        // Si tenemos un ID de cliente (del upsert anterior), lo relacionamos
+        if (clienteId) {
+            updateData.cliente_id = clienteId;
+        }
+
+        const { data: reservaActualizada, error: updateError } = await supabaseAdmin
             .from("reservas")
-            .update({
-                nombre,
-                apellido,
-                email,
-                is_vip_booking: isVip,
-                updated_at: new Date().toISOString(),
-            })
+            .update(updateData)
             .eq("id", reservaId)
             .select("id, domo_id, fecha_inicio, fecha_fin, total")
             .single();
@@ -67,7 +78,7 @@ export async function POST(req: Request) {
 
         // 3. Registrar Lead en leads_checkout
         if (reservaActualizada) {
-            const { error: leadError } = await supabase
+            const { error: leadError } = await supabaseAdmin
                 .from("leads_checkout")
                 .insert({
                     id: reservaActualizada.id, // Opcional, usar el mismo id de la reserva o dejar que gen_random_uuid lo cree. Mejor dejarlo genérico si el id es distinto, pero aquí ponemos email

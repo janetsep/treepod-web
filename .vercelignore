@@ -1,0 +1,5 @@
+*.zip
+.claude/worktrees
+scripts
+test-supa.ts
+proxy.ts

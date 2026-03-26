@@ -39,7 +39,7 @@ const SEASONS = [
         title: "Renacimiento",
         description: "El deshielo y el despertar de la fauna local. Vive la energía de la montaña en el centro estratégico de Las Trancas.",
         perk: "Proximidad a senderos de trekking",
-        image: "/images/Galeria/Las Trancas Camino entorno.jpeg",
+        image: "/images/Galeria/Las Trancas Bosque Nativo 3.jpeg",
     }
 ];
 
@@ -103,7 +103,7 @@ export default function SeasonalSelector() {
                                 src={activeSeason.image}
                                 alt={activeSeason.title}
                                 fill
-                                className="object-cover object-center transition-transform duration-[5s] hover:scale-105"
+                                className="object-cover object-[center_30%] transition-transform duration-[5s] hover:scale-105"
                                 sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70"></div>

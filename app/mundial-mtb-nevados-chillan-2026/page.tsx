@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Alojamiento Mundial MTB 2026 | Domos TreePod',
         description: 'Domos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán.',
-        images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
+        images: ['/images/Ciclista en sendero de bosque.png'],
     }
 };
 
@@ -29,14 +29,14 @@ export default function MundialMtbPage() {
             <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
-                        src="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
-                        alt="Domo alojamiento Mundial MTB"
+                        src="/images/Ciclista en sendero de bosque.png"
+                        alt="Ciclista en sendero de bosque - Mundial MTB 2026"
                         fill
                         priority
                         className="object-cover object-center"
                         sizes="100vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/60 z-10"></div>
                 </div>
 
                 <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
@@ -60,6 +60,8 @@ export default function MundialMtbPage() {
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-03-26&salida=2026-03-29&adultos=4&event=mundial"
                             eventName="click_reservar_mundial"
+                            secondEventName="begin_checkout_mundial"
+                            secondParams={{ event: "mundial_mtb_2026" }}
                             className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
                             <span className="text-xl md:text-2xl">BLOQUEA TU DOMO AHORA</span>
@@ -202,6 +204,8 @@ export default function MundialMtbPage() {
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-03-26&salida=2026-03-29&adultos=4&event=mundial"
                             eventName="click_reservar_mundial_final"
+                            secondEventName="begin_checkout_mundial"
+                            secondParams={{ event: "mundial_mtb_2026" }}
                             className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
                         >
                             <span className="text-lg md:text-xl">ASEGURA TU CUPO AHORA</span>

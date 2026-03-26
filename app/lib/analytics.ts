@@ -29,7 +29,15 @@ export type AnalyticsEventName =
   | "click_reservar_semana_santa_final"
   | "click_whatsapp_semana_santa"
   | "begin_checkout_semana_santa"
-  | "click_reservar_mundial_final";
+  | "click_reservar_mundial_final"
+  | "view_contacto"
+  | "view_servicios"
+  | "view_guia_huesped"
+  | "view_pricing_result"
+  | "select_payment_method"
+  | "click_whatsapp_contacto"
+  | "click_whatsapp_servicios"
+  | "click_whatsapp_guia";
 
 declare global {
   interface Window {
