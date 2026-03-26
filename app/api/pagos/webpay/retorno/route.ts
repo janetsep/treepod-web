@@ -153,7 +153,6 @@ async function handleReturn(req: Request) {
       .from("reservas")
       .update({
         estado: isApproved ? "pagado" : "rechazado",
-        pagado: isApproved ? 1 : 0,
         monto_pagado: isApproved ? commit.amount ?? null : 0,
         numero_transaccion: isApproved ? token : null,
         updated_at: new Date().toISOString(),
