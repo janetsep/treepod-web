@@ -218,6 +218,7 @@ export async function POST(req: Request) {
         metodo_pago_inicial: "webpay",
         payment_intent_id: response.token,
         estado: 'pendiente_pago',
+        monto_pagado: monto,
         updated_at: new Date().toISOString()
       })
       .eq("id", reservaId);
