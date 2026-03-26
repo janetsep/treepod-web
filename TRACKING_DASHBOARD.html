@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreePod - Sistema de Tracking Meta Ads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .flow-step { animation: slideIn 0.6s ease-out forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="min-h-screen py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-5xl font-bold mb-4">🎯 Sistema de Tracking Meta Ads</h1>
+                <p class="text-xl text-gray-400">TreePod - Implementación Completa del Feedback Loop</p>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+                <div class="bg-green-900/20 border border-green-500 rounded-lg p-4 text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">Meta Pixel</p>
+                    <p class="text-sm text-green-300">Instalado</p>
+                </div>
+                <div class="bg-green-900/20 border border-green-500 rounded-lg p-4 text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">Meta CAPI</p>
+                    <p class="text-sm text-green-300">Configurado</p>
+                </div>
+                <div class="bg-green-900/20 border border-green-500 rounded-lg p-4 text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">Conversiones DB</p>
+                    <p class="text-sm text-green-300">Activo</p>
+                </div>
+                <div class="bg-yellow-900/20 border border-yellow-500 rounded-lg p-4 text-center">
+                    <div class="text-3xl mb-2">⚠️</div>
+                    <p class="font-semibold">GA4 Server</p>
+                    <p class="text-sm text-yellow-300">Opcional</p>
+                </div>
+            </div>
+
+            <!-- Main Flow Diagram -->
+            <div class="bg-gray-800 rounded-xl p-8 mb-12">
+                <h2 class="text-2xl font-bold mb-8 text-center">Flujo Completo del Tracking</h2>
+
+                <div class="space-y-4">
+                    <!-- Step 1 -->
+                    <div class="flow-step" style="animation-delay: 0s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">1</div>
+                            <div class="bg-blue-900/30 border border-blue-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">👥 Usuario ve Meta Ads</h3>
+                                <p class="text-gray-400 text-sm">Meta Ads Campaign gastó $119,632 CLP</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flow-step" style="animation-delay: 0.1s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">2</div>
+                            <div class="bg-blue-900/30 border border-blue-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">🔗 Click en anuncio</h3>
+                                <p class="text-gray-400 text-sm">Meta Pixel cargado en layout.tsx - fbq('track', 'PageView')</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flow-step" style="animation-delay: 0.2s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">3</div>
+                            <div class="bg-blue-900/30 border border-blue-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">💳 Usuario paga en Webpay</h3>
+                                <p class="text-gray-400 text-sm">Pago completado - $100,000 CLP por ejemplo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 - SERVER SIDE -->
+                    <div class="flow-step" style="animation-delay: 0.3s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-purple-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">4️⃣</div>
+                            <div class="bg-purple-900/30 border border-purple-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">⚙️ SERVIDOR - Meta CAPI</h3>
+                                <p class="text-gray-400 text-sm">trackMetaConversion() → Envía a Meta desde Node.js</p>
+                                <p class="text-purple-300 text-xs mt-2">Archivo: /lib/meta-capi.ts</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 - SERVER SIDE -->
+                    <div class="flow-step" style="animation-delay: 0.4s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-purple-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">5️⃣</div>
+                            <div class="bg-purple-900/30 border border-purple-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">⚙️ SERVIDOR - Supabase</h3>
+                                <p class="text-gray-400 text-sm">recordConversion() → Registra en tabla "conversiones"</p>
+                                <p class="text-purple-300 text-xs mt-2">Archivo: /lib/track-conversion.ts</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6 - CLIENT SIDE -->
+                    <div class="flow-step" style="animation-delay: 0.5s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-green-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">6️⃣</div>
+                            <div class="bg-green-900/30 border border-green-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">🌐 CLIENTE - Meta Pixel</h3>
+                                <p class="text-gray-400 text-sm">fbq('track', 'Purchase') en /confirmacion/page.tsx</p>
+                                <p class="text-green-300 text-xs mt-2">Verifica en Browser Console</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 7 - CLIENT SIDE -->
+                    <div class="flow-step" style="animation-delay: 0.6s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-green-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">7️⃣</div>
+                            <div class="bg-green-900/30 border border-green-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">🌐 CLIENTE - GTM/GA4</h3>
+                                <p class="text-gray-400 text-sm">dataLayer.push() en confirmacion/page.tsx</p>
+                                <p class="text-green-300 text-xs mt-2">Envía a Google Analytics 4</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Result -->
+                    <div class="flow-step" style="animation-delay: 0.7s;">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-yellow-600 rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">✅</div>
+                            <div class="bg-yellow-900/30 border border-yellow-500 rounded-lg p-4 flex-1">
+                                <h3 class="font-semibold text-lg">🎯 META RECIBE CONVERSIÓN</h3>
+                                <p class="text-yellow-300">Meta Ads ahora SABE que tu campaña generó $100k en reservas</p>
+                                <p class="text-yellow-300">Meta puede OPTIMIZAR futuras campañas ✨</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files Modified -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">📝 Archivos Modificados</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-400">✓</span>
+                            <span><strong>/app/layout.tsx</strong><br/><span class="text-gray-400">Meta Pixel script init</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-400">✓</span>
+                            <span><strong>/app/confirmacion/page.tsx</strong><br/><span class="text-gray-400">fbq('track', 'Purchase')</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-400">✓</span>
+                            <span><strong>/app/api/pagos/webpay/retorno/route.ts</strong><br/><span class="text-gray-400">Meta CAPI + Supabase calls</span></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">📦 Nuevos Archivos</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400">+</span>
+                            <span><strong>/lib/meta-capi.ts</strong><br/><span class="text-gray-400">Meta Conversions API</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400">+</span>
+                            <span><strong>/lib/track-conversion.ts</strong><br/><span class="text-gray-400">Supabase conversiones table</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400">+</span>
+                            <span><strong>Migración Supabase</strong><br/><span class="text-gray-400">Campos para tracking completo</span></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Environment Variables -->
+            <div class="bg-gray-800 rounded-xl p-6 mb-12">
+                <h3 class="text-xl font-bold mb-4">🔐 Variables Configuradas (Ya en .env.local)</h3>
+                <div class="bg-gray-900 rounded p-4 font-mono text-sm space-y-2">
+                    <div class="text-green-400">✓ NEXT_PUBLIC_GTM_ID=GTM-KFDWNCT</div>
+                    <div class="text-green-400">✓ NEXT_PUBLIC_PIXEL_ID=285422125138908​5</div>
+                    <div class="text-green-400">✓ NEXT_PUBLIC_CONVERSIONS_API_TOKEN=FAAkSFFa...</div>
+                    <div class="text-green-400">✓ NEXT_PUBLIC_GA_MEASUREMENT_ID=G-B4F27BE1X6</div>
+                    <div class="text-yellow-400">⚠️ GA4_MP_API_SECRET=??? (OPCIONAL)</div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-xl p-8">
+                <h2 class="text-2xl font-bold mb-6">🚀 Próximos Pasos</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">✅ INMEDIATO</h3>
+                        <ul class="space-y-2 text-sm text-gray-200">
+                            <li>• Hacer deploy a producción</li>
+                            <li>• Hacer una reserva de prueba</li>
+                            <li>• Verificar en Meta Ads Manager</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">📊 MONITOREO</h3>
+                        <ul class="space-y-2 text-sm text-gray-200">
+                            <li>• Verificar Supabase conversiones table</li>
+                            <li>• Browser Console → fbq eventos</li>
+                            <li>• Meta Ads Manager → Conversiones entrando</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
