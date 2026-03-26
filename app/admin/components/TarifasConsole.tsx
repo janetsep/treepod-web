@@ -401,13 +401,13 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                         </div>
 
                                         <div className="relative">
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-primary font-black text-sm">$</span>
+                                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xs">$</span>
                                             <input
                                                 type="number"
                                                 readOnly={isViewer}
                                                 defaultValue={tarifa.precio_noche}
                                                 onBlur={(e) => !isViewer && handleUpdatePrice(tarifa.id, Number(e.target.value))}
-                                                className={`w-full pl-8 pr-3 py-4 border-transparent border-2 rounded-2xl text-base font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
+                                                className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
                                             />
                                             {saving === tarifa.id && (
                                                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
