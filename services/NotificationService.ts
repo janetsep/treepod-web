@@ -101,8 +101,11 @@ export const NotificationService = {
                         <span style="color: rgba(255,255,255,0.4);">|</span>
                         <a href="https://domostreepod.cl" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Web</a>
                     </p>
-                    <p style="font-size: 11px; color: rgba(255,255,255,0.8); margin: 0 0 4px 0;">Glamping Domos TreePod · Valle Las Trancas, Km 72 · Pinto, Chile</p>
-                    <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 0;">SERNATUR N° 36806</p>
+                    <p style="font-size: 11px; color: rgba(255,255,255,0.8); margin: 0 0 8px 0;">Glamping Domos TreePod · Valle Las Trancas, Km 72 · Pinto, Chile</p>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <img src="https://domostreepod.cl/images/branding/sello-sernatur-sin-fecha.png" alt="Sello SERNATUR" style="width: 50px; height: auto; margin-bottom: 6px;" />
+                        <p style="font-size: 10px; color: rgba(255,255,255,0.7); margin: 0;">Registro SERNATUR N° 36806</p>
+                    </div>
                 </div>
             </div>
         `
