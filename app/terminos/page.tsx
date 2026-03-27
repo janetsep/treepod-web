@@ -36,8 +36,8 @@ export default function TerminosPage() {
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">3. Horarios y Estadía</h2>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
-                        <li><strong>Check-in:</strong> Desde las 15:00 hrs. de la fecha de llegada. Por favor avisa si estimas llegar más tarde para coordinar acceso.</li>
-                        <li><strong>Check-out:</strong> Hasta las 11:00 hrs. de la fecha de salida. El recargo por "Late Check-out" sin autorización previa tendrá cobro adicional.</li>
+                        <li><strong>Check-in:</strong> A partir de las 16:00 hrs. de la fecha de llegada. Por favor avisa si estimas llegar más tarde para coordinar acceso.</li>
+                        <li><strong>Check-out:</strong> Hasta las 12:00 hrs. de la fecha de salida. El recargo por "Late Check-out" sin autorización previa tendrá cobro adicional.</li>
                     </ul>
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">4. Respeto por el Espacio y Convivencia</h2>
@@ -63,6 +63,7 @@ export default function TerminosPage() {
                         <li><strong>Criterios de Aceptación:</strong> Se permite el ingreso de mascotas previa consulta al momento de la reserva. Nos reservamos el derecho de ingreso según raza, tamaño o comportamiento previo informado.</li>
                         <li><strong>Responsabilidad del Dueño:</strong> El huésped es responsable absoluto de la conducta, limpieza y posibles daños que la mascota pueda causar tanto en el interior del domo como en las áreas comunes y bosque nativo.</li>
                         <li><strong>Convivencia:</strong> Las mascotas no deben alterar la tranquilidad de otros huéspedes ni afectar la fauna silvestre local.</li>
+                        <li><strong>Supervisión permanente:</strong> Las mascotas no pueden quedarse solas al interior del domo bajo ninguna circunstancia, ni permanecer sueltas en el predio sin la supervisión directa de su dueño.</li>
                     </ul>
 
                     <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 mt-6 font-bold text-text-main">

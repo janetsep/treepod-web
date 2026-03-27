@@ -7,7 +7,7 @@ export const NotificationService = {
   /**
    * Envía correo de bienvenida al huésped
    */
-  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string, guestsCount?: number, extras?: string[]) {
+  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string, guestsCount?: number, extras?: string[], amountPaid?: number, totalAmount?: number) {
     if (!to || !to.includes('@')) {
       console.warn('❌ Email inválido para notificación:', to);
       return;
@@ -22,54 +22,87 @@ export const NotificationService = {
       recipient = testEmail;
     }
 
+    const pendingAmount = totalAmount && amountPaid ? totalAmount - amountPaid : 0;
+    const formatCLP = (n: number) => n.toLocaleString('es-CL');
+
     try {
-      // 1. Correo al Huésped - Usando el dominio de onboarding de Resend para pruebas
       await resend.emails.send({
-        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [recipient],
-        subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera.`,
+        subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera`,
         html: `
-            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; background: #ffffff;">
                 ${testEmail ? `<p style="background: #ffecb3; padding: 10px; border-radius: 5px;">🚧 <strong>MODO TEST</strong><br>Este correo iba dirigido a: ${to}</p>` : ''}
-                
-                <div style="text-align: center; margin-bottom: 30px; padding-top: 20px;">
-                    <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="Logo TreePod" style="width: 140px; height: auto; margin-bottom: 20px;" />
-                    <h1 style="color: #00ADEF; margin-bottom: 5px; font-size: 20px; text-transform: uppercase;">Bienvenidos a Glamping Domos TreePod</h1>
-                    <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 11px; color: #666; margin: 0; font-weight: bold;">REFUGIO DE MONTAÑA</p>
+
+                <div style="padding: 32px 20px 16px; text-align: center;">
+                    <img src="https://domostreepod.cl/images/branding/logo-treepod.jpg" alt="Logo TreePod" style="width: 120px; height: auto;" />
                 </div>
 
-                <div style="padding: 0 20px;">
-                    <p>Hola <strong>${guestName}</strong>,</p>
-                    <p>Estamos contentos de confirmar su estadía en nuestro glamping. Prepararemos todo para que su experiencia sea de un encuentro real con la naturaleza.</p>
-                    
-                    <div style="background-color: #f9f9f9; padding: 25px; border-radius: 12px; margin: 30px 0; border: 1px solid #eee;">
-                        <h4 style="margin: 0 0 15px 0; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Datos de la reserva</h4>
-                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Código de Reserva:</strong> #${shortId?.toUpperCase() || 'S/N'}</p>
-                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Fechas:</strong> ${bookingDates}</p>
-                        <p style="margin: 0 0 10px 0; font-size: 15px;"><strong>Huéspedes:</strong> ${guestsCount || 1} ${guestsCount === 1 ? 'persona' : 'personas'}</p>
-                        ${extras && extras.length > 0 ? `
-                        <p style="margin: 10px 0 0 0; font-size: 15px;"><strong>Servicios Adicionales:</strong></p>
-                        <ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 14px; color: #555;">
-                            ${extras.map(ex => `<li>${ex}</li>`).join('')}
-                        </ul>
-                        ` : ''}
-                        <p style="margin: 15px 0 0 0; font-size: 15px;"><strong>Ubicación:</strong> Valle Las Trancas, Km 72</p>
+                <div style="background: #00ADEF; padding: 24px 20px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0 0 4px 0; font-size: 22px; font-weight: 600;">Reserva Confirmada</h1>
+                    <p style="color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 3px; font-size: 11px; margin: 0; font-weight: 600;">Glamping Domos TreePod</p>
+                </div>
+
+                <div style="padding: 32px 24px;">
+                    <p style="font-size: 16px; line-height: 1.6;">Hola <strong>${guestName}</strong>,</p>
+                    <p style="font-size: 15px; line-height: 1.6; color: #555;">Estamos contentos de confirmar su estadía en nuestro glamping. Prepararemos todo para que su experiencia sea de un encuentro real con la naturaleza.</p>
+
+                    <div style="background: #f5f5f5; padding: 24px; border-radius: 12px; margin: 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 16px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Datos de la reserva</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 8px 0; color: #64748b; width: 45%;">Código</td><td style="padding: 8px 0; font-weight: 700; color: #00ADEF; font-family: monospace; font-size: 16px;">#${shortId?.toUpperCase() || 'S/N'}</td></tr>
+                            <tr><td style="padding: 8px 0; color: #64748b;">Fechas</td><td style="padding: 8px 0; font-weight: 600;">${bookingDates}</td></tr>
+                            <tr><td style="padding: 8px 0; color: #64748b;">Huéspedes</td><td style="padding: 8px 0; font-weight: 600;">${guestsCount || 1} ${guestsCount === 1 ? 'persona' : 'personas'}</td></tr>
+                            ${extras && extras.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748b; vertical-align: top;">Extras</td><td style="padding: 8px 0; font-weight: 600;">${extras.join(', ')}</td></tr>` : ''}
+                            <tr><td style="padding: 8px 0; color: #64748b;">Ubicación</td><td style="padding: 8px 0; font-weight: 600;">Valle Las Trancas, Km 72</td></tr>
+                        </table>
                     </div>
 
-                    <h3 style="font-size: 18px; margin-bottom: 10px;">Cómo llegar</h3>
-                    <p style="line-height: 1.6; color: #555;">Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
-                    <div style="text-align: center; margin: 30px 0;">
-                        <a href="${googleMapsLink}" style="color: #fff; background-color: #1a1a1a; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 15px;">Ver Ubicación en Maps</a>
+                    ${totalAmount ? `
+                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Detalle de pago</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 6px 0; color: #64748b;">Total reserva</td><td style="padding: 6px 0; font-weight: 700; color: #1a1a1a; text-align: right;">$${formatCLP(totalAmount)}</td></tr>
+                            <tr><td style="padding: 6px 0; color: #64748b;">Abono pagado (50%)</td><td style="padding: 6px 0; font-weight: 700; color: #00ADEF; text-align: right;">$${formatCLP(amountPaid || 0)}</td></tr>
+                            ${pendingAmount > 0 ? `<tr><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; color: #64748b;">Saldo pendiente</td><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; font-weight: 700; text-align: right; color: #1a1a1a;">$${formatCLP(pendingAmount)}</td></tr>` : ''}
+                        </table>
+                        ${pendingAmount > 0 ? `<p style="font-size: 12px; color: #64748b; margin: 12px 0 0 0;">* El saldo pendiente se paga al momento del check-in.</p>` : ''}
                     </div>
-                    
-                    <p style="font-size: 14px; color: #777; line-height: 1.6;">
-                        * El enlace de Google Maps funciona en todos los dispositivos con conexión a internet y te guiará paso a paso hasta nuestra entrada.
+                    ` : ''}
+
+                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Horarios</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 6px 0; color: #64748b; width: 45%;">Check-in</td><td style="padding: 6px 0; font-weight: 600;">A partir de las 16:00 hrs</td></tr>
+                            <tr><td style="padding: 6px 0; color: #64748b;">Check-out</td><td style="padding: 6px 0; font-weight: 600;">Hasta las 12:00 hrs</td></tr>
+                        </table>
+                        <p style="font-size: 12px; color: #64748b; margin: 10px 0 0 0;">
+                            Revisa nuestras <a href="https://domostreepod.cl/terminos" style="color: #00ADEF; text-decoration: underline;">políticas de cancelación y condiciones</a>.
+                        </p>
+                    </div>
+
+                    <h3 style="font-size: 17px; margin: 0 0 8px 0; color: #1e293b;">Cómo llegar</h3>
+                    <p style="line-height: 1.6; color: #555; font-size: 14px; margin: 0 0 20px 0;">Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
+                    <div style="text-align: center; margin: 0 0 28px 0;">
+                        <a href="${googleMapsLink}" style="color: #fff; background-color: #00ADEF; padding: 14px 32px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 14px;">Ver Ubicación en Maps</a>
+                    </div>
+
+                    <div style="text-align: center; margin: 28px 0 0 0;">
+                        <p style="font-size: 14px; color: #555; margin: 0 0 16px 0;">¿Tienes preguntas? Escríbenos por WhatsApp:</p>
+                        <a href="https://wa.me/56984643307" style="color: #fff; background-color: #25D366; padding: 12px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 14px;">WhatsApp +56 9 8464 3307</a>
+                    </div>
+                </div>
+
+                <div style="background: #00ADEF; padding: 28px 24px; text-align: center; border-radius: 0 0 12px 12px;">
+                    <p style="margin: 0 0 16px 0;">
+                        <a href="https://instagram.com/domostreepod" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Instagram</a>
+                        <span style="color: rgba(255,255,255,0.4);">|</span>
+                        <a href="https://facebook.com/domostreepod" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Facebook</a>
+                        <span style="color: rgba(255,255,255,0.4);">|</span>
+                        <a href="https://domostreepod.cl" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Web</a>
                     </p>
-
-                    <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;" />
-                    <div style="text-align: center;">
-                        <p style="font-size: 13px; color: #888;">Si tienes alguna emergencia en ruta, contáctanos al WhatsApp de recepción.<br/>¡Nos vemos pronto en la montaña!</p>
-                    </div>
+                    <p style="font-size: 11px; color: rgba(255,255,255,0.8); margin: 0 0 4px 0;">Glamping Domos TreePod · Valle Las Trancas, Km 72 · Pinto, Chile</p>
+                    <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 0;">SERNATUR N° 36806</p>
                 </div>
             </div>
         `
@@ -78,23 +111,31 @@ export const NotificationService = {
       // 2. Correo de Alerta al Administrador
       const adminEmail = 'janetsep@gmail.com';
       await resend.emails.send({
-        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `NUEVA RESERVA WEB - ${guestName}`,
         html: `
-          <div style="font-family: sans-serif; color: #333; max-width: 600px;">
-            <div style="text-align: center; padding: 20px 0 10px 0;">
-              <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto;" />
+          <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, #00ADEF 0%, #008CBF 100%); padding: 24px 20px; text-align: center; border-radius: 12px 12px 0 0;">
+              <img src="https://domostreepod.cl/images/branding/logo-white.png" alt="TreePod" style="width: 100px; height: auto; margin-bottom: 12px;" />
+              <h2 style="color: #ffffff; margin: 0; font-size: 18px;">Nueva Reserva via Webpay</h2>
             </div>
-            <h2 style="color: #00ADEF;">Nueva Reserva Confirmada via Webpay</h2>
-            ${shortId ? `<p><strong>Código:</strong> <span style="font-size: 1.2em; font-weight: bold; color: #00ADEF;">#${shortId.toUpperCase()}</span></p>` : ''}
-            <p><strong>Huésped:</strong> ${guestName} (${to})</p>
-            <p><strong>Fechas:</strong> ${bookingDates}</p>
-            <p><strong>Personas:</strong> ${guestsCount || 1} ${(guestsCount || 1) === 1 ? 'persona' : 'personas'}</p>
-            ${extras && extras.length > 0 ? `<p><strong>Extras contratados:</strong> ${extras.join(', ')}</p>` : ''}
-            <p><strong>Estado:</strong> Pago confirmado vía Webpay</p>
-            <hr />
-            <p><a href="https://domostreepod.cl/admin" style="color: #00ADEF;">Ir al Panel de Administración</a></p>
+            <div style="padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+              ${shortId ? `<div style="background: #f0f9ff; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center;"><span style="font-size: 12px; color: #64748b;">CÓDIGO</span><br/><span style="font-size: 22px; font-weight: bold; color: #00ADEF; font-family: monospace;">#${shortId.toUpperCase()}</span></div>` : ''}
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                <tr><td style="padding: 8px 0; color: #64748b; width: 40%;">Huésped</td><td style="padding: 8px 0; font-weight: 600;">${guestName}</td></tr>
+                <tr><td style="padding: 8px 0; color: #64748b;">Email</td><td style="padding: 8px 0;">${to}</td></tr>
+                <tr><td style="padding: 8px 0; color: #64748b;">Fechas</td><td style="padding: 8px 0; font-weight: 600;">${bookingDates}</td></tr>
+                <tr><td style="padding: 8px 0; color: #64748b;">Personas</td><td style="padding: 8px 0;">${guestsCount || 1}</td></tr>
+                ${extras && extras.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748b;">Extras</td><td style="padding: 8px 0;">${extras.join(', ')}</td></tr>` : ''}
+                ${totalAmount ? `<tr><td style="padding: 8px 0; color: #64748b;">Total</td><td style="padding: 8px 0; font-weight: 600;">$${formatCLP(totalAmount)}</td></tr>` : ''}
+                ${amountPaid ? `<tr><td style="padding: 8px 0; color: #16a34a;">Pagado</td><td style="padding: 8px 0; font-weight: 700; color: #16a34a;">$${formatCLP(amountPaid)}</td></tr>` : ''}
+                ${pendingAmount > 0 ? `<tr><td style="padding: 8px 0; color: #ea580c;">Saldo pendiente</td><td style="padding: 8px 0; font-weight: 700; color: #ea580c;">$${formatCLP(pendingAmount)}</td></tr>` : ''}
+              </table>
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="https://domostreepod.cl/admin" style="background: #00ADEF; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 14px;">Ver en Panel Admin</a>
+              </div>
+            </div>
           </div>
         `
       });
@@ -113,7 +154,7 @@ export const NotificationService = {
 
     try {
       await resend.emails.send({
-        from: 'Glamping Domos TreePod <onboarding@resend.dev>',
+        from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `Nuevo Contacto: ${data.subject} - ${data.name}`,
         html: `
@@ -158,7 +199,7 @@ export const NotificationService = {
 
     try {
       await resend.emails.send({
-        from: 'TreePod <onboarding@resend.dev>',
+        from: 'TreePod <info@domostreepod.cl>',
         to: [recipient],
         subject: 'Tu Guía de Retiro en la Montaña + Regalo Especial',
         html: `
@@ -271,14 +312,14 @@ export const NotificationService = {
     try {
       // Email al admin con ICS
       await resend.emails.send({
-        from: 'TreePod Admin <onboarding@resend.dev>',
+        from: 'TreePod Admin <info@domostreepod.cl>',
         to: [adminTo],
         subject: `Nueva Reserva Manual: ${data.guestName} - ${data.domoNombre}`,
         attachments: [{ filename: `reserva-${shortId}.ics`, content: icsBase64 }],
         html: `
           <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
             <div style="text-align: center; padding: 24px 20px 16px;">
-              <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 16px;" />
+              <img src="https://domostreepod.cl/images/branding/logo-white.png" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 16px;" />
             </div>
             <div style="background: #00ADEF; padding: 24px 20px; text-align: center; border-radius: 12px 12px 0 0;">
               <h1 style="color: white; margin: 0; font-size: 22px;">Nueva Reserva Creada</h1>
@@ -316,13 +357,13 @@ export const NotificationService = {
       // Email al huésped (si tiene email y se pidió enviarlo)
       if (data.sendGuestEmail && data.guestEmail && data.guestEmail.includes('@')) {
         await resend.emails.send({
-          from: 'Glamping Domos TreePod <onboarding@resend.dev>',
+          from: 'Glamping Domos TreePod <info@domostreepod.cl>',
           to: [data.guestEmail],
           subject: `¡Tu reserva en TreePod está confirmada! #${shortId}`,
           html: `
             <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
               <div style="text-align: center; padding: 30px 20px;">
-                <img src="https://domostreepod.cl/images/branding/logo-cyan.jpg" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 20px;" />
+                <img src="https://domostreepod.cl/images/branding/logo-white.png" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 20px;" />
                 <h1 style="color: #00ADEF; font-size: 20px; margin: 0;">¡Reserva Confirmada!</h1>
                 <p style="color: #666; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;">Glamping Domos TreePod · Valle Las Trancas</p>
               </div>
@@ -367,7 +408,7 @@ export const NotificationService = {
     const adminEmail = 'janetsep@gmail.com';
     try {
       await resend.emails.send({
-        from: 'TreePod Security <onboarding@resend.dev>',
+        from: 'TreePod Security <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `ALERTA DE SEGURIDAD: ${type}`,
         html: `

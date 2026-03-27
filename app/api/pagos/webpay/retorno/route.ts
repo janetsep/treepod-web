@@ -262,10 +262,12 @@ async function handleReturn(req: Request) {
           reserva.email,
           guestName,
           dateRange,
-          "https://maps.app.goo.gl/uX3f7N8CqU7XN2Xv9",
+          "https://www.google.com/maps/search/?api=1&query=-36.9116,-71.5069",
           reserva.id.slice(-5),
           reserva.adultos,
-          extrasNames
+          extrasNames,
+          commit.amount || 0,
+          reserva.total
         );
 
       } catch (error) {
