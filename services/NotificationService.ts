@@ -93,7 +93,7 @@ export const NotificationService = {
                     </div>
                 </div>
 
-                <div style="background: #00ADEF; padding: 28px 24px; text-align: center; border-radius: 0 0 12px 12px;">
+                <div style="background: #00ADEF; padding: 28px 24px; text-align: center;">
                     <p style="margin: 0 0 16px 0;">
                         <a href="https://instagram.com/domostreepod" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Instagram</a>
                         <span style="color: rgba(255,255,255,0.4);">|</span>
@@ -102,10 +102,10 @@ export const NotificationService = {
                         <a href="https://domostreepod.cl" style="text-decoration: none; margin: 0 8px; color: #ffffff; font-size: 13px;">Web</a>
                     </p>
                     <p style="font-size: 11px; color: rgba(255,255,255,0.8); margin: 0 0 8px 0;">Glamping Domos TreePod · Valle Las Trancas, Km 72 · Pinto, Chile</p>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
-                        <img src="https://domostreepod.cl/images/branding/sello-sernatur-sin-fecha.png" alt="Sello SERNATUR" style="width: 50px; height: auto; margin-bottom: 6px;" />
-                        <p style="font-size: 10px; color: rgba(255,255,255,0.7); margin: 0;">Registro SERNATUR N° 36806</p>
-                    </div>
+                </div>
+                <div style="background: #ffffff; padding: 20px 24px; text-align: center; border-radius: 0 0 12px 12px;">
+                    <img src="https://domostreepod.cl/images/branding/sello-sernatur-sin-fecha.png" alt="Sello SERNATUR" style="width: 80px; height: auto; margin-bottom: 8px;" />
+                    <p style="font-size: 12px; color: #333333; margin: 0; font-weight: 600;">Registro SERNATUR N° 36806</p>
                 </div>
             </div>
         `
