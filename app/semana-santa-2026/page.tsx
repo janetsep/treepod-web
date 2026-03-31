@@ -277,13 +277,15 @@ export default function SemanaSantaPage() {
                             Semana Santa siempre colapsa en el Valle
                         </h2>
 
-                        <p className="text-lg md:text-xl text-white/80 font-bold mb-6 leading-relaxed max-w-2xl mx-auto">
+                        <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
                             Este es el fin de semana más buscado del año y tenemos una disponibilidad muy limitada. Si lo dejas para después, te quedarás atrapado en la ciudad o pagando de más por lugares repletos de gente.
                         </p>
 
-                        <p className="text-primary text-xl font-black mb-10 italic">
-                            (Estadía exclusiva de mínimo 3 noches: 02 al 05 de abril)
-                        </p>
+                        <div className="text-center mb-10">
+                            <p className="text-primary text-xl font-black italic mx-auto">
+                                (Estadía exclusiva de mínimo 3 noches: 02 al 05 de abril)
+                            </p>
+                        </div>
 
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
