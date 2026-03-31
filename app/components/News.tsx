@@ -4,14 +4,6 @@ import Image from "next/image";
 export default function News() {
     const activities = [
         {
-            image: "/images/Ciclista en sendero de bosque.png",
-            title: "Mundial UCI MTB 2026",
-            description: "Alojamiento exclusivo para competidores y equipos durante el UCI Mountain Bike World Championships.",
-            tag: "Evento Mundial",
-            details: "⭐ Ver Pack Especial Domos y Recuperación",
-            href: "/mundial-mtb-nevados-chillan-2026"
-        },
-        {
             image: "/images/Semana Santa en el bosque.png",
             title: "Semana Santa 2026",
             description: "Vive un fin de semana sagrado de descanso real. Tinajas de ciprés exclusivas bajo el cielo estrellado y la calma absoluta del bosque.",
@@ -53,7 +45,7 @@ export default function News() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {activities.map((item, index) => {
                         const CardContent = (
                             <div className="group bg-surface rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col h-full border border-black/5 ring-1 ring-black/5 relative hover:-translate-y-2">
