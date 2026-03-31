@@ -240,8 +240,15 @@ export default function SemanaSantaPage() {
                     </div>
 
                     {/* Widget de Elfsight Reviews - Igual que página principal */}
-                    <div className="w-full relative min-h-[500px]">
-                        <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab"></div>
+                    <div className="w-full relative min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
+                        <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
+                        {/* Loading placeholder */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="flex flex-col items-center gap-3 opacity-50">
+                                <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                                <span className="text-sm font-bold text-text-sub">Cargando reseñas...</span>
+                            </div>
+                        </div>
                     </div>
 
                     <Script
