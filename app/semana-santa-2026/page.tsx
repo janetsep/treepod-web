@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { ArrowRight, Mountain, Waves, Coffee, Info, Check, Sparkles, Heart } from 'lucide-react';
+import Script from 'next/script';
+import { ArrowRight, Mountain, Waves, Coffee, Info, Check } from 'lucide-react';
 import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
@@ -238,76 +239,16 @@ export default function SemanaSantaPage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
-                        {/* Reseña 1 - Lidia M. */}
-                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
-                            <div className="flex items-center gap-2 mb-4">
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
-                                        ⭐
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
-                                "Estos domos son la definición exacta de descanso, naturales, y comodidad, un paisaje precioso y una tranquilidad única! La atención de don Jaime fue maravillosa!"
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                                    <Heart className="w-6 h-6 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-black text-text-main">Lidia M.</p>
-                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Reseña 2 - Matías A. */}
-                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
-                            <div className="flex items-center gap-2 mb-4">
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
-                                        ⭐
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
-                                "Llegamos y el domo estaba calentito, se encuentra muy equipado, todo muy limpio. Se agradece la buena onda del encargado. MAGNÍFICO."
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                                    <Sparkles className="w-6 h-6 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-black text-text-main">Matías A.</p>
-                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Reseña 3 - María Angélica */}
-                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
-                            <div className="flex items-center gap-2 mb-4">
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
-                                        ⭐
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
-                                "La acogida, calidad de la atención y la comodidad en los Domos Treepod permitieron que disfrutáramos cada minuto de nuestro tiempo. Excelente experiencia."
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                                    <Mountain className="w-6 h-6 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-black text-text-main">María Angélica</p>
-                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Widget de Elfsight Reviews - Igual que página principal */}
+                    <div className="w-full relative min-h-[500px]">
+                        <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab"></div>
                     </div>
+
+                    <Script
+                        src="https://elfsightcdn.com/platform.js"
+                        strategy="afterInteractive"
+                        defer
+                    />
 
                     <div className="text-center mt-16">
                         <TrackedLink
