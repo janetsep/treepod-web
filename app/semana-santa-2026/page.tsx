@@ -56,7 +56,7 @@ export default function SemanaSantaPage() {
                                 Desde $110.000 por noche
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Estadía mínima 3 noches · Abril 2026
+                                Abril 2026
                             </span>
                         </div>
                     </div>
