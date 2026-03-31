@@ -49,6 +49,17 @@ export default function SemanaSantaPage() {
                         y enciérrate en el bosque <span className="text-primary italic-display block md:inline">(con tu propia tinaja hirviendo)</span>
                     </h1>
 
+                    <div className="mb-8 animate-fade-in-up delay-150">
+                        <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
+                            <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
+                                Desde $110.000 por noche
+                            </span>
+                            <span className="block text-white/80 text-sm font-bold mt-1">
+                                Estadía mínima 3 noches · Abril 2026
+                            </span>
+                        </div>
+                    </div>
+
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
                         El 99% de la gente pasará sus vacaciones estresada en lugares llenos. <br className="hidden md:block" />
                         Tú estarás en medio de la cordillera, sin escuchar a nadie y con el calor perfecto 24/7.
@@ -130,7 +141,188 @@ export default function SemanaSantaPage() {
                 </div>
             </section>
 
-            {/* SECCIÓN 3 – URGENCIA Y CTA FINAL */}
+            {/* SECCIÓN 2 – GALERÍA INTERIOR */}
+            <section className="py-24 md:py-32 bg-white">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="text-center max-w-4xl mx-auto mb-16">
+                        <h2 className="h2-display text-text-main mb-6">Tu refugio privado en el bosque</h2>
+                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
+                        <p className="text-lg text-text-sub font-bold">
+                            Interior cálido, tinaja exclusiva y todo lo necesario para desconectarte del mundo
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                            <Image
+                                src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
+                                alt="Interior acogedor del domo con cama y estufa"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                                <p className="font-black text-sm">Interior cálido</p>
+                                <p className="text-xs opacity-80">Estufa a pellet automática</p>
+                            </div>
+                        </div>
+
+                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                            <Image
+                                src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
+                                alt="Cocina completa del domo"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                                <p className="font-black text-sm">Cocina equipada</p>
+                                <p className="text-xs opacity-80">Todo para cocinar</p>
+                            </div>
+                        </div>
+
+                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                            <Image
+                                src="/images/wellness/Tinaja1.jpg"
+                                alt="Tinaja de agua termal privada"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                                <p className="font-black text-sm">Tu tinaja privada</p>
+                                <p className="text-xs opacity-80">Solo para ti</p>
+                            </div>
+                        </div>
+
+                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                            <Image
+                                src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg"
+                                alt="Ambiente acogedor del interior"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                                <p className="font-black text-sm">Espacio para relajar</p>
+                                <p className="text-xs opacity-80">Ambiente perfecto</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <TrackedLink
+                            href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
+                            eventName="click_reservar_semana_santa"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                        >
+                            Ver disponibilidad para estas fechas
+                            <ArrowRight size={20} />
+                        </TrackedLink>
+                    </div>
+                </div>
+            </section>
+
+            {/* SECCIÓN 3 – RESEÑAS REALES */}
+            <section className="py-24 md:py-32 bg-background-light">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="text-center max-w-4xl mx-auto mb-16">
+                        <h2 className="h2-display text-text-main mb-6">Lo que dicen nuestros huéspedes</h2>
+                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
+                        <p className="text-lg text-text-sub font-bold">
+                            Reseñas reales de quienes ya vivieron la experiencia TreePod
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+                        {/* Reseña 1 - Lidia M. */}
+                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
+                            <div className="flex items-center gap-2 mb-4">
+                                {[...Array(5)].map((_, i) => (
+                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
+                                        ⭐
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
+                                "Estos domos son la definición exacta de descanso, naturales, y comodidad, un paisaje precioso y una tranquilidad única! La atención de don Jaime fue maravillosa!"
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <Heart className="w-6 h-6 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="font-black text-text-main">Lidia M.</p>
+                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Reseña 2 - Matías A. */}
+                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
+                            <div className="flex items-center gap-2 mb-4">
+                                {[...Array(5)].map((_, i) => (
+                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
+                                        ⭐
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
+                                "Llegamos y el domo estaba calentito, se encuentra muy equipado, todo muy limpio. Se agradece la buena onda del encargado. MAGNÍFICO."
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <Sparkles className="w-6 h-6 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="font-black text-text-main">Matías A.</p>
+                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Reseña 3 - María Angélica */}
+                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-black/5 relative">
+                            <div className="flex items-center gap-2 mb-4">
+                                {[...Array(5)].map((_, i) => (
+                                    <div key={i} className="w-5 h-5 text-yellow-400 fill-current">
+                                        ⭐
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-text-main font-bold text-lg mb-6 leading-relaxed">
+                                "La acogida, calidad de la atención y la comodidad en los Domos Treepod permitieron que disfrutáramos cada minuto de nuestro tiempo. Excelente experiencia."
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <Mountain className="w-6 h-6 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="font-black text-text-main">María Angélica</p>
+                                    <p className="text-text-sub text-sm font-bold">TripAdvisor ⭐⭐⭐⭐⭐</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-center mt-16">
+                        <TrackedLink
+                            href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
+                            eventName="click_reservar_semana_santa"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                        >
+                            Únete a nuestros huéspedes satisfechos
+                            <ArrowRight size={20} />
+                        </TrackedLink>
+                    </div>
+                </div>
+            </section>
+
+            {/* SECCIÓN 4 – URGENCIA Y CTA FINAL */}
             <section className="py-20 md:py-24 bg-background-dark text-white relative border-t-8 border-primary">
                 <div className="container mx-auto px-6 md:px-10 relative z-10">
                     <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl text-center">
