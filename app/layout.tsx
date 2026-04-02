@@ -124,7 +124,7 @@ export default function RootLayout({
 
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
         <AuthRecoveryRedirect />
-        <DebugGTM enabled={process.env.NODE_ENV === 'development'} />
+        <DebugGTM enabled={true} />
         <AdminAwareLayout>
           {children}
         </AdminAwareLayout>

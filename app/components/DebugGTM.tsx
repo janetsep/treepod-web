@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface GTMDebugProps {
   enabled?: boolean;
 }
 
-export default function DebugGTM({ enabled = process.env.NODE_ENV === 'development' }: GTMDebugProps) {
+export default function DebugGTM({ enabled }: GTMDebugProps) {
+  const [isDev, setIsDev] = useState(false);
+
   useEffect(() => {
-    if (!enabled) return;
+    // Verificar si estamos en desarrollo solo del lado del cliente
+    setIsDev(process.env.NODE_ENV === 'development');
+  }, []);
+
+  useEffect(() => {
+    if (!enabled || !isDev) return;
 
     const debugGTMConnection = () => {
       console.log('🎯 TREEPOD - Debug GTM → GA4');
@@ -47,7 +54,7 @@ export default function DebugGTM({ enabled = process.env.NODE_ENV === 'developme
   }, [enabled]);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !isDev) return;
 
     // Detectar eventos de GTM en tiempo real
     const originalPush = (window as any).dataLayer?.push;
@@ -68,8 +75,8 @@ export default function DebugGTM({ enabled = process.env.NODE_ENV === 'developme
     }
   }, [enabled]);
 
-  // Solo mostrar en desarrollo
-  if (!enabled || process.env.NODE_ENV === 'production') {
+  // Solo mostrar en desarrollo y después de hidratación
+  if (!enabled || !isDev) {
     return null;
   }
 
