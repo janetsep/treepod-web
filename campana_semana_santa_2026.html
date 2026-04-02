@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaña Semana Santa 2026 — TreePod Glamping | Todos los Agentes</title>
+<style>
+:root {
+  --cyan: #009FDF;
+  --verde: #4A7C2E;
+  --dorado: #8B6914;
+  --fondo1: #E8F0E0;
+  --fondo2: #F5E6C8;
+  --dark: #1a2e1a;
+  --gris: #333;
+  --rojo: #c0392b;
+  --naranja: #e67e22;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; color: var(--gris); background: #fff; font-size: 15px; line-height: 1.7; }
+
+.header {
+  background: linear-gradient(135deg, var(--dark) 0%, #2d4a1e 60%, #1a3a2a 100%);
+  color: white; padding: 3rem 3rem 2rem; border-bottom: 6px solid var(--dorado);
+}
+.header .badge { display: inline-block; background: var(--dorado); color: white; font-family: sans-serif; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 1rem; }
+.header h1 { font-size: 2.4rem; margin-bottom: 0.5rem; color: var(--fondo1); }
+.header .sub { font-family: sans-serif; font-size: 1rem; opacity: 0.85; color: #b0c8a0; max-width: 600px; }
+
+.urgency-bar { background: var(--rojo); color: white; text-align: center; padding: 0.7rem; font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; }
+
+.agents-bar { background: var(--dark); padding: 0.8rem 3rem; display: flex; gap: 0.6rem; flex-wrap: wrap; font-family: sans-serif; font-size: 0.75rem; align-items: center; }
+.agent-chip { background: rgba(255,255,255,0.1); color: white; padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
+.agent-chip.active { background: var(--cyan); border-color: var(--cyan); }
+
+.container { max-width: 980px; margin: 0 auto; padding: 2.5rem 2.5rem 5rem; }
+.section { margin-bottom: 3rem; }
+
+.section-title { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding-bottom: 0.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.agent-tag { background: var(--cyan); color: white; padding: 1px 8px; border-radius: 10px; font-size: 0.65rem; letter-spacing: 1px; }
+
+h2 { font-size: 1.5rem; color: var(--verde); margin-bottom: 1rem; }
+h3 { font-size: 1.1rem; color: var(--dorado); margin-bottom: 0.6rem; margin-top: 1.4rem; }
+p { margin-bottom: 0.8rem; }
+
+.validation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.val-box { border-radius: 8px; padding: 1.2rem; border-left: 4px solid; }
+.val-ok { background: #eafaf1; border-left-color: #27ae60; }
+.val-ok .val-status { color: #27ae60; font-family: sans-serif; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 0.3rem; }
+.val-warn { background: #fef9e7; border-left-color: var(--dorado); }
+.val-warn .val-status { color: var(--dorado); font-family: sans-serif; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 0.3rem; }
+.val-block { background: #fdedec; border-left-color: var(--rojo); }
+.val-block .val-status { color: var(--rojo); font-family: sans-serif; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 0.3rem; }
+.val-box p { font-size: 0.9rem; margin: 0; }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin: 1rem 0; }
+.card { background: var(--fondo1); border-radius: 10px; padding: 1.4rem; border-left: 5px solid var(--verde); }
+.card.dorado { background: var(--fondo2); border-left-color: var(--dorado); }
+.card.cyan { background: #e6f6fd; border-left-color: var(--cyan); }
+.card.dark { background: var(--dark); color: white; border-left-color: var(--cyan); }
+.card.dark h3 { color: #b0e0ff; }
+.card h3 { margin-top: 0; }
+.card ul { padding-left: 1.3rem; margin-top: 0.5rem; }
+.card li { font-size: 0.92rem; margin-bottom: 0.25rem; }
+
+.budget-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+.budget-table th { background: var(--dark); color: white; padding: 10px 14px; text-align: left; font-family: sans-serif; font-size: 0.78rem; letter-spacing: 1px; }
+.budget-table td { padding: 10px 14px; border-bottom: 1px solid #e8e8e8; }
+.budget-table tr:nth-child(even) td { background: var(--fondo1); }
+.budget-table tfoot td { background: var(--fondo2); font-weight: bold; border-top: 2px solid var(--dorado); }
+.monto { font-family: sans-serif; font-weight: bold; color: var(--verde); }
+
+.copy-box { background: #1a1a2e; color: #e8f0e0; border-radius: 10px; padding: 1.8rem 1.6rem 1.4rem; margin: 1rem 0; font-family: 'Courier New', monospace; font-size: 0.87rem; line-height: 1.9; position: relative; }
+.copy-label { position: absolute; top: -10px; left: 1.2rem; background: var(--cyan); color: white; font-family: sans-serif; font-size: 0.7rem; letter-spacing: 2px; padding: 2px 10px; border-radius: 10px; text-transform: uppercase; }
+
+.design-spec { background: var(--fondo2); border-radius: 10px; padding: 1.4rem; margin: 1rem 0; }
+.format-badge { background: var(--dorado); color: white; font-family: sans-serif; font-size: 0.75rem; padding: 4px 12px; border-radius: 15px; display: inline-block; margin-bottom: 0.8rem; }
+.spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; font-size: 0.87rem; margin-top: 0.8rem; }
+.spec-label { color: var(--dorado); font-weight: bold; min-width: 80px; display: inline-block; }
+.photo-real { background: #eafaf1; border: 2px solid #27ae60; border-radius: 8px; padding: 0.7rem 1rem; margin-top: 0.8rem; font-size: 0.87rem; }
+.photo-real strong { color: #27ae60; }
+
+.kpi-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.kpi-table th { background: var(--verde); color: white; padding: 10px 14px; font-family: sans-serif; font-size: 0.78rem; letter-spacing: 1px; text-align: left; }
+.kpi-table td { padding: 10px 14px; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; }
+.kpi-table tr:nth-child(even) td { background: #f5f5f5; }
+.kpi-ok { color: #27ae60; font-weight: bold; }
+.kpi-warn { color: var(--dorado); font-weight: bold; }
+.kpi-crit { color: var(--rojo); font-weight: bold; }
+
+.gap-card { border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1rem; border-left: 5px solid; }
+.gap-red { background: #fdedec; border-left-color: var(--rojo); }
+.gap-yellow { background: #fef9e7; border-left-color: var(--naranja); }
+.gap-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.gap-badge { font-family: sans-serif; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.gap-red .gap-badge { background: var(--rojo); color: white; }
+.gap-yellow .gap-badge { background: var(--naranja); color: white; }
+.gap-title { font-weight: bold; font-size: 1rem; }
+.gap-body { font-size: 0.88rem; }
+.gap-body ul { padding-left: 1.3rem; margin-top: 0.4rem; }
+
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 0.55rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--cyan), var(--verde)); }
+.timeline-item { position: relative; margin-bottom: 1.8rem; }
+.timeline-item::before { content: ''; position: absolute; left: -1.55rem; top: 0.35rem; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); border: 2px solid white; box-shadow: 0 0 0 2px var(--cyan); }
+.timeline-item.urgent::before { background: var(--rojo); box-shadow: 0 0 0 2px var(--rojo); }
+.timeline-time { font-family: sans-serif; font-size: 0.75rem; font-weight: bold; color: var(--cyan); letter-spacing: 1px; margin-bottom: 0.2rem; text-transform: uppercase; }
+.timeline-item.urgent .timeline-time { color: var(--rojo); }
+.timeline-title { font-weight: bold; margin-bottom: 0.3rem; }
+.timeline-body { font-size: 0.88rem; color: #555; }
+
+.alert-block { background: #fdedec; border: 2px solid var(--rojo); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1.2rem; font-size: 0.88rem; }
+
+.footer { background: var(--dark); color: #b0c8a0; padding: 2rem 3rem; font-family: sans-serif; font-size: 0.82rem; text-align: center; margin-top: 3rem; }
+.footer strong { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<div class="urgency-bar">
+  🚨 CAMPAÑA URGENTE — SEMANA SANTA INICIA 2 DE ABRIL 2026 — EJECUTAR HOY 1 ABRIL
+</div>
+
+<div class="header">
+  <div class="badge">Campaña Completa · 7 Agentes · 1 Abril 2026</div>
+  <h1>Semana Santa en la Cordillera</h1>
+  <p class="sub">Cadena completa de agentes ejecutada: A9 → A4 → A2 → A3 → A5 → A1 → A10. Todo listo para que Janet revise y lance.</p>
+</div>
+
+<div class="agents-bar">
+  <span style="color:#8B6914; font-weight:bold; margin-right:0.3rem;">AGENTES:</span>
+  <span class="agent-chip active">A9 Brand ✓</span>
+  <span class="agent-chip active">A4 Estrategia ✓</span>
+  <span class="agent-chip active">A2 Contenido ✓</span>
+  <span class="agent-chip active">A3 Diseño ✓</span>
+  <span class="agent-chip active">A5 Email/WA ✓</span>
+  <span class="agent-chip active">A1 Datos ✓</span>
+  <span class="agent-chip active">A10 Gaps ✓</span>
+</div>
+
+<div class="container">
+
+  <!-- A9 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A9</span> Brand Ambassador — Validación de Marca</div>
+    <h2>TreePod aprobado para campaña Semana Santa</h2>
+    <div class="validation-grid">
+      <div class="val-box val-ok">
+        <div class="val-status">✅ APROBADO</div>
+        <p><strong>Identidad visual</strong> — Paleta oficial #009FDF / #4A7C2E / #8B6914. Tipografías correctas.</p>
+      </div>
+      <div class="val-box val-ok">
+        <div class="val-status">✅ APROBADO</div>
+        <p><strong>Tono de marca</strong> — Mensajes auténticos. Sin palabras prohibidas. Sin exageración de atributos.</p>
+      </div>
+      <div class="val-box val-ok">
+        <div class="val-status">✅ APROBADO</div>
+        <p><strong>Audiencia</strong> — 25–44, parejas y amigos. Nivel 4–5 de conciencia. Millennial/Gen Z sofisticado.</p>
+      </div>
+      <div class="val-box val-block">
+        <div class="val-status">🚫 BLOQUEADO</div>
+        <p><strong>Diseños anteriores con IA</strong> — Deben rehacerse con foto real <em>domo-treepod-chile-24.jpg</em>.</p>
+      </div>
+    </div>
+    <p style="font-size:0.87rem; color:#666; margin-top:0.5rem;">Tagline oficial aplicado: <em>"Donde la montaña se convierte en tu hogar"</em> · Brand essence: Naturaleza + Arquitectura + Experiencia Premium</p>
+  </div>
+
+  <!-- A4 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A4</span> Estrategia — Presupuesto y Canales</div>
+    <h2>Campaña de Conversión Urgente — No de Awareness</h2>
+    <p style="font-size:0.88rem; color:#555;">Semana Santa = momento pico de otoño. Audiencia ya está lista para comprar (nivel 4–5). Foco en lista propia + boost pago.</p>
+
+    <div class="card-grid">
+      <div class="card cyan">
+        <h3>Objetivo</h3>
+        <ul>
+          <li>100% ocupación Jue 2 – Dom 5 Abril</li>
+          <li>Cero domos vacíos en Semana Santa</li>
+          <li>Reservas desde lista propia (CAC más bajo)</li>
+          <li>Offer Stack con canasta de Pascua local</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Audiencia (Dream 100)</h3>
+        <ul>
+          <li>25–44, parejas y amigos activos</li>
+          <li>Intereses: glamping, naturaleza, ski, cordillera</li>
+          <li>Seguidores de @termaschillan, @sernatur_nuble</li>
+          <li>Meta Ads SIN audience expansion</li>
+        </ul>
+      </div>
+      <div class="card dorado">
+        <h3>Offer Stack</h3>
+        <ul>
+          <li>Estadía 4 noches en domo geodésico</li>
+          <li>🧺 Canasta Pascua local ($8–15K valor)</li>
+          <li>🔥 Fogata preparada al llegar</li>
+          <li>📍 Guía personalizada termas y rutas</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Presupuesto — $50.000 CLP (límite mensual)</h3>
+    <table class="budget-table">
+      <thead>
+        <tr><th>Canal</th><th>Monto</th><th>Objetivo</th><th>Timing</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Instagram Boost (post con rendimiento orgánico)</td><td class="monto">$20.000</td><td>Conversión directa a reserva</td><td>HOY — 2 días</td></tr>
+        <tr><td>Google My Business (búsquedas "glamping Semana Santa")</td><td class="monto">$10.000</td><td>Aparecer en búsquedas locales</td><td>HOY — 3 días</td></tr>
+        <tr><td>Canva Pro (diseño de piezas)</td><td class="monto">$10.000</td><td>Story + Post + Banner email</td><td>HOY</td></tr>
+        <tr><td>Reserva emergencia</td><td class="monto">$10.000</td><td>Oportunidades imprevistas</td><td>Disponible</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td><strong>TOTAL</strong></td><td class="monto"><strong>$50.000</strong></td><td colspan="2">Dentro del presupuesto mensual ✅</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- A2 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A2</span> Contenido — Copys Listos para Publicar</div>
+    <h2>Todas las piezas de texto generadas</h2>
+    <p style="font-size:0.87rem; color:#555; margin-bottom:1.2rem;">Pilares: <strong>Momentos Mágicos</strong> (15%) + <strong>Vida en el Domo</strong> (40%). Tono: 60% inspiracional · 25% informativo · 15% conversión urgente real.</p>
+
+    <h3>📸 Caption Instagram Post (Feed)</h3>
+    <div class="copy-box">
+      <span class="copy-label">IG POST — CAPTION</span>
+La Cordillera guarda sus mejores noches para quienes se atreven a vivirlas.
+
+Este Semana Santa, el domo te espera.
+
+Despierta entre árboles. Duerme bajo las estrellas.
+Siente el silencio de la montaña como no lo habías sentido nunca.
+
+🏔️ Jue 2 → Dom 5 de Abril
+📍 Las Trancas, Ñuble — a minutos de Termas de Chillán
+🔗 Reserva en la bio → domostreepod.cl
+
+@domostreepod
+
+#glamping #glampingChile #domosgeodesicos #LasTrancas #SemanaSanta
+#TreePod #turismoNuble #experienciasChile #glampingChile #cordillera
+    </div>
+
+    <h3>📱 Instagram Story — Texto en pantalla</h3>
+    <div class="copy-box">
+      <span class="copy-label">STORY — TEXTOS</span>
+[TÍTULO — Playfair Display grande, centrado]
+Semana Santa
+en la Cordillera
+
+[SUBTÍTULO — Montserrat, centrado]
+— Últimos domos disponibles —
+Jue 2 al Dom 5 de Abril
+
+[STICKER LINK o CTA]
+Reserva ahora → domostreepod.cl
+
+[PIE — pequeño]
+@domostreepod
+    </div>
+
+    <h3>🎬 Reel / TikTok — Script completo</h3>
+    <div class="copy-box">
+      <span class="copy-label">REEL SCRIPT — 30 SEG</span>
+[0–3s] HOOK:
+  Plano del domo iluminado de noche con nieve (foto real)
+  TEXTO: "Esto existe en Chile 🏔️"
+
+[3–12s] DESARROLLO — secuencia de fotos reales:
+  Exterior nocturno → Interior cálido → Vista desde la cúpula
+
+[12–22s] INFORMACIÓN:
+  "Semana Santa en los domos geodésicos de Las Trancas, Ñuble"
+  "A minutos de Termas de Chillán"
+
+[22–28s] URGENCIA:
+  "Solo quedan domos disponibles"
+  "Jue 2 → Dom 5 de Abril"
+
+[28–30s] CTA:
+  "Reserva en el link de la bio 👆"
+  @domostreepod
+    </div>
+
+    <h3>💬 WhatsApp Broadcast — Enviar HOY</h3>
+    <div class="copy-box">
+      <span class="copy-label">WHATSAPP BROADCAST</span>
+Hola [Nombre] 👋
+
+Semana Santa se viene y en TreePod quedan los últimos domos disponibles.
+
+🏔️ *Semana Santa en la Cordillera*
+📅 Jueves 2 → Domingo 5 de Abril
+📍 Las Trancas, Ñuble
+
+Este año lo hacemos especial: cada domo incluye una
+*canasta de Pascua* artesanal con productos locales de Ñuble 🧺
+
+¿Quieres que te reserve? Escríbeme o entra directo a:
+👉 domostreepod.cl
+
+¡Los últimos se van rápido! 🌲
+
+— Janet, TreePod
+    </div>
+
+    <h3>✉️ Email — Carta de Janet</h3>
+    <div class="copy-box">
+      <span class="copy-label">EMAIL — ASUNTO: "Semana Santa en la montaña 🏔️"</span>
+Hola [Nombre],
+
+Te escribo desde el domo, con la montaña justo delante y el
+olor a pino que ya empieza a anticipar el otoño.
+
+Semana Santa está a horas de llegar, y los últimos domos
+están esperando a las personas correctas.
+
+Si alguna vez pensaste en venir a Las Trancas, este fin de
+semana largo es el momento. No hay nieve todavía, pero hay
+algo mejor: el silencio de la cordillera antes del invierno,
+los cielos más despejados del año, y el calor de la fogata
+al volver de las termas.
+
+Este Semana Santa preparamos una canasta de Pascua artesanal
+con productos locales de Ñuble para cada domo 🧺
+
+→ Reserva aquí: domostreepod.cl
+→ Disponibilidad: Jue 2 al Dom 5 de Abril
+
+Los domos se están llenando. Escríbeme directo si quieres
+alguno en particular.
+
+Un abrazo desde la cordillera,
+— Janet, TreePod
+
+PD: Si ya tienes planes para Semana Santa, guarda este email.
+Mayo y junio en Las Trancas son una maravilla 🌿
+    </div>
+  </div>
+
+  <!-- A3 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A3</span> Diseño — Especificaciones con Foto Real</div>
+    <h2>Piezas Gráficas — Política: Solo Fotos Reales Propias</h2>
+
+    <div class="design-spec">
+      <span class="format-badge">STORY · 1080 × 1920 px · Instagram / WA Status</span>
+      <strong>Story Semana Santa</strong>
+      <div class="photo-real">
+        <strong>✅ FOTO REAL OBLIGATORIA:</strong> <code>domo-treepod-chile-24.jpg</code>
+        Ruta: <code>/Users/janetsepulvedacorrea/Downloads/domo-treepod-chile-24.jpg</code>
+        Domo iluminado de noche con nieve y bosque — perfecta para esta campaña.
+      </div>
+      <div class="spec-grid">
+        <div><span class="spec-label">Fondo:</span> Foto real con overlay oscuro 25%</div>
+        <div><span class="spec-label">Título:</span> Playfair Display 48pt, #FFFFFF</div>
+        <div><span class="spec-label">Subtítulo:</span> Montserrat 22pt, #E8F0E0</div>
+        <div><span class="spec-label">Acento:</span> Línea Dorado #8B6914</div>
+        <div><span class="spec-label">CTA:</span> Botón Cyan #009FDF</div>
+        <div><span class="spec-label">Handle:</span> @domostreepod, Open Sans 16pt</div>
+      </div>
+    </div>
+
+    <div class="design-spec">
+      <span class="format-badge">POST FEED · 1080 × 1350 px · Instagram (4:5)</span>
+      <strong>Post Feed Semana Santa</strong>
+      <div class="photo-real">
+        <strong>✅ FOTO REAL OBLIGATORIA:</strong> <code>domo-treepod-chile-24.jpg</code>
+        SIN overlay de papel. SIN textura IA. Solo foto real + gradiente oscuro desde abajo.
+      </div>
+      <div class="spec-grid">
+        <div><span class="spec-label">Fondo:</span> Foto real, sin texturas artificiales</div>
+        <div><span class="spec-label">Overlay:</span> Gradiente vertical desde abajo 40%</div>
+        <div><span class="spec-label">Título:</span> Playfair Display 40pt, #FFFFFF</div>
+        <div><span class="spec-label">Subtítulo:</span> Montserrat 18pt, #E8F0E0</div>
+        <div><span class="spec-label">Handle:</span> @domostreepod arriba, 14pt</div>
+        <div><span class="spec-label">CTA:</span> Fechas + web abajo, Cyan</div>
+      </div>
+    </div>
+
+    <div class="design-spec">
+      <span class="format-badge">EMAIL BANNER · 600 × 200 px</span>
+      <strong>Banner para email de Janet</strong>
+      <div class="photo-real">
+        <strong>✅ FOTO REAL:</strong> Foto panorámica exterior de los domos. Gradiente oscuro de derecha a izquierda.
+      </div>
+      <div class="spec-grid">
+        <div><span class="spec-label">Ancho:</span> 600 px (estándar email)</div>
+        <div><span class="spec-label">Texto:</span> "Semana Santa en la Cordillera" Playfair 28pt</div>
+        <div><span class="spec-label">Color texto:</span> #FFFFFF alineado izquierda</div>
+        <div><span class="spec-label">Overlay:</span> Gradiente oscuro de derecha a izquierda</div>
+      </div>
+    </div>
+
+    <div class="alert-block">
+      <strong style="color:var(--rojo);">🚫 BLOQUEADO POR A9 + A3:</strong> Los diseños Canva anteriores (DAHFlOhW4Gw y DAHFlFmBuVM) usan imágenes generadas por IA. No pueden publicarse. Deben rehacerse subiendo <code>domo-treepod-chile-24.jpg</code> como fondo en Canva. Links de edición:<br>
+      Story: <a href="https://www.canva.com/d/HOj6ibzmuVssHCN" style="color:var(--cyan);">canva.com/d/HOj6ibzmuVssHCN</a> ·
+      Post: <a href="https://www.canva.com/d/rBOGywEFChlPU-a" style="color:var(--cyan);">canva.com/d/rBOGywEFChlPU-a</a>
+    </div>
+  </div>
+
+  <!-- A5 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A5</span> Distribución — Email y WhatsApp</div>
+    <h2>Plan de Distribución por Canal Directo</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Canal 1: WhatsApp Broadcast</h3>
+        <ul>
+          <li><strong>ENVIAR HOY antes de las 20:00h</strong></li>
+          <li>Lista: todos los contactos previos de TreePod</li>
+          <li>Adjuntar foto domo real (Story como imagen)</li>
+          <li>Incluir link directo domostreepod.cl</li>
+          <li>Copy listo arriba en sección A2</li>
+        </ul>
+      </div>
+      <div class="card dorado">
+        <h3>Canal 2: Email (Mailchimp / MailerLite)</h3>
+        <ul>
+          <li><strong>ENVIAR HOY — 19:00–21:00h</strong></li>
+          <li>Asunto: "Semana Santa en la montaña 🏔️"</li>
+          <li>Tono "carta de Janet" — personal, sin corporativo</li>
+          <li>Banner: foto real domos (600×200)</li>
+          <li>CTA botón Cyan → domostreepod.cl</li>
+        </ul>
+      </div>
+      <div class="card cyan">
+        <h3>Canal 3: Instagram Orgánico</h3>
+        <ul>
+          <li>Story: <strong>HOY tarde</strong></li>
+          <li>Post Feed: <strong>HOY 19:00–21:00h</strong></li>
+          <li>Reel: <strong>mañana 2 abril, 09:00h</strong></li>
+          <li>Boost $20K solo si el post tiene buen rendimiento orgánico primero</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Secuencia de recuperación (quienes preguntan y no reservan)</h3>
+    <div class="copy-box" style="font-size:0.82rem;">
+      <span class="copy-label">FOLLOW-UP DÍA 0</span>
+Hola [Nombre] 👋 Vi que preguntaste por Semana Santa en TreePod.
+¿Pudiste ver la disponibilidad? Te ayudo en 2 minutos.
+    </div>
+    <div class="copy-box" style="font-size:0.82rem; margin-top:0.6rem;">
+      <span class="copy-label">FOLLOW-UP DÍA 1</span>
+Hola [Nombre], las fechas Jue–Dom aún están disponibles.
+Suelen llenarse hoy. ¿Te ayudo a concretar? 🏔️
+    </div>
+  </div>
+
+  <!-- A1 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A1</span> Analista de Datos — KPIs de Campaña</div>
+    <h2>Métricas de Éxito — Medir el 6 de Abril</h2>
+    <table class="kpi-table">
+      <thead>
+        <tr><th>Métrica</th><th>Objetivo</th><th>Fuente</th><th>Estado</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Ocupación Semana Santa</strong></td><td>100% (4 noches)</td><td>Airbnb Dashboard</td><td class="kpi-warn">⚠️ Medir al cerrar</td></tr>
+        <tr><td><strong>ROMI de campaña</strong></td><td>&gt; 3x</td><td>Ingresos ÷ $50K inversión</td><td class="kpi-warn">⚠️ Post-campaña</td></tr>
+        <tr><td><strong>CAC por reserva nueva</strong></td><td>&lt; $50.000 CLP</td><td>Gasto ÷ reservas nuevas</td><td class="kpi-warn">⚠️ Post-campaña</td></tr>
+        <tr><td><strong>Tasa apertura email</strong></td><td>&gt; 25%</td><td>Mailchimp Insights</td><td class="kpi-warn">⚠️ Post-envío 24h</td></tr>
+        <tr><td><strong>Engagement IG Post</strong></td><td>&gt; 5%</td><td>Instagram Insights</td><td class="kpi-warn">⚠️ Monitorear hoy</td></tr>
+        <tr><td><strong>Respuesta WA &lt; 2 horas</strong></td><td>100% durante SS</td><td>WhatsApp Business</td><td class="kpi-crit">🔴 CRÍTICO — estar disponible</td></tr>
+        <tr><td><strong>Rating Google y Airbnb</strong></td><td>≥ 4.8 / ≥ 4.9</td><td>GMB / Airbnb Host</td><td class="kpi-ok">✅ Mantener post-estadía</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.84rem; color:#777; margin-top:0.5rem;">📊 Dashboard completo el <strong>Lunes 6 de Abril</strong>. Calcular ROMI real y preparar reporte A10 post-campaña.</p>
+  </div>
+
+  <!-- A10 -->
+  <div class="section">
+    <div class="section-title"><span class="agent-tag">A10</span> Gap Monitor — Brechas Detectadas</div>
+    <h2>3 Críticos · 3 Medios</h2>
+
+    <div class="gap-card gap-red">
+      <div class="gap-header">
+        <span class="gap-badge">🔴 CRÍTICO · URGENTE HOY</span>
+        <span class="gap-title">Diseños Canva con imágenes IA — No publicables</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> Story DAHFlOhW4Gw y Post DAHFlFmBuVM usan fondos de IA, violando sección 3 de CLAUDE.md.<br>
+        <strong>Impacto financiero:</strong> Sin piezas gráficas, no hay campaña visual. Riesgo de pérdida de 100% de ocupación.<br>
+        <strong>Acción:</strong>
+        <ul>
+          <li>Abrir ambos diseños en Canva (links en sección A3)</li>
+          <li>Reemplazar fondo IA por <code>domo-treepod-chile-24.jpg</code></li>
+          <li>Ajustar overlay y texto según specs A3</li>
+          <li>Janet aprueba y publica</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="gap-card gap-red">
+      <div class="gap-header">
+        <span class="gap-badge">🔴 CRÍTICO · URGENTE HOY</span>
+        <span class="gap-title">WA broadcast y email sin enviar — mayor canal de conversión</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> La lista propia (clientes anteriores) aún no recibió la campaña. CAC = $0, tasa de conversión más alta.<br>
+        <strong>Impacto:</strong> Pérdida de las reservas más fáciles y rentables.<br>
+        <strong>Acción:</strong> Enviar WA broadcast HOY antes de las 20:00h. Email HOY 19–21h. Copys listos en sección A2.
+      </div>
+    </div>
+
+    <div class="gap-card gap-red">
+      <div class="gap-header">
+        <span class="gap-badge">🔴 CRÍTICO · HOY</span>
+        <span class="gap-title">Carpeta ResultadoAnuncios no existe para esta campaña</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> CLAUDE.md exige crear estructura antes de finalizar campaña.<br>
+        <strong>Ruta a crear:</strong> <code>/Users/janetsepulvedacorrea/DOMOS/ResultadoAnuncios/2026-04-SemanaSanta/</code><br>
+        <strong>Subcarpetas:</strong> imagenes / videos / copys / variaciones<br>
+        <strong>Acción:</strong> Crear hoy antes de guardar diseños finales.
+      </div>
+    </div>
+
+    <div class="gap-card gap-yellow">
+      <div class="gap-header">
+        <span class="gap-badge">🟡 MEDIO · ANTES DE PUBLICAR</span>
+        <span class="gap-title">Meta Ads boost no activado</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> $20K IG Boost pendiente. Regla A4: nunca boostear sin rendimiento orgánico primero.<br>
+        <strong>Acción:</strong> Publicar Post orgánico → esperar 2h → si engagement ok → activar boost. 25–44 años, sin audience expansion.
+      </div>
+    </div>
+
+    <div class="gap-card gap-yellow">
+      <div class="gap-header">
+        <span class="gap-badge">🟡 MEDIO · CONFIRMAR HOY</span>
+        <span class="gap-title">Canasta de Pascua — confirmar disponibilidad</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> El offer stack menciona canasta artesanal, pero no se confirmó si es viable conseguirla antes del 2 de abril.<br>
+        <strong>Acción:</strong> Janet confirma si puede armarla. Si no es viable, retirar del copy de WA y email antes de enviar.
+      </div>
+    </div>
+
+    <div class="gap-card gap-yellow">
+      <div class="gap-header">
+        <span class="gap-badge">🟡 CONTEXTO · FINANCIERO</span>
+        <span class="gap-title">Deuda León + AT2026 — vigilar destino de ingresos</span>
+      </div>
+      <div class="gap-body">
+        <strong>Gap:</strong> Ingresos de Semana Santa contribuyen al flujo de caja para AT2026 (30 Abril) y Deuda León (~$37M).<br>
+        <strong>Acción:</strong> Coordinar con contador Manuel Silva los ingresos proyectados para planificar pago AT2026. No exceder $50K CLP en marketing.
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section">
+    <div class="section-title">📋 Timeline de Ejecución — Próximas 48 Horas</div>
+    <h2>Plan de Acción para Janet</h2>
+    <div class="timeline">
+      <div class="timeline-item urgent">
+        <div class="timeline-time">HOY — Ahora mismo</div>
+        <div class="timeline-title">✅ Crear carpeta ResultadoAnuncios/2026-04-SemanaSanta/</div>
+        <div class="timeline-body">Subcarpetas: imagenes / videos / copys / variaciones. Ruta: /Users/janetsepulvedacorrea/DOMOS/ResultadoAnuncios/</div>
+      </div>
+      <div class="timeline-item urgent">
+        <div class="timeline-time">HOY — Antes 18:00h</div>
+        <div class="timeline-title">✅ Rehacer diseños Canva con domo-treepod-chile-24.jpg</div>
+        <div class="timeline-body">Subir foto real a Canva → reemplazar fondo IA → aplicar overlay + texto según specs A3. Story y Post Feed.</div>
+      </div>
+      <div class="timeline-item urgent">
+        <div class="timeline-time">HOY — Antes 20:00h</div>
+        <div class="timeline-title">✅ Enviar WhatsApp Broadcast a lista de contactos</div>
+        <div class="timeline-body">Copy listo en sección A5. Adjuntar foto del domo. Link directo a reserva.</div>
+      </div>
+      <div class="timeline-item urgent">
+        <div class="timeline-time">HOY — 19:00–21:00h</div>
+        <div class="timeline-title">✅ Publicar Instagram Story + Post Feed</div>
+        <div class="timeline-body">Story primero, luego Post. Hashtags completos en copy A2. Solo fotos reales.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">HOY — Antes 21:00h</div>
+        <div class="timeline-title">✅ Enviar email (Mailchimp/MailerLite)</div>
+        <div class="timeline-body">Asunto "Semana Santa en la montaña 🏔️". Carta de Janet. Banner foto real 600×200.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">MAÑANA 2 ABRIL — 09:00h</div>
+        <div class="timeline-title">✅ Publicar Reel de apertura Semana Santa</div>
+        <div class="timeline-body">Script listo en sección A2. Usar video real del domo si disponible. Hook en 3 segundos.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">MAÑANA — Después de 2h orgánico</div>
+        <div class="timeline-title">✅ Activar boost Meta Ads $20.000 CLP (si aplica)</div>
+        <div class="timeline-body">Solo si el Post tiene buen engagement. 25–44 años. Sin audience expansion. Intereses: glamping, naturaleza, ski.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">2–5 ABRIL — Durante Semana Santa</div>
+        <div class="timeline-title">✅ Stories diarias + responder WA en menos de 2 horas</div>
+        <div class="timeline-body">Behind the scenes real. UGC de huéspedes. Mantener urgencia sin presionar. Solicitar reseña el día del checkout.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">6 ABRIL — Lunes post Semana Santa</div>
+        <div class="timeline-title">✅ A1 + A10: Medir resultados y calcular ROMI real</div>
+        <div class="timeline-body">Ocupación real, ingresos, CAC, ROMI, engagement. Reporte de brechas para siguiente campaña.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="section">
+    <div class="section-title">⚡ Resumen Ejecutivo</div>
+    <div class="card dark" style="margin-bottom:1rem;">
+      <h3>Todo lo que tienes listo ahora mismo</h3>
+      <ul>
+        <li>✅ Validación de marca — A9</li>
+        <li>✅ Estrategia y presupuesto $50K — A4</li>
+        <li>✅ 5 copys completos (Post, Story, Reel, WA, Email) — A2</li>
+        <li>✅ Especificaciones de diseño con foto real identificada — A3</li>
+        <li>✅ Plan de distribución WA + Email + IG — A5</li>
+        <li>✅ KPIs definidos y fuentes de medición — A1</li>
+        <li>✅ 6 brechas identificadas con acciones concretas — A10</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Las 3 acciones más urgentes para Janet</h3>
+      <ul>
+        <li><strong>1.</strong> Rehacer diseños Canva con <code>domo-treepod-chile-24.jpg</code> (foto real, no IA)</li>
+        <li><strong>2.</strong> Enviar WhatsApp broadcast HOY — es el canal de mayor conversión</li>
+        <li><strong>3.</strong> Confirmar si la canasta de Pascua es viable antes de enviar los copys</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>TreePod Glamping</strong> · Ecosistema de 7 Agentes IA · Campaña Semana Santa 2026<br>
+  Generado: 1 Abril 2026 · Cadena: A9 → A4 → A2 → A3 → A5 → A1 → A10<br>
+  Política visual: Solo fotos reales propias · Autenticidad &gt; estética artificial · Rentabilidad &gt; volumen
+</div>
+
+</body>
+</html>

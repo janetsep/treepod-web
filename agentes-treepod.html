@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agentes IA — TreePod Glamping</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+    }
+    header {
+      background: linear-gradient(135deg, #009FDF 0%, #4A7C2E 100%);
+      color: white;
+      padding: 40px 48px 32px;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p { margin-top: 8px; opacity: 0.9; font-size: 1rem; }
+    .meta { margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .meta span {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+    /* ─── Ecosistema ─── */
+    .ecosystem {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .ecosystem h2 { font-size: 1.2rem; color: #009FDF; margin-bottom: 16px; }
+    .eco-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .eco-item {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .eco-item:hover { border-color: #009FDF; }
+    .eco-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #009FDF;
+    }
+    .eco-name { font-size: 0.78rem; font-weight: 600; margin-top: 4px; color: #4a5568; }
+
+    /* ─── Comunicación entre agentes ─── */
+    .comms {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .comms h2 { font-size: 1.2rem; color: #009FDF; margin-bottom: 16px; }
+    .comms-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+    .node {
+      background: #EBF8FF;
+      border: 2px solid #009FDF;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: 600;
+      color: #0077aa;
+    }
+    .node.central {
+      background: #009FDF;
+      color: white;
+      border-color: #007aaa;
+      font-size: 0.9rem;
+      padding: 10px 18px;
+    }
+    .arrow { font-size: 1.2rem; color: #718096; }
+    .comms-note {
+      margin-top: 20px;
+      background: #f7fafc;
+      border-left: 4px solid #009FDF;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      color: #4a5568;
+    }
+
+    /* ─── Cards de agentes ─── */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-header {
+      padding: 20px 24px 16px;
+      color: white;
+      position: relative;
+    }
+    .card-header .num {
+      font-size: 2.5rem;
+      font-weight: 900;
+      opacity: 0.25;
+      position: absolute;
+      top: 8px;
+      right: 16px;
+    }
+    .card-header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-header h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+    .card-header p { margin-top: 4px; font-size: 0.82rem; opacity: 0.9; }
+
+    .card-body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #a0aec0;
+      margin-bottom: 6px;
+    }
+
+    .trigger-list { list-style: none; }
+    .trigger-list li {
+      font-size: 0.82rem;
+      color: #4a5568;
+      padding: 3px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .trigger-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #009FDF;
+    }
+
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      font-size: 0.73rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #EBF8FF;
+      color: #0077aa;
+      border: 1px solid #bee3f8;
+    }
+    .pill.tool { background: #F0FFF4; color: #276749; border-color: #9ae6b4; }
+    .pill.connects { background: #FFF5F7; color: #97266d; border-color: #fed7e2; }
+
+    .kpi-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .kpi-item {
+      background: #f7fafc;
+      border-radius: 8px;
+      padding: 8px 12px;
+      flex: 1;
+      min-width: 80px;
+    }
+    .kpi-item .kpi-val { font-size: 1rem; font-weight: 700; color: #2d3748; }
+    .kpi-item .kpi-lbl { font-size: 0.68rem; color: #718096; margin-top: 2px; }
+
+    /* Colores por agente */
+    .a1 { background: linear-gradient(135deg, #2B6CB0, #2C5282); }
+    .a2 { background: linear-gradient(135deg, #276749, #22543D); }
+    .a3 { background: linear-gradient(135deg, #8B6914, #7B4F12); }
+    .a4 { background: linear-gradient(135deg, #9B2C2C, #822727); }
+    .a5 { background: linear-gradient(135deg, #6B46C1, #553C9A); }
+    .a9 { background: linear-gradient(135deg, #009FDF, #007aaa); }
+    .a10 { background: linear-gradient(135deg, #D69E2E, #B7791F); }
+    .acc { background: linear-gradient(135deg, #2D3748, #1A202C); }
+
+    .pending {
+      background: #FFFAF0;
+      border: 1px dashed #ECC94B;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #744210;
+    }
+    .pending strong { display: block; font-size: 0.7rem; text-transform: uppercase; color: #975a16; margin-bottom: 2px; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #a0aec0;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🤖 Ecosistema de Agentes IA — TreePod Glamping</h1>
+  <p>Documentación completa: roles, skills, triggers, herramientas y flujos de colaboración</p>
+  <div class="meta">
+    <span>📅 Actualizado: 31 Mar 2026</span>
+    <span>🏕️ Migryk Correa Ltda</span>
+    <span>⚡ 8 Agentes Activos</span>
+    <span>🔁 3 Agentes Pendientes (A6, A7, A8)</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Ecosistema -->
+  <div class="ecosystem">
+    <h2>🗺️ Mapa del Ecosistema</h2>
+    <div class="eco-grid">
+      <div class="eco-item"><div class="eco-number">A1</div><div class="eco-name">Analista de Datos</div></div>
+      <div class="eco-item"><div class="eco-number">A2</div><div class="eco-name">Creador de Contenido</div></div>
+      <div class="eco-item"><div class="eco-number">A3</div><div class="eco-name">Diseñador Creativo</div></div>
+      <div class="eco-item"><div class="eco-number">A4</div><div class="eco-name">Estratega Campañas</div></div>
+      <div class="eco-item"><div class="eco-number">A5</div><div class="eco-name">Email & WhatsApp</div></div>
+      <div class="eco-item" style="opacity:0.4; border-style:dashed;"><div class="eco-number" style="color:#a0aec0;">A6</div><div class="eco-name">Pendiente</div></div>
+      <div class="eco-item" style="opacity:0.4; border-style:dashed;"><div class="eco-number" style="color:#a0aec0;">A7</div><div class="eco-name">Pendiente</div></div>
+      <div class="eco-item" style="opacity:0.4; border-style:dashed;"><div class="eco-number" style="color:#a0aec0;">A8</div><div class="eco-name">Pendiente</div></div>
+      <div class="eco-item"><div class="eco-number">A9</div><div class="eco-name">Brand Ambassador</div></div>
+      <div class="eco-item"><div class="eco-number">A10</div><div class="eco-name">Monitor de Brechas</div></div>
+      <div class="eco-item"><div class="eco-number">💰</div><div class="eco-name">Contabilidad & Finanzas</div></div>
+    </div>
+  </div>
+
+  <!-- Cómo se comunican -->
+  <div class="comms">
+    <h2>🔗 Cómo se comunican entre ellos</h2>
+    <div class="comms-diagram">
+      <div class="node">A1 Datos</div>
+      <div class="arrow">↔</div>
+      <div class="node central">A9 Brand Ambassador<br/><small style="font-weight:400;font-size:0.75rem;">Valida a todos los demás</small></div>
+      <div class="arrow">↔</div>
+      <div class="node">A10 Gap Monitor</div>
+    </div>
+    <div style="margin-top:12px;" class="comms-diagram">
+      <div class="node">A4 Estratega</div>
+      <div class="arrow">→</div>
+      <div class="node">A2 Contenido</div>
+      <div class="arrow">→</div>
+      <div class="node">A3 Diseño</div>
+      <div class="arrow">→</div>
+      <div class="node">A5 Email/WA</div>
+    </div>
+    <div class="comms-note">
+      <strong>Flujo estándar:</strong> A9 (Brand) define los estándares → A4 (Estrategia) planifica → A2 (Contenido) escribe → A3 (Diseño) visualiza → A5 (Email/WA) distribuye → A1 (Datos) mide → A10 (Brechas) evalúa si se cumplieron las metas. El skill de <strong>Contabilidad</strong> opera de forma independiente pero A10 lo consulta para brechas financieras.
+    </div>
+  </div>
+
+  <!-- Cards de agentes -->
+  <div class="agents-grid">
+
+    <!-- AGENTE 1 -->
+    <div class="card">
+      <div class="card-header a1">
+        <div class="num">1</div>
+        <div class="badge">Analista · Datos</div>
+        <h3>Agente 1 — Analista de Datos e Inteligencia Competitiva</h3>
+        <p>Transforma datos en decisiones con herramientas 100% gratuitas</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿cómo estamos con la ocupación?"</li>
+            <li>"¿cuánto nos cuesta un cliente?"</li>
+            <li>"análisis de métricas del mes"</li>
+            <li>"¿dónde estamos vs la competencia?"</li>
+            <li>"informe mensual / dashboard semanal"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Fuentes de datos que usa</div>
+          <div class="skill-pills">
+            <span class="pill tool">Windsor.ai MCP</span>
+            <span class="pill tool">Supabase MCP</span>
+            <span class="pill tool">GA4</span>
+            <span class="pill tool">Instagram Insights</span>
+            <span class="pill tool">Google Search Console</span>
+            <span class="pill tool">Mailchimp</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">KPIs que monitorea</div>
+          <div class="kpi-row">
+            <div class="kpi-item"><div class="kpi-val">≥70%</div><div class="kpi-lbl">Ocupación</div></div>
+            <div class="kpi-item"><div class="kpi-val">&lt;$50K</div><div class="kpi-lbl">CAC CLP</div></div>
+            <div class="kpi-item"><div class="kpi-val">&gt;3x</div><div class="kpi-lbl">ROMI</div></div>
+            <div class="kpi-item"><div class="kpi-val">≥4.8</div><div class="kpi-lbl">Rating Google</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Se coordina con</div>
+          <div class="skill-pills">
+            <span class="pill connects">A9 Brand (validación)</span>
+            <span class="pill connects">A10 Brechas (reporta gaps)</span>
+            <span class="pill connects">A4 Estrategia (informa campañas)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 2 -->
+    <div class="card">
+      <div class="card-header a2">
+        <div class="num">2</div>
+        <div class="badge">Contenido · Orgánico</div>
+        <h3>Agente 2 — Creador de Contenido Estratégico</h3>
+        <p>Genera todo el contenido orgánico con cero presupuesto publicitario</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"escríbeme un Reel / TikTok"</li>
+            <li>"dame ideas para Instagram esta semana"</li>
+            <li>"redacta un post sobre los domos"</li>
+            <li>"qué publicar esta semana"</li>
+            <li>"escribe el blog / newsletter"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Los 5 pilares de contenido</div>
+          <div class="skill-pills">
+            <span class="pill">40% Vida en el Domo</span>
+            <span class="pill">25% Las Trancas Secreta</span>
+            <span class="pill">15% Momentos Mágicos</span>
+            <span class="pill">10% Educativo</span>
+            <span class="pill">10% Testimonios</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Plataformas que cubre</div>
+          <div class="skill-pills">
+            <span class="pill tool">Instagram Reels</span>
+            <span class="pill tool">TikTok</span>
+            <span class="pill tool">Pinterest</span>
+            <span class="pill tool">Blog SEO</span>
+            <span class="pill tool">Carruseles</span>
+            <span class="pill tool">Newsletter</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Frameworks que aplica</div>
+          <div class="skill-pills">
+            <span class="pill connects">StoryBrand</span>
+            <span class="pill connects">Voz de Marca TreePod</span>
+            <span class="pill connects">Calendar Editorial</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 3 -->
+    <div class="card">
+      <div class="card-header a3">
+        <div class="num">3</div>
+        <div class="badge">Diseño · Visual</div>
+        <h3>Agente 3 — Diseñador Creativo e Identidad Visual</h3>
+        <p>Guardián de la imagen visual: colores, tipografía y manuales de marca</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿qué colores usa TreePod?"</li>
+            <li>"cómo debe verse un Reel / Story"</li>
+            <li>"¿está bien este diseño?"</li>
+            <li>"necesito las medidas para Instagram"</li>
+            <li>"diseña un banner / flyer"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Paleta de colores oficial</div>
+          <div class="skill-pills">
+            <span class="pill" style="background:#009FDF;color:white;border:none;">#009FDF Cyan</span>
+            <span class="pill" style="background:#4A7C2E;color:white;border:none;">#4A7C2E Verde</span>
+            <span class="pill" style="background:#8B6914;color:white;border:none;">#8B6914 Dorado</span>
+            <span class="pill" style="background:#E8F0E0;border:none;">Rocío</span>
+            <span class="pill" style="background:#F5E6C8;border:none;">Arena</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Tipografías oficiales</div>
+          <div class="skill-pills">
+            <span class="pill tool">Playfair Display (títulos)</span>
+            <span class="pill tool">Montserrat (subtítulos)</span>
+            <span class="pill tool">Open Sans (cuerpo)</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Herramientas</div>
+          <div class="skill-pills">
+            <span class="pill connects">Canva MCP</span>
+            <span class="pill connects">Image Processing MCP</span>
+            <span class="pill connects">Vision MCP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 4 -->
+    <div class="card">
+      <div class="card-header a4">
+        <div class="num">4</div>
+        <div class="badge">Estrategia · Campañas</div>
+        <h3>Agente 4 — Estratega de Campañas de Marketing</h3>
+        <p>Diseña estrategia anual y campañas con $50.000 CLP/mes de presupuesto</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿qué campaña lanzamos este mes?"</li>
+            <li>"¿cómo aprovechamos temporada de nieve?"</li>
+            <li>"¿hacemos algo con influencers?"</li>
+            <li>"¿cuánto invertir en Instagram Boost?"</li>
+            <li>"estrategia para Semana Santa / Fiestas Patrias"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Presupuesto mensual ($50k CLP)</div>
+          <div class="kpi-row">
+            <div class="kpi-item"><div class="kpi-val">$20K</div><div class="kpi-lbl">IG Boost</div></div>
+            <div class="kpi-item"><div class="kpi-val">$10K</div><div class="kpi-lbl">GMB Local</div></div>
+            <div class="kpi-item"><div class="kpi-val">$10K</div><div class="kpi-lbl">Canva Pro</div></div>
+            <div class="kpi-item"><div class="kpi-val">$10K</div><div class="kpi-lbl">Reserva</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">10 motores de crecimiento orgánico</div>
+          <div class="skill-pills">
+            <span class="pill">Reels/TikTok</span>
+            <span class="pill">Google My Business</span>
+            <span class="pill">Blog SEO</span>
+            <span class="pill">Email List</span>
+            <span class="pill">UGC</span>
+            <span class="pill">Alianzas Trueque</span>
+            <span class="pill">Influencers</span>
+            <span class="pill">Pinterest</span>
+            <span class="pill">Reseñas</span>
+            <span class="pill">WhatsApp</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 5 -->
+    <div class="card">
+      <div class="card-header a5">
+        <div class="num">5</div>
+        <div class="badge">Email · WhatsApp</div>
+        <h3>Agente 5 — Email Marketer y Automatización WhatsApp</h3>
+        <p>Canal más rentable con herramientas 100% gratuitas (Mailchimp + WA Business)</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"escríbeme el email de bienvenida"</li>
+            <li>"¿cómo respondo en WhatsApp?"</li>
+            <li>"qué les mando a los que no reservaron"</li>
+            <li>"escribe la newsletter del mes"</li>
+            <li>"cómo hago crecer mi lista de emails"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Herramientas gratuitas</div>
+          <div class="skill-pills">
+            <span class="pill tool">Mailchimp Free (500 ctts)</span>
+            <span class="pill tool">MailerLite Free (1.000 ctts)</span>
+            <span class="pill tool">WhatsApp Business</span>
+            <span class="pill tool">Gmail MCP</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Secuencias que gestiona</div>
+          <div class="skill-pills">
+            <span class="pill">Bienvenida (Soap Opera)</span>
+            <span class="pill">Recuperación consultas</span>
+            <span class="pill">Post-estadía + reseña</span>
+            <span class="pill">Newsletter mensual</span>
+            <span class="pill">Lead Magnet</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Lead Magnet estrella</div>
+          <div class="pending">
+            <strong>PDF Gratuito</strong>
+            "Guía 10 Experiencias Imperdibles en Las Trancas" — capta emails a cambio de valor real
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 9 -->
+    <div class="card">
+      <div class="card-header a9">
+        <div class="num">9</div>
+        <div class="badge">Brand · COO Virtual</div>
+        <h3>Agente 9 — Brand Ambassador y COO Virtual</h3>
+        <p>Guardián de TODA la identidad, políticas y conocimiento operativo de TreePod</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿está bien esto para la marca?"</li>
+            <li>"¿cuál es nuestra política de cancelación?"</li>
+            <li>"¿qué incluye la estadía?"</li>
+            <li>"¿aceptamos mascotas?"</li>
+            <li>"¿cuánto cuesta cada noche?"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">Rol especial: valida a todos los demás agentes</div>
+          <div class="skill-pills">
+            <span class="pill connects">Valida A1 (métricas)</span>
+            <span class="pill connects">Valida A2 (tono/contenido)</span>
+            <span class="pill connects">Valida A3 (identidad visual)</span>
+            <span class="pill connects">Valida A4 (estrategia)</span>
+            <span class="pill connects">Valida A5 (mensajes)</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Identidad que protege</div>
+          <div class="skill-pills">
+            <span class="pill">Misión y Visión</span>
+            <span class="pill">Tagline oficial</span>
+            <span class="pill">Perfil huésped ideal</span>
+            <span class="pill">Tarifas y políticas</span>
+            <span class="pill">Estándares calidad</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Tagline oficial</div>
+          <div class="pending">
+            <strong>Brand Essence</strong>
+            "Donde la montaña se convierte en tu hogar" — Naturaleza + Arquitectura + Experiencia Premium
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTE 10 -->
+    <div class="card">
+      <div class="card-header a10">
+        <div class="num">10</div>
+        <div class="badge">Brechas · Gaps</div>
+        <h3>Agente 10 — Monitor de Brechas y Desalineaciones</h3>
+        <p>Detecta diferencias entre lo planeado y lo ejecutado. Sin juicio, solo claridad.</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿dónde estamos fallando?"</li>
+            <li>"¿qué no estamos cumpliendo?"</li>
+            <li>"revisión crítica del mes"</li>
+            <li>"¿están alineados los resultados con los objetivos?"</li>
+            <li>"análisis de gaps / brecha de ingresos"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">10 tipos de brechas que monitorea</div>
+          <div class="skill-pills">
+            <span class="pill">Planificación vs Ejecución</span>
+            <span class="pill">Objetivos vs Resultados</span>
+            <span class="pill">Presupuesto vs Gasto Real</span>
+            <span class="pill">Capacidades vs Demandas</span>
+            <span class="pill">Ingresos Proyectados vs Reales</span>
+            <span class="pill">Calidad Esperada vs Entregada</span>
+            <span class="pill">Procesos vs Realidad</span>
+            <span class="pill">KPIs vs Metas</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Cómo obtiene sus datos</div>
+          <div class="skill-pills">
+            <span class="pill connects">Consulta A1 (métricas)</span>
+            <span class="pill connects">Consulta Finanzas (números)</span>
+            <span class="pill connects">Consulta A9 (estándares)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNTING -->
+    <div class="card">
+      <div class="card-header acc">
+        <div class="num">💰</div>
+        <div class="badge">Finanzas · Contabilidad</div>
+        <h3>Skill Contabilidad y Finanzas TreePod</h3>
+        <p>Análisis contable, financiero y tributario para Migryk Correa Ltda (RUT 76.286.428-2)</p>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="section-label">Activar cuando Janet diga…</div>
+          <ul class="trigger-list">
+            <li>"¿somos rentables?"</li>
+            <li>"¿cuánto pagamos de impuestos?"</li>
+            <li>"¿cuál es nuestra deuda con León?"</li>
+            <li>"¿por qué el F29 es tan bajo?"</li>
+            <li>"AT2026 / operación renta / balance"</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">7 módulos del skill</div>
+          <div class="skill-pills">
+            <span class="pill">Conciliación Cartolas vs F29</span>
+            <span class="pill">IVA Crédito Fiscal</span>
+            <span class="pill">Deuda León Experience</span>
+            <span class="pill">Flujo de Caja</span>
+            <span class="pill">AT2026 (Renta Anual)</span>
+            <span class="pill">Retiros Socios</span>
+            <span class="pill">Rentabilidad por Producto</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Contexto clave</div>
+          <div class="kpi-row">
+            <div class="kpi-item"><div class="kpi-val">Pro Pyme</div><div class="kpi-lbl">Régimen 14 D3</div></div>
+            <div class="kpi-item"><div class="kpi-val">$37.1M</div><div class="kpi-lbl">Deuda neta León</div></div>
+            <div class="kpi-item"><div class="kpi-val">30 Abr</div><div class="kpi-lbl">Plazo AT2026</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Herramientas</div>
+          <div class="skill-pills">
+            <span class="pill tool">Supabase MCP</span>
+            <span class="pill tool">Python scripts</span>
+            <span class="pill tool">Excel/XLSX análisis</span>
+            <span class="pill tool">Cartolas bancarias</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /agents-grid -->
+
+  <!-- Agentes pendientes -->
+  <div class="ecosystem" style="margin-top:32px; border: 2px dashed #ECC94B; background:#FFFAF0;">
+    <h2 style="color:#D69E2E;">⚠️ Agentes 6, 7 y 8 — Pendientes de Definir</h2>
+    <p style="font-size:0.88rem; color:#744210; margin-top:8px;">Los agentes 6, 7 y 8 no han sido creados todavía. Posibles roles que podrían cubrir:</p>
+    <div class="eco-grid" style="margin-top:16px;">
+      <div class="eco-item" style="border-color:#ECC94B;">
+        <div class="eco-number" style="color:#D69E2E;">A6</div>
+        <div class="eco-name">¿Atención al Cliente / Reservas?</div>
+      </div>
+      <div class="eco-item" style="border-color:#ECC94B;">
+        <div class="eco-number" style="color:#D69E2E;">A7</div>
+        <div class="eco-name">¿SEO / Web / Desarrollador?</div>
+      </div>
+      <div class="eco-item" style="border-color:#ECC94B;">
+        <div class="eco-number" style="color:#D69E2E;">A8</div>
+        <div class="eco-name">¿Operaciones / Logística?</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  TreePod Glamping · Migryk Correa Ltda · Generado con IA en Cowork Mode · 31 Mar 2026
+</footer>
+
+</body>
+</html>

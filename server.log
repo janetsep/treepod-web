@@ -5,52 +5,227 @@
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
    ▲ Next.js 16.0.10 (Turbopack)
    - Local:         http://localhost:3000
-   - Network:       http://192.168.1.7:3000
+   - Network:       http://192.168.1.223:3000
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 633ms
- GET /api/public/disponibilidad?from=2026-02-01&to=2026-03-01 200 in 1291ms (compile: 195ms, proxy.ts: 80ms, render: 1017ms)
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- GET /disponibilidad 200 in 1563ms (compile: 1408ms, proxy.ts: 20ms, render: 136ms)
- GET /images/news/celebrating-at-treepod.jpg 404 in 322ms (compile: 269ms, render: 53ms)
- GET /images/services/breakfast.jpg 404 in 375ms (compile: 300ms, render: 75ms)
- ⨯ The requested resource isn't a valid image for /images/news/celebrating-at-treepod.jpg received null
- ⨯ The requested resource isn't a valid image for /images/services/breakfast.jpg received null
- GET /api/public/disponibilidad?from=2026-02-20&to=2026-08-20 200 in 1179ms (compile: 1258µs, proxy.ts: 2ms, render: 1176ms)
-🚀 API calcular-precio llamada con: { entrada: '2026-03-11', salida: '2026-03-13', adultos: 2 }
-🔗 Conectando a Supabase en: https://iwcejrbiaflbebggvlrm.supabase.co
-✅ Precio base calculado: { temporada: 'Verano', precio_noche: 130000, noches: 2, total: 260000 }
- POST /api/calcular-precio 200 in 679ms (compile: 137ms, proxy.ts: 10ms, render: 532ms)
- POST /api/reservas/crear 200 in 1823ms (compile: 125ms, proxy.ts: 9ms, render: 1689ms)
- GET /reserva/c8e18c95-34ea-4c3f-9307-f28d26139bd4 200 in 505ms (compile: 489ms, proxy.ts: 5ms, render: 11ms)
-📝 Payload recibido: {
-  reservaId: 'c8e18c95-34ea-4c3f-9307-f28d26139bd4',
-  nombre: 'Test',
-  apellido: 'Lead',
-  email: 'test_lead@example.com'
+ ✓ Ready in 1086ms
+ GET / 200 in 1425ms (compile: 1127ms, proxy.ts: 100ms, render: 197ms)
+ GET /contacto 200 in 229ms (compile: 213ms, proxy.ts: 6ms, render: 9ms)
+ GET /disponibilidad 200 in 460ms (compile: 439ms, proxy.ts: 10ms, render: 11ms)
+ GET /images/Galeria/DesayunoTreepod.jpg 404 in 185ms (compile: 158ms, render: 27ms)
+ ⨯ The requested resource isn't a valid image for /images/Galeria/DesayunoTreepod.jpg received null
+Error: The requested resource isn't a valid image.
+    at ignore-listed frames {
+  statusCode: 400
 }
-⚠️ Error registrando lead: Could not find the table 'public.leads_checkout' in the schema cache
- POST /api/reservas/actualizar-huesped 200 in 1370ms (compile: 83ms, proxy.ts: 10ms, render: 1277ms)
- GET /reserva/c8e18c95-34ea-4c3f-9307-f28d26139bd4 200 in 27ms (compile: 9ms, proxy.ts: 2ms, render: 16ms)
- GET /disponibilidad 200 in 58ms (compile: 5ms, proxy.ts: 8ms, render: 45ms)
- GET /images/services/breakfast.jpg 404 in 54ms (compile: 8ms, render: 46ms)
- GET /images/news/celebrating-at-treepod.jpg 404 in 55ms (compile: 32ms, render: 23ms)
- ⨯ The requested resource isn't a valid image for /images/services/breakfast.jpg received null
- ⨯ The requested resource isn't a valid image for /images/news/celebrating-at-treepod.jpg received null
- GET /api/public/disponibilidad?from=2026-02-20&to=2026-08-20 200 in 972ms (compile: 1311µs, proxy.ts: 3ms, render: 968ms)
-🚀 API calcular-precio llamada con: { entrada: '2026-04-15', salida: '2026-04-17', adultos: 2 }
+ GET /api/public/disponibilidad?from=2026-03-20&to=2026-09-20 200 in 1648ms (compile: 199ms, proxy.ts: 4ms, render: 1445ms)
+ GET /api/public/disponibilidad?from=2026-03-20&to=2026-09-20 200 in 974ms (compile: 1774µs, proxy.ts: 4ms, render: 968ms)
+🚀 API calcular-precio llamada con: { entrada: '2026-03-20', salida: '2026-03-22', adultos: 2 }
 🔗 Conectando a Supabase en: https://iwcejrbiaflbebggvlrm.supabase.co
-✅ Precio base calculado: { temporada: 'Otoño', precio_noche: 130000, noches: 2, total: 260000 }
-💰 Descuento aplicado por anticipación (54 días): 26000
- POST /api/calcular-precio 200 in 348ms (compile: 782µs, proxy.ts: 41ms, render: 307ms)
- POST /api/reservas/crear 200 in 1111ms (compile: 14ms, proxy.ts: 6ms, render: 1091ms)
- GET /reserva/d64ea414-7bc7-46af-8034-24ea1115dcf5 200 in 24ms (compile: 6ms, proxy.ts: 1842µs, render: 16ms)
-📝 Payload recibido: {
-  reservaId: 'd64ea414-7bc7-46af-8034-24ea1115dcf5',
-  nombre: 'Real',
-  apellido: 'Test',
-  email: 'real_lead@treepod.cl'
+✅ Precio base calculado: {
+  temporada: 'Otoño',
+  precio_promedio: 145000,
+  noches: 2,
+  total: 290000,
+  desglose: 'Otoño (Fin de semana): 2 noches x $145000 = $290000'
 }
- POST /api/reservas/actualizar-huesped 200 in 934ms (compile: 5ms, proxy.ts: 14ms, render: 916ms)
- GET /reserva/d64ea414-7bc7-46af-8034-24ea1115dcf5 200 in 28ms (compile: 10ms, proxy.ts: 2ms, render: 17ms)
+💰 Descuentos aplicados: []  - Total Descuento: 0
+ POST /api/calcular-precio 200 in 388ms (compile: 79ms, proxy.ts: 6ms, render: 304ms)
+⚠️ Las columnas de descuento no existen en la tabla 'reservas'. Reintentando inserción básica.
+ POST /api/reservas/crear 200 in 1597ms (compile: 70ms, proxy.ts: 5ms, render: 1522ms)
+ GET /reserva/6f7d2587-6c4a-44bd-9b7b-19357b7d59f7 200 in 410ms (compile: 396ms, proxy.ts: 6ms, render: 8ms)
+ GET /images/hero/interior-domo-acogedor-105-2.jpg 404 in 26ms (compile: 2ms, render: 24ms)
+ ⨯ The requested resource isn't a valid image for /images/hero/interior-domo-acogedor-105-2.jpg received null
+Error: The requested resource isn't a valid image.
+    at ignore-listed frames {
+  statusCode: 400
+}
+📝 Payload recibido: {
+  reservaId: '6f7d2587-6c4a-44bd-9b7b-19357b7d59f7',
+  nombre: 'j',
+  apellido: 'j',
+  email: 'j@j.com'
+}
+ POST /api/reservas/actualizar-huesped 200 in 1067ms (compile: 78ms, proxy.ts: 8ms, render: 981ms)
+ GET /reserva/6f7d2587-6c4a-44bd-9b7b-19357b7d59f7 200 in 38ms (compile: 12ms, proxy.ts: 7ms, render: 20ms)
+🔍 Iniciando proceso de pago...
+🔍 ID de reserva recibido: {
+  id: '6f7d2587-6c4a-44bd-9b7b-19357b7d59f7',
+  tipo: 'string',
+  longitud: 36
+}
+🔌 Verificando conexión con Supabase...
+📋 Últimas 5 reservas: [
+  {
+    "id": "6f7d2587-6c4a-44bd-9b7b-19357b7d59f7",
+    "total": 290000,
+    "estado": "pendiente_pago",
+    "created_at": "2026-03-20T19:59:56.900842+00:00"
+  },
+  {
+    "id": "2bd9bbcb-1f10-4d5c-ad5e-8af8c6ee7fce",
+    "total": 290000,
+    "estado": "pendiente_pago",
+    "created_at": "2026-03-20T19:43:39.153473+00:00"
+  },
+  {
+    "id": "cb7f810f-4498-4037-a733-69a72d3ab4c6",
+    "total": 290000,
+    "estado": "expirada",
+    "created_at": "2026-03-20T17:47:46.67421+00:00"
+  },
+  {
+    "id": "48398339-fd94-4b20-ac42-437073c96283",
+    "total": 145000,
+    "estado": "expirada",
+    "created_at": "2026-03-20T02:19:35.732773+00:00"
+  },
+  {
+    "id": "89bae610-7e02-41af-b4b9-9acb2320f8f0",
+    "total": 290000,
+    "estado": "expirada",
+    "created_at": "2026-03-20T01:41:32.066866+00:00"
+  }
+]
+🔍 Buscando reserva con ID: 6f7d2587-6c4a-44bd-9b7b-19357b7d59f7
+✅ Reserva encontrada: {
+  id: '6f7d2587-6c4a-44bd-9b7b-19357b7d59f7',
+  total: 290000,
+  estado: 'pendiente_pago'
+}
+💳 Procesando pago...
+🌐 Usando baseUrl/returnUrl: {
+  baseUrl: 'http://localhost:3000',
+  returnUrl: 'http://localhost:3000/api/pagos/webpay/retorno?reserva_id=6f7d2587-6c4a-44bd-9b7b-19357b7d59f7'
+}
+📝 Detalles del pago: {
+  monto: 145000,
+  ordenCompra: 'res-1774036810791',
+  returnUrl: 'http://localhost:3000/api/pagos/webpay/retorno?reserva_id=6f7d2587-6c4a-44bd-9b7b-19357b7d59f7'
+}
+🔄 Creando transacción en Webpay...
+🌐 Enviando petición a: https://webpay3g.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions
+🔑 Headers: { 'Tbk-Api-Key-Id': '597049972793', 'Tbk-Api-Key-Secret': '****6ddc' }
+📦 Body: {
+  buy_order: 'res-1774036810791',
+  session_id: 'res-1774036810791',
+  amount: 145000,
+  return_url: 'http://localhost:3000/api/pagos/webpay/retorno?reserva_id=6f7d2587-6c4a-44bd-9b7b-19357b7d59f7'
+}
+📥 Respuesta de Transbank: {
+  status: 200,
+  statusText: 'OK',
+  headers: {
+    'content-type': 'application/json',
+    date: 'Fri, 20 Mar 2026 20:00:11 GMT',
+    'transfer-encoding': 'chunked'
+  },
+  body: '{"token":"12317f24e0d71f9a32f81a5c2fb7a01781c9157736addc839dc34bf054a0aa94","url":"https://webpay3g.transbank.cl:443/webpayserver/initTransaction"}'
+}
+✅ Transacción creada: {
+  url: 'https://webpay3g.transbank.cl:443/webpayserver/initTransaction',
+  token: '12317f24e0d71f9a32f81a5c2fb7a01781c9157736addc839dc34bf054a0aa94',
+  buyOrder: 'res-1774036810791'
+}
+🔄 Actualizando estado de la reserva...
+✅ Pago procesado correctamente
+ POST /api/pagos/webpay/crear 200 in 1411ms (compile: 70ms, proxy.ts: 6ms, render: 1336ms)
+📩 Webpay retorno recibido {
+  method: 'GET',
+  url: 'http://localhost:3000/api/pagos/webpay/retorno?TBK_TOKEN=12317f24e0d71f9a32f81a5c2fb7a01781c9157736addc839dc34bf054a0aa94&reserva_id=6f7d2587-6c4a-44bd-9b7b-19357b7d59f7&TBK_ORDEN_COMPRA=res-1774036810791&TBK_ID_SESION=res-1774036810791',
+  baseUrl: 'http://localhost:3000',
+  contentType: null,
+  env: 'PRODUCTION',
+  commerceCode: '597049972793'
+}
+⚠️ Retorno con TBK_TOKEN (aborto/falla) {
+  tbkToken: '12317f24e0d71f9a32f81a5c2fb7a01781c9157736addc839dc34bf054a0aa94',
+  reservaId: '6f7d2587-6c4a-44bd-9b7b-19357b7d59f7'
+}
+ GET /api/pagos/webpay/retorno?TBK_TOKEN=12317f24e0d71f9a32f81a5c2fb7a01781c9157736addc839dc34bf054a0aa94&reserva_id=6f7d2587-6c4a-44bd-9b7b-19357b7d59f7&TBK_ORDEN_COMPRA=res-1774036810791&TBK_ID_SESION=res-1774036810791 303 in 162ms (compile: 155ms, proxy.ts: 4ms, render: 3ms)
+ GET /reserva/6f7d2587-6c4a-44bd-9b7b-19357b7d59f7?error=webpay_abort 200 in 63ms (compile: 3ms, proxy.ts: 1393µs, render: 59ms)
+ GET / 200 in 42ms (compile: 7ms, proxy.ts: 6ms, render: 29ms)
+ GET /semana-santa-2026 200 in 287ms (compile: 255ms, proxy.ts: 12ms, render: 21ms)
+ GET / 200 in 40ms (compile: 9ms, proxy.ts: 8ms, render: 24ms)
+ GET /mundial-mtb-nevados-chillan-2026 200 in 209ms (compile: 185ms, proxy.ts: 7ms, render: 17ms)
+ GET / 200 in 32ms (compile: 5ms, proxy.ts: 4ms, render: 23ms)
+ GET /admi 404 in 90ms (compile: 22ms, proxy.ts: 8ms, render: 60ms)
+ GET /admin 200 in 477ms (compile: 432ms, proxy.ts: 6ms, render: 39ms)
+ GET /admin/login 200 in 165ms (compile: 155ms, proxy.ts: 3ms, render: 8ms)
+ GET /admin/reset-password 200 in 244ms (compile: 207ms, proxy.ts: 14ms, render: 22ms)
+ GET /admin/login 200 in 37ms (compile: 8ms, proxy.ts: 7ms, render: 21ms)
+ GET / 200 in 119ms (compile: 47ms, proxy.ts: 7ms, render: 65ms)
+ GET / 200 in 54ms (compile: 3ms, proxy.ts: 1998µs, render: 49ms)
+ GET /admin/dashboard 200 in 1232ms (compile: 1122ms, proxy.ts: 6ms, render: 104ms)
+ GET /admin/dashboard 200 in 33ms (compile: 3ms, proxy.ts: 3ms, render: 26ms)
+ GET /api/analytics 200 in 10.8s (compile: 164ms, proxy.ts: 7ms, render: 10.6s)
+ GET /api/analytics 200 in 2.8s (compile: 3ms, proxy.ts: 3ms, render: 2.7s)
+ GET /api/analytics 200 in 2.5s (compile: 3ms, proxy.ts: 4ms, render: 2.5s)
+ GET /admin/login 200 in 49ms (compile: 18ms, proxy.ts: 10ms, render: 21ms)
+ GET /admin 200 in 102ms (compile: 82ms, proxy.ts: 6ms, render: 15ms)
+ GET /api/admin/reservas 200 in 517ms (compile: 126ms, proxy.ts: 5ms, render: 386ms)
+ GET /api/admin/reservas 200 in 264ms (compile: 4ms, proxy.ts: 4ms, render: 256ms)
+ GET /api/admin/tarifas 200 in 718ms (compile: 90ms, proxy.ts: 12ms, render: 617ms)
+ GET /api/admin/tarifas 200 in 511ms (compile: 1579µs, proxy.ts: 2ms, render: 507ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 48398339-fd94-4b20-ac42-437073c96283
+🗑️ Eliminación por janetsep@gmail.com: reserva cb7f810f-4498-4037-a733-69a72d3ab4c6
+✅ Reserva 48398339-fd94-4b20-ac42-437073c96283 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 2.4s (compile: 154ms, proxy.ts: 10ms, render: 2.3s)
+✅ Reserva cb7f810f-4498-4037-a733-69a72d3ab4c6 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1689ms (compile: 892µs, proxy.ts: 1923µs, render: 1686ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva d0d0a81b-7072-4318-8c91-1deec10da190
+✅ Reserva d0d0a81b-7072-4318-8c91-1deec10da190 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1885ms (compile: 6ms, proxy.ts: 6ms, render: 1873ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 088bacf6-46e4-44d2-8a38-1defa0aa89f9
+✅ Reserva 088bacf6-46e4-44d2-8a38-1defa0aa89f9 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1943ms (compile: 8ms, proxy.ts: 14ms, render: 1921ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva e4654fd5-b548-44d1-b307-b1dd3405c20d
+✅ Reserva e4654fd5-b548-44d1-b307-b1dd3405c20d eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1698ms (compile: 884µs, proxy.ts: 4ms, render: 1693ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 99980f14-a717-45ff-9462-d1738f7347c0
+✅ Reserva 99980f14-a717-45ff-9462-d1738f7347c0 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1807ms (compile: 16ms, proxy.ts: 5ms, render: 1786ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 89cf9b07-7002-47a8-a76f-dd55f3fc9284
+✅ Reserva 89cf9b07-7002-47a8-a76f-dd55f3fc9284 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1693ms (compile: 3ms, proxy.ts: 6ms, render: 1684ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 5a35564e-a1e2-4e46-b2bb-072f864c50a1
+✅ Reserva 5a35564e-a1e2-4e46-b2bb-072f864c50a1 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1700ms (compile: 711µs, proxy.ts: 1172µs, render: 1698ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 257ebfe2-ef77-4ef3-a3bd-cf91952f1856
+✅ Reserva 257ebfe2-ef77-4ef3-a3bd-cf91952f1856 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1670ms (compile: 1761µs, proxy.ts: 3ms, render: 1665ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva ad63bad7-54ff-415a-915e-d7f53f18e264
+ GET /api/admin/reservas 200 in 258ms (compile: 5ms, proxy.ts: 5ms, render: 248ms)
+✅ Reserva ad63bad7-54ff-415a-915e-d7f53f18e264 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1836ms (compile: 3ms, proxy.ts: 4ms, render: 1829ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva fdff69af-753a-4470-b37b-e0683f5a405a
+✅ Reserva fdff69af-753a-4470-b37b-e0683f5a405a eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1673ms (compile: 1779µs, proxy.ts: 3ms, render: 1669ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 2bd9bbcb-1f10-4d5c-ad5e-8af8c6ee7fce
+✅ Reserva 2bd9bbcb-1f10-4d5c-ad5e-8af8c6ee7fce eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1679ms (compile: 1974µs, proxy.ts: 4ms, render: 1673ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 6f7d2587-6c4a-44bd-9b7b-19357b7d59f7
+✅ Reserva 6f7d2587-6c4a-44bd-9b7b-19357b7d59f7 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1696ms (compile: 3ms, proxy.ts: 5ms, render: 1688ms)
+🗑️ Eliminación por janetsep@gmail.com: reserva 89bae610-7e02-41af-b4b9-9acb2320f8f0
+✅ Reserva 89bae610-7e02-41af-b4b9-9acb2320f8f0 eliminada exitosamente.
+ POST /api/admin/reservas/eliminar 200 in 1697ms (compile: 3ms, proxy.ts: 5ms, render: 1690ms)
+ GET /api/admin/reservas 200 in 339ms (compile: 4ms, proxy.ts: 5ms, render: 330ms)
+ GET /api/admin/reservas 200 in 324ms (compile: 3ms, proxy.ts: 5ms, render: 316ms)
+ GET /admin/login 200 in 28ms (compile: 7ms, proxy.ts: 5ms, render: 15ms)
+ GET /admin 200 in 27ms (compile: 7ms, proxy.ts: 6ms, render: 14ms)
+ GET /api/admin/reservas 200 in 321ms (compile: 4ms, proxy.ts: 3ms, render: 313ms)
+ GET /api/admin/reservas 200 in 250ms (compile: 3ms, proxy.ts: 4ms, render: 244ms)
+ GET /api/admin/tarifas 200 in 548ms (compile: 3ms, proxy.ts: 6ms, render: 539ms)
+ GET /api/admin/tarifas 200 in 489ms (compile: 3ms, proxy.ts: 4ms, render: 483ms)
+ GET /api/admin/tarifas 200 in 576ms (compile: 3ms, proxy.ts: 4ms, render: 569ms)
+ GET /api/admin/tarifas 200 in 514ms (compile: 3ms, proxy.ts: 4ms, render: 507ms)
+ GET /api/admin/reservas 200 in 246ms (compile: 3ms, proxy.ts: 5ms, render: 238ms)
+ GET /api/admin/reservas 200 in 724ms (compile: 4ms, proxy.ts: 9ms, render: 711ms)
+ GET /api/admin/reservas 200 in 439ms (compile: 10ms, proxy.ts: 18ms, render: 411ms)
+ GET /domos 200 in 312ms (compile: 296ms, proxy.ts: 3ms, render: 12ms)
+ GET /images/hero/interior-domo-acogedor-105-2.jpg 404 in 168ms (compile: 19ms, render: 150ms)
+ GET /images/real/CocinaDomo.jpeg 404 in 166ms (compile: 58ms, render: 108ms)
+ GET /images/real/CocinaDomo1.jpeg 404 in 168ms (compile: 67ms, render: 101ms)
+ GET /images/hero/interior-domo-acogedor-95-2.jpg 404 in 176ms (compile: 143ms, render: 33ms)

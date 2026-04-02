@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Agentes IA — TreePod Glamping v2.1</title>
+<style>
+:root {
+  --cyan: #009FDF;
+  --verde: #4A7C2E;
+  --dorado: #8B6914;
+  --fondo1: #E8F0E0;
+  --fondo2: #F5E6C8;
+  --dark: #1a2e1a;
+  --text: #2d2d2d;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Georgia, serif; color: var(--text); background: #fff; font-size: 14px; line-height: 1.6; }
+h1,h2,h3,h4 { font-family: Georgia, serif; }
+.page-break { page-break-after: always; }
+
+/* PORTADA */
+.cover {
+  background: linear-gradient(160deg, #1a2e1a 0%, #2d4a1e 50%, #1a3a2a 100%);
+  color: white; min-height: 100vh; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; text-align: center; padding: 60px 40px;
+}
+.cover h1 { font-size: 36px; color: #E8F0E0; margin-bottom: 8px; }
+.cover h2 { font-size: 20px; color: #009FDF; margin-bottom: 30px; font-style: italic; }
+.cover-divider { width: 80px; height: 3px; background: #8B6914; margin: 20px auto; }
+.cover p { font-size: 15px; color: #b0c8a0; max-width: 500px; line-height: 1.7; }
+.cover .version-box {
+  margin-top: 40px; border: 1px solid #4A7C2E; padding: 12px 30px;
+  border-radius: 4px; font-size: 13px; color: #E8F0E0;
+}
+.cover .agents-count {
+  font-size: 60px; font-weight: bold; color: #009FDF; margin: 20px 0 5px;
+}
+
+/* LAYOUT */
+.container { max-width: 860px; margin: 0 auto; padding: 40px 40px; }
+.section-title {
+  background: var(--dark); color: white; padding: 14px 24px;
+  font-size: 18px; margin: 40px 0 24px; border-left: 5px solid var(--cyan);
+  page-break-after: avoid;
+}
+.section-title span { color: var(--cyan); margin-right: 10px; }
+
+/* INTRO BOX */
+.intro-box {
+  background: var(--fondo1); border-left: 4px solid var(--verde);
+  padding: 20px 24px; margin: 20px 0; border-radius: 4px;
+}
+.intro-box h3 { color: var(--verde); margin-bottom: 8px; font-size: 16px; }
+
+/* FLUJO MAESTRO */
+.flow-container { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 24px 0; justify-content: center; }
+.flow-step {
+  background: white; border: 2px solid var(--cyan); border-radius: 8px;
+  padding: 12px 16px; text-align: center; min-width: 90px;
+}
+.flow-step .agent-id { font-size: 22px; font-weight: bold; color: var(--cyan); }
+.flow-step .agent-name { font-size: 10px; color: #555; margin-top: 2px; }
+.flow-arrow { font-size: 20px; color: var(--dorado); font-weight: bold; }
+.flow-note { font-size: 12px; color: #666; text-align: center; margin-top: 10px; font-style: italic; }
+.a9-badge {
+  background: var(--dorado); color: white; border-radius: 50px;
+  padding: 10px 22px; text-align: center; font-weight: bold; font-size: 13px;
+  margin: 16px auto; max-width: 460px; display: block;
+}
+
+/* LAYOUT */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* MAPA DE RELACIONES */
+.rel-map {
+  background: var(--dark); border-radius: 8px; padding: 24px; margin: 20px 0;
+  color: white;
+}
+.rel-map h4 { color: var(--cyan); margin-bottom: 16px; text-align: center; font-size: 15px; }
+.rel-row { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+.rel-node {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px; padding: 8px 14px; font-size: 12px; text-align: center;
+}
+.rel-node.primary { border-color: #009FDF; background: rgba(0,159,223,0.2); }
+.rel-node.secondary { border-color: #4A7C2E; background: rgba(74,124,46,0.2); }
+.rel-node.accent { border-color: #8B6914; background: rgba(139,105,20,0.2); }
+.rel-conn { font-size: 16px; color: #8B6914; font-weight: bold; }
+
+/* AGENT CARD */
+.agent-card {
+  border: 1px solid #ddd; border-radius: 8px; margin: 30px 0;
+  overflow: hidden; page-break-inside: avoid;
+}
+.agent-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 24px; color: white;
+}
+.agent-header.marketing { background: linear-gradient(90deg, #1a3a2a, #2d5a1e); }
+.agent-header.operaciones { background: linear-gradient(90deg, #1a2a3a, #1e3a5a); }
+.agent-header.finanzas { background: linear-gradient(90deg, #2a1a1a, #4a2020); }
+.agent-header.control { background: linear-gradient(90deg, #2a1a3a, #3a1a5a); }
+.agent-id-badge {
+  font-size: 28px; font-weight: bold; background: rgba(255,255,255,0.15);
+  padding: 8px 14px; border-radius: 6px; min-width: 60px; text-align: center;
+}
+.agent-title h3 { font-size: 17px; margin-bottom: 2px; }
+.agent-title .subtitle { font-size: 12px; opacity: 0.8; font-style: italic; }
+.agent-body { padding: 20px 24px; }
+
+/* SECTIONS */
+.agent-section { margin: 14px 0; }
+.agent-section h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--cyan); border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 4px; margin-bottom: 10px; font-family: Georgia, serif;
+}
+
+/* TRIGGER BOX */
+.trigger-box {
+  background: #f0f8ff; border: 1px solid #b8ddf8; border-radius: 6px;
+  padding: 14px; margin: 10px 0;
+}
+.trigger-box .label { font-size: 11px; font-weight: bold; color: #009FDF; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+.trigger-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.trigger-tag {
+  background: #e0f2fe; color: #0277bd; border-radius: 20px;
+  padding: 4px 10px; font-size: 11px; border: 1px solid #b3e0fc;
+}
+
+/* FUENTES BOX */
+.sources-box {
+  background: var(--fondo1); border-radius: 6px; padding: 14px; margin: 10px 0;
+}
+.source-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.source-label {
+  background: var(--verde); color: white; font-size: 10px; padding: 2px 7px;
+  border-radius: 3px; white-space: nowrap; margin-top: 1px; flex-shrink: 0;
+}
+.source-text strong { color: var(--verde); }
+
+/* BEST PRACTICES */
+.bp-list { margin: 0; padding: 0; list-style: none; }
+.bp-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 12px; align-items: flex-start; }
+.bp-mark { color: var(--dorado); font-weight: bold; font-size: 14px; flex-shrink: 0; line-height: 1.4; }
+
+/* RELATIONS TABLE */
+.rel-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+.rel-table th { background: var(--dark); color: white; padding: 8px 12px; text-align: left; font-weight: normal; font-size: 11px; letter-spacing: 0.5px; }
+.rel-table td { padding: 7px 12px; border-bottom: 1px solid #eee; }
+.rel-table tr:nth-child(even) td { background: #f9f9f9; }
+.badge-envia { background: #e8f5e9; color: #2e7d32; border-radius: 3px; padding: 2px 6px; font-size: 10px; }
+.badge-recibe { background: #e3f2fd; color: #1565c0; border-radius: 3px; padding: 2px 6px; font-size: 10px; }
+.badge-valida { background: #fff8e1; color: #f57f17; border-radius: 3px; padding: 2px 6px; font-size: 10px; }
+
+/* KPI GRID */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+.kpi-card {
+  background: var(--fondo2); border-radius: 6px; padding: 12px; text-align: center;
+  border-bottom: 3px solid var(--dorado);
+}
+.kpi-value { font-size: 20px; font-weight: bold; color: var(--dark); }
+.kpi-label { font-size: 10px; color: #666; text-transform: uppercase; margin-top: 3px; }
+
+/* TABLA DE COSTOS */
+.cost-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.cost-table th { background: var(--verde); color: white; padding: 8px; text-align: left; font-weight: normal; font-size: 11px; letter-spacing: 0.5px; }
+.cost-table td { padding: 7px 8px; border-bottom: 1px solid #e0e8d8; }
+.cost-table .total-row td { background: var(--dark); color: white; font-weight: bold; }
+.cost-table .category-row td { background: var(--fondo1); font-weight: bold; color: var(--verde); font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* TECH STACK */
+.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 20px 0; }
+.tech-card {
+  background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 6px;
+  padding: 14px; border-top: 3px solid var(--cyan);
+}
+.tech-card h4 { font-size: 13px; color: var(--dark); margin-bottom: 8px; }
+.tech-item { font-size: 12px; color: #555; margin-bottom: 4px; }
+.tech-item strong { color: var(--cyan); }
+
+/* FINANCIAL */
+.fin-alert {
+  background: #2d1a1a; color: #ffcc80; border-radius: 6px;
+  padding: 14px 18px; margin: 12px 0; border-left: 4px solid #ff6b35;
+}
+.fin-alert .alert-title { font-weight: bold; font-size: 13px; color: #ff8a65; margin-bottom: 4px; }
+
+/* N8N */
+.n8n-card {
+  border: 1px solid #ddd; border-radius: 8px; padding: 18px; margin: 14px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8f0e0 100%);
+}
+.n8n-card h4 { color: var(--dark); margin-bottom: 10px; font-size: 15px; }
+.n8n-param { font-size: 12px; color: #555; margin-bottom: 4px; padding-left: 14px; }
+
+/* ALERTS */
+.alert-box-red { background: #fff0f0; border-left: 3px solid #e53935; padding: 8px 10px; margin-bottom: 5px; border-radius: 0 4px 4px 0; font-size: 11px; }
+.alert-box-yellow { background: #fffde7; border-left: 3px solid #f9a825; padding: 8px 10px; margin-bottom: 5px; border-radius: 0 4px 4px 0; font-size: 11px; }
+.occ-box { padding: 7px 10px; margin-bottom: 4px; border-radius: 4px; font-size: 11px; }
+
+/* RULE BOX */
+.rule-box {
+  background: #fff3cd; border-left: 3px solid var(--dorado);
+  padding: 10px 14px; font-size: 12px; margin: 8px 0; border-radius: 0 4px 4px 0;
+}
+.rule-box strong { color: var(--dorado); }
+
+/* PILAR BAR */
+.pilar-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.pilar-fill { height: 14px; border-radius: 2px; }
+
+/* FOOTER */
+.footer {
+  background: var(--dark); color: #888; text-align: center;
+  padding: 16px; font-size: 11px; margin-top: 40px;
+}
+
+@media print {
+  .cover { min-height: auto; padding: 40px; }
+  .container { padding: 20px; }
+  .agent-card { page-break-inside: avoid; }
+  .section-title { page-break-after: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover page-break">
+  <h1>Manual de Agentes IA</h1>
+  <h2>Ecosistema de Automatización Inteligente</h2>
+  <div class="cover-divider"></div>
+  <div class="agents-count">12</div>
+  <p>Agentes activos para gestión integral del Glamping</p>
+  <p style="margin-top:10px; color:#a0b890;">Marketing · Operaciones · Finanzas · Control de Calidad</p>
+  <div style="margin-top:30px; display:grid; grid-template-columns: repeat(4,1fr); gap:12px; max-width:560px;">
+    <div style="text-align:center; color:#b0c8a0; font-size:12px;"><div style="font-size:22px; color:#009FDF; font-weight:bold;">7</div>Agentes<br>Marketing</div>
+    <div style="text-align:center; color:#b0c8a0; font-size:12px;"><div style="font-size:22px; color:#4A7C2E; font-weight:bold;">3</div>Agentes<br>Operaciones</div>
+    <div style="text-align:center; color:#b0c8a0; font-size:12px;"><div style="font-size:22px; color:#8B6914; font-weight:bold;">1</div>Skill<br>Finanzas</div>
+    <div style="text-align:center; color:#b0c8a0; font-size:12px;"><div style="font-size:22px; color:#e0a060; font-weight:bold;">1</div>Agente<br>Control</div>
+  </div>
+  <div class="version-box">
+    <strong>TreePod Glamping — Migryk Correa Ltda.</strong><br>
+    Version 2.1 — Marzo 2026 · Precios reales Jumbo Chillán verificados · @domostreepod
+  </div>
+</div>
+
+<!-- FLUJO MAESTRO -->
+<div class="container page-break">
+  <div class="section-title"><span>I.</span> Flujo de Colaboracion Maestro</div>
+
+  <div class="intro-box">
+    <h3>Como colaboran los agentes</h3>
+    <p>El ecosistema funciona como un equipo estructurado: cada campana de marketing sigue un flujo secuencial obligatorio. El Agente 9 (Brand Ambassador / COO Virtual) actua como arbitro absoluto y valida el trabajo de todos los demas antes de cualquier ejecucion final.</p>
+  </div>
+
+  <h3 style="color:var(--verde); margin: 20px 0 12px; font-size:15px;">Flujo secuencial para campanas de marketing</h3>
+  <div class="flow-container">
+    <div class="flow-step"><div class="agent-id">A9</div><div class="agent-name">Brand define<br>estandares</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A4</div><div class="agent-name">Estrategia<br>planifica</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A2</div><div class="agent-name">Contenido<br>escribe</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A3</div><div class="agent-name">Diseno<br>visualiza</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A5</div><div class="agent-name">Email/WA<br>distribuye</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A1</div><div class="agent-name">Datos<br>mide</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A10</div><div class="agent-name">Brechas<br>evalua</div></div>
+  </div>
+
+  <div class="a9-badge">A9 BRAND — Valida el trabajo de TODOS los agentes antes de ejecutar</div>
+  <p class="flow-note">A9 puede detener cualquier accion que no este alineada con la identidad y politicas de TreePod</p>
+
+  <h3 style="color:var(--verde); margin: 30px 0 12px; font-size:15px;">Flujo operativo post-estadía (A8A → A8B → A8C → A1)</h3>
+  <div class="flow-container">
+    <div class="flow-step"><div class="agent-id">A8A</div><div class="agent-name">Instalaciones<br>consumos</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A8B</div><div class="agent-name">Inventario<br>insumos</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A8C</div><div class="agent-name">Costos<br>rentabilidad</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">A1</div><div class="agent-name">Datos<br>KPIs</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="agent-id">ACC</div><div class="agent-name">Contabilidad<br>F29 / F22</div></div>
+  </div>
+
+  <h3 style="color:var(--verde); margin: 30px 0 16px; font-size:15px;">Mapa completo de relaciones</h3>
+  <div class="rel-map">
+    <h4>Arquitectura de Dependencias</h4>
+    <div class="rel-row">
+      <div class="rel-node accent" style="font-weight:bold; padding:12px 20px;">A9 — Brand Ambassador<br><small>Arbitro y validador global</small></div>
+    </div>
+    <div class="rel-conn" style="text-align:center; font-size:18px; margin:6px 0;">↕ valida a todos ↕</div>
+    <div class="rel-row">
+      <div class="rel-node primary">A4<br><small>Estrategia</small></div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node primary">A2<br><small>Contenido</small></div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node primary">A3<br><small>Diseno</small></div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node primary">A5<br><small>Email / WA</small></div>
+    </div>
+    <div class="rel-conn" style="text-align:center; margin:4px 0;">↓ resultados</div>
+    <div class="rel-row">
+      <div class="rel-node secondary">A1 — Analista de Datos<br><small>Mide y reporta KPIs</small></div>
+      <div class="rel-conn">↔</div>
+      <div class="rel-node secondary">A10 — Monitor Brechas<br><small>Detecta gaps vs objetivos</small></div>
+    </div>
+    <div class="rel-conn" style="text-align:center; margin:4px 0;">↕ datos reales</div>
+    <div class="rel-row">
+      <div class="rel-node" style="font-size:11px;">A8A<br>Instalaciones</div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node" style="font-size:11px;">A8B<br>Inventario</div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node" style="font-size:11px;">A8C<br>Costos</div>
+      <div class="rel-conn">→</div>
+      <div class="rel-node accent" style="font-size:11px;">ACC<br>Contabilidad</div>
+    </div>
+  </div>
+</div>
+
+<!-- A9 BRAND -->
+<div class="container">
+  <div class="section-title"><span>II.</span> Agente A9 — Brand Ambassador y COO Virtual</div>
+  <div class="agent-card">
+    <div class="agent-header control">
+      <div class="agent-id-badge">A9</div>
+      <div class="agent-title">
+        <h3>Brand Ambassador / COO Virtual</h3>
+        <div class="subtitle">Arbitro de marca · Guardian de identidad · Validador de todos los agentes</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">esta bien esto para la marca?</span>
+                <span class="trigger-tag">cual es nuestra politica?</span>
+                <span class="trigger-tag">que incluye la estadia?</span>
+                <span class="trigger-tag">aceptamos mascotas?</span>
+                <span class="trigger-tag">cuanto cuesta la noche?</span>
+                <span class="trigger-tag">cual es nuestra mision?</span>
+                <span class="trigger-tag">revisa si esto es de TreePod</span>
+                <span class="trigger-tag">como tratamos a los huespedes?</span>
+                <span class="trigger-tag">valida este contenido</span>
+              </div>
+            </div>
+            <p style="font-size:11px; color:#888; margin-top:6px; font-style:italic;">Activar tambien ANTES de que cualquier agente ejecute contenido publico.</p>
+          </div>
+
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">SKILL.md</span><div>Mision, vision, valores, politicas de operacion, perfil de huesped ideal</div></div>
+              <div class="source-item"><span class="source-label">MARCA</span><div>Paleta oficial, tipografias, tono de voz, Brand Promise</div></div>
+              <div class="source-item"><span class="source-label">CALENDAR</span><div>Ocupacion para decisiones de politica operativa</div></div>
+              <div class="source-item"><span class="source-label">TODOS</span><div>Valida contenido de A1 a A8C antes de cualquier ejecucion</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Framework StoryBrand: el heroe siempre es el huesped, TreePod es el guia que resuelve su problema</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Brand Promise como filtro absoluto: si una accion no contribuye a "experiencia inmersiva que transforma", la rechaza</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Nunca compite en precio, siempre en valor y experiencia</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Tono consistente en todo contenido: 60% inspiracional, 25% informativo, 15% promocional</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Rechaza cualquier accion que comprometa la sostenibilidad o autenticidad de la marca</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Respuesta a consultas: menos de 2h WhatsApp, menos de 24h email — estandar no negociable</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A2 Contenido</td><td><span class="badge-valida">Valida</span> tono y voz de marca</td></tr>
+              <tr><td>A3 Diseno</td><td><span class="badge-valida">Valida</span> paleta y tipografia</td></tr>
+              <tr><td>A4 Estrategia</td><td><span class="badge-valida">Valida</span> posicionamiento correcto</td></tr>
+              <tr><td>A5 Email/WA</td><td><span class="badge-valida">Valida</span> tono carta personal</td></tr>
+              <tr><td>A8A/B/C</td><td><span class="badge-envia">Provee</span> contexto de marca para decisiones operativas</td></tr>
+              <tr><td>A1 Datos</td><td><span class="badge-valida">Confirma</span> metricas prioritarias</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="agent-section">
+        <h4>Identidad de marca — Referencia rapida</h4>
+        <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:10px; font-size:12px;">
+          <div style="background:var(--fondo1); padding:12px; border-radius:6px;"><strong style="color:var(--verde);">Tagline</strong><br><em>"Donde la montana se convierte en tu hogar"</em></div>
+          <div style="background:var(--fondo1); padding:12px; border-radius:6px;"><strong style="color:var(--verde);">Brand Essence</strong><br>Naturaleza + Arquitectura + Experiencia Premium</div>
+          <div style="background:var(--fondo1); padding:12px; border-radius:6px;"><strong style="color:var(--verde);">Huesped ideal</strong><br>Millennials/Gen Z 25-40 · Parejas · Nomadas digitales</div>
+        </div>
+      </div>
+      <div class="agent-section">
+        <h4>Mision y Vision</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:12px;">
+          <div style="background:#1a2e1a; color:#c0d8b0; padding:14px 16px; border-radius:6px;">
+            <strong style="color:#80d070; display:block; margin-bottom:6px;">MISION</strong>
+            Ofrecer una experiencia de glamping unica en domos geodesicos en Las Trancas, Nuble, donde la naturaleza salvaje de la Cordillera se encuentra con el confort, el diseno y la conexion humana autentica.
+          </div>
+          <div style="background:#1a2e1a; color:#c0d8b0; padding:14px 16px; border-radius:6px;">
+            <strong style="color:#80d070; display:block; margin-bottom:6px;">VISION</strong>
+            Ser el glamping de referencia del sur de Chile, reconocido por transformar la forma en que los viajeros se reconectan con la naturaleza y consigo mismos.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- A4 ESTRATEGIA -->
+  <div class="section-title"><span>III.</span> Agente A4 — Estratega de Campanas</div>
+  <div class="agent-card">
+    <div class="agent-header marketing">
+      <div class="agent-id-badge">A4</div>
+      <div class="agent-title">
+        <h3>Estratega de Campanas de Marketing Organico</h3>
+        <div class="subtitle">10 motores de crecimiento · $50.000 CLP/mes · Alianzas trueque · Meta Ads + Google Ads</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">que campana lanzamos?</span>
+                <span class="trigger-tag">estrategia para la nieve</span>
+                <span class="trigger-tag">hacemos algo con influencers?</span>
+                <span class="trigger-tag">cuanto invertir en IG Boost?</span>
+                <span class="trigger-tag">trueque con restaurante?</span>
+                <span class="trigger-tag">campana Semana Santa</span>
+                <span class="trigger-tag">calendario de marketing</span>
+                <span class="trigger-tag">Meta Ads / Facebook Ads</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">PRESUPUESTO</span><div>$50k/mes: $20k IG Boost · $10k GMB · $10k Canva Pro · $10k Reserva</div></div>
+              <div class="source-item"><span class="source-label">META ADS</span><div>Meta Business Manager — campanas Facebook e Instagram. Segmentacion 25-50 anos. Pausar audiencias 55+</div></div>
+              <div class="source-item"><span class="source-label">WINDSOR.AI</span><div>Conecta Meta Ads y Google Ads para reportes unificados</div></div>
+              <div class="source-item"><span class="source-label">A1 DATOS</span><div>Resultados de campanas anteriores para tomar decisiones</div></div>
+              <div class="source-item"><span class="source-label">ALIANZAS</span><div>Influencers, restaurantes, termas, guias, tours del Valle del Itata</div></div>
+            </div>
+          </div>
+          <div class="rule-box"><strong>Regla critica:</strong> Nunca boostear un post que no tuvo buen rendimiento organico primero. El boost amplifica lo que ya funciona. En Meta Ads, segmentar estrictamente 25-50 anos.</div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>5 niveles de conciencia del consumidor — contenido diferente segun si el cliente no sabe de TreePod o ya quiere reservar</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>10 motores organicos simultaneos: Reels, GMB, Blog SEO, Email, UGC, Alianzas trueque, WhatsApp, Pinterest, Reviews, Grupos Facebook</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Meta Ads con pixeles bien configurados y audiencias lookalike construidas desde huespedes reales</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Micro-influencers sobre macro: 8.000 seguidores apasionados de naturaleza valen mas que 50.000 genericos</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Anticipacion estacional: publicar en agosto para capturar reservas de Fiestas Patrias de septiembre</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A9 Brand</td><td><span class="badge-recibe">Recibe</span> validacion de posicionamiento</td></tr>
+              <tr><td>A2 Contenido</td><td><span class="badge-envia">Entrega</span> brief de campana</td></tr>
+              <tr><td>A1 Datos</td><td><span class="badge-recibe">Recibe</span> metricas para ajustar</td></tr>
+              <tr><td>A5 Email</td><td><span class="badge-envia">Define</span> cuando activar secuencias</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- A2 CONTENIDO -->
+  <div class="section-title"><span>IV.</span> Agente A2 — Creador de Contenido</div>
+  <div class="agent-card">
+    <div class="agent-header marketing">
+      <div class="agent-id-badge">A2</div>
+      <div class="agent-title">
+        <h3>Creador de Contenido Estrategico 100% Organico</h3>
+        <div class="subtitle">5 pilares · Framework StoryBrand · Instagram · TikTok · Blog SEO · @domostreepod</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">escribeme un Reel</span>
+                <span class="trigger-tag">dame ideas para Instagram</span>
+                <span class="trigger-tag">que publicar esta semana?</span>
+                <span class="trigger-tag">script para TikTok</span>
+                <span class="trigger-tag">redacta un post sobre la nieve</span>
+                <span class="trigger-tag">blog post glamping Chile</span>
+                <span class="trigger-tag">texto para carrusel</span>
+                <span class="trigger-tag">calendario editorial</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Distribucion de los 5 Pilares</h4>
+            <div class="pilar-bar"><div class="pilar-fill" style="width:96px; background:var(--cyan);"></div><span><strong>40%</strong> Vida en el Domo</span></div>
+            <div class="pilar-bar"><div class="pilar-fill" style="width:60px; background:var(--verde);"></div><span><strong>25%</strong> Las Trancas Secreta</span></div>
+            <div class="pilar-bar"><div class="pilar-fill" style="width:36px; background:var(--dorado);"></div><span><strong>15%</strong> Momentos Magicos</span></div>
+            <div class="pilar-bar"><div class="pilar-fill" style="width:24px; background:#888;"></div><span><strong>10%</strong> Educativo / SEO</span></div>
+            <div class="pilar-bar"><div class="pilar-fill" style="width:24px; background:#aaa;"></div><span><strong>10%</strong> Testimonios / UGC</span></div>
+          </div>
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">INSTAGRAM</span><div>Insights de @domostreepod — posts con mejor rendimiento para replicar formato</div></div>
+              <div class="source-item"><span class="source-label">SEARCH CONSOLE</span><div>Keywords con trafico real para optimizar el blog</div></div>
+              <div class="source-item"><span class="source-label">UGC</span><div>Contenido real etiquetado en @domostreepod y #domostreepod por huespedes</div></div>
+              <div class="source-item"><span class="source-label">BRIEF A4</span><div>Temporada y campana activa define el tono de cada pieza</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Hook de 3 segundos (David Ogilvy): pregunta provocadora, afirmacion sorprendente, o plano visual impactante — los primeros 3s deciden si se ve el Reel completo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>StoryBrand en cada pieza: el huesped es el heroe, TreePod es el guia que resuelve hoteles genericos sin recuerdos</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Grid 3 columnas en Instagram: Paisaje / Detalle / Experiencia — cohesion visual que diferencia cuentas Premium</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Tono 60/25/15: inspiracional, informativo, promocional — nunca vendedor agresivo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>CTA siempre presente aunque sea suave: enlace en bio, cuando vienes?, reserva tu domo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Keywords SEO en cada blog: glamping Chile, que hacer en Las Trancas, domos geodesicos Chile</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A9 Brand</td><td><span class="badge-recibe">Recibe</span> validacion de tono y voz</td></tr>
+              <tr><td>A4 Estrategia</td><td><span class="badge-recibe">Recibe</span> brief de campana activa</td></tr>
+              <tr><td>A3 Diseno</td><td><span class="badge-envia">Entrega</span> texto para visualizar en Canva</td></tr>
+              <tr><td>A5 Email</td><td><span class="badge-envia">Provee</span> contenido para newsletters</td></tr>
+              <tr><td>A1 Datos</td><td><span class="badge-recibe">Recibe</span> posts exitosos para replicar</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A3 + A5 -->
+<div class="container page-break">
+  <div class="section-title"><span>V.</span> Agente A3 — Disenador Creativo</div>
+  <div class="agent-card">
+    <div class="agent-header marketing">
+      <div class="agent-id-badge">A3</div>
+      <div class="agent-title">
+        <h3>Disenador Creativo e Identidad Visual</h3>
+        <div class="subtitle">Guardian de la imagen · Paleta oficial · Tipografias · Especificaciones por plataforma</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">que colores usa TreePod?</span>
+                <span class="trigger-tag">que fuente uso?</span>
+                <span class="trigger-tag">dimensiones de Story</span>
+                <span class="trigger-tag">revisa si este diseno esta bien</span>
+                <span class="trigger-tag">disena un banner para email</span>
+                <span class="trigger-tag">como debe verse un Reel?</span>
+                <span class="trigger-tag">especificaciones para Canva</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Paleta oficial y tipografias</h4>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px;">
+              <div style="background:#009FDF; color:white; padding:10px; text-align:center; border-radius:4px; font-size:11px;"><strong>Cyan Confianza</strong><br>#009FDF<br>CTAs, primario</div>
+              <div style="background:#4A7C2E; color:white; padding:10px; text-align:center; border-radius:4px; font-size:11px;"><strong>Verde Cordillera</strong><br>#4A7C2E<br>Naturaleza</div>
+              <div style="background:#8B6914; color:white; padding:10px; text-align:center; border-radius:4px; font-size:11px;"><strong>Dorado Atardecer</strong><br>#8B6914<br>Premium</div>
+            </div>
+            <div style="font-size:11px; color:#555;">
+              <strong>Tipografias:</strong> Playfair Display (titulos) · Montserrat (subtitulos) · Open Sans (cuerpo)<br>
+              <strong>Dimensiones clave:</strong> Story/Reel 1080x1920px · Feed 1080x1080px · Email 600px ancho
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Golden hour para fotografias: luz natural al amanecer/atardecer, tonos calidos, sin azules frios</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Grid 3 columnas: Paisaje / Detalle / Experiencia — coherencia visual que comunica Premium</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Edicion consistente Lightroom mobile: +0.2 exposicion, +200 temperatura, +15 saturacion natural</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Maximo 2 fuentes por pieza — jerarquia visual clara, nunca caos tipografico</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Checklist antes de publicar: paleta correcta, tipografia, dimensiones, CTA, @domostreepod visible</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A9 Brand</td><td><span class="badge-recibe">Recibe</span> validacion de identidad visual</td></tr>
+              <tr><td>A2 Contenido</td><td><span class="badge-recibe">Recibe</span> textos para visualizar</td></tr>
+              <tr><td>A5 Email</td><td><span class="badge-envia">Disena</span> banners y templates de email</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span>VI.</span> Agente A5 — Email Marketer y WhatsApp</div>
+  <div class="agent-card">
+    <div class="agent-header marketing">
+      <div class="agent-id-badge">A5</div>
+      <div class="agent-title">
+        <h3>Email Marketer y Automatizacion WhatsApp</h3>
+        <div class="subtitle">Secuencia Soap Opera · Lead Magnet · Recuperacion de leads · Mailchimp Free / WA Business</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">escribeme el email de bienvenida</span>
+                <span class="trigger-tag">como respondo en WhatsApp?</span>
+                <span class="trigger-tag">que mandarle a los que no reservaron?</span>
+                <span class="trigger-tag">newsletter de este mes</span>
+                <span class="trigger-tag">como hago crecer mi lista?</span>
+                <span class="trigger-tag">seguimiento post-estadia</span>
+                <span class="trigger-tag">secuencia de emails</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Herramientas (100% gratuitas)</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">MAILCHIMP</span><div>Hasta 500 contactos, 1.000 emails/mes — plan gratuito</div></div>
+              <div class="source-item"><span class="source-label">MAILERLITE</span><div>Migrar cuando supere 450 contactos — hasta 1.000 contactos, 12.000 emails/mes</div></div>
+              <div class="source-item"><span class="source-label">WA BUSINESS</span><div>Mensajes ilimitados, respuestas rapidas, flujos automaticos</div></div>
+              <div class="source-item"><span class="source-label">LEAD MAGNET</span><div>PDF "Guia 10 Experiencias en Las Trancas" — entregado automaticamente al suscribirse</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Secuencia Soap Opera 5 emails en 8 dias: Historia personal → Secreto local → Transformacion → Temporada ideal → Invitacion con 10% descuento</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Tono "carta de Janet": escribe como si le hablara a un amigo, nunca "Estimado/a", siempre "Hola [Nombre]", firmar "— Janet"</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>PD en cada email: es la parte mas leida, usar para el mensaje mas directo o intimo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Recuperacion de leads en 3 toques: Dia 0 (mismo dia), Dia 2 (urgencia suave), Dia 5 (sorpresa)</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Post-estadia dia 1: WhatsApp personal + solicitud resena Google dentro de las 24h del checkout</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A9 Brand</td><td><span class="badge-recibe">Recibe</span> validacion de tono y estilo</td></tr>
+              <tr><td>A4 Estrategia</td><td><span class="badge-recibe">Recibe</span> cuando activar secuencias</td></tr>
+              <tr><td>A2 Contenido</td><td><span class="badge-recibe">Recibe</span> textos de newsletters</td></tr>
+              <tr><td>A3 Diseno</td><td><span class="badge-recibe">Recibe</span> banners y diseno de email</td></tr>
+              <tr><td>A1 Datos</td><td><span class="badge-envia">Envia</span> tasas de apertura y conversion</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A1 + A10 -->
+<div class="container page-break">
+  <div class="section-title"><span>VII.</span> Agente A1 — Analista de Datos</div>
+  <div class="agent-card">
+    <div class="agent-header marketing">
+      <div class="agent-id-badge">A1</div>
+      <div class="agent-title">
+        <h3>Analista de Datos e Inteligencia Competitiva</h3>
+        <div class="subtitle">KPIs · Dashboard semanal · FODA · Competencia local · Meta Ads + GA4 · 15 metricas ROMI</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">como estamos?</span>
+                <span class="trigger-tag">cual es nuestra ocupacion?</span>
+                <span class="trigger-tag">cuanto nos cuesta un cliente?</span>
+                <span class="trigger-tag">que metricas van bien?</span>
+                <span class="trigger-tag">informe mensual</span>
+                <span class="trigger-tag">dashboard semanal</span>
+                <span class="trigger-tag">calcular ROMI</span>
+                <span class="trigger-tag">como van los Meta Ads?</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>KPIs objetivo</h4>
+            <div class="kpi-grid">
+              <div class="kpi-card"><div class="kpi-value">70%</div><div class="kpi-label">Ocupacion min.</div></div>
+              <div class="kpi-card"><div class="kpi-value">&lt;$50k</div><div class="kpi-label">CAC CLP</div></div>
+              <div class="kpi-card"><div class="kpi-value">&gt;3x</div><div class="kpi-label">ROMI</div></div>
+              <div class="kpi-card"><div class="kpi-value">4.8+</div><div class="kpi-label">Rating Google</div></div>
+              <div class="kpi-card"><div class="kpi-value">4.9+</div><div class="kpi-label">Rating Airbnb</div></div>
+              <div class="kpi-card"><div class="kpi-value">&gt;5%</div><div class="kpi-label">Engagement IG</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">META ADS</span><div>Meta Business Manager — resultados de campanas Facebook e Instagram, costo por lead, ROI por audiencia</div></div>
+              <div class="source-item"><span class="source-label">WINDSOR.AI</span><div>Dashboard unificado Meta Ads + Google Ads + organico</div></div>
+              <div class="source-item"><span class="source-label">GA4</span><div>Trafico web, conversiones, fuentes de adquisicion</div></div>
+              <div class="source-item"><span class="source-label">INSTAGRAM</span><div>Insights de @domostreepod: engagement, alcance, audiencia</div></div>
+              <div class="source-item"><span class="source-label">GMB</span><div>Busquedas, visitas al perfil, llamadas, resenas Google</div></div>
+              <div class="source-item"><span class="source-label">A8C</span><div>Rentabilidad real por reserva para calcular ROMI verdadero</div></div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Dashboard 15 minutos cada lunes: 5 metricas clave antes de planificar la semana</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Numero + contexto: nunca reportar un numero sin compararlo vs objetivo y dar accion correctiva</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Meta Ads: monitorear frecuencia, costo por resultado y audience overlap — ajustar cada semana</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Python para analisis cuando hay archivos de datos: transformar datos crudos en insights accionables</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span>VIII.</span> Agente A10 — Monitor de Brechas</div>
+  <div class="agent-card">
+    <div class="agent-header control">
+      <div class="agent-id-badge">A10</div>
+      <div class="agent-title">
+        <h3>Monitor de Brechas y Desalineaciones (Gap Analysis)</h3>
+        <div class="subtitle">10 tipos de brechas · Alertas por umbrales · Correlacion entre todos los agentes</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">donde estamos fallando?</span>
+                <span class="trigger-tag">que no estamos cumpliendo?</span>
+                <span class="trigger-tag">donde esta la brecha de ingresos?</span>
+                <span class="trigger-tag">revision critica del mes</span>
+                <span class="trigger-tag">analisis de gaps</span>
+                <span class="trigger-tag">que planeamos y no hicimos?</span>
+                <span class="trigger-tag">antes de reunion estrategica</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Alertas criticas por umbral</h4>
+            <div class="alert-box-red"><strong>CRITICO:</strong> Ocupacion menor de 40% en temporada alta</div>
+            <div class="alert-box-red"><strong>CRITICO:</strong> Rating por debajo de 4.5 en cualquier plataforma</div>
+            <div class="alert-box-red"><strong>CRITICO:</strong> Ingresos mas de 30% bajo proyeccion</div>
+            <div class="alert-box-red"><strong>CRITICO:</strong> 3 o mas resenas negativas seguidas</div>
+            <div class="alert-box-yellow"><strong>MEDIA:</strong> Consultas sin respuesta mas de 24h</div>
+            <div class="alert-box-yellow"><strong>MEDIA:</strong> CAC supera $100k CLP</div>
+            <div class="alert-box-yellow"><strong>MEDIA:</strong> Engagement Instagram cae mas de 50%</div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>10 tipos de brechas monitoreadas simultaneamente: Planificacion vs Ejecucion, Objetivos vs Resultados, Presupuesto, Capacidad, Ingresos, Calidad, Procesos, Recursos, KPIs, Promesas a clientes</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Framework GAP completo: detectado, tipo, planificado/real, impacto financiero, causa raiz, accion correctiva, tendencia</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Brechas son oportunidades disfrazadas: ocupacion baja = oportunidad de campana especial o ajuste de precio</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Correlacion entre todos los agentes para detectar patrones sistemicos que ningun agente detecta solo</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Recibe datos de todos los agentes</h4>
+            <table class="rel-table">
+              <tr><th>Fuente</th><th>Tipo de brecha detectada</th></tr>
+              <tr><td>A1 Datos</td><td>KPIs marketing y ocupacion</td></tr>
+              <tr><td>A2 Contenido</td><td>Calendario ejecutado vs planificado</td></tr>
+              <tr><td>A4 Campanas</td><td>Resultados vs objetivos de campana</td></tr>
+              <tr><td>A5 Email</td><td>Apertura, conversion, crecimiento lista</td></tr>
+              <tr><td>A9 Brand</td><td>Promesa de marca vs experiencia real</td></tr>
+              <tr><td>ACC Contabilidad</td><td>Ingresos reales vs proyectados</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A8A + A8B + A8C -->
+<div class="container page-break">
+  <div class="section-title"><span>IX.</span> Agentes A8 — Operaciones del Glamping</div>
+
+  <div class="agent-card">
+    <div class="agent-header operaciones">
+      <div class="agent-id-badge">A8A</div>
+      <div class="agent-title">
+        <h3>Gestor de Instalaciones y Eficiencia Energetica</h3>
+        <div class="subtitle">Home Assistant MCP · Sensores en tiempo real · Modo eco sin apagar · Aprobacion de Janet siempre</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">quedo algo encendido?</span>
+                <span class="trigger-tag">revisa los domos vacios</span>
+                <span class="trigger-tag">como estan los consumos?</span>
+                <span class="trigger-tag">hay alguna fuga?</span>
+                <span class="trigger-tag">reporte de instalaciones</span>
+                <span class="trigger-tag">rutina de operaciones lunes</span>
+                <span class="trigger-tag">verificar Home Assistant</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">HOME ASSISTANT</span><div>Lectura de sensores, estados de entidades, historial de consumo en tiempo real via MCP</div></div>
+              <div class="source-item"><span class="source-label">CALENDAR</span><div>Cruzar sensores con reservas para saber que domos estan realmente vacios</div></div>
+              <div class="source-item"><span class="source-label">SUPABASE</span><div>Registros historicos de consumo para detectar anomalias por patron</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Prioridad absoluta: experiencia del huesped — ante duda de ocupacion, no tocar ningun dispositivo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Modo eco no es apagado: minimo 14 grados Celsius en domos vacios para proteger canierias</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Tarifa real $204 CLP/kWh (Copelec BT1 verificado en facturas) — nunca usar $150</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Cero cambios sin aprobacion de Janet — solo reportar y sugerir, nunca ejecutar de forma autonoma</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Alertas inmediatas por consumo anomalo mas de 4h en domo vacio, sensor de fuga, o temperatura bajo 5 grados</div></li>
+            </ul>
+          </div>
+          <div class="rule-box"><strong>Regla absoluta:</strong> Validar con A9 cualquier cambio en configuracion estandar de confort de huespedes. La experiencia Premium no se negocia.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agent-card" style="margin-top:20px;">
+    <div class="agent-header operaciones">
+      <div class="agent-id-badge">A8B</div>
+      <div class="agent-title">
+        <h3>Gestor de Inventario Predictivo y Compras</h3>
+        <div class="subtitle">Compras basadas en reservas reales · Sin desperdicio · Buffer 15% en temporada alta</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">que compramos esta semana?</span>
+                <span class="trigger-tag">lista del supermercado</span>
+                <span class="trigger-tag">tenemos suficiente para el fin de semana?</span>
+                <span class="trigger-tag">insumos para Semana Santa</span>
+                <span class="trigger-tag">vale la pena comprar si no hay reservas?</span>
+                <span class="trigger-tag">inventario del glamping</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Logica de nivel de ocupacion</h4>
+            <div class="occ-box" style="background:#ffebee;">0 reservas — Bloquear compras de perecederos</div>
+            <div class="occ-box" style="background:#fff8e1;">1-2 reservas — Solo basicos no perecederos</div>
+            <div class="occ-box" style="background:#e8f5e9;">3-4 reservas — Compra normal segun formula</div>
+            <div class="occ-box" style="background:#e3f2fd;">5+ reservas — Compra ampliada mas buffer 15%</div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Las compras siguen a las reservas, no a la intuicion — calcular demanda real de los proximos 7-14 dias</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Bloqueo de perecederos si no hay reservas en 3 dias — el desperdicio es un costo real y evitable</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Alerta con 2-3 dias de anticipacion en alta ocupacion para no quedar con stock insuficiente</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Pedir confirmacion de stock si no hay datos confiables — nunca adivinar ni suponer</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Relacion</th></tr>
+              <tr><td>A8C Costos</td><td><span class="badge-envia">Entrega</span> registro de insumos usados por estadia</td></tr>
+              <tr><td>A9 Brand</td><td><span class="badge-recibe">Consulta</span> antes de cambiar proveedor o calidad</td></tr>
+              <tr><td>Google Calendar</td><td><span class="badge-recibe">Lee</span> reservas para calcular demanda</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A8C -->
+<div class="container page-break">
+  <div class="section-title"><span>X.</span> Agente A8C — Analista de Costos por Reserva</div>
+  <div class="agent-card">
+    <div class="agent-header operaciones">
+      <div class="agent-id-badge">A8C</div>
+      <div class="agent-title">
+        <h3>Analista de Costos por Reserva y Rentabilidad</h3>
+        <div class="subtitle">Cierre del ciclo operativo · Margen real por estadia · Precios verificados con boletas reales Jumbo Chillan</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">cuanto nos costo esa estadia?</span>
+                <span class="trigger-tag">cual fue la utilidad?</span>
+                <span class="trigger-tag">es rentable el desayuno?</span>
+                <span class="trigger-tag">costo real por noche</span>
+                <span class="trigger-tag">rentabilidad Semana Santa</span>
+                <span class="trigger-tag">registrar costos del checkout</span>
+                <span class="trigger-tag">cuanto nos cuesta cada huesped?</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Herramientas y fuentes</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">HOME ASSISTANT</span><div>kWh reales consumidos por domo durante la estadia via MCP</div></div>
+              <div class="source-item"><span class="source-label">A8B</span><div>Insumos descontados por estadia (amenities, desayuno, limpieza)</div></div>
+              <div class="source-item"><span class="source-label">SUPABASE</span><div>Tabla rentabilidad_reservas — registra cada resultado para historico</div></div>
+              <div class="source-item"><span class="source-label">BOLETAS JUMBO</span><div>Precios verificados en boletas reales Jumbo Chillan, Feb 2026 — fuente de la tabla de costos</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Sin inventar datos: si falta sensor, usar promedio historico indicando que es estimacion</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Tarifa real $204 CLP/kWh (Copelec BT1) — nunca usar $150</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Desayuno real $1.340/pax/dia (elaboracion propia) — nunca usar $4.000</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Aseo y lavanderia son propios: $0 de mano de obra externa — nunca usar $8.000 + $7.500</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Etiquetar por temporada: alta, normal, feriado — para que A1 compare rentabilidad por periodo</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Notificar a A1 al completar cada calculo para actualizar el dashboard de KPIs</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Relaciones con otros agentes</h4>
+            <table class="rel-table">
+              <tr><th>Agente</th><th>Tipo</th><th>Detalle</th></tr>
+              <tr><td>A8A</td><td><span class="badge-recibe">Recibe</span></td><td>kWh consumidos del periodo de la estadia</td></tr>
+              <tr><td>A8B</td><td><span class="badge-recibe">Recibe</span></td><td>Insumos usados descontados del inventario</td></tr>
+              <tr><td>A1</td><td><span class="badge-envia">Envia</span></td><td>Rentabilidad real por reserva para KPIs</td></tr>
+              <tr><td>ACC</td><td><span class="badge-envia">Coordina</span></td><td>Costos consistentes con F29 y libro de compras</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-section">
+        <h4>Tabla de Costos Unitarios — actualizada Marzo 2026, precios reales Jumbo Chillan</h4>
+        <table class="cost-table">
+          <tr><th>Categoria / Item</th><th>Producto</th><th>Precio compra</th><th>Costo por estadia (2 pax, 2 noches)</th></tr>
+          <tr class="category-row"><td colspan="4">Energia — Copelec BT1 verificado en facturas reales</td></tr>
+          <tr><td>Electricidad</td><td>Tarifa real BT1</td><td>$204 CLP/kWh</td><td>$2.040 (aprox. 10 kWh)</td></tr>
+          <tr class="category-row"><td colspan="4">Desayuno — elaboracion propia, sin costo de mano de obra</td></tr>
+          <tr><td>Pan + huevo + leche + cafe + jugo</td><td>Ingredientes propios</td><td>—</td><td>$5.360 (2 dias x 2 pax x $1.340)</td></tr>
+          <tr class="category-row"><td colspan="4">Amenities bano — precios boletas Jumbo Chillan Feb 2026</td></tr>
+          <tr><td>Shampoo</td><td>Ballerina Manzana 750ml</td><td>$1.940</td><td>$155 (60ml usados aprox.)</td></tr>
+          <tr><td>Acondicionador</td><td>750ml</td><td>$1.940</td><td>$155 (60ml usados aprox.)</td></tr>
+          <tr><td>Jabon barra</td><td>Palmolive 85g x4 pack</td><td>$3.390</td><td>$848 (1 barra por estadia)</td></tr>
+          <tr><td>Papel higienico</td><td>Elite pack 18 rollos</td><td>$13.490</td><td>$750 (3 rollos)</td></tr>
+          <tr class="category-row"><td colspan="4">Amenities cocina</td></tr>
+          <tr><td>Esponja cocina</td><td>Home Care x4</td><td>$945</td><td>$236 (1 unidad)</td></tr>
+          <tr><td>Papel Nova toalla</td><td>Nova Clasica 40m</td><td>$1.650</td><td>$330 (aprox. 8m de 40m)</td></tr>
+          <tr><td>Lavaloza</td><td>Fuzol 700ml</td><td>$1.290</td><td>$258 (aprox. 140ml)</td></tr>
+          <tr><td>Servilletas</td><td>Elite/Nova 200 unidades</td><td>$1.890</td><td>$142 (aprox. 15 servilletas)</td></tr>
+          <tr class="category-row"><td colspan="4">Estacion de cafe</td></tr>
+          <tr><td>Cafe capsula</td><td>Gold 10 unidades</td><td>$4.690</td><td>$1.876 (4 capsulas)</td></tr>
+          <tr><td>Endulzante</td><td>Splenda 200 sobres</td><td>$7.990</td><td>$320 (8 sobres x $40)</td></tr>
+          <tr><td>Leche para cafe</td><td>Leche entera 1 litro</td><td>$1.460</td><td>$365 (aprox. 250ml)</td></tr>
+          <tr class="category-row"><td colspan="4">Limpieza y lavanderia — propia, solo insumos</td></tr>
+          <tr><td>Aseo + bolsas + lavanderia</td><td>Productos propios</td><td>—</td><td>$3.800</td></tr>
+          <tr class="total-row"><td colspan="3"><strong>TOTAL COSTO OPERATIVO por estadia</strong></td><td><strong>$16.635 CLP</strong></td></tr>
+        </table>
+        <p style="font-size:11px; color:#666; margin-top:8px; font-style:italic;">A $60.000 de ingreso el margen operativo es aproximadamente 72%. A $120.000 es aproximadamente 86%. Los costos fijos (internet, mantencion, amortizacion) se prorratean mensualmente entre todas las estadias.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACC CONTABILIDAD -->
+<div class="container page-break">
+  <div class="section-title"><span>XI.</span> Skill Contabilidad — ACC</div>
+  <div class="agent-card">
+    <div class="agent-header finanzas">
+      <div class="agent-id-badge" style="font-size:20px;">ACC</div>
+      <div class="agent-title">
+        <h3>Skill Contabilidad, Finanzas y Tributaria</h3>
+        <div class="subtitle">Migryk Correa Ltda · Pro Pyme 14 D3 · F29 · F22 · Deuda Leon · AT2026</div>
+      </div>
+    </div>
+    <div class="agent-body">
+      <div class="two-col">
+        <div>
+          <div class="agent-section">
+            <h4>Preguntas que lo activan</h4>
+            <div class="trigger-box">
+              <div class="label">Activar cuando Janet diga...</div>
+              <div class="trigger-list">
+                <span class="trigger-tag">somos rentables?</span>
+                <span class="trigger-tag">cuanto pagamos de impuestos?</span>
+                <span class="trigger-tag">cual es nuestra deuda con Leon?</span>
+                <span class="trigger-tag">por que el F29 es tan bajo?</span>
+                <span class="trigger-tag">cartola bancaria</span>
+                <span class="trigger-tag">flujo de caja</span>
+                <span class="trigger-tag">IVA credito fiscal</span>
+                <span class="trigger-tag">AT2026 operacion renta</span>
+                <span class="trigger-tag">conciliacion</span>
+              </div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Archivos de referencia</h4>
+            <div class="sources-box">
+              <div class="source-item"><span class="source-label">XLSX</span><div>Cartolas_Analisis_Migryk_2025_2026.xlsx — movimientos bancarios</div></div>
+              <div class="source-item"><span class="source-label">XLSX</span><div>F29_Resumen_Migryk_2024_2026.xlsx — historial de declaraciones</div></div>
+              <div class="source-item"><span class="source-label">XLSX</span><div>Historico_Balances_2018_2025_Migryk.xlsx — balance proyectado</div></div>
+              <div class="source-item"><span class="source-label">PYTHON</span><div>Scripts de reconciliacion, analisis IVA, flujo de caja, alertas tributarias</div></div>
+            </div>
+          </div>
+          <div class="agent-section">
+            <h4>Los 7 modulos del skill</h4>
+            <div style="font-size:12px;">
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M1</strong> — Conciliacion Cartolas vs F29</div>
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M2</strong> — Analisis IVA Credito Fiscal</div>
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M3</strong> — Separacion Ingresos Operacionales vs Captaciones Leon</div>
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M4</strong> — Proyecciones Tributarias (F29 estimado)</div>
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M5</strong> — Analisis Flujo de Caja Operacional</div>
+              <div style="padding:5px 0; border-bottom:1px solid #eee;"><strong>M6</strong> — Gestion Deuda Leon Experience</div>
+              <div style="padding:5px 0;"><strong>M7</strong> — Alertas Tributarias y Obligaciones SII</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="agent-section">
+            <h4>Mejores practicas (categoria mundial)</h4>
+            <ul class="bp-list">
+              <li class="bp-item"><div class="bp-mark">+</div><div>Nunca confundir captaciones Leon con ingresos Migryk — separar siempre antes de cualquier analisis</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Retiros de socios no son gastos del negocio — son item de balance, no afectan la utilidad operacional</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Todo estimado vs confirmado diferenciado claramente — cifras definitivas las confirma el contador Manuel Silva</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>Alertas de vencimiento nunca omitir, especialmente 02/04/2026 (DAP Leon) y 30/04/2026 (AT2026)</div></li>
+              <li class="bp-item"><div class="bp-mark">+</div><div>La perdida tributaria acumulada de $31 millones CLP absorbe el F22 actual — documentar correctamente antes de la declaracion</div></li>
+            </ul>
+          </div>
+          <div class="agent-section">
+            <h4>Alertas financieras urgentes — Abril 2026</h4>
+            <div class="fin-alert">
+              <div class="alert-title">URGENTE — 02 Abril 2026</div>
+              Deposito a Plazo N°29321 Leon Experience vence: $10.034.000 mas intereses. Decidir con contador Manuel Silva: renovar, devolver o formalizar como mutuo.
+            </div>
+            <div class="fin-alert">
+              <div class="alert-title">URGENTE — 30 Abril 2026 (AT2026)</div>
+              Formalizar deuda Leon ($37.128.000 neta) antes de la declaracion F22. Coordinar con Manuel Silva para tratamiento tributario correcto bajo Pro Pyme 14 D3.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- TECH STACK -->
+  <div class="section-title"><span>XII.</span> Pila Tecnologica (Tech Stack)</div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <h4>Datos, Analitica y CRM</h4>
+      <div class="tech-item"><strong>Supabase MCP</strong> — base de datos principal (reservas, costos, inventario)</div>
+      <div class="tech-item"><strong>Windsor.ai MCP</strong> — conecta Meta Ads y Google Ads en un solo dashboard</div>
+      <div class="tech-item"><strong>GA4 + Search Console</strong> — analitica web, conversiones, keywords</div>
+      <div class="tech-item"><strong>Notion</strong> — CRM para leads y seguimiento comercial</div>
+    </div>
+    <div class="tech-card">
+      <h4>Publicidad Pagada</h4>
+      <div class="tech-item"><strong>Meta Ads (Facebook + Instagram)</strong> — campanas de pago segmentadas 25-50 anos. Pausar audiencias 55+. Retargeting a visitantes web</div>
+      <div class="tech-item"><strong>Google Ads</strong> — busqueda intencional para terminos como "glamping Chile" o "domos Las Trancas"</div>
+      <div class="tech-item"><strong>Instagram Boost</strong> — $20.000 CLP/mes para amplificar posts organicos de alto rendimiento</div>
+      <div class="tech-item"><strong>GMB Promo</strong> — $10.000 CLP/mes para aparecer en busquedas locales</div>
+    </div>
+    <div class="tech-card">
+      <h4>Diseno y Vision</h4>
+      <div class="tech-item"><strong>Canva MCP</strong> — diseno grafico ($10.000 CLP/mes plan Pro)</div>
+      <div class="tech-item"><strong>Image Processing MCP</strong> — optimizacion de imagenes para web</div>
+      <div class="tech-item"><strong>Vision MCP</strong> — analisis visual e IA para revision de contenido</div>
+      <div class="tech-item"><strong>Flux via Together AI</strong> — generacion de imagenes con inteligencia artificial</div>
+    </div>
+    <div class="tech-card">
+      <h4>Comunicaciones</h4>
+      <div class="tech-item"><strong>Gmail MCP</strong> — email operativo del negocio</div>
+      <div class="tech-item"><strong>Mailchimp Free</strong> — hasta 500 contactos, migrar a MailerLite al superar 450</div>
+      <div class="tech-item"><strong>WhatsApp Business</strong> — seguimiento de reservas y leads directos</div>
+      <div class="tech-item"><strong>Twilio + Vapi</strong> — SMS y llamadas automatizadas para funnel de ventas</div>
+    </div>
+    <div class="tech-card">
+      <h4>Operaciones del Glamping</h4>
+      <div class="tech-item"><strong>Home Assistant MCP</strong> — sensores y consumo energetico en tiempo real</div>
+      <div class="tech-item"><strong>Google Calendar</strong> — calendario de reservas y disponibilidad</div>
+      <div class="tech-item"><strong>n8n (Docker local)</strong> — orquestador de automatizaciones (tres skills activos)</div>
+      <div class="tech-item"><strong>FFmpeg MCP</strong> — produccion y conversion de video</div>
+    </div>
+    <div class="tech-card">
+      <h4>Inteligencia y Scraping</h4>
+      <div class="tech-item"><strong>Apify</strong> — scraping de Google Maps (resenas), Reddit (tendencias), LinkedIn</div>
+      <div class="tech-item"><strong>Kokoro (local)</strong> — sintesis de voz sin costo para videos</div>
+      <div class="tech-item"><strong>yt-dlp</strong> — descarga de musica libre de derechos para fondos de video</div>
+      <div class="tech-item"><strong>Cartolas + Python</strong> — analisis financiero automatizado via scripts</div>
+    </div>
+  </div>
+
+<!-- SKILLS N8N -->
+  <div class="section-title"><span>XIII.</span> Skills Automatizados (n8n)</div>
+
+  <div class="n8n-card">
+    <h4>Skill 1 — Generador de Videos Faceless</h4>
+    <p style="font-size:12px; color:#555; margin-bottom:10px;">Crea videos de cualquier tema sin mostrar personas. Flujo completo sin intervencion manual: guion generado por IA, voz sintetizada (Kokoro), imagenes (Flux), musica libre de derechos (yt-dlp), renderizado MP4 final (FFmpeg).</p>
+    <strong style="font-size:11px; color:var(--verde); text-transform:uppercase; letter-spacing:0.5px;">Parametros a solicitar antes de activar:</strong>
+    <div class="n8n-param">— Tema o concepto del video</div>
+    <div class="n8n-param">— Tono o genero: terror, inspiracional, educativo, testimonial</div>
+    <div class="n8n-param">— Duracion aproximada: corto 60 segundos, medio 3-5 minutos</div>
+    <div class="n8n-param">— Idioma de la locucion</div>
+  </div>
+
+  <div class="n8n-card">
+    <h4>Skill 2 — Sales Lead Funnel</h4>
+    <p style="font-size:12px; color:#555; margin-bottom:10px;">Automatiza el seguimiento de prospectos: formulario Typeform guarda el lead en Notion, luego dispara secuencia de follow-up por Gmail, SMS via Twilio y llamada de voz via Vapi.</p>
+    <strong style="font-size:11px; color:var(--verde); text-transform:uppercase; letter-spacing:0.5px;">Parametros a solicitar antes de activar:</strong>
+    <div class="n8n-param">— Producto o servicio que se esta vendiendo</div>
+    <div class="n8n-param">— Perfil del lead objetivo</div>
+    <div class="n8n-param">— Numero de toques en la secuencia: emails mas llamadas</div>
+    <div class="n8n-param">— Plazo del seguimiento (ejemplo: 7 dias)</div>
+  </div>
+
+  <div class="n8n-card">
+    <h4>Skill 3 — Reposicionador de Contenido (Reddit → Newsletter)</h4>
+    <p style="font-size:12px; color:#555; margin-bottom:10px;">Monitorea subreddits relevantes via Apify, analiza tendencias con IA, y redacta una newsletter o articulo de blog con los insights mas relevantes para la audiencia de TreePod.</p>
+    <strong style="font-size:11px; color:var(--verde); text-transform:uppercase; letter-spacing:0.5px;">Parametros a solicitar antes de activar:</strong>
+    <div class="n8n-param">— Subreddits a monitorear: r/glamping, r/travel, r/chile</div>
+    <div class="n8n-param">— Tema o angulo editorial</div>
+    <div class="n8n-param">— Formato de salida: newsletter, post de blog, hilo de Twitter</div>
+    <div class="n8n-param">— Audiencia objetivo</div>
+  </div>
+</div>
+
+<div class="footer">
+  TreePod Glamping — Migryk Correa Ltda · Manual de Agentes IA v2.1 · Marzo 2026 · Instagram: @domostreepod · Precios verificados Jumbo Chillan Feb 2026
+</div>
+
+</body>
+</html>

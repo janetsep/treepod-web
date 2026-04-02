@@ -5,6 +5,7 @@ import Script from 'next/script';
 import AdminAwareLayout from './components/AdminAwareLayout';
 import MicrosoftClarity from './components/MicrosoftClarity';
 import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
+import DebugGTM from './components/DebugGTM';
 
 
 const geistSans = Geist({
@@ -123,6 +124,7 @@ export default function RootLayout({
 
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
         <AuthRecoveryRedirect />
+        <DebugGTM enabled={process.env.NODE_ENV === 'development'} />
         <AdminAwareLayout>
           {children}
         </AdminAwareLayout>
