@@ -6,8 +6,11 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Semana Santa 2026 en TreePod | Valle Las Trancas',
-    description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico en Nevados de Chillán.',
+    title: 'Semana Santa 2026 en TreePod | Glamping Valle Las Trancas',
+    description: 'Vive una Semana Santa de descanso real en nuestros domos geodésicos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico en Nevados de Chillán.',
+    alternates: {
+        canonical: '/semana-santa-2026',
+    },
     openGraph: {
         title: 'Semana Santa 2026 en TreePod | Valle Las Trancas',
         description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico.',

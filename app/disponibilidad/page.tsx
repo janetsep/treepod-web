@@ -309,7 +309,7 @@ function DisponibilidadContent() {
         <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/5 pb-8">
           <div className="space-y-2">
             <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight text-text-main">
-              Reserva tu <span className="text-primary italic-display">Domo</span>
+              Reserva tu <span className="text-primary italic-display">Glamping</span> en Las Trancas
             </h1>
             <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
               {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}

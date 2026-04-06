@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Galería de Momentos | TreePod Glamping',
-    description: 'Una ventana visual a la magia de TreePod. Descubre la belleza de lo auténtico y los momentos de calma que te esperan en nuestra reserva natural.',
+    title: 'Galería de Fotos | Glamping TreePod Valle Las Trancas',
+    description: 'Fotos reales de nuestros domos geodésicos, el bosque nativo, tinajas de ciprés y las experiencias que viven nuestros huéspedes en TreePod.',
+    alternates: {
+        canonical: '/galeria',
+    },
+    openGraph: {
+        title: 'Galería de Fotos | Glamping TreePod',
+        description: 'Fotos reales de nuestros domos, bosque nativo y experiencias en Valle Las Trancas.',
+        images: ['/images/hero/domo-treepod-ok-12.jpg'],
+    },
 };
 
 export default function GaleriaLayout({

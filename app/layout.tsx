@@ -44,9 +44,9 @@ const notoSans = Noto_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://domostreepod.cl'),
-  title: 'Domos TreePod | Refugio de Montaña en Valle Las Trancas',
-  description: 'Tu pausa en el bosque nativo. Domos TreePod en Valle Las Trancas para vivir la montaña auténtica y descansar de verdad. Reserva tu refugio.',
-  keywords: ['glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio'],
+  title: 'Glamping en Valle Las Trancas | Domos TreePod - Chillán',
+  description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly en Valle Las Trancas, cerca de Termas de Chillán. Reserva tu refugio hoy.',
+  keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'alojamiento pet friendly chile', 'donde alojar en las trancas', 'turismo nuble'],
   icons: {
     icon: [
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
@@ -54,12 +54,21 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Domos TreePod | Refugio de Montaña en Valle Las Trancas',
-    description: 'Recupera tu energía real. Domos inmersos en el bosque para vivir la montaña auténtica.',
+    title: 'Glamping en Valle Las Trancas | Domos TreePod',
+    description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly en Valle Las Trancas, cerca de Termas de Chillán.',
     images: ['/images/hero/domo-treepod-ok-12.jpg'],
     locale: 'es_CL',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Glamping en Valle Las Trancas | Domos TreePod',
+    description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly cerca de Termas de Chillán.',
+    images: ['/images/hero/domo-treepod-ok-12.jpg'],
   },
 };
 
@@ -71,6 +80,119 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Schema.org JSON-LD — LodgingBusiness */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LodgingBusiness",
+              "name": "TreePod Glamping",
+              "description": "Domos geodésicos con tinaja privada en el bosque nativo de Valle Las Trancas, cerca de Termas de Chillán.",
+              "url": "https://domostreepod.cl",
+              "telephone": "+56984643307",
+              "email": "reservas@domostreepod.cl",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Camino a Termas de Chillán km 28",
+                "addressLocality": "Valle Las Trancas",
+                "addressRegion": "Ñuble",
+                "postalCode": "3780000",
+                "addressCountry": "CL"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "-36.905",
+                "longitude": "-71.478"
+              },
+              "image": "https://domostreepod.cl/images/hero/domo-treepod-ok-12.jpg",
+              "priceRange": "$$$",
+              "starRating": {
+                "@type": "Rating",
+                "ratingValue": "4.9",
+                "bestRating": "5"
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "47",
+                "bestRating": "5"
+              },
+              "amenityFeature": [
+                {"@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Pet Friendly", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Estufa a pellet automática", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Cafetera Nespresso", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Cocina equipada", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Estacionamiento privado", "value": true}
+              ],
+              "petsAllowed": true,
+              "checkinTime": "15:00",
+              "checkoutTime": "15:00",
+              "numberOfRooms": 3,
+              "currenciesAccepted": "CLP",
+              "paymentAccepted": "Tarjeta de crédito, Transferencia bancaria, WebPay",
+              "sameAs": [
+                "https://www.instagram.com/domostreepod",
+                "https://www.facebook.com/domostreepod"
+              ]
+            })
+          }}
+        />
+
+        {/* Schema.org JSON-LD — FAQPage */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "¿Dónde queda TreePod Glamping?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TreePod está en Valle Las Trancas, camino a Termas de Chillán km 28, Región de Ñuble, Chile. A 80 km de Chillán y a unas 5 horas de Santiago."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Cuánto cuesta una noche en los domos?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "La tarifa base para 2 personas es de $145.000 CLP por noche. Los domos tienen capacidad para hasta 4 adultos."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Se aceptan mascotas en TreePod?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sí, TreePod es Pet Friendly. Tu mascota es bienvenida siguiendo las normas de convivencia del glamping."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Qué incluye la estadía en TreePod?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Cada domo incluye baño privado, cocina equipada, cafetera Nespresso, WiFi Starlink, estufa a pellet automática, terraza privada y estacionamiento. La tinaja de ciprés caliente es un servicio adicional."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Hay WiFi en los domos?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sí, contamos con internet Starlink de alta velocidad. Perfecto para teletrabajar o ver películas sin cortes."
+                  }
+                }
+              ]
+            })
+          }}
+        />
 
         {/* Google Tag Manager - Base Code */}
         <Script id="google-tag-manager" strategy="afterInteractive">

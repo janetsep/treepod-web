@@ -69,15 +69,15 @@ export default function Hero() {
 
 
         <h1 className="h1-display mb-8 md:mb-12 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] font-bold">
-          Duerme en medio del bosque, <br className="hidden md:block" />
-          en una cama increíble <br className="hidden md:block" />
+          Glamping en Valle Las Trancas: <br className="hidden md:block" />
+          domos con tinaja privada <br className="hidden md:block" />
           <span className="text-[#00ADEF] italic-display block mt-4 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-3xl md:!text-6xl lg:!text-7xl">
-            sin pasar una gota de frío.
+            en el bosque nativo.
           </span>
         </h1>
 
         <p className="text-white text-lg md:text-xl font-semibold mb-12 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-3xl bg-black/10 backdrop-blur-[2px] px-6 py-2 rounded-full border border-white/10 italic">
-          Tu propio refugio panorámico en Valle Las Trancas.
+          Duerme en una cama increíble sin pasar una gota de frío.
         </p>
 
         <div className="animate-fade-in-up delay-300 mb-16">

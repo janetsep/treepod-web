@@ -1,6 +1,24 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://www.domostreepod.cl',
+    siteUrl: 'https://domostreepod.cl',
     generateRobotsTxt: true,
-    exclude: ['/pago/*', '/admin/*'], // Exclude payment return routes and admin
+    exclude: [
+        '/pago/*',
+        '/admin',
+        '/admin/*',
+        '/confirmacion',
+        '/landing',
+        '/reserva',
+        '/reserva/*',
+    ],
+    robotsTxtOptions: {
+        policies: [
+            {
+                userAgent: '*',
+                allow: '/',
+                disallow: ['/admin', '/admin/', '/confirmacion', '/landing', '/pago', '/reserva'],
+            },
+        ],
+        additionalSitemaps: [],
+    },
 }

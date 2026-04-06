@@ -7,8 +7,11 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Alojamiento Mundial MTB 2026 | Domos TreePod',
-    description: 'Domos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán.',
+    title: 'Alojamiento Mundial MTB 2026 | Glamping Domos TreePod Chillán',
+    description: 'Domos geodésicos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán para el Mundial MTB 2026.',
+    alternates: {
+        canonical: '/mundial-mtb-nevados-chillan-2026',
+    },
     openGraph: {
         title: 'Alojamiento Mundial MTB 2026 | Domos TreePod',
         description: 'Domos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán.',

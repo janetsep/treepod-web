@@ -54,8 +54,8 @@ export default function DomosPage() {
                             <span className="text-primary text-base font-black tracking-[0.2em] uppercase">TreePod es</span>
                         </div>
                         <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
-                            Tu lugar en el bosque, <br className="hidden md:block" />
-                            <span className="text-primary italic-display font-light">pensado para que no eches nada de menos</span>
+                            Domos geodésicos equipados <br className="hidden md:block" />
+                            <span className="text-primary italic-display font-light">en Valle Las Trancas, Chillán</span>
                         </h1>
                         <p className="text-lg md:text-xl leading-relaxed text-text-main font-bold">
                             Diseñamos este refugio para que puedas estar inmerso en la naturaleza salvaje, pero durmiendo en una cama increíble y con todas las comodidades de la ciudad. <br className="hidden md:block" />
