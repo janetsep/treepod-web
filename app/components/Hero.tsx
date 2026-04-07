@@ -70,17 +70,15 @@ export default function Hero() {
 
 
 
-        <h1 className="h1-display mb-8 md:mb-12 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-2xl sm:!text-3xl md:!text-5xl lg:!text-7xl !leading-[1.2] font-bold px-4 sm:px-0">
-          Glamping en Valle Las Trancas:
-          <br className="block sm:hidden" />
-          <span className="block sm:inline"> domos con tinaja privada</span>
-          <br className="hidden md:block" />
-          <span className="text-[#00ADEF] italic-display block mt-2 sm:mt-4 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-2xl sm:!text-3xl md:!text-6xl lg:!text-7xl">
+        <h1 className="h1-display mb-8 md:mb-12 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-2xl sm:!text-3xl md:!text-5xl lg:!text-7xl !leading-[1.3] sm:!leading-[1.2] font-bold px-4 sm:px-0">
+          <span className="block mb-2">Glamping en Valle Las Trancas:</span>
+          <span className="block mb-4"> domos con tinaja privada</span>
+          <span className="text-[#00ADEF] italic-display block mt-2 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-2xl sm:!text-3xl md:!text-6xl lg:!text-7xl">
             en el bosque nativo.
           </span>
         </h1>
 
-        <p className="text-white text-lg md:text-xl font-semibold mb-12 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-3xl bg-black/10 backdrop-blur-[2px] px-6 py-2 rounded-full border border-white/10 italic">
+        <p className="text-white text-base sm:text-lg md:text-xl font-semibold mb-12 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-3xl bg-black/10 backdrop-blur-[2px] px-4 sm:px-6 py-3 sm:py-2 rounded-full border border-white/10 italic leading-relaxed">
           Duerme en una cama increíble sin pasar una gota de frío.
         </p>
 
