@@ -13,17 +13,27 @@ export default function News() {
         },
         {
             image: "/images/hero/domonieve2.jpeg",
-            title: "Nevados de Chillán",
-            description: "A solo minutos de TreePod, disfruta del mejor centro de esquí del sur de Chile. Pistas para todos los niveles, snowpark y las famosas aguas termales volcánicas.",
-            tag: "Deporte Invernal",
-            details: "Centro de Ski & Resort con la pista más larga de Sudamérica."
+            title: "Domos Geodésicos Chillán",
+            description: "Experimenta el glamping más auténtico del sur de Chile. Domos geodésicos únicos con tinaja privada, a minutos de las pistas de ski de Nevados de Chillán.",
+            tag: "Glamping Premium",
+            details: "⛷️ Ski + Glamping perfecto",
+            href: "/domos-geodesicos-chillan"
         },
         {
             image: "/images/Galeria/Las Trancas Bosque Nativo.jpeg",
-            title: "Las Trancas",
-            description: "Las Trancas es sede de carreras de Trail Running y MTB de nivel mundial. Entrena o compite en la Garganta del Diablo y senderos épicos.",
-            tag: "Deporte Outdoor",
-            details: "Competiciones anuales y rutas para todos los niveles."
+            title: "Glamping Valle Las Trancas",
+            description: "Descubre por qué Valle Las Trancas es el destino de glamping más exclusivo de Chile. Naturaleza, aventura y comodidad en perfecta armonía.",
+            tag: "Experiencia Única",
+            details: "🌲 El mejor glamping del valle",
+            href: "/glamping-valle-las-trancas"
+        },
+        {
+            image: "/images/wellness/Tinaja5.jpg",
+            title: "Escapada Romántica",
+            description: "Una escapada perfecta para parejas que buscan reconectarse. Tinaja privada bajo las estrellas, cenas íntimas y la magia del bosque nativo.",
+            tag: "Solo Para Dos",
+            details: "💕 Romance en el bosque",
+            href: "/escapada-romantica-las-trancas"
         }
     ];
 
@@ -45,7 +55,7 @@ export default function News() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto">
                     {activities.map((item, index) => {
                         const CardContent = (
                             <div className="group bg-surface rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col h-full border border-black/5 ring-1 ring-black/5 relative hover:-translate-y-2">
