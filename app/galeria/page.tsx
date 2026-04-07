@@ -18,7 +18,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
     // --- DESTACADAS (Domo & Landscape) ---
     { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea privilegiada de los domos en el bosque", aspect: "landscape" },
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en plenitud del verano", aspect: "landscape" },
-    { src: "/images/Galeria/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
+    { src: "/images/hero/domonieve2.jpeg", alt: "La magia del invierno y la nieve en TreePod", aspect: "portrait" },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
     { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait", objectPosition: "center 30%" },
     { src: "/images/Galeria/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
