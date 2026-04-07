@@ -29,6 +29,10 @@ export type AnalyticsEventName =
   | "click_reservar_semana_santa_final"
   | "click_whatsapp_semana_santa"
   | "begin_checkout_semana_santa"
+  | "begin_checkout_otono"
+  | "begin_checkout_domos_chillan"
+  | "begin_checkout_glamping_trancas"
+  | "begin_checkout_romantica"
   | "click_reservar_mundial_final"
   | "view_contacto"
   | "view_servicios"
@@ -37,7 +41,23 @@ export type AnalyticsEventName =
   | "select_payment_method"
   | "click_whatsapp_contacto"
   | "click_whatsapp_servicios"
-  | "click_whatsapp_guia";
+  | "click_whatsapp_guia"
+  | "view_otono_las_trancas"
+  | "click_reservar_otono"
+  | "click_whatsapp_otono"
+  | "click_reservar_otono_final"
+  | "view_domos_geodesicos_chillan"
+  | "click_reservar_domos_chillan"
+  | "click_whatsapp_domos_chillan"
+  | "click_reservar_domos_chillan_final"
+  | "view_glamping_valle_las_trancas"
+  | "click_reservar_glamping_trancas"
+  | "click_whatsapp_glamping_trancas"
+  | "click_reservar_glamping_trancas_final"
+  | "view_escapada_romantica"
+  | "click_reservar_romantica"
+  | "click_whatsapp_romantica"
+  | "click_reservar_romantica_final";
 
 declare global {
   interface Window {
