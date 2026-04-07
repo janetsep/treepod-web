@@ -50,7 +50,7 @@ const jsonLd = {
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Camino a Termas de Chillán km 28",
+        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
@@ -184,7 +184,7 @@ export default function GlampingValleLasTrancasPage() {
                             {
                                 icon: Mountain,
                                 title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 28 del camino a Termas de Chillán."
+                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan."
                             },
                             {
                                 icon: Wifi,
@@ -401,7 +401,7 @@ export default function GlampingValleLasTrancasPage() {
 
                     <div className="mt-16 max-w-4xl mx-auto text-center">
                         <p className="text-lg text-text-sub font-bold leading-relaxed mb-8">
-                            TreePod está en el kilómetro 28 del Camino a Termas de Chillán, en el corazón de Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
+                            TreePod está en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
                         </p>
                     </div>
                 </div>

@@ -43,7 +43,7 @@ const jsonLd = {
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Camino a Termas de Chillán km 28",
+        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
@@ -171,7 +171,7 @@ export default function DomosGeodesicosChillanPage() {
                             {
                                 icon: Mountain,
                                 title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 28 del camino a Termas de Chillán."
+                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 71 de la ruta N-55 hacia Nevados de Chillan."
                             },
                             {
                                 icon: Wifi,

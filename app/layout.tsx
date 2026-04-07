@@ -94,7 +94,7 @@ export default function RootLayout({
               "email": "reservas@domostreepod.cl",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Camino a Termas de Chillán km 28",
+                "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
                 "addressLocality": "Valle Las Trancas",
                 "addressRegion": "Ñuble",
                 "postalCode": "3780000",
@@ -154,7 +154,7 @@ export default function RootLayout({
                   "name": "¿Dónde queda TreePod Glamping?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "TreePod está en Valle Las Trancas, camino a Termas de Chillán km 28, Región de Ñuble, Chile. A 72 km de Chillán y a unas 5.5 horas de Santiago."
+                    "text": "TreePod está en Valle Las Trancas, ruta N-55 km 71 hacia Nevados de Chillan, Región de Ñuble, Chile. A 72 km de Chillán y a unas 5.5 horas de Santiago."
                   }
                 },
                 {
