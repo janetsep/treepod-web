@@ -62,7 +62,7 @@ export default function Hero() {
         {/* Social Proof Badge - Hidden on mobile */}
         <div
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
-          className="hero-badge group hidden sm:flex"
+          className="hero-badge group !hidden lg:flex"
         >
           <span className="star">⭐</span>
           <span className="rating-text">4.9/5 - 200+ HUÉSPEDES</span>

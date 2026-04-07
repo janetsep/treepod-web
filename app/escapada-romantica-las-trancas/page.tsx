@@ -42,7 +42,7 @@ export default function EscapadaRomanticaPage() {
             <TrackView eventName="view_escapada_romantica" />
 
             {/* HERO */}
-            <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
+            <section className="relative h-[85vh] min-h-[550px] md:min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
                         src="/images/Galeria/domo-iluminado-noche.jpg"
@@ -88,7 +88,7 @@ export default function EscapadaRomanticaPage() {
                             eventName="click_reservar_romantica"
                             secondEventName="begin_checkout_romantica"
                             secondParams={{ event: "escapada_romantica" }}
-                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
                             <span className="text-xl md:text-2xl">RESERVA TU ESCAPADA</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
@@ -109,7 +109,7 @@ export default function EscapadaRomanticaPage() {
             </section>
 
             {/* POR QUÉ TREEPOD ES PERFECTO PARA PAREJAS */}
-            <section className="py-24 md:py-32 bg-background-light">
+            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
                         <h2 className="h2-display text-text-main mb-6">Por qué TreePod es el lugar perfecto <span className="italic-display text-primary">para una escapada de pareja</span></h2>
@@ -149,7 +149,7 @@ export default function EscapadaRomanticaPage() {
                                 desc: "Aniversario, cumpleaños, compromiso o simplemente una escapada sin motivo. Escríbenos por WhatsApp si quieres coordinar algo especial para la ocasión."
                             },
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
+                            <div key={idx} className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
                                 <div className="w-16 h-16 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 flex-shrink-0 group-hover:scale-110 transition-transform">
                                     <item.icon size={32} strokeWidth={1.5} />
                                 </div>
@@ -164,7 +164,7 @@ export default function EscapadaRomanticaPage() {
             </section>
 
             {/* GALERÍA */}
-            <section className="py-24 md:py-32 bg-white">
+            <section className="py-16 md:py-24 lg:py-32 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Así se ve una escapada en TreePod</h2>
@@ -172,7 +172,7 @@ export default function EscapadaRomanticaPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/Galeria/noche-domo-iluminado-2-2.jpg"
                                 alt="Domo iluminado para una noche romántica"
@@ -187,7 +187,7 @@ export default function EscapadaRomanticaPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja5.jpg"
                                 alt="Tinaja privada de ciprés para dos"
@@ -202,7 +202,7 @@ export default function EscapadaRomanticaPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/interiors/interior-domo-acogedor-89-2.jpg"
                                 alt="Interior acogedor del domo con ambiente romántico"
@@ -217,7 +217,7 @@ export default function EscapadaRomanticaPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/Galeria/Desayuno.jpg"
                                 alt="Desayuno para dos en el domo"
@@ -247,7 +247,7 @@ export default function EscapadaRomanticaPage() {
             </section>
 
             {/* RESEÑAS */}
-            <section className="py-24 md:py-32 bg-background-light">
+            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Parejas que ya vinieron a TreePod</h2>
@@ -255,7 +255,7 @@ export default function EscapadaRomanticaPage() {
                         <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 47 reseñas verificadas</p>
                     </div>
 
-                    <div className="w-full relative min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
+                    <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
                         <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="flex flex-col items-center gap-3 opacity-50">
@@ -271,7 +271,7 @@ export default function EscapadaRomanticaPage() {
             {/* CTA FINAL */}
             <section className="py-20 md:py-24 bg-background-dark text-white relative border-t-8 border-rose-500">
                 <div className="container mx-auto px-6 md:px-10 relative z-10">
-                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl text-center">
+                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-12 border border-white/20 shadow-2xl text-center">
                         <h2 className="text-2xl md:text-4xl font-display font-black text-white mb-6 leading-tight">
                             La mejor sorpresa es tiempo juntos en el lugar correcto
                         </h2>

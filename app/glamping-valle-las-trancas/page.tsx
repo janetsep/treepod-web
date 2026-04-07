@@ -87,7 +87,7 @@ export default function GlampingValleLasTrancasPage() {
             />
 
             {/* HERO SECTION */}
-            <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
+            <section className="relative h-[85vh] min-h-[550px] md:min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
                         src="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
@@ -133,7 +133,7 @@ export default function GlampingValleLasTrancasPage() {
                             eventName="click_reservar_glamping_trancas"
                             secondEventName="begin_checkout_glamping_trancas"
                             secondParams={{ event: "glamping_valle_las_trancas" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
                             <span className="text-xl md:text-2xl">VER DISPONIBILIDAD Y TARIFAS</span>
                             <span className="text-sm font-normal opacity-90">(Reserva directa, mejor precio)</span>
@@ -154,7 +154,7 @@ export default function GlampingValleLasTrancasPage() {
             </section>
 
             {/* SECCIÓN 1 – QUÉ INCLUYE */}
-            <section className="py-24 md:py-32 bg-background-light">
+            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
                         <h2 className="h2-display text-text-main mb-6">Todo lo que necesitas para una estadía perfecta <span className="italic-display text-primary">en Las Trancas</span></h2>
@@ -192,7 +192,7 @@ export default function GlampingValleLasTrancasPage() {
                                 desc: "Internet satelital real en la montaña. Trabaja remoto, sube fotos o haz streaming sin cortes. Conectado cuando quieras, desconectado cuando lo elijas."
                             },
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
+                            <div key={idx} className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
                                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary flex-shrink-0 group-hover:scale-110 transition-transform">
                                     <item.icon size={32} strokeWidth={1.5} />
                                 </div>
@@ -207,7 +207,7 @@ export default function GlampingValleLasTrancasPage() {
             </section>
 
             {/* SECCIÓN 2 – GALERÍA */}
-            <section className="py-24 md:py-32 bg-white">
+            <section className="py-16 md:py-24 lg:py-32 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Así se ve tu alojamiento en Las Trancas</h2>
@@ -218,7 +218,7 @@ export default function GlampingValleLasTrancasPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/Galeria/domo-iluminado-noche.jpg"
                                 alt="Domo geodésico iluminado de noche en Valle Las Trancas"
@@ -233,7 +233,7 @@ export default function GlampingValleLasTrancasPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
                                 alt="Interior cálido del domo con cama king y estufa a pellet"
@@ -248,7 +248,7 @@ export default function GlampingValleLasTrancasPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja1.jpg"
                                 alt="Tinaja privada de ciprés en el bosque nativo de Las Trancas"
@@ -263,7 +263,7 @@ export default function GlampingValleLasTrancasPage() {
                             </div>
                         </div>
 
-                        <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
+                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
                                 alt="Cocina completamente equipada del domo en Las Trancas"
@@ -293,7 +293,7 @@ export default function GlampingValleLasTrancasPage() {
             </section>
 
             {/* SECCIÓN 3 – QUÉ INCLUYE CADA DOMO */}
-            <section className="py-24 md:py-32 bg-background-light">
+            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Todo incluido en tu domo <span className="italic-display text-primary">TreePod</span></h2>
@@ -304,7 +304,7 @@ export default function GlampingValleLasTrancasPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5">
+                        <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5">
                             <h3 className="text-2xl font-display font-black mb-6 text-primary">Equipamiento</h3>
                             <ul className="space-y-4">
                                 {[
@@ -325,7 +325,7 @@ export default function GlampingValleLasTrancasPage() {
                             </ul>
                         </div>
 
-                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5">
+                        <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5">
                             <h3 className="text-2xl font-display font-black mb-6 text-primary">Experiencia</h3>
                             <ul className="space-y-4">
                                 {[
@@ -350,7 +350,7 @@ export default function GlampingValleLasTrancasPage() {
             </section>
 
             {/* SECCIÓN 4 – RESEÑAS */}
-            <section className="py-24 md:py-32 bg-white">
+            <section className="py-16 md:py-24 lg:py-32 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen quienes ya se quedaron en TreePod</h2>
@@ -360,7 +360,7 @@ export default function GlampingValleLasTrancasPage() {
                         </p>
                     </div>
 
-                    <div className="w-full relative min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
+                    <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
                         <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="flex flex-col items-center gap-3 opacity-50">
@@ -379,7 +379,7 @@ export default function GlampingValleLasTrancasPage() {
             </section>
 
             {/* SECCIÓN 5 – UBICACIÓN Y CONTEXTO */}
-            <section className="py-24 md:py-32 bg-background-light">
+            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Ubicación privilegiada en Valle Las Trancas</h2>
@@ -392,7 +392,7 @@ export default function GlampingValleLasTrancasPage() {
                             { title: "5.5 hrs", desc: "desde Santiago por ruta 5 Sur" },
                             { title: "1 hr", desc: "desde Chillán ciudad" },
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-8 rounded-[2rem] shadow-lg border border-black/5 text-center">
+                            <div key={idx} className="bg-white p-5 md:p-8 rounded-xl md:rounded-[2rem] shadow-lg border border-black/5 text-center">
                                 <p className="text-4xl font-display font-black text-primary mb-3">{item.title}</p>
                                 <p className="text-text-sub font-bold text-lg">{item.desc}</p>
                             </div>
@@ -410,7 +410,7 @@ export default function GlampingValleLasTrancasPage() {
             {/* CTA FINAL */}
             <section className="py-20 md:py-24 bg-background-dark text-white relative border-t-8 border-primary">
                 <div className="container mx-auto px-6 md:px-10 relative z-10">
-                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-white/20 shadow-2xl text-center">
+                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-12 border border-white/20 shadow-2xl text-center">
 
                         <h2 className="text-2xl md:text-4xl font-display font-black text-white mb-6 leading-tight">
                             Reserva directo y obtén el mejor precio
