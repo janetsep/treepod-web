@@ -59,10 +59,10 @@ export default function Hero() {
 
       <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center">
 
-        {/* Social Proof Badge */}
+        {/* Social Proof Badge - Hidden on mobile */}
         <div
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
-          className="hero-badge group"
+          className="hero-badge group hidden sm:flex"
         >
           <span className="star">⭐</span>
           <span className="rating-text">4.9/5 - 200+ HUÉSPEDES</span>
