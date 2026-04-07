@@ -444,6 +444,14 @@ function DisponibilidadContent() {
                       displayNombre = "Cena Privada para Dos";
                       displayDescripcion = "Una velada mágica preparada especialmente en la intimidad de tu TreePod.";
                       displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+                  } else if (s.nombre.toLowerCase().includes("salida") || s.nombre.toLowerCase().includes("15:00") || s.nombre.toLowerCase().includes("checkout")) {
+                      displayNombre = "Salida hasta las 15:00 hrs";
+                      displayDescripcion = "Extiende tu salida de 12:00 a las 15:00 hrs.";
+                      displayImage = "/images/Galeria/IMG_8987.JPG";
+                  } else if (s.nombre.toLowerCase().includes("almuerzo") || s.nombre.toLowerCase().includes("relajado") || s.nombre.toLowerCase().includes("aperitivo")) {
+                      displayNombre = "Almuerzo relajado";
+                      displayDescripcion = "Aperitivo, jugos naturales y vino increíble.";
+                      displayImage = "/images/wellness/Tinaja5.jpg";
                   }
 
                   if (!displayImage) displayImage = "/images/Galeria/domonieve2.jpeg";
