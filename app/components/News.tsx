@@ -4,15 +4,15 @@ import Image from "next/image";
 export default function News() {
     const activities = [
         {
-            image: "/images/Semana Santa en el bosque.png",
-            title: "Semana Santa 2026",
-            description: "Vive un fin de semana sagrado de descanso real. Tinajas de ciprés exclusivas bajo el cielo estrellado y la calma absoluta del bosque.",
-            tag: "Evento Especial",
-            details: "🧘 Reserva tu Refugio de Descanso",
-            href: "/semana-santa-2026"
+            image: "/images/Galeria/Domo3noche.jpeg",
+            title: "Otoño Valle Las Trancas",
+            description: "Vive el otoño más mágico en el corazón del Valle Las Trancas. Colores únicos, aire puro y la tranquilidad absoluta que solo esta época puede ofrecerte.",
+            tag: "Temporada Especial",
+            details: "🍂 Descubre la magia del otoño",
+            href: "/otono-valle-las-trancas"
         },
         {
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBqsbwWLwYH9OTmmwRGTC1khmaeUKNJEOoehlnkDbhxZ9eiVTw_1BXMHfnvo7rFLRLH21zVlKUP9MWlJbRj5Yux_dVwnobxV77Zw8FiQDXZpaECKb5-f05zTDNC6hBYT8uKmvhEjcbme3Y5b9lPV6o-1xsuVwkn6BbKJaV9L3RpK9fRzglqIzPJ9YLaL2buWMIw2nwrGbETzBx35iVYeOdN3PU_voROtg6kLWVADcoERZXhYkPTBum4lAe7wy-5INp7K1rVENpyFLs", // Ski photo
+            image: "/images/hero/domonieve2.jpeg",
             title: "Nevados de Chillán",
             description: "A solo minutos de TreePod, disfruta del mejor centro de esquí del sur de Chile. Pistas para todos los niveles, snowpark y las famosas aguas termales volcánicas.",
             tag: "Deporte Invernal",
