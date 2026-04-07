@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TreePod — Preview Landing Pages SEO (Fase 1)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #009FDF 0%, #4A7C2E 100%);
+    color: white;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+  }
+
+  .page-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  .page-hero {
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .page-hero .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .hero-primary .overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,159,223,0.5)); }
+  .hero-amber .overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(180,120,20,0.5)); }
+  .hero-rose .overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(180,60,80,0.5)); }
+
+  .page-hero .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 24px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .page-info {
+    padding: 24px 32px;
+  }
+
+  .page-url {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .page-url .url {
+    font-family: monospace;
+    font-size: 0.85rem;
+    background: #e8f4fd;
+    color: #009FDF;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .page-url .vol {
+    font-size: 0.75rem;
+    background: #e8f0e0;
+    color: #4A7C2E;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .page-url .type {
+    font-size: 0.75rem;
+    background: #f5e6c8;
+    color: #8B6914;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .seo-meta {
+    margin-bottom: 16px;
+  }
+
+  .seo-meta .meta-title {
+    font-size: 1.05rem;
+    color: #1a0dab;
+    font-weight: 600;
+    margin-bottom: 2px;
+    text-decoration: underline;
+  }
+
+  .seo-meta .meta-url {
+    font-size: 0.8rem;
+    color: #006621;
+    margin-bottom: 4px;
+  }
+
+  .seo-meta .meta-desc {
+    font-size: 0.85rem;
+    color: #545454;
+    line-height: 1.4;
+  }
+
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .keywords span {
+    font-size: 0.75rem;
+    background: #f0f0f0;
+    color: #555;
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+
+  .sections-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .sections-list .section-tag {
+    font-size: 0.7rem;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #666;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .sections-list .section-tag.cta {
+    background: #009FDF;
+    color: white;
+    border-color: #009FDF;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #444;
+  }
+
+  .feature .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .icon-primary { background: #e0f2fe; color: #009FDF; }
+  .icon-green { background: #e8f0e0; color: #4A7C2E; }
+  .icon-amber { background: #fef3c7; color: #92400e; }
+  .icon-rose { background: #fce7f3; color: #be185d; }
+
+  .summary {
+    background: linear-gradient(135deg, #009FDF10, #4A7C2E10);
+    border: 1px solid #009FDF30;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+
+  .summary h2 {
+    font-family: 'Playfair Display', serif;
+    color: #1a1a2e;
+    margin-bottom: 16px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .summary-item {
+    text-align: center;
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  .summary-item .number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #009FDF;
+  }
+
+  .summary-item .label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .fix-banner {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    padding: 20px 24px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .fix-banner .fix-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .fix-banner h3 { margin-bottom: 4px; }
+  .fix-banner p { font-size: 0.85rem; opacity: 0.9; }
+
+  .noindex-banner {
+    background: #f59e0b20;
+    border: 1px solid #f59e0b;
+    color: #92400e;
+    padding: 16px 24px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+  }
+
+  .noindex-banner strong { color: #78350f; }
+
+  .google-preview {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 8px;
+    max-width: 600px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>TreePod — Landing Pages SEO (Fase 1)</h1>
+  <p>Preview de las 5 páginas nuevas + fix del pixel Meta · 6 abril 2026</p>
+</div>
+
+<div class="container">
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <h2>Resumen del Deploy</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="number">5</div>
+        <div class="label">Landing pages nuevas</div>
+      </div>
+      <div class="summary-item">
+        <div class="number">530+</div>
+        <div class="label">Búsquedas/mes potenciales</div>
+      </div>
+      <div class="summary-item">
+        <div class="number">1</div>
+        <div class="label">Fix crítico (pixel)</div>
+      </div>
+      <div class="summary-item">
+        <div class="number">1</div>
+        <div class="label">Página marcada noindex</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIX BANNER -->
+  <div class="fix-banner">
+    <div class="fix-icon">🔧</div>
+    <div>
+      <h3>Fix Crítico: Pixel Meta (ID truncado)</h3>
+      <p>El ID del pixel tenía 15 dígitos en vez de 16. Faltaba el "5" final. Corregido en layout.tsx, .env.production y .env.local. El pixel no registra eventos hace 19 días.</p>
+      <p style="margin-top:6px;font-family:monospace;font-size:0.8rem;">Antes: 285422125138908 → Ahora: <strong>2854221251389085</strong></p>
+    </div>
+  </div>
+
+  <!-- NOINDEX -->
+  <div class="noindex-banner">
+    <strong>/semana-santa-2026</strong> — Marcada como <code>noindex, nofollow</code>. El evento ya pasó (2-5 abril). Google dejará de mostrarla en resultados.
+  </div>
+
+  <!-- PAGE 1: glamping-valle-las-trancas -->
+  <div class="page-card">
+    <div class="page-hero hero-primary">
+      <img src="https://www.domostreepod.cl/images/Galeria/lastrancas-exterior-domo-14-2.jpg" alt="TreePod exterior" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Glamping en el Valle</div>
+        <h2 class="hero-title">Glamping en Valle Las Trancas</h2>
+        <p class="hero-subtitle">Domos geodésicos con tinaja privada en el corazón del bosque nativo</p>
+      </div>
+    </div>
+    <div class="page-info">
+      <div class="page-url">
+        <span class="url">domostreepod.cl/glamping-valle-las-trancas</span>
+        <span class="type">Transaccional</span>
+      </div>
+
+      <div class="google-preview">
+        <div class="seo-meta">
+          <div class="meta-title">Glamping en Valle Las Trancas | Domos con Tinaja Privada - TreePod</div>
+          <div class="meta-url">https://www.domostreepod.cl › glamping-valle-las-trancas</div>
+          <div class="meta-desc">Glamping en Valle Las Trancas, Chillán. Domos geodésicos con tinaja privada, estufa a pellet, cocina equipada y WiFi Starlink. A 15 min de Nevados de Chillán. Desde $110.000/noche.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span>glamping valle las trancas</span>
+        <span>glamping las trancas</span>
+        <span>alojamiento valle las trancas</span>
+        <span>domos las trancas</span>
+        <span>alojamiento nevados de chillán</span>
+      </div>
+
+      <div class="sections-list">
+        <span class="section-tag">Hero</span>
+        <span class="section-tag">Qué incluye (5 beneficios)</span>
+        <span class="section-tag">Galería (4 fotos)</span>
+        <span class="section-tag">Todo incluido (checklists)</span>
+        <span class="section-tag">Reseñas Google</span>
+        <span class="section-tag">Ubicación (distancias)</span>
+        <span class="section-tag cta">CTA Reserva + WhatsApp</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon icon-primary">🏔</span> Tinaja privada al aire libre</div>
+        <div class="feature"><span class="icon icon-green">🌲</span> Bosque nativo milenario</div>
+        <div class="feature"><span class="icon icon-primary">🔥</span> Estufa a pellet automática</div>
+        <div class="feature"><span class="icon icon-green">📶</span> WiFi Starlink</div>
+        <div class="feature"><span class="icon icon-primary">🍳</span> Cocina 100% equipada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: domos-geodesicos-chillan -->
+  <div class="page-card">
+    <div class="page-hero hero-primary">
+      <img src="https://www.domostreepod.cl/images/Galeria/noche-domo-iluminado-2-2.jpg" alt="Domo iluminado" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Arquitectura Geodésica</div>
+        <h2 class="hero-title">Domos Geodésicos en Chillán</h2>
+        <p class="hero-subtitle">Estructura de 6 metros, tinaja privada, estufa a pellet y WiFi Starlink</p>
+      </div>
+    </div>
+    <div class="page-info">
+      <div class="page-url">
+        <span class="url">domostreepod.cl/domos-geodesicos-chillan</span>
+        <span class="vol">210 búsquedas/mes</span>
+        <span class="type">Transaccional</span>
+      </div>
+
+      <div class="google-preview">
+        <div class="seo-meta">
+          <div class="meta-title">Domos Geodésicos en Chillán | Glamping TreePod - Valle Las Trancas</div>
+          <div class="meta-url">https://www.domostreepod.cl › domos-geodesicos-chillan</div>
+          <div class="meta-desc">Domos geodésicos habitables en Chillán, Valle Las Trancas. Estructura de 6 metros, tinaja privada, estufa a pellet y WiFi Starlink. A 15 min de Nevados de Chillán. Desde $110.000/noche.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span>domos chillan (90/mes)</span>
+        <span>domos en chillan (70/mes)</span>
+        <span>domos termas de chillan (50/mes)</span>
+        <span>domos geodésicos chillán</span>
+        <span>domos nevados de chillan</span>
+      </div>
+
+      <div class="sections-list">
+        <span class="section-tag">Hero</span>
+        <span class="section-tag">Especificaciones (6 cards técnicas)</span>
+        <span class="section-tag">Galería (4 fotos)</span>
+        <span class="section-tag">Reseñas Google</span>
+        <span class="section-tag cta">CTA Reserva + WhatsApp</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon icon-primary">📐</span> 6m diámetro, 28m² útiles</div>
+        <div class="feature"><span class="icon icon-green">🛡</span> Resistente a viento y nieve</div>
+        <div class="feature"><span class="icon icon-primary">🌡</span> Calefacción automática</div>
+        <div class="feature"><span class="icon icon-green">💧</span> Tinaja privada exterior</div>
+        <div class="feature"><span class="icon icon-primary">🏔</span> A 15 min de pistas de ski</div>
+        <div class="feature"><span class="icon icon-green">📶</span> WiFi Starlink satelital</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: glamping-cerca-de-santiago -->
+  <div class="page-card">
+    <div class="page-hero hero-primary">
+      <img src="https://www.domostreepod.cl/images/Galeria/hero-night-2.jpg" alt="TreePod de noche" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">⭐ Mayor oportunidad SEO</div>
+        <h2 class="hero-title">Glamping Cerca de Santiago</h2>
+        <p class="hero-subtitle">A solo 4.5 horas por Ruta 5 Sur. Tu escape perfecto desde la capital.</p>
+      </div>
+    </div>
+    <div class="page-info">
+      <div class="page-url">
+        <span class="url">domostreepod.cl/glamping-cerca-de-santiago</span>
+        <span class="vol">320 búsquedas/mes · SD 8</span>
+        <span class="type">Transaccional</span>
+      </div>
+
+      <div class="google-preview">
+        <div class="seo-meta">
+          <div class="meta-title">Glamping Cerca de Santiago | Domos TreePod - Valle Las Trancas, Chillán</div>
+          <div class="meta-url">https://www.domostreepod.cl › glamping-cerca-de-santiago</div>
+          <div class="meta-desc">Glamping a 4.5 horas de Santiago en Valle Las Trancas. Domos geodésicos con tinaja privada, estufa a pellet y bosque nativo. Escapada perfecta desde la capital. Desde $110.000/noche.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span>glamping cerca de santiago (320/mes)</span>
+        <span>glamping santiago chile</span>
+        <span>mejores glamping cerca de santiago</span>
+        <span>glampings cerca de santiago</span>
+      </div>
+
+      <div class="sections-list">
+        <span class="section-tag">Hero</span>
+        <span class="section-tag">Cómo llegar (3 distancias)</span>
+        <span class="section-tag">Qué te espera (4 beneficios)</span>
+        <span class="section-tag">Galería (4 fotos)</span>
+        <span class="section-tag">Reseñas Google</span>
+        <span class="section-tag cta">CTA Reserva + WhatsApp</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon icon-primary">🕐</span> 4.5h desde Santiago</div>
+        <div class="feature"><span class="icon icon-green">🚗</span> Ruta 5 Sur directa</div>
+        <div class="feature"><span class="icon icon-primary">📍</span> 15 min de Nevados de Chillán</div>
+        <div class="feature"><span class="icon icon-green">🏔</span> 120 min de Termas de Chillán</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: otono-valle-las-trancas -->
+  <div class="page-card">
+    <div class="page-hero hero-amber">
+      <img src="https://www.domostreepod.cl/images/real/VegetacionOtono.jpg" alt="Otoño en TreePod" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Otoño 2026 · Abril a Junio</div>
+        <h2 class="hero-title">Otoño en Valle Las Trancas</h2>
+        <p class="hero-subtitle">Colores dorados, cero multitudes, tinaja caliente entre las hojas</p>
+      </div>
+    </div>
+    <div class="page-info">
+      <div class="page-url">
+        <span class="url">domostreepod.cl/otono-valle-las-trancas</span>
+        <span class="type" style="background:#fef3c7;color:#92400e;">Estacional</span>
+      </div>
+
+      <div class="google-preview">
+        <div class="seo-meta">
+          <div class="meta-title">Otoño en Valle Las Trancas 2026 | Glamping TreePod - Colores del Bosque</div>
+          <div class="meta-url">https://www.domostreepod.cl › otono-valle-las-trancas</div>
+          <div class="meta-desc">Vive el otoño en Valle Las Trancas. Bosque nativo con colores dorados, tinaja caliente entre las hojas, estufa a pellet y cero multitudes. Abril a junio en Domos TreePod. Desde $110.000/noche.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span>otoño valle las trancas</span>
+        <span>glamping otoño chile</span>
+        <span>escapada otoño chile</span>
+        <span>las trancas otoño</span>
+      </div>
+
+      <div class="sections-list">
+        <span class="section-tag">Hero (tema ámbar)</span>
+        <span class="section-tag">Por qué otoño (6 beneficios)</span>
+        <span class="section-tag">Galería (4 fotos)</span>
+        <span class="section-tag">Reseñas Google</span>
+        <span class="section-tag cta">CTA Escapada de Otoño</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon icon-amber">🍂</span> Colores dorados del bosque</div>
+        <div class="feature"><span class="icon icon-amber">🤫</span> Cero multitudes</div>
+        <div class="feature"><span class="icon icon-amber">♨️</span> Tinaja + aire frío</div>
+        <div class="feature"><span class="icon icon-amber">📸</span> Fotografía de otoño</div>
+        <div class="feature"><span class="icon icon-amber">🔥</span> Domo cálido automático</div>
+        <div class="feature"><span class="icon icon-amber">🥾</span> Trekking en colores</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5: escapada-romantica-las-trancas -->
+  <div class="page-card">
+    <div class="page-hero hero-rose">
+      <img src="https://www.domostreepod.cl/images/Galeria/domo-iluminado-noche.jpg" alt="Domo romántico" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Para Dos ❤</div>
+        <h2 class="hero-title">Escapada Romántica en Las Trancas</h2>
+        <p class="hero-subtitle">Privacidad total, estrellas desde la cama, tinaja privada para dos</p>
+      </div>
+    </div>
+    <div class="page-info">
+      <div class="page-url">
+        <span class="url">domostreepod.cl/escapada-romantica-las-trancas</span>
+        <span class="type" style="background:#fce7f3;color:#be185d;">Temática Evergreen</span>
+      </div>
+
+      <div class="google-preview">
+        <div class="seo-meta">
+          <div class="meta-title">Escapada Romántica en Las Trancas | Domos con Tinaja Privada - TreePod</div>
+          <div class="meta-url">https://www.domostreepod.cl › escapada-romantica-las-trancas</div>
+          <div class="meta-desc">Escapada romántica en domos geodésicos con tinaja privada en Valle Las Trancas. Privacidad total, bosque nativo, estufa a pellet y WiFi Starlink. Aniversario, cumpleaños o simplemente para dos. Desde $110.000/noche.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span>escapada romantica las trancas</span>
+        <span>glamping romantico chile</span>
+        <span>escapada de pareja chile</span>
+        <span>aniversario las trancas</span>
+      </div>
+
+      <div class="sections-list">
+        <span class="section-tag">Hero (tema rosa)</span>
+        <span class="section-tag">Por qué para parejas (6 beneficios)</span>
+        <span class="section-tag">Galería (4 fotos)</span>
+        <span class="section-tag">Reseñas Google</span>
+        <span class="section-tag cta">CTA WhatsApp "Sorpresa"</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon icon-rose">♨️</span> Tinaja privada para dos</div>
+        <div class="feature"><span class="icon icon-rose">✨</span> Estrellas desde la cama</div>
+        <div class="feature"><span class="icon icon-rose">🔥</span> Calefacción automática</div>
+        <div class="feature"><span class="icon icon-rose">🍳</span> Cocina para cena íntima</div>
+        <div class="feature"><span class="icon icon-rose">🤫</span> Privacidad total</div>
+        <div class="feature"><span class="icon icon-rose">🎉</span> Ideal aniversarios</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

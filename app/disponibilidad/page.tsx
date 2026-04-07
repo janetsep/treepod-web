@@ -427,22 +427,22 @@ function DisponibilidadContent() {
 
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
                 {servicios.map((s) => {
-                  // Cambio #3: Emotional Copies mapping
+                  // Cambio #3: Emotional Copies mapping (CRO High Conversion)
                   let displayNombre = s.nombre;
                   let displayDescripcion = s.descripcion;
                   let displayImage = s.image_url;
                             
                   if (s.nombre.toLowerCase().includes("desayuno")) {
                       displayNombre = "Despierta en el Bosque";
-                      displayDescripcion = "Café orgánico con vistas al bosque desde tu terraza";
+                      displayDescripcion = "Café orgánico y pan artesanal con vistas al bosque desde tu terraza.";
                       displayImage = "/images/Galeria/Desayuno.jpg";
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
                       displayNombre = "Baño Privado Bajo las Estrellas";
-                      displayDescripcion = "Relajo absoluto al aire libre cruzando la pasarela por el bosque nativo";
+                      displayDescripcion = "Relajo absoluto en agua caliente al aire libre, rodeado de naturaleza nativa.";
                       displayImage = "/images/wellness/Tinaja1.jpg"; 
                   } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("pack")) {
                       displayNombre = "Cena Privada para Dos";
-                      displayDescripcion = "Una velada mágica preparada especialmente para ustedes en la intimidad del bosque";
+                      displayDescripcion = "Una velada mágica preparada especialmente en la intimidad de tu TreePod.";
                       displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
                   }
 

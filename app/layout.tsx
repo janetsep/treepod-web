@@ -216,9 +216,9 @@ export default function RootLayout({
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '285422125138908');
+            fbq('init', '2854221251389085');
             fbq('track', 'PageView');
-            console.log('🟢 Meta Pixel initialized: 285422125138908');
+            console.log('🟢 Meta Pixel initialized: 2854221251389085');
           `}
         </Script>
       </head>

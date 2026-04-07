@@ -57,13 +57,13 @@ export default function Hero() {
 
       <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center">
 
-        {/* Cambio #1: Hero Rating Badge (Mejorado Visualmente) */}
+        {/* Social Proof Badge */}
         <div
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
           className="hero-badge group"
         >
-          <span className="star">⭐⭐⭐⭐⭐</span>
-          <span className="rating-text">EXPERIENCIAS REALES</span>
+          <span className="star">⭐</span>
+          <span className="rating-text">4.9/5 - 200+ HUÉSPEDES</span>
         </div>
 
 
@@ -83,9 +83,10 @@ export default function Hero() {
         <div className="animate-fade-in-up delay-300 mb-16">
           <Link 
             href="/disponibilidad"
-            className="inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-black text-sm md:text-lg uppercase tracking-[0.2em] rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 shadow-[0_20px_40px_-10px_rgba(0,173,239,0.5)] border-2 border-white/20"
+            className="cta-hero group"
           >
             Reservar mi escapada ahora
+            <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
 

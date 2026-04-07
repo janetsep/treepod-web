@@ -272,9 +272,9 @@ function ReservaContent({ id }: { id: string }) {
       <div className="container mx-auto px-4 md:px-6 py-4 lg:py-6 max-w-5xl">
         <div className="space-y-10">
 
-          {/* Cambio #2: Checkout Stepper */}
-          <div className="mb-0">
-            <Stepper activeStep={2} />
+          {/* Paso Visual del Checkout (Stepper) */}
+          <div className="mb-0 pt-4">
+            <Stepper activeStep={isGuestDataComplete ? 3 : 2} />
           </div>
 
           <header className="text-center space-y-4">
