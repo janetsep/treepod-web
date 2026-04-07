@@ -3,15 +3,15 @@
 import Link from "next/link";
 import Script from "next/script";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { trackEvent } from "../lib/analytics";
 
 
 export default function Hero() {
-  const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Blur placeholder para evitar fondo gris durante carga
+  const blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
 
   const heroImages = [
     { src: "/images/hero/IMG_8987.JPG", alt: "Tu refugio en medio del bosque nativo" },
@@ -45,6 +45,8 @@ export default function Hero() {
               fill
               priority={index < 2} // Carga prioritaria para las 2 primeras para evitar parpadeo
               loading={index < 2 ? "eager" : "lazy"}
+              placeholder="blur"
+              blurDataURL={blurDataURL}
               className="object-cover object-center"
               sizes="100vw"
             />
@@ -68,10 +70,12 @@ export default function Hero() {
 
 
 
-        <h1 className="h1-display mb-8 md:mb-12 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] font-bold">
-          Glamping en Valle Las Trancas: <br className="hidden md:block" />
-          domos con tinaja privada <br className="hidden md:block" />
-          <span className="text-[#00ADEF] italic-display block mt-4 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-3xl md:!text-6xl lg:!text-7xl">
+        <h1 className="h1-display mb-8 md:mb-12 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-2xl sm:!text-3xl md:!text-5xl lg:!text-7xl !leading-[1.2] font-bold px-4 sm:px-0">
+          Glamping en Valle Las Trancas:
+          <br className="block sm:hidden" />
+          <span className="block sm:inline"> domos con tinaja privada</span>
+          <br className="hidden md:block" />
+          <span className="text-[#00ADEF] italic-display block mt-2 sm:mt-4 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-2xl sm:!text-3xl md:!text-6xl lg:!text-7xl">
             en el bosque nativo.
           </span>
         </h1>
