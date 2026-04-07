@@ -154,7 +154,7 @@ export default function RootLayout({
                   "name": "¿Dónde queda TreePod Glamping?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "TreePod está en Valle Las Trancas, camino a Termas de Chillán km 28, Región de Ñuble, Chile. A 80 km de Chillán y a unas 5 horas de Santiago."
+                    "text": "TreePod está en Valle Las Trancas, camino a Termas de Chillán km 28, Región de Ñuble, Chile. A 72 km de Chillán y a unas 5.5 horas de Santiago."
                   }
                 },
                 {

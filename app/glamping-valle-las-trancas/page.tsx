@@ -389,8 +389,8 @@ export default function GlampingValleLasTrancasPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {[
                             { title: "15 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
-                            { title: "4.5 hrs", desc: "desde Santiago por ruta 5 Sur" },
-                            { title: "1.5 hrs", desc: "desde Chillán ciudad" },
+                            { title: "5.5 hrs", desc: "desde Santiago por ruta 5 Sur" },
+                            { title: "1 hr", desc: "desde Chillán ciudad" },
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-8 rounded-[2rem] shadow-lg border border-black/5 text-center">
                                 <p className="text-4xl font-display font-black text-primary mb-3">{item.title}</p>
