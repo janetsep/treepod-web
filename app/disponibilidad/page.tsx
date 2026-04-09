@@ -52,6 +52,11 @@ function DisponibilidadContent() {
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState<Set<string>>(new Set());
   const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
 
+  // Client data states
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const isMundialEvent = searchParams.get("event") === "mundial";
@@ -199,6 +204,20 @@ function DisponibilidadContent() {
   const reservar = async () => {
     try {
       if (!resultado) return;
+
+      // Validate client data
+      if (!nombre.trim() || !apellido.trim() || !email.trim() || !telefono.trim()) {
+        setError("Por favor completa todos los datos: nombre, apellido, email y teléfono");
+        return;
+      }
+
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        setError("Por favor ingresa un email válido");
+        return;
+      }
+
       setReserving(true);
       setError(null);
 
@@ -216,6 +235,10 @@ function DisponibilidadContent() {
           descuento_monto: resultado.descuento_aplicado?.monto || 0,
           descuento_detalle: resultado.descuento_aplicado ? [resultado.descuento_aplicado.tipo] : [],
           is_event_mundial: isMundialEvent,
+          nombre: nombre.trim(),
+          apellido: apellido.trim(),
+          email: email.trim().toLowerCase(),
+          telefono: telefono.trim(),
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
             if (!s) return null;
@@ -378,7 +401,6 @@ function DisponibilidadContent() {
                       from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
                       to: salida ? new Date(salida + 'T12:00:00') : undefined
                     }}
-                    defaultMonth={entrada ? new Date(entrada + 'T12:00:00') : undefined}
                     onSelect={(range) => {
                       if (range?.from) {
                         const year = range.from.getFullYear();
@@ -502,7 +524,7 @@ function DisponibilidadContent() {
                             {displayDescripcion}
                           </p>
                           <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="extra-price-large">
+                            <span className="text-lg font-bold text-text-main">
                               ${(s.precio || 0).toLocaleString("es-CL")}
                             </span>
                             <span className="text-[10px] text-text-sub font-black uppercase tracking-widest bg-black/5 px-2 py-0.5 rounded-full">
@@ -780,6 +802,66 @@ function DisponibilidadContent() {
                         </span>
                         <span className="font-bold text-text-main">${(Math.round((calcularTotalConServicios() || 0) * 0.5)).toLocaleString("es-CL")}</span>
                       </div>
+                    </div>
+
+                    {/* Client Data Form */}
+                    <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl p-6 border border-primary/10 mt-6">
+                      <h3 className="text-sm font-black text-text-main uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-primary rounded-full"></span>
+                        Tus Datos
+                      </h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Nombre *</label>
+                          <input
+                            type="text"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            placeholder="Tu nombre"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Apellido *</label>
+                          <input
+                            type="text"
+                            value={apellido}
+                            onChange={(e) => setApellido(e.target.value)}
+                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            placeholder="Tu apellido"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Email *</label>
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            placeholder="tu@email.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Teléfono *</label>
+                          <input
+                            type="tel"
+                            value={telefono}
+                            onChange={(e) => setTelefono(e.target.value)}
+                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            placeholder="+56 9 1234 5678"
+                          />
+                        </div>
+                      </div>
+
+                      {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mt-4 text-sm font-medium">
+                          {error}
+                        </div>
+                      )}
                     </div>
 
                     <button

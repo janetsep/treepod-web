@@ -12,7 +12,11 @@ export async function POST(req: Request) {
       servicios,
       precio_original,
       descuento_monto,
-      descuento_detalle
+      descuento_detalle,
+      nombre,
+      apellido,
+      email,
+      telefono
     } = body as {
       entrada?: string;
       salida?: string;
@@ -22,10 +26,25 @@ export async function POST(req: Request) {
       precio_original?: number;
       descuento_monto?: number;
       descuento_detalle?: any;
+      nombre?: string;
+      apellido?: string;
+      email?: string;
+      telefono?: string;
     };
 
     if (!entrada || !salida || !adultos || !total) {
       return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
+    }
+
+    // Validate client data (critical for Transbank flow)
+    if (!nombre?.trim() || !apellido?.trim() || !email?.trim() || !telefono?.trim()) {
+      return NextResponse.json({ error: "Datos del cliente incompletos. Nombre, apellido, email y teléfono son obligatorios." }, { status: 400 });
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
     if (Number.isNaN(Number(adultos)) || Number(adultos) <= 0) {
@@ -112,7 +131,12 @@ export async function POST(req: Request) {
       domo_id: domoDisponible.id,
       estado: "pendiente_pago",
       expires_at: expiresAt,
-      fuente: "WEB_NEW_PRICING"
+      fuente: "WEB_NEW_PRICING",
+      // Client data (critical for Transbank return flow)
+      nombre: nombre.trim(),
+      apellido: apellido.trim(),
+      email: email.trim().toLowerCase(),
+      telefono: telefono.trim()
     };
 
     let { data, error } = await supabaseAdmin

@@ -258,17 +258,31 @@ async function handleReturn(req: Request) {
         // Nota: Fechas podrían formatearse mejor si tuviéramos date-fns, usaremos string simple por robustez
         const dateRange = `Check-in: ${reserva.fecha_inicio} | Check-out: ${reserva.fecha_fin}`;
 
-        await NotificationService.sendWelcomeEmail(
-          reserva.email,
-          guestName,
-          dateRange,
-          "https://www.google.com/maps/search/?api=1&query=-36.9116,-71.5069",
-          reserva.id.slice(-5),
-          reserva.adultos,
-          extrasNames,
-          commit.amount || 0,
-          reserva.total
-        );
+        // Only send email if we have valid email address
+        if (reserva.email?.trim()) {
+          try {
+            await NotificationService.sendWelcomeEmail(
+              reserva.email,
+              guestName,
+              dateRange,
+              "https://www.google.com/maps/search/?api=1&query=-36.9116,-71.5069",
+              reserva.id.slice(-5),
+              reserva.adultos,
+              extrasNames,
+              commit.amount || 0,
+              reserva.total
+            );
+            console.log("📧 Email de bienvenida enviado exitosamente");
+          } catch (emailError) {
+            console.error("⚠️ Error enviando email de bienvenida:", emailError);
+          }
+        } else {
+          console.warn("⚠️ No se pudo enviar email de bienvenida: email no disponible en la reserva", {
+            reservaId: reserva.id,
+            hasNombre: !!reserva.nombre,
+            hasApellido: !!reserva.apellido
+          });
+        }
 
       } catch (error) {
         console.error("⚠️ Error crítico al registrar finanzas/notificación:", error);

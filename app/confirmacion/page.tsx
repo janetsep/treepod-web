@@ -12,6 +12,7 @@ function ConfirmacionContent() {
     const [reserva, setReserva] = useState<any>(null);
     const [montoPagado, setMontoPagado] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+    const [purchaseEventSent, setPurchaseEventSent] = useState(false);
 
     useEffect(() => {
         const reservaId = searchParams.get('reserva_id');
@@ -24,42 +25,7 @@ function ConfirmacionContent() {
             if (!isNaN(parsed)) setMontoPagado(parsed);
         }
 
-        // Disparar evento purchase a GA4/GTM
-        if (reservaId && amount && typeof window !== 'undefined') {
-            console.log('🎯 Disparando evento purchase a GA4', { reservaId, amount, transactionId });
-
-            (window as any).dataLayer = (window as any).dataLayer || [];
-            (window as any).dataLayer.push({
-                event: 'purchase',
-                transaction_id: transactionId || reservaId,
-                value: parseFloat(amount),
-                currency: 'CLP',
-                items: [{
-                    item_id: 'reserva_treepod',
-                    item_name: 'Reserva TreePod',
-                    price: parseFloat(amount),
-                    quantity: 1
-                }]
-            });
-
-            // Meta Pixel (Facebook) - Tracking de Compra Real
-            // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
-            if ((window as any).fbq) {
-                (window as any).fbq('track', 'Purchase', {
-                    value: parseFloat(amount),
-                    currency: 'CLP',
-                    content_name: 'Reserva TreePod',
-                    content_ids: ['reserva_treepod'],
-                    num_items: 1
-                });
-                console.log('✅ Meta Pixel Purchase event enviado:', { reservaId, amount });
-            } else {
-                console.warn('⚠️ fbq no disponible - Meta Pixel puede no estar cargado');
-            }
-
-            // Eventos gestionados vía GTM y Meta Pixel
-            console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel');
-        }
+        // Note: GA4 purchase event will be triggered after reserva data is loaded
 
         // Cargar datos de la reserva
         if (reservaId) {
@@ -73,6 +39,54 @@ function ConfirmacionContent() {
                         console.error('Error cargando reserva:', error);
                     } else {
                         setReserva(data);
+
+                        // Disparar evento purchase a GA4/GTM con datos completos
+                        const amount = searchParams.get('amount');
+                        const transactionId = searchParams.get('transaction_id');
+
+                        if (!purchaseEventSent && data && amount && typeof window !== 'undefined') {
+                            const domoName = data.domos?.nombre || 'TreePod Domo';
+                            console.log('🎯 Disparando evento purchase a GA4 con datos completos', {
+                                reservaId: data.id,
+                                amount,
+                                domoName,
+                                transactionId
+                            });
+
+                            (window as any).dataLayer = (window as any).dataLayer || [];
+                            (window as any).dataLayer.push({
+                                event: 'purchase',
+                                transaction_id: transactionId || data.id,
+                                value: parseFloat(amount),
+                                currency: 'CLP',
+                                items: [{
+                                    item_id: data.id,
+                                    item_name: `Reserva ${domoName}`,
+                                    category: 'Glamping',
+                                    price: parseFloat(amount),
+                                    quantity: 1
+                                }]
+                            });
+
+                            // Meta Pixel (Facebook) - Tracking de Compra Real
+                            // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
+                            if ((window as any).fbq) {
+                                (window as any).fbq('track', 'Purchase', {
+                                    value: parseFloat(amount),
+                                    currency: 'CLP',
+                                    content_name: `Reserva ${domoName}`,
+                                    content_ids: [data.id],
+                                    num_items: 1
+                                });
+                                console.log('✅ Meta Pixel Purchase event enviado:', { reservaId: data.id, amount, domoName });
+                            } else {
+                                console.warn('⚠️ fbq no disponible - Meta Pixel puede no estar cargado');
+                            }
+
+                            // Mark as sent to prevent duplicates
+                            setPurchaseEventSent(true);
+                            console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel con datos completos');
+                        }
                     }
                     setLoading(false);
                 });

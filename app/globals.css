@@ -289,14 +289,6 @@ section,
   line-height: 1.4 !important;
 }
 
-.extra-price-large {
-  font-size: 3rem !important; /* ~48px */
-  font-weight: 900 !important;
-  color: var(--primary) !important;
-  margin: 12px 0 !important;
-  line-height: 1 !important;
-  letter-spacing: -0.02em !important;
-}
 
 /* Cambio #4: Hero CTA (Destacado Premium) */
 .cta-hero {
