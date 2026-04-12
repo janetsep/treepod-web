@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Playfair_Display, Inter, Plus_Jakarta_Sans, Noto_Sans } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
+import { Suspense } from 'react';
 import AdminAwareLayout from './components/AdminAwareLayout';
 import MicrosoftClarity from './components/MicrosoftClarity';
 import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
 import DebugGTM from './components/DebugGTM';
+import UTMCapture from './components/UTMCapture';
 
 
 const geistSans = Geist({
@@ -237,6 +239,11 @@ export default function RootLayout({
         </noscript>
         {/* Scripts Globales de Terceros */}
         <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
+
+        {/* UTM Capture — captura parámetros de campaña al llegar al sitio */}
+        <Suspense fallback={null}>
+          <UTMCapture />
+        </Suspense>
 
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
         <AuthRecoveryRedirect />

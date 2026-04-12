@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
+import { TrackingService } from '@/services/TrackingService';
 import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info } from "lucide-react";
 import Stepper from '../components/Stepper';
 
@@ -205,6 +206,18 @@ function DisponibilidadContent() {
     try {
       if (!resultado) return;
 
+      // Disparar select_dome cuando usuario hace clic en reservar
+      // Disparar evento GA4 via GTM
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'select_dome',
+        domo_id: "DOMO-GENERICO", // ID genérico ya que se asigna automáticamente
+        fecha_inicio: entrada,
+        fecha_fin: salida,
+        adultos: adultos,
+        value: calcularTotalConServicios()
+      });
+
       // Validate client data
       if (!nombre.trim() || !apellido.trim() || !email.trim() || !telefono.trim()) {
         setError("Por favor completa todos los datos: nombre, apellido, email y teléfono");
@@ -220,6 +233,10 @@ function DisponibilidadContent() {
 
       setReserving(true);
       setError(null);
+
+      // Agregar ANTES del fetch, leer UTMs del sessionStorage:
+      const savedUtms = sessionStorage.getItem('treepod_utms');
+      const utms = savedUtms ? JSON.parse(savedUtms) : {};
 
       const res = await fetch("/api/reservas/crear", {
         method: "POST",
@@ -239,6 +256,7 @@ function DisponibilidadContent() {
           apellido: apellido.trim(),
           email: email.trim().toLowerCase(),
           telefono: telefono.trim(),
+          ...utms, // ← NUEVO: expande utm_source, utm_medium, utm_campaign, etc.
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
             if (!s) return null;

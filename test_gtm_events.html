@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test GTM Events - TreePod</title>
+    <script>
+        // Simular GTM dataLayer
+        window.dataLayer = window.dataLayer || [];
+
+        // Simular sessionStorage con UTMs de prueba
+        const testUTMs = {
+            utm_source: 'test',
+            utm_medium: 'claude',
+            utm_campaign: 'verificacion',
+            utm_content: 'mcp',
+            utm_term: 'glamping'
+        };
+        sessionStorage.setItem('treepod_utms', JSON.stringify(testUTMs));
+
+        function testEvents() {
+            console.log('🧪 Iniciando pruebas de eventos GTM...');
+
+            // Test 1: select_dome
+            window.dataLayer.push({
+                event: 'select_dome',
+                domo_id: 'DOMO-TEST',
+                fecha_inicio: '2026-04-15',
+                fecha_fin: '2026-04-16',
+                adultos: 2,
+                value: 145000
+            });
+            console.log('✅ Evento select_dome disparado');
+
+            // Test 2: generate_lead
+            setTimeout(() => {
+                window.dataLayer.push({
+                    event: 'generate_lead',
+                    reserva_id: 'TEST-12345',
+                    value: 145000,
+                    currency: 'CLP'
+                });
+                console.log('✅ Evento generate_lead disparado');
+            }, 1000);
+
+            // Test 3: begin_checkout
+            setTimeout(() => {
+                window.dataLayer.push({
+                    event: 'begin_checkout',
+                    reserva_id: 'TEST-12345',
+                    value: 72500, // 50% del total
+                    currency: 'CLP'
+                });
+                console.log('✅ Evento begin_checkout disparado');
+            }, 2000);
+
+            // Test 4: utm_captured
+            setTimeout(() => {
+                window.dataLayer.push({
+                    event: 'utm_captured',
+                    ...testUTMs,
+                    source: 'glamping_ecosystem'
+                });
+                console.log('✅ Evento utm_captured disparado');
+            }, 3000);
+
+            console.log('📊 DataLayer actual:', window.dataLayer);
+        }
+
+        function testUTMCapture() {
+            const stored = sessionStorage.getItem('treepod_utms');
+            const utms = stored ? JSON.parse(stored) : {};
+            console.log('🎯 UTMs capturados:', utms);
+            return Object.keys(utms).length > 0;
+        }
+    </script>
+</head>
+<body>
+    <h1>🧪 Test TreePod GTM Events</h1>
+
+    <button onclick="testEvents()" style="padding: 10px 20px; background: #009FDF; color: white; border: none; margin: 10px;">
+        Disparar Eventos GTM
+    </button>
+
+    <button onclick="testUTMCapture()" style="padding: 10px 20px; background: #4A7C2E; color: white; border: none; margin: 10px;">
+        Verificar UTMs
+    </button>
+
+    <div id="results" style="margin-top: 20px; padding: 20px; background: #f5f5f5;">
+        <h3>Estado de Verificación:</h3>
+        <div>✅ UTMCapture.tsx - Implementado</div>
+        <div>✅ window.dataLayer.push() - 3 eventos configurados</div>
+        <div>✅ GTM Triggers - IDs 43, 44, 45 creados</div>
+        <div>✅ GTM Variables - 7 variables data layer</div>
+        <div>✅ GTM Tags - IDs 54, 55, 56 publicados</div>
+        <div>⏳ Deploy pendiente para prueba en producción</div>
+    </div>
+
+    <div style="margin-top: 20px; padding: 20px; background: #E8F0E0;">
+        <h3>🚀 URLs de Prueba:</h3>
+        <div>https://domostreepod.cl?utm_source=test&utm_medium=claude&utm_campaign=mcp</div>
+        <div>https://domostreepod.cl?utm_source=google&utm_medium=cpc&utm_campaign=invierno2026&utm_content=domo&utm_term=glamping</div>
+    </div>
+</body>
+</html>

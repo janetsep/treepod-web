@@ -453,6 +453,16 @@ function ReservaContent({ id }: { id: string }) {
                     initialData={reserva}
                     onSave={(data) => {
                       setReserva({ ...reserva, ...data });
+
+                      // ✅ NUEVO: disparar generate_lead cuando el usuario completa sus datos via GTM
+                      window.dataLayer = window.dataLayer || [];
+                      window.dataLayer.push({
+                        event: 'generate_lead',
+                        reserva_id: id,
+                        value: reserva?.total,
+                        currency: 'CLP'
+                      });
+
                       router.refresh();
                     }}
                   />

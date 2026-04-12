@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { trackEvent } from "../lib/analytics";
+import { TrackingService } from '@/services/TrackingService';
 
 export default function PagarButton({
   reservaId,
@@ -15,6 +16,26 @@ export default function PagarButton({
   label?: ReactNode;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [reservaTotal, setReservaTotal] = useState<number>(0);
+
+  // Obtener total de la reserva para calcular el 50% en begin_checkout
+  useEffect(() => {
+    const fetchReservaTotal = async () => {
+      try {
+        const res = await fetch(`/api/reservas/obtener?id=${reservaId}`);
+        const data = res.ok ? await res.json() : null;
+        if (data?.total) {
+          setReservaTotal(data.total);
+        }
+      } catch (error) {
+        console.error('Error obteniendo total de reserva:', error);
+      }
+    };
+
+    if (reservaId) {
+      fetchReservaTotal();
+    }
+  }, [reservaId]);
 
   type WebpayCreateResponse = {
     url?: string;
@@ -84,7 +105,14 @@ export default function PagarButton({
           }
         }
 
-        trackEvent("begin_checkout", { metodo: "webpay", reserva_id: reservaId });
+        // Evento begin_checkout ANTES de iniciar el flujo WebPay via GTM
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'begin_checkout',
+          reserva_id: reservaId,
+          value: Math.round(reservaTotal * 0.5), // monto a cobrar (50% del total)
+          currency: 'CLP'
+        });
 
         redirectToWebpay(data.url, data.token);
         return;

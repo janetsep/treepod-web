@@ -16,7 +16,12 @@ export async function POST(req: Request) {
       nombre,
       apellido,
       email,
-      telefono
+      telefono,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
     } = body as {
       entrada?: string;
       salida?: string;
@@ -30,6 +35,11 @@ export async function POST(req: Request) {
       apellido?: string;
       email?: string;
       telefono?: string;
+      utm_source?: string;
+      utm_medium?: string;
+      utm_campaign?: string;
+      utm_content?: string;
+      utm_term?: string;
     };
 
     if (!entrada || !salida || !adultos || !total) {
@@ -136,7 +146,13 @@ export async function POST(req: Request) {
       nombre: nombre.trim(),
       apellido: apellido.trim(),
       email: email.trim().toLowerCase(),
-      telefono: telefono.trim()
+      telefono: telefono.trim(),
+      // UTM Attribution — NUEVO
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      utm_content: utm_content || null,
+      utm_term: utm_term || null,
     };
 
     let { data, error } = await supabaseAdmin
