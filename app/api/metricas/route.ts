@@ -93,6 +93,13 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    if (!query) {
+      return NextResponse.json(
+        { error: 'Tipo de consulta no válido' },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await query;
 
     if (error) {
@@ -106,25 +113,28 @@ export async function GET(request: NextRequest) {
     // Agregar estadísticas de resumen
     let resumen = {};
     if (tipo === 'ga4' && data?.length > 0) {
+      const gaData = data as any[];
       resumen = {
-        total_eventos: data.reduce((sum, row) => sum + (row.event_count || 0), 0),
-        total_usuarios: data.reduce((sum, row) => sum + (row.unique_users || 0), 0),
-        total_revenue: data.reduce((sum, row) => sum + (parseFloat(row.total_revenue) || 0), 0),
-        eventos_unicos: [...new Set(data.map(row => row.event_name))].length
+        total_eventos: gaData.reduce((sum, row) => sum + (row.event_count || 0), 0),
+        total_usuarios: gaData.reduce((sum, row) => sum + (row.unique_users || 0), 0),
+        total_revenue: gaData.reduce((sum, row) => sum + (parseFloat(row.total_revenue) || 0), 0),
+        eventos_unicos: [...new Set(gaData.map(row => row.event_name))].length
       };
     } else if (tipo === 'search_console' && data?.length > 0) {
+      const scData = data as any[];
       resumen = {
-        total_clicks: data.reduce((sum, row) => sum + (row.clicks || 0), 0),
-        total_impressions: data.reduce((sum, row) => sum + (row.impressions || 0), 0),
-        ctr_promedio: data.reduce((sum, row) => sum + (row.ctr || 0), 0) / data.length,
-        posicion_promedio: data.reduce((sum, row) => sum + (row.position || 0), 0) / data.length
+        total_clicks: scData.reduce((sum, row) => sum + (row.clicks || 0), 0),
+        total_impressions: scData.reduce((sum, row) => sum + (row.impressions || 0), 0),
+        ctr_promedio: scData.reduce((sum, row) => sum + (row.ctr || 0), 0) / scData.length,
+        posicion_promedio: scData.reduce((sum, row) => sum + (row.position || 0), 0) / scData.length
       };
     } else if (tipo === 'meta_ads' && data?.length > 0) {
+      const metaData = data as any[];
       resumen = {
-        total_spend: data.reduce((sum, row) => sum + (parseFloat(row.spend) || 0), 0),
-        total_impressions: data.reduce((sum, row) => sum + (row.impressions || 0), 0),
-        total_clicks: data.reduce((sum, row) => sum + (row.clicks || 0), 0),
-        total_results: data.reduce((sum, row) => sum + (row.results || 0), 0)
+        total_spend: metaData.reduce((sum, row) => sum + (parseFloat(row.spend) || 0), 0),
+        total_impressions: metaData.reduce((sum, row) => sum + (row.impressions || 0), 0),
+        total_clicks: metaData.reduce((sum, row) => sum + (row.clicks || 0), 0),
+        total_results: metaData.reduce((sum, row) => sum + (row.results || 0), 0)
       };
     }
 
