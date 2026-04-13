@@ -8,6 +8,7 @@ import MicrosoftClarity from './components/MicrosoftClarity';
 import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
 import DebugGTM from './components/DebugGTM';
 import UTMCapture from './components/UTMCapture';
+import CanonicalURL from './components/CanonicalURL';
 
 
 const geistSans = Geist({
@@ -55,9 +56,6 @@ export const metadata: Metadata = {
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
     apple: '/apple-touch-icon.png',
-  },
-  alternates: {
-    canonical: '/',
   },
   openGraph: {
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
@@ -244,6 +242,9 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <UTMCapture />
         </Suspense>
+
+        {/* Canonical URL dinámico para cada página */}
+        <CanonicalURL />
 
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
         <AuthRecoveryRedirect />
