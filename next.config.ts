@@ -57,6 +57,12 @@ const nextConfig: NextConfig = {
         destination: '/disponibilidad',
         permanent: true,
       },
+      // Antigravity fix - redirect home-4 to home
+      {
+        source: '/home-4',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 };
