@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Glamping en Valle Las Trancas | Domos con Tinaja Privada - TreePod',
-    description: 'Glamping en Valle Las Trancas, Chillán. Domos geodésicos con tinaja privada, estufa a pellet, cocina equipada y WiFi Starlink. A 15 min de Nevados de Chillán. Desde $110.000/noche.',
+    title: 'Glamping Valle Las Trancas | Domos y Mascotas — TreePod',
+    description: 'Glamping valle las trancas con domos geodésicos y mascotas. Tinaja privada, WiFi Starlink, bosque nativo. A 15 min Nevados de Chillán. Desde $110.000.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',

@@ -29,6 +29,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // WWW to non-WWW redirects (SEO Fix)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.domostreepod.cl' }],
+        destination: 'https://domostreepod.cl/:path*',
+        permanent: true,
+      },
+      // Existing redirects
       {
         source: '/domos-2',
         destination: '/domos',
