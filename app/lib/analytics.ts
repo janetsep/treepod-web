@@ -70,7 +70,8 @@ export type AnalyticsEventName =
   | "begin_checkout_finde_largo"
   | "view_dia_de_la_madre"
   | "cta_dia_madre_hero_reserva"
-  | "cta_dia_madre_final_reserva";
+  | "cta_dia_madre_final_reserva"
+  | "view_nosotros";
 
 declare global {
   interface Window {

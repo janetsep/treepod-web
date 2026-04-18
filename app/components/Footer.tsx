@@ -39,6 +39,8 @@ export default function Footer() {
                         <h4 className="h4-display text-white"><span className="italic-display">Navegación</span></h4>
                         <ul className="flex flex-col gap-5 text-lg md:text-xl text-white/90 font-bold">
                             <li><Link href="/domos" className="hover:text-primary transition-colors">Nuestros Domos</Link></li>
+                            <li><Link href="/servicios" className="hover:text-primary transition-colors">Servicios</Link></li>
+                            <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-primary transition-colors">Ubicación & Contacto</Link></li>
                         </ul>
@@ -87,6 +89,7 @@ export default function Footer() {
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
                     <p>© {new Date().getFullYear()} TreePod. Glamping de Montaña.</p>
                     <div className="flex gap-10">
+                        <Link href="/nosotros" className="hover:text-primary transition-colors">Nosotros</Link>
                         <Link href="/privacidad" className="hover:text-primary transition-colors">Privacidad</Link>
                         <Link href="/terminos" className="hover:text-primary transition-colors">Términos</Link>
                     </div>
