@@ -13,12 +13,8 @@ export default function Galeria() {
     { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Acceso al domo" },
   ];
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://elfsightcdn.com/platform.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+  // Script de Elfsight ya se carga globalmente en layout.tsx
+  // No necesitamos duplicarlo aquí
 
   return (
     <section className="py-24 max-w-7xl mx-auto text-center px-4" id="galeria">

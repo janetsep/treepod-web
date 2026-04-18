@@ -59,6 +59,13 @@ export default function PagarButton({
     form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
+
+    // Limpiar formulario después de submit para evitar acumulación
+    setTimeout(() => {
+      if (form && form.parentNode) {
+        form.parentNode.removeChild(form);
+      }
+    }, 100);
   };
 
   const pagarWebpay = async () => {

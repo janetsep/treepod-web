@@ -83,7 +83,11 @@ function downloadICS(
     a.download = `reserva-${domoNombre}-${nombre}.ics`.replace(/\s+/g, "-");
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+
+    // Verificar que el elemento aún existe antes de remover
+    if (a.parentNode) {
+      a.parentNode.removeChild(a);
+    }
     URL.revokeObjectURL(url);
 }
 
