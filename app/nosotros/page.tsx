@@ -8,42 +8,36 @@ const objetivosSociales = [
     titulo: "Encadenamiento Productivo Local",
     descripcion:
       "Compramos a productores del Valle Las Trancas y Ñuble: huevos, berries, pan de masa madre y verduras frescas. El 40% de nuestros insumos gastronómicos vienen de manos locales.",
-    icono: "🌿",
   },
   {
     numero: "02",
     titulo: "Empleo Local en Temporada",
     descripcion:
       "Contratamos preferentemente a personas de Las Trancas y Recinto para los períodos de temporada alta. Cien por ciento del personal temporal es reclutado en la comunidad.",
-    icono: "🤝",
   },
   {
     numero: "03",
     titulo: "Gastronomía y Cultura Regional",
     descripcion:
       "Nuestros desayunos destacan recetas e ingredientes de la Región de Ñuble. Preservar la cocina local es parte de la experiencia que ofrecemos a cada huésped.",
-    icono: "🍳",
   },
   {
     numero: "04",
     titulo: "Educación Ambiental",
     descripcion:
       "Informamos a cada huésped sobre nuestras prácticas de separación de residuos, energía solar y biodiversidad del Valle. La conciencia ambiental se construye en cada estadía.",
-    icono: "🌱",
   },
   {
     numero: "05",
     titulo: "Turismo Inclusivo",
     descripcion:
       "Trabajamos para que más familias puedan vivir la experiencia TreePod, con tarifas accesibles en temporada baja y una oferta que contempla diversas necesidades.",
-    icono: "🏡",
   },
   {
     numero: "06",
     titulo: "Huella Ambiental Mínima",
     descripcion:
       "Operamos con energía solar, compostaje activo, separación de residuos y productos de limpieza biodegradables. Cada decisión operativa considera su impacto en el entorno.",
-    icono: "☀️",
   },
 ];
 
@@ -143,16 +137,13 @@ export default function NosotrosPage() {
                   key={obj.numero}
                   className="bg-white rounded-[2rem] p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-black/5"
                 >
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="text-2xl">{obj.icono}</div>
-                    <div className="flex-1">
-                      <span className="text-primary text-xs font-black tracking-[0.2em] uppercase block mb-2">
-                        {obj.numero}
-                      </span>
-                      <h3 className="text-xl font-display font-bold text-text-main mb-4">
-                        {obj.titulo}
-                      </h3>
-                    </div>
+                  <div className="mb-6">
+                    <span className="text-primary text-xs font-black tracking-[0.2em] uppercase block mb-2">
+                      {obj.numero}
+                    </span>
+                    <h3 className="text-xl font-display font-bold text-text-main mb-4">
+                      {obj.titulo}
+                    </h3>
                   </div>
                   <p className="text-text-sub leading-relaxed">
                     {obj.descripcion}
