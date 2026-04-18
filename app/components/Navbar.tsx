@@ -44,6 +44,7 @@ export default function Navbar() {
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
         { name: "Servicios", href: "/servicios" },
+        { name: "Blog", href: "/blog" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
     ];
@@ -53,6 +54,7 @@ export default function Navbar() {
         { name: "Inicio", href: "/" },
         { name: "Domos", href: "/domos" },
         { name: "Servicios", href: "/servicios" },
+        { name: "Blog", href: "/blog" },
         { name: "Galería", href: "/galeria" },
         { name: "Contacto", href: "/contacto" },
     ];

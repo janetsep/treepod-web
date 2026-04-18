@@ -4,6 +4,14 @@ import Image from "next/image";
 export default function News() {
     const activities = [
         {
+            image: "/images/real/NODomootono.jpeg",
+            title: "Finde Largo Mayo Las Trancas",
+            description: "El finde largo del día del trabajo perfecto en Valle Las Trancas. Escapada 1 mayo Ñuble con domos geodésicos y tinaja privada en el bosque nativo.",
+            tag: "Mayo 2026",
+            details: "🌟 Finde largo perfecto",
+            href: "/finde-largo-dia-trabajo-las-trancas"
+        },
+        {
             image: "/images/Galeria/Domo3noche.jpeg",
             title: "Otoño Valle Las Trancas",
             description: "Vive el otoño más mágico en el corazón del Valle Las Trancas. Colores únicos, aire puro y la tranquilidad absoluta que solo esta época puede ofrecerte.",

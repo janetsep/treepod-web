@@ -102,7 +102,7 @@ function ReservaContent({ id }: { id: string }) {
       if (purchaseEventSent.current) return;
       purchaseEventSent.current = true;
 
-      TrackingService.sendEvent("Purchase", {
+      TrackingService.sendEvent("purchase", {
         transaction_id: reserva.id,
         value: Number(reserva.total),
         currency: "CLP",

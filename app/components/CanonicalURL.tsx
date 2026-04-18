@@ -23,9 +23,12 @@ export default function CanonicalURL() {
 
     // Cleanup function para remover el canonical al desmontar
     return () => {
-      const canonicalToRemove = document.querySelector(`link[rel="canonical"][href="https://domostreepod.cl${pathname}"]`);
-      if (canonicalToRemove) {
-        canonicalToRemove.remove();
+      // Verificar que el documento y DOM aún existen
+      if (typeof document !== 'undefined') {
+        const canonicalToRemove = document.querySelector(`link[rel="canonical"][href="https://domostreepod.cl${pathname}"]`);
+        if (canonicalToRemove && canonicalToRemove.parentNode) {
+          canonicalToRemove.parentNode.removeChild(canonicalToRemove);
+        }
       }
     };
   }, [pathname]);

@@ -54,7 +54,7 @@ export default function SemanaSantaPage() {
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
                         Escapa del caos de Semana Santa <br className="hidden md:block" />
-                        y enciérrate en el bosque <span className="text-primary italic-display block md:inline">(con tu propia tinaja hirviendo)</span>
+                        y enciérrate en el bosque <span className="text-primary italic-display block md:inline">(con tu propia tinaja termal)</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -117,7 +117,7 @@ export default function SemanaSantaPage() {
                             { 
                                 icon: Waves, 
                                 title: "Tu propia Tinaja bajo las estrellas (Cero extraños)", 
-                                desc: "No compartas tu agua termal. Cruza tu pasarela exclusiva por el bosque y aíslate del mundo en tu propia tina de ciprés, siempre lista para ti (Reserva tu hora exclusiva sin compartir con otros)." 
+                                desc: "No compartas tu agua termal. Cruza tu pasarela exclusiva por el bosque y aíslate del mundo en tu propia tina de ciprés (Reserva con 1 día de anticipación para tu hora exclusiva sin compartir)." 
                             },
                             { 
                                 icon: Info, 
