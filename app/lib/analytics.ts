@@ -57,7 +57,20 @@ export type AnalyticsEventName =
   | "view_escapada_romantica"
   | "click_reservar_romantica"
   | "click_whatsapp_romantica"
-  | "click_reservar_romantica_final";
+  | "click_reservar_romantica_final"
+  | "view_blog_page"
+  | "view_blog_post"
+  | "view_blog_post_placeholder"
+  | "view_finde_largo_mayo_page"
+  | "click_reservar_finde_largo_mayo"
+  | "click_whatsapp_finde_largo_mayo"
+  | "click_reservar_finde_largo_mayo_galeria"
+  | "click_reservar_finde_largo_mayo_testimonios"
+  | "click_reservar_finde_largo_mayo_final"
+  | "begin_checkout_finde_largo"
+  | "view_dia_de_la_madre"
+  | "cta_dia_madre_hero_reserva"
+  | "cta_dia_madre_final_reserva";
 
 declare global {
   interface Window {
