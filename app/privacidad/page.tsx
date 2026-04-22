@@ -3,6 +3,9 @@ import React from 'react';
 export const metadata = {
     title: 'Política de Privacidad | TreePod',
     description: 'Información sobre cómo TreePod recopila, utiliza y protege tus datos personales.',
+    alternates: {
+        canonical: '/privacidad',
+    },
 };
 
 export default function PrivacidadPage() {

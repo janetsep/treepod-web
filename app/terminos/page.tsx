@@ -3,6 +3,9 @@ import React from 'react';
 export const metadata = {
     title: 'Términos y Condiciones | TreePod',
     description: 'Políticas de reserva, cancelación y convivencia de TreePod, tu glamping en Valle Las Trancas.',
+    alternates: {
+        canonical: '/terminos',
+    },
 };
 
 export default function TerminosPage() {

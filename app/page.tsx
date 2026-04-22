@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import NotForEveryone from "./components/NotForEveryone";
+
+export const metadata: Metadata = {
+    alternates: {
+        canonical: '/',
+    },
+};
 import Hero from "./components/Hero";
 import TreePodDomes from "./components/TreePodDomes";
 import DomoAmenities from "./components/DomoAmenities";
