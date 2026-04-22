@@ -168,6 +168,18 @@ interface Props {
     };
 }
 
+export async function generateMetadata({ params }: Props) {
+    const article = articleContent[params.slug];
+    if (!article) return {};
+    return {
+        title: `${article.title} | Blog TreePod`,
+        description: article.excerpt,
+        alternates: {
+            canonical: `/blog/${params.slug}`,
+        },
+    };
+}
+
 export default function BlogPost({ params }: Props) {
     const { slug } = params;
 
