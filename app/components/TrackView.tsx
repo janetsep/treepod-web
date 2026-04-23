@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { trackEvent, type AnalyticsEventName } from "../lib/analytics";
 
 export default function TrackView({
@@ -10,9 +10,13 @@ export default function TrackView({
   eventName: AnalyticsEventName;
   params?: Record<string, unknown>;
 }) {
+  const fired = useRef(false);
+
   useEffect(() => {
+    if (fired.current) return;
+    fired.current = true;
     trackEvent(eventName, params);
-  }, [eventName, params]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return null;
 }

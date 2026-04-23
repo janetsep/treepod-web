@@ -32,14 +32,53 @@ export default function UTMCapture() {
       if (value) incoming[key as keyof UTMParams] = value;
     });
 
-    if (Object.keys(incoming).length === 0) return;
     const existing = getStoredUTMs();
-    if (Object.keys(existing).length > 0) return; // primer touch wins
 
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(incoming));
+    if (Object.keys(incoming).length > 0) {
+      // Solo guardar si no hay UTMs previos (primer touch wins)
+      if (Object.keys(existing).length === 0) {
+        try {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(incoming));
+        } catch {}
+      }
+      // Siempre enviar a dataLayer cuando hay UTMs en la URL
       if (window.dataLayer) {
-        window.dataLayer.push({ event: 'utm_captured', ...incoming, source: 'glamping_ecosystem' });
+        window.dataLayer.push({ event: 'utm_captured', ...incoming });
+      }
+      return;
+    }
+
+    // Sin UTMs: inferir canal desde referrer para reducir tráfico Unassigned
+    try {
+      const referrer = document.referrer;
+      let inferred_source = 'direct';
+      let inferred_medium = 'none';
+
+      if (referrer) {
+        const ref = new URL(referrer);
+        const host = ref.hostname;
+        if (/google\.|bing\.|yahoo\.|duckduckgo\./.test(host)) {
+          inferred_source = host.split('.')[0];
+          inferred_medium = 'organic';
+        } else if (/facebook\.|instagram\.|fb\./.test(host)) {
+          inferred_source = 'facebook';
+          inferred_medium = 'social';
+        } else if (/airbnb\./.test(host)) {
+          inferred_source = 'airbnb';
+          inferred_medium = 'referral';
+        } else if (host && host !== window.location.hostname) {
+          inferred_source = host;
+          inferred_medium = 'referral';
+        }
+      }
+
+      if (window.dataLayer && inferred_source !== 'direct') {
+        window.dataLayer.push({
+          event: 'traffic_source_inferred',
+          inferred_source,
+          inferred_medium,
+          referrer: referrer || '(none)',
+        });
       }
     } catch {}
   }, [searchParams]);
