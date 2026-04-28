@@ -700,10 +700,10 @@ export default function AdminDashboard() {
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="flex items-center gap-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-[8px] font-black uppercase tracking-tighter hover:bg-green-200 transition-colors"
-                                                                        title="Ver Boleta / Comprobante"
+                                                                        title={`Ver ${(reserva.tipo_documento || 'boleta').charAt(0).toUpperCase() + (reserva.tipo_documento || 'boleta').slice(1)} / Comprobante`}
                                                                     >
                                                                         <CheckCircle2 className="w-2.5 h-2.5" />
-                                                                        Boleta
+                                                                        {(reserva.tipo_documento || 'boleta').charAt(0).toUpperCase() + (reserva.tipo_documento || 'boleta').slice(1)}
                                                                     </a>
                                                                 )}
                                                                  {adminRole !== 'viewer' && (

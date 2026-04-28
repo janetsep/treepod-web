@@ -5,7 +5,7 @@ import { NotificationService } from "@/services/NotificationService";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, adminEmail, servicios_seleccionados } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, adminEmail, servicios_seleccionados, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
         
         // Validación básica
         if (!fecha_inicio || !fecha_fin || !domo_id) {
@@ -47,6 +47,10 @@ export async function POST(request: Request) {
             fuente: fuente || 'manual_admin',
             notas: mensaje || null,
             comprobante_url: comprobante_url || null,
+            enviar_confirmacion: enviar_confirmacion ?? true,
+            acompanantes: acompanantes || null,
+            tipo_documento: tipo_documento || 'boleta',
+            sincronizar_calendario: sincronizar_calendario ?? true,
         };
 
         let result;
@@ -130,8 +134,8 @@ export async function POST(request: Request) {
             }
         }
 
-        // Enviar notificación por email solo cuando es una reserva nueva
-        if (!isUpdate) {
+        // Enviar notificación por email y sincronizar calendario según configuración
+        if (!isUpdate && (enviar_confirmacion || sincronizar_calendario)) {
             const { data: domoData } = await supabaseAdmin
                 .from("domos")
                 .select("nombre")
@@ -161,8 +165,11 @@ export async function POST(request: Request) {
                 fuente: fuente || 'manual_admin',
                 reservaId: result.data.id,
                 adminEmail: adminEmail,
-                sendGuestEmail: !!email,
+                sendGuestEmail: enviar_confirmacion && !!email,
+                sincronizarCalendario: sincronizar_calendario,
                 extras: extrasNombres,
+                acompanantes: acompanantes,
+                tipoDocumento: tipo_documento,
             }).catch(err => console.error('Error enviando notificación:', err));
         }
 

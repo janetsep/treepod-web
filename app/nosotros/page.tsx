@@ -84,12 +84,11 @@ export default function NosotrosPage() {
                 </div>
                 <h2 className="h2-display text-text-main mb-6">Misión</h2>
                 <p className="text-text-sub text-lg leading-relaxed">
-                  Ofrecer experiencias de alojamiento únicas en domos geodésicos
-                  integrados en la naturaleza del Valle Las Trancas, con
-                  hospitalidad cálida, gastronomía local y operación sustentable
-                  de bajo impacto ambiental. A través de cada estadía, impulsamos
-                  el desarrollo económico de la comunidad del Valle y preservamos
-                  el entorno natural para las generaciones futuras.
+                  En Domos TreePod creemos que el mejor viaje es el que te conecta con el lugar. Por eso
+                  ofrecemos experiencias únicas y memorables en domos geodésicos en el Valle Las Trancas,
+                  en el corazón de la Cordillera de la Región de Ñuble — con un servicio cercano,
+                  cocina de productos de la zona y un compromiso real con el medioambiente y la
+                  comunidad de montaña que nos rodea.
                 </p>
               </div>
 
@@ -100,11 +99,10 @@ export default function NosotrosPage() {
                 </div>
                 <h2 className="h2-display text-text-main mb-6">Visión</h2>
                 <p className="text-text-sub text-lg leading-relaxed">
-                  Ser el referente de glamping sustentable y turismo de impacto
-                  positivo en la Región de Ñuble al año 2028, reconocidos por
-                  nuestra calidad de experiencia, nuestro compromiso activo con
-                  el desarrollo socioeconómico de la comunidad local y nuestra
-                  gestión ambiental responsable.
+                  Ser reconocidos como el mejor destino de glamping sustentable, un referente de
+                  turismo regenerativo de la región, donde cada visita conecta a las personas con
+                  la naturaleza, fortalece y apoya a la comunidad cordillerana y cuida el
+                  patrimonio natural que nos acoge.
                 </p>
               </div>
             </div>

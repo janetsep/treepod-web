@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { google } from 'googleapis';
 
 // Inicializar Resend con la key del entorno
 const resend = new Resend(process.env.RESEND_API_KEY || 're_123_placeholder');
@@ -268,6 +269,9 @@ export const NotificationService = {
     reservaId: string;
     adminEmail: string;
     sendGuestEmail: boolean;
+    sincronizarCalendario?: boolean;
+    acompanantes?: string;
+    tipoDocumento?: string;
     extras?: string[];
   }) {
     const adminTo = 'janetsep@gmail.com';
@@ -396,6 +400,23 @@ export const NotificationService = {
         });
       }
 
+      // Sincronizar con Google Calendar si está habilitado
+      if (data.sincronizarCalendario) {
+        try {
+          await this.addToGoogleCalendar({
+            summary: `Reserva ${data.domoNombre} - ${data.guestName}`,
+            description: `Huésped: ${data.guestName}\nEmail: ${data.guestEmail}\nCódigo: #${shortId}\nAdultos: ${data.adultos}\nTotal: $${data.total.toLocaleString('es-CL')}\nPagado: $${data.montoPagado.toLocaleString('es-CL')}\nFuente: ${data.fuente}${data.extras && data.extras.length > 0 ? `\nExtras: ${data.extras.join(', ')}` : ''}${data.acompanantes ? `\nAcompañantes: ${data.acompanantes}` : ''}\nTipo Documento: ${data.tipoDocumento || 'boleta'}`,
+            startDate: data.fechaInicio,
+            endDate: data.fechaFin,
+            attendeeEmail: data.guestEmail
+          });
+          console.log(`📅 Evento agregado a Google Calendar para ${data.guestName}`);
+        } catch (calendarError: any) {
+          console.error('🔥 Error sincronizando con Google Calendar:', calendarError);
+          // No fallar todo el proceso por error de calendario
+        }
+      }
+
       console.log(`📧 Notificación de reserva manual enviada al admin y al huésped.`);
       return { success: true };
     } catch (error: any) {
@@ -451,6 +472,63 @@ export const NotificationService = {
     } catch (error: any) {
       console.error('🔥 Error enviando alerta de seguridad:', error);
       return { success: false, error: error.message };
+    }
+  },
+
+  /**
+   * Agrega evento a Google Calendar de janetsep@gmail.com
+   */
+  async addToGoogleCalendar(event: {
+    summary: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    attendeeEmail?: string;
+  }) {
+    try {
+      // Configurar autenticación con Service Account
+      const auth = new google.auth.GoogleAuth({
+        credentials: {
+          type: 'service_account',
+          project_id: process.env.GOOGLE_PROJECT_ID,
+          private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+          private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+          client_email: process.env.GOOGLE_CLIENT_EMAIL,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+        },
+        scopes: ['https://www.googleapis.com/auth/calendar'],
+      });
+
+      const calendar = google.calendar({ version: 'v3', auth });
+
+      // Crear evento
+      const calendarEvent = {
+        summary: event.summary,
+        description: event.description,
+        start: {
+          date: event.startDate,
+          timeZone: 'America/Santiago',
+        },
+        end: {
+          date: event.endDate,
+          timeZone: 'America/Santiago',
+        },
+        attendees: event.attendeeEmail ? [{ email: event.attendeeEmail }] : undefined,
+        location: 'Valle Las Trancas, Km 72, Región del Ñuble, Chile',
+      };
+
+      // Agregar a calendario principal de Janet
+      const response = await calendar.events.insert({
+        calendarId: 'janetsep@gmail.com',
+        requestBody: calendarEvent,
+        sendUpdates: 'all', // Enviar invitaciones si hay attendees
+      });
+
+      console.log(`✅ Evento creado en Google Calendar: ${response.data.id}`);
+      return { success: true, eventId: response.data.id };
+    } catch (error: any) {
+      console.error('🔥 Error creando evento en Google Calendar:', error);
+      throw error;
     }
   }
 };

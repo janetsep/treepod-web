@@ -467,34 +467,25 @@ function DisponibilidadContent() {
 
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
                 {servicios.map((s) => {
-                  // Cambio #3: Emotional Copies mapping (CRO High Conversion)
+                  // Usar directamente los nombres y datos de la base de datos
                   let displayNombre = s.nombre;
                   let displayDescripcion = s.descripcion;
                   let displayImage = s.image_url;
-                            
+
+                  // Asignar imágenes basándose en palabras clave (siempre, para consistencia)
                   if (s.nombre.toLowerCase().includes("desayuno")) {
-                      displayNombre = "Despierta en el Bosque";
-                      displayDescripcion = "Café orgánico y pan artesanal con vistas al bosque desde tu terraza.";
                       displayImage = "/images/Galeria/Desayuno.jpg";
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
-                      displayNombre = "Baño Privado Bajo las Estrellas";
-                      displayDescripcion = "Relajo absoluto en agua caliente al aire libre, rodeado de naturaleza nativa.";
-                      displayImage = "/images/wellness/Tinaja1.jpg"; 
+                      displayImage = "/images/wellness/Tinaja1.jpg";
                   } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("pack")) {
-                      displayNombre = "Cena Privada para Dos";
-                      displayDescripcion = "Una velada mágica preparada especialmente en la intimidad de tu TreePod.";
                       displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
                   } else if (s.nombre.toLowerCase().includes("salida") || s.nombre.toLowerCase().includes("15:00") || s.nombre.toLowerCase().includes("checkout")) {
-                      displayNombre = "Salida hasta las 15:00 hrs";
-                      displayDescripcion = "Extiende tu salida de 12:00 a las 15:00 hrs.";
                       displayImage = "/images/Galeria/IMG_8987.JPG";
                   } else if (s.nombre.toLowerCase().includes("almuerzo") || s.nombre.toLowerCase().includes("relajado") || s.nombre.toLowerCase().includes("aperitivo")) {
-                      displayNombre = "Almuerzo relajado";
-                      displayDescripcion = "Aperitivo, jugos naturales y vino increíble.";
                       displayImage = "/images/wellness/Tinaja5.jpg";
+                  } else if (!displayImage || displayImage === '') {
+                      displayImage = "/images/Galeria/domonieve2.jpeg";
                   }
-
-                  if (!displayImage) displayImage = "/images/Galeria/domonieve2.jpeg";
 
                   const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
                   const isTinaja = s.nombre.toLowerCase().includes("tinaja");

@@ -33,6 +33,10 @@ interface Reserva {
     mensaje?: string;
     comprobante_url?: string;
     rut?: string;
+    enviar_confirmacion?: boolean;
+    acompanantes?: string;
+    tipo_documento?: string;
+    sincronizar_calendario?: boolean;
 }
 
 interface ReservaModalProps {
@@ -108,7 +112,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         fuente: "manual_admin",
         mensaje: "",
         comprobante_url: "",
-        rut: ""
+        rut: "",
+        enviar_confirmacion: true,
+        acompanantes: "",
+        tipo_documento: "boleta",
+        sincronizar_calendario: true
     });
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -138,7 +146,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     fuente: reservaToEdit.fuente || "manual_admin",
                     mensaje: reservaToEdit.notas || reservaToEdit.mensaje || "",
                     comprobante_url: reservaToEdit.comprobante_url || "",
-                    rut: reservaToEdit.rut || reservaToEdit.clientes?.rut || ""
+                    rut: reservaToEdit.rut || reservaToEdit.clientes?.rut || "",
+                    enviar_confirmacion: reservaToEdit.enviar_confirmacion ?? true,
+                    acompanantes: reservaToEdit.acompanantes || "",
+                    tipo_documento: reservaToEdit.tipo_documento || "boleta",
+                    sincronizar_calendario: reservaToEdit.sincronizar_calendario ?? true
                 });
             } else {
                 setFormData({
@@ -156,7 +168,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     fuente: "manual_admin",
                     mensaje: "",
                     comprobante_url: "",
-                    rut: ""
+                    rut: "",
+                    enviar_confirmacion: true,
+                    acompanantes: "",
+                    tipo_documento: "boleta",
+                    sincronizar_calendario: true
                 });
                 setServiciosSeleccionados([]);
             }
@@ -650,6 +666,71 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <p className="text-[9px] text-gray-400 font-bold italic pl-1 italic">
                                 Puedes pegar un link de Google Drive directamente o subir un archivo (PDF/IMG) desde tu dispositivo.
                             </p>
+                        </div>
+                    </div>
+
+                    {/* Sección: Configuraciones Adicionales */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Configuraciones Administrativas</h4>
+                        </div>
+
+                        {/* Tipo de Documento */}
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Tipo de Documento</label>
+                            <select
+                                value={formData.tipo_documento}
+                                onChange={(e) => setFormData({ ...formData, tipo_documento: e.target.value })}
+                                disabled={isViewer}
+                                className={`w-full p-4 bg-gray-50 border border-gray-100 rounded-[2rem] text-sm font-medium transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            >
+                                <option value="boleta">Boleta</option>
+                                <option value="factura">Factura</option>
+                            </select>
+                        </div>
+
+                        {/* Campo de Acompañantes */}
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Datos de Acompañantes</label>
+                            <textarea
+                                value={formData.acompanantes}
+                                onChange={(e) => setFormData({ ...formData, acompanantes: e.target.value })}
+                                readOnly={isViewer}
+                                className={`w-full p-4 bg-gray-50 border border-gray-100 rounded-[2rem] text-sm font-medium transition-all outline-none min-h-[80px] resize-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                placeholder="Nombres de acompañantes, edades, observaciones especiales..."
+                            />
+                        </div>
+
+                        {/* Checkboxes de configuración */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                                <input
+                                    type="checkbox"
+                                    id="enviar_confirmacion"
+                                    checked={formData.enviar_confirmacion}
+                                    onChange={(e) => setFormData({ ...formData, enviar_confirmacion: e.target.checked })}
+                                    disabled={isViewer}
+                                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                />
+                                <label htmlFor="enviar_confirmacion" className="text-xs font-bold text-gray-700 cursor-pointer">
+                                    Enviar confirmación al cliente
+                                </label>
+                            </div>
+
+                            <div className="flex items-center gap-3 p-4 bg-green-50/50 rounded-2xl border border-green-100">
+                                <input
+                                    type="checkbox"
+                                    id="sincronizar_calendario"
+                                    checked={formData.sincronizar_calendario}
+                                    onChange={(e) => setFormData({ ...formData, sincronizar_calendario: e.target.checked })}
+                                    disabled={isViewer}
+                                    className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                />
+                                <label htmlFor="sincronizar_calendario" className="text-xs font-bold text-gray-700 cursor-pointer">
+                                    Sincronizar con Google Calendar
+                                </label>
+                            </div>
                         </div>
                     </div>
 
