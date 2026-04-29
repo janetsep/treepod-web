@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
 interface Domo {
     id: string;
     nombre: string;
@@ -23,51 +20,28 @@ interface DomoCalendarProps {
     domos: Domo[];
 }
 
-const MONTH_NAMES = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
 
 export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
-    const now = new Date();
-    const [selectedYear, setSelectedYear] = useState(now.getFullYear());
-    const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
 
-    // Generate all days of the selected month
-    const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
-    const dates = Array.from({ length: daysInMonth }, (_, i) => {
-        return new Date(selectedYear, selectedMonth, i + 1);
-    });
-
+    // Generate date range: 5 days before today + today + 30 days forward
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - 5); // 5 días antes de hoy
 
-    // Navigate months
-    const goToPrevMonth = () => {
-        if (selectedMonth === 0) {
-            setSelectedMonth(11);
-            setSelectedYear(selectedYear - 1);
-        } else {
-            setSelectedMonth(selectedMonth - 1);
-        }
-    };
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 30); // 30 días después de hoy
 
-    const goToNextMonth = () => {
-        if (selectedMonth === 11) {
-            setSelectedMonth(0);
-            setSelectedYear(selectedYear + 1);
-        } else {
-            setSelectedMonth(selectedMonth + 1);
-        }
-    };
+    const dates = [];
+    const currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
 
-    const goToToday = () => {
-        setSelectedYear(now.getFullYear());
-        setSelectedMonth(now.getMonth());
-    };
+    // Set today to start of day for comparison
+    const todayComparison = new Date(today);
+    todayComparison.setHours(0, 0, 0, 0);
 
-    // Year options: from 2024 to current year + 2
-    const yearOptions = Array.from({ length: (now.getFullYear() + 2) - 2024 + 1 }, (_, i) => 2024 + i);
 
     const isReserved = (domoId: string, date: Date) => {
         const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -75,59 +49,33 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
         return reservas.filter(r => {
             if (r.estado === 'cancelada') return false;
             if (r.domo_id !== domoId) return false;
-            return r.fecha_inicio <= dateStr && r.fecha_fin > dateStr;
+
+            // Check-in es a las 16:00 del día de entrada
+            // Check-out es a las 12:00 del día de salida
+            // Marcar como ocupado desde fecha_inicio hasta fecha_fin (inclusive)
+            return r.fecha_inicio <= dateStr && r.fecha_fin >= dateStr;
         });
     };
 
     const isToday = (date: Date) => {
-        return date.getFullYear() === today.getFullYear() &&
-            date.getMonth() === today.getMonth() &&
-            date.getDate() === today.getDate();
+        return date.getFullYear() === todayComparison.getFullYear() &&
+            date.getMonth() === todayComparison.getMonth() &&
+            date.getDate() === todayComparison.getDate();
     };
 
     return (
         <div className="space-y-4">
             {/* Controls */}
             <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-gray-700">Rango de ocupación:</span>
+                    <span className="text-xs text-gray-500">5 días anteriores + HOY + 30 días futuros</span>
+                </div>
                 <button
-                    onClick={goToPrevMonth}
-                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-                >
-                    <ChevronLeft className="w-4 h-4 text-gray-600" />
-                </button>
-
-                <select
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 bg-white cursor-pointer hover:border-gray-300 transition-colors"
-                >
-                    {MONTH_NAMES.map((name, i) => (
-                        <option key={i} value={i}>{name}</option>
-                    ))}
-                </select>
-
-                <select
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(Number(e.target.value))}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 bg-white cursor-pointer hover:border-gray-300 transition-colors"
-                >
-                    {yearOptions.map(y => (
-                        <option key={y} value={y}>{y}</option>
-                    ))}
-                </select>
-
-                <button
-                    onClick={goToNextMonth}
-                    className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-                >
-                    <ChevronRight className="w-4 h-4 text-gray-600" />
-                </button>
-
-                <button
-                    onClick={goToToday}
+                    onClick={() => window.location.reload()}
                     className="px-3 py-2 rounded-lg border border-primary/30 text-primary text-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-colors"
                 >
-                    Hoy
+                    Actualizar Vista
                 </button>
             </div>
 
