@@ -31,7 +31,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
     const endDate = new Date(today);
     endDate.setDate(today.getDate() + 30); // 30 días después de hoy
 
-    const dates = [];
+    const dates: Date[] = [];
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
         dates.push(new Date(currentDate));
