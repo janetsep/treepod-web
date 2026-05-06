@@ -91,7 +91,12 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
-                    <p>© {new Date().getFullYear()} TreePod. Glamping de Montaña.</p>
+                    <div className="flex flex-col gap-2 text-center md:text-left">
+                        <p>© {new Date().getFullYear()} Migryk Correa Ltda. · TreePod Glamping de Montaña.</p>
+                        <p className="text-white/40 normal-case tracking-normal font-bold text-[10px]">
+                            TreePod es una marca operada por Migryk Correa Ltda., RUT 76.286.428-2. Contacto: info@domostreepod.cl
+                        </p>
+                    </div>
                     <div className="flex gap-10">
                         <Link href="/nosotros" className="hover:text-primary transition-colors">Nosotros</Link>
                         <Link href="/privacidad" className="hover:text-primary transition-colors">Privacidad</Link>

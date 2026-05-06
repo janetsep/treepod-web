@@ -22,6 +22,15 @@ export default function TerminosPage() {
                         Al realizar una reserva en TreePod, aceptas las siguientes condiciones establecidas para asegurar el orden, respeto ambiental y correcto funcionamiento de nuestros servicios.
                     </p>
 
+                    <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 my-8 text-sm">
+                        <p className="font-bold text-text-main mb-1">Identificación de la empresa</p>
+                        <p className="mb-1"><strong>Razón social:</strong> Migryk Correa Ltda.</p>
+                        <p className="mb-1"><strong>RUT:</strong> 76.286.428-2</p>
+                        <p className="mb-1"><strong>Marca comercial:</strong> TreePod / Domos TreePod (domostreepod.cl)</p>
+                        <p className="mb-1"><strong>Domicilio:</strong> Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile</p>
+                        <p><strong>Correo de contacto:</strong> info@domostreepod.cl</p>
+                    </div>
+
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">1. Política de Reserva y Pago</h2>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
                         <li><strong>Confirmación de Reserva:</strong> Una reserva solo se considera <strong>confirmada una vez procesado y verificado el 100% del pago</strong> asociado. El envío de formularios, correos de intención, solicitudes vía WhatsApp o inicios de pago fallidos NO garantizan ni bloquean fechas en nuestro calendario.</li>

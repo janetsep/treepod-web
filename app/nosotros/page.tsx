@@ -176,6 +176,39 @@ export default function NosotrosPage() {
           </div>
         </div>
       </section>
+
+      {/* INFORMACIÓN LEGAL DE LA EMPRESA */}
+      <section className="py-20 md:py-28 bg-background-light">
+        <div className="container mx-auto px-6 md:px-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-[2.5rem] p-10 md:p-14 border border-black/5 shadow-sm">
+              <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
+                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
+                  Información Legal
+                </span>
+              </div>
+              <h2 className="h2-display text-text-main mb-6">
+                Empresa propietaria de TreePod
+              </h2>
+              <p className="text-text-sub text-lg leading-relaxed mb-6">
+                <strong>TreePod</strong> (también <strong>Domos TreePod</strong>) es la marca
+                comercial bajo la cual <strong>Migryk Correa Ltda.</strong> opera su servicio
+                de glamping en el Valle Las Trancas. Toda reserva, contrato y comunicación
+                comercial es responsabilidad de esta entidad legal.
+              </p>
+              <ul className="text-text-sub text-base leading-relaxed space-y-2">
+                <li><strong>Razón social:</strong> Migryk Correa Ltda.</li>
+                <li><strong>RUT:</strong> 76.286.428-2</li>
+                <li><strong>Marca comercial:</strong> TreePod / Domos TreePod</li>
+                <li><strong>Sitio web:</strong> domostreepod.cl</li>
+                <li><strong>Domicilio:</strong> Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile</li>
+                <li><strong>Correo de contacto:</strong> info@domostreepod.cl</li>
+                <li><strong>Registro SERNATUR:</strong> N° 36806</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

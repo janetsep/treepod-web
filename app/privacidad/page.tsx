@@ -22,6 +22,15 @@ export default function PrivacidadPage() {
                         En TreePod valoramos tu confianza y estamos comprometidos con la protección de tu información personal. Esta política explica cómo recopilamos, usamos y resguardamos tus datos.
                     </p>
 
+                    <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 my-8 text-sm">
+                        <p className="font-bold text-text-main mb-1">Responsable del tratamiento de datos</p>
+                        <p className="mb-1"><strong>Razón social:</strong> Migryk Correa Ltda.</p>
+                        <p className="mb-1"><strong>RUT:</strong> 76.286.428-2</p>
+                        <p className="mb-1"><strong>Marca comercial:</strong> TreePod / Domos TreePod (domostreepod.cl)</p>
+                        <p className="mb-1"><strong>Domicilio:</strong> Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile</p>
+                        <p><strong>Correo de contacto:</strong> info@domostreepod.cl</p>
+                    </div>
+
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">1. Información que Recopilamos</h2>
                     <p>
                         Recopilamos información personal solo cuando es estrictamente necesaria para gestionar tu reserva y mejorar tu experiencia con nosotros. Esto incluye:
