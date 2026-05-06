@@ -241,7 +241,9 @@ export default function DomosPage() {
                         <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-text-sub/60 mb-1.5">Tarifa para 2 personas</span>
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
                             <div className="flex items-center gap-2.5">
-                                <span className="text-xl md:text-2xl font-black text-primary">$145.000</span>
+                                <span className="text-xl md:text-2xl font-black text-primary">
+                                    {price1Night ? `Desde $${price1Night}` : '—'}
+                                </span>
                                 <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ noche</span>
                             </div>
                         </div>

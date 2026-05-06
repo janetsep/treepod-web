@@ -1,9 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import { getDomoPriceForNights } from '@/lib/pricing';
 
 const JsonLdSchemas = () => {
   useEffect(() => {
+    let isMounted = true;
+
     // Only add schemas on client side to avoid hydration mismatch
     const addSchema = (id: string, schema: object) => {
       if (document.getElementById(id)) return; // Schema already exists
@@ -13,6 +16,16 @@ const JsonLdSchemas = () => {
       script.type = 'application/ld+json';
       script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
+    };
+
+    // Build FAQ price answer dynamically from DB
+    const buildFaqPriceAnswer = async (): Promise<string> => {
+      const price = await getDomoPriceForNights(1);
+      if (price) {
+        const formatted = new Intl.NumberFormat('es-CL').format(price);
+        return `La tarifa base para 2 personas es desde $${formatted} CLP por noche, según temporada. Los domos tienen capacidad para hasta 4 adultos.`;
+      }
+      return 'Las tarifas para 2 personas varían según temporada y duración de la estadía. Los domos tienen capacidad para hasta 4 adultos. Consulta disponibilidad en domostreepod.cl/disponibilidad.';
     };
 
     // Add LodgingBusiness schema
@@ -71,8 +84,11 @@ const JsonLdSchemas = () => {
       ]
     });
 
-    // Add FAQPage schema
-    addSchema('schema-faq-page', {
+    // Add FAQPage schema (async — fetches price from DB)
+    (async () => {
+      const priceAnswer = await buildFaqPriceAnswer();
+      if (!isMounted) return;
+      addSchema('schema-faq-page', {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
@@ -89,7 +105,7 @@ const JsonLdSchemas = () => {
           "name": "¿Cuánto cuesta una noche en los domos?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "La tarifa base para 2 personas es de $145.000 CLP por noche. Los domos tienen capacidad para hasta 4 adultos."
+            "text": priceAnswer
           }
         },
         {
@@ -118,9 +134,11 @@ const JsonLdSchemas = () => {
         }
       ]
     });
+    })();
 
     // Cleanup function para remover schemas al desmontar
     return () => {
+      isMounted = false;
       // Verificar que el documento existe y no estamos en SSR
       if (typeof document !== 'undefined' && typeof window !== 'undefined') {
         try {
