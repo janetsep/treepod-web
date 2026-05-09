@@ -1,39 +1,19 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import Script from 'next/script';
 import { ArrowRight, Mountain, Waves, Coffee, Info, Check, Calendar } from 'lucide-react';
 import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
-
-export const metadata: Metadata = {
-    title: 'Finde Largo Glorias Navales Las Trancas | Escapada 21 Mayo Ñuble — TreePod',
-    description: 'Vive el finde largo de las Glorias Navales en Valle Las Trancas. Domos geodésicos con tinaja privada en bosque nativo. Escapada 21–24 mayo 2026 perfecta para parejas y familias.',
-    keywords: ['finde largo glorias navales', 'escapada 21 mayo Ñuble', 'glorias navales Las Trancas', 'glamping 21 mayo', 'domos geodésicos mayo 2026', 'alojamiento glorias navales chile', 'finde largo 4 días mayo', 'glamping Ñuble mayo'],
-    robots: {
-        index: true,
-        follow: true,
-    },
-    alternates: {
-        canonical: '/glorias-navales-las-trancas',
-    },
-    openGraph: {
-        title: 'Finde Largo Glorias Navales Las Trancas | Escapada 21 Mayo Ñuble — TreePod',
-        description: 'Vive el finde largo de las Glorias Navales en Valle Las Trancas. Domos geodésicos con tinaja privada en bosque nativo.',
-        images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Finde Largo Glorias Navales Las Trancas | Escapada 21 Mayo Ñuble — TreePod',
-        description: 'Vive el finde largo de las Glorias Navales en Valle Las Trancas. Domos con tinaja privada.',
-        images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
-    }
-};
+import { getDomoPriceForNights } from '@/lib/pricing';
 
 const whatsappNumber = "56984643307";
 const whatsappMessage = "Hola TreePod, me gustaría consultar por el finde largo de las Glorias Navales (21–24 mayo 2026).";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-export default function GloriasNavalesPage() {
+export default async function GloriasNavalesPage() {
+    const priceNight = await getDomoPriceForNights(1);
+    const priceText = priceNight
+        ? `Desde $${new Intl.NumberFormat('es-CL').format(priceNight)} por noche`
+        : 'Tarifas dinámicas según temporada';
     return (
         <div className="bg-white text-text-main transition-colors duration-300 font-sans min-h-screen">
             <TrackView eventName="view_glorias_navales_page" />
@@ -67,7 +47,7 @@ export default function GloriasNavalesPage() {
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
                             <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $145.000 por noche
+                                {priceText}
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
                                 Glorias Navales · 21 al 24 Mayo 2026
