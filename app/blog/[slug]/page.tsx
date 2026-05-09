@@ -223,117 +223,132 @@ export default async function BlogPost({ params }: Props) {
         <div className="bg-white text-text-main min-h-screen">
             <TrackView eventName="view_blog_post" params={{ slug }} />
 
-            {/* HERO con imagen */}
-            <section className="relative h-[60vh] min-h-[420px] text-white overflow-hidden flex items-end pt-20">
-                <div className="absolute inset-0 bg-background-dark">
-                    <Image
-                        src={article.image}
-                        alt={article.title}
-                        fill
-                        priority
-                        className="object-cover object-center"
-                        sizes="100vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80 z-10"></div>
-                </div>
-
-                <div className="relative z-20 container mx-auto px-6 md:px-10 pb-12 md:pb-16">
-                    <div className="max-w-4xl">
-                        {/* Breadcrumb */}
-                        <div className="flex items-center gap-2 text-xs md:text-sm font-bold text-white/80 mb-6">
-                            <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-                            <span>·</span>
-                            <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-                            <span>·</span>
-                            <span className="text-primary">{article.category}</span>
+            {/* CATEGORÍA + BREADCRUMB (estilo editorial Awasi) */}
+            <section className="pt-32 pb-12 bg-white">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <div className="flex items-center justify-center gap-3 text-xs font-bold tracking-[0.3em] uppercase text-text-sub/70 mb-8">
+                            <Link href="/blog" className="hover:text-primary transition-colors">
+                                {article.category}
+                            </Link>
+                            <span className="w-8 h-px bg-text-sub/30"></span>
+                            <span>{article.readTime} de lectura</span>
                         </div>
 
-                        <h1 className="h1-display mb-6 !text-white leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+                        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-text-main leading-[1.15] mb-8 tracking-tight">
                             {article.title}
                         </h1>
 
-                        <div className="flex flex-wrap items-center gap-4">
-                            <span className="bg-primary text-white px-4 py-2 rounded-full text-xs md:text-sm font-black uppercase tracking-wide">
-                                {article.category}
-                            </span>
-                            <span className="flex items-center gap-2 text-white/90 font-bold text-sm">
-                                <Calendar size={16} />
+                        <p className="text-lg md:text-xl text-text-sub font-medium italic font-display leading-relaxed max-w-2xl mx-auto">
+                            {article.excerpt}
+                        </p>
+
+                        <div className="flex items-center justify-center gap-4 mt-10 text-xs font-bold tracking-[0.2em] uppercase text-text-sub/60">
+                            <span className="flex items-center gap-2">
+                                <Calendar size={14} />
                                 {new Date(article.publishDate).toLocaleDateString('es-ES', {
                                     day: 'numeric',
                                     month: 'long',
                                     year: 'numeric'
                                 })}
                             </span>
-                            <span className="flex items-center gap-2 text-white/90 font-bold text-sm">
-                                <Clock size={16} />
-                                {article.readTime}
-                            </span>
+                            <span className="w-1 h-1 bg-text-sub/40 rounded-full"></span>
+                            <span>TreePod Editorial</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CONTENIDO */}
+            {/* HERO IMAGE — full bleed estilo magazine */}
+            <section className="relative w-full">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-[1rem] md:rounded-[2rem]">
+                        <Image
+                            src={article.image}
+                            alt={article.title}
+                            fill
+                            priority
+                            className="object-cover object-center"
+                            sizes="100vw"
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* CONTENIDO — narrow column editorial */}
             <article className="py-16 md:py-24">
                 <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-3xl mx-auto">
-                        <div className="prose prose-lg max-w-none text-text-main leading-relaxed
-                            prose-headings:font-display prose-headings:text-text-main
+                    <div className="max-w-2xl mx-auto">
+                        <div className="prose prose-lg max-w-none text-text-main
+                            prose-headings:font-display prose-headings:text-text-main prose-headings:tracking-tight
                             prose-h1:hidden
-                            prose-h2:text-3xl prose-h2:font-black prose-h2:mb-5 prose-h2:mt-12 prose-h2:pb-3 prose-h2:border-b prose-h2:border-primary/20
-                            prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:text-text-main
-                            prose-p:text-lg prose-p:mb-6 prose-p:leading-relaxed prose-p:text-text-sub
-                            prose-ul:mb-6 prose-ul:list-disc prose-ul:pl-6
-                            prose-ol:mb-6 prose-ol:list-decimal prose-ol:pl-6
-                            prose-li:mb-2 prose-li:text-lg prose-li:text-text-sub prose-li:leading-relaxed
+                            prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:font-black prose-h2:mb-6 prose-h2:mt-16 prose-h2:leading-tight
+                            prose-h3:text-xl md:prose-h3:text-2xl prose-h3:font-bold prose-h3:mb-4 prose-h3:mt-10 prose-h3:text-text-main
+                            prose-p:text-lg md:prose-p:text-xl prose-p:mb-7 prose-p:leading-[1.8] prose-p:text-text-main prose-p:font-normal
+                            prose-p:first-of-type:first-letter:font-display prose-p:first-of-type:first-letter:text-7xl prose-p:first-of-type:first-letter:font-black prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:mt-1 prose-p:first-of-type:first-letter:leading-[0.85] prose-p:first-of-type:first-letter:text-primary
+                            prose-ul:mb-8 prose-ul:list-none prose-ul:pl-0
+                            prose-ol:mb-8 prose-ol:list-decimal prose-ol:pl-6
+                            prose-li:mb-3 prose-li:text-lg md:prose-li:text-xl prose-li:text-text-main prose-li:leading-relaxed
+                            prose-ul>li:relative prose-ul>li:pl-6 prose-ul>li:before:content-[''] prose-ul>li:before:absolute prose-ul>li:before:left-0 prose-ul>li:before:top-[0.85em] prose-ul>li:before:w-3 prose-ul>li:before:h-px prose-ul>li:before:bg-primary
                             prose-strong:text-text-main prose-strong:font-bold
-                            prose-em:italic
-                            prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-                            prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-background-light prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:not-italic prose-blockquote:font-bold prose-blockquote:text-text-main prose-blockquote:my-8
-                            prose-table:w-full prose-table:border-collapse prose-table:my-8 prose-table:rounded-2xl prose-table:overflow-hidden
-                            prose-th:border prose-th:border-black/10 prose-th:p-3 prose-th:bg-background-light prose-th:font-bold prose-th:text-left
-                            prose-td:border prose-td:border-black/10 prose-td:p-3 prose-td:text-text-sub
-                            prose-hr:my-12 prose-hr:border-black/10
+                            prose-em:italic prose-em:font-display
+                            prose-a:text-primary prose-a:font-bold prose-a:no-underline prose-a:border-b prose-a:border-primary/30 hover:prose-a:border-primary
+                            prose-blockquote:border-0 prose-blockquote:my-12 prose-blockquote:px-0 prose-blockquote:py-0
+                            prose-blockquote:font-display prose-blockquote:italic prose-blockquote:text-2xl md:prose-blockquote:text-3xl prose-blockquote:font-medium prose-blockquote:text-text-main prose-blockquote:text-center prose-blockquote:leading-snug prose-blockquote:relative
+                            prose-table:w-full prose-table:border-collapse prose-table:my-10
+                            prose-th:border-b-2 prose-th:border-text-main/20 prose-th:p-4 prose-th:font-display prose-th:font-bold prose-th:text-left prose-th:text-base prose-th:uppercase prose-th:tracking-wide
+                            prose-td:border-b prose-td:border-black/5 prose-td:p-4 prose-td:text-text-main
+                            prose-hr:my-16 prose-hr:border-0 prose-hr:h-px prose-hr:bg-gradient-to-r prose-hr:from-transparent prose-hr:via-text-sub/30 prose-hr:to-transparent
                         ">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
                             </ReactMarkdown>
                         </div>
 
-                        {/* DISCLAIMER */}
-                        <div className="mt-16 bg-background-light rounded-[2rem] p-6 md:p-8 border border-black/5 flex items-start gap-4">
-                            <Info className="text-primary flex-shrink-0 mt-1" size={24} strokeWidth={2.5} />
-                            <p className="text-sm md:text-base text-text-sub font-bold leading-relaxed">
-                                <strong className="text-text-main">Datos referenciales:</strong> los precios, horarios y disponibilidad de operadores externos (Nevados de Chillán, Termas, buses, aerolíneas, etc.) cambian con frecuencia. Te recomendamos verificar valores actualizados directamente con cada operador antes de tu viaje.
+                        {/* SEPARADOR ORNAMENTAL */}
+                        <div className="flex items-center justify-center my-16">
+                            <span className="w-12 h-px bg-text-sub/30"></span>
+                            <span className="mx-4 text-primary text-2xl font-display italic">~</span>
+                            <span className="w-12 h-px bg-text-sub/30"></span>
+                        </div>
+
+                        {/* DISCLAIMER — estilo editorial sutil */}
+                        <div className="border-l-2 border-primary/40 pl-6 py-2 my-12">
+                            <p className="text-sm md:text-base text-text-sub italic font-display leading-relaxed">
+                                <strong className="not-italic font-bold text-text-main uppercase tracking-wider text-xs block mb-2">Nota editorial</strong>
+                                Los precios, horarios y disponibilidad de operadores externos cambian con frecuencia. Te recomendamos verificar valores actualizados directamente con cada operador antes de tu viaje.
                             </p>
                         </div>
                     </div>
                 </div>
             </article>
 
-            {/* CTA FINAL */}
-            <section className="py-16 md:py-20 bg-background-dark text-white">
+            {/* CTA FINAL — estilo editorial elegante */}
+            <section className="py-20 md:py-28 bg-background-light border-t border-black/5">
                 <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-3xl mx-auto text-center">
-                        <h2 className="h2-display mb-6 !text-white">
-                            ¿Listo para tu escapada en Valle Las Trancas?
+                    <div className="max-w-2xl mx-auto text-center">
+                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-6 block">
+                            Tu refugio en Valle Las Trancas
+                        </span>
+                        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-text-main leading-tight mb-8">
+                            Domos geodésicos en bosque nativo
                         </h2>
-                        <p className="text-lg md:text-xl text-white/80 font-bold mb-10 leading-relaxed">
-                            Reserva tu domo TreePod con confirmación inmediata. Bosque nativo, calefacción 24/7, WiFi Starlink y opción de tinaja exclusiva.
+                        <p className="text-lg text-text-sub font-medium italic font-display leading-relaxed mb-10 max-w-xl mx-auto">
+                            Calefacción a pellet 24/7, WiFi Starlink, mascotas bienvenidas y opción de tinaja exclusiva. Reserva directa con confirmación inmediata.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                        <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
                             <Link
                                 href="/disponibilidad"
-                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-xl items-center gap-2 tracking-widest uppercase"
+                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-full transition-all items-center gap-3 tracking-widest uppercase text-sm"
                             >
-                                Reservar mi domo
-                                <ArrowRight size={20} />
+                                Ver disponibilidad
+                                <ArrowRight size={18} />
                             </Link>
                             <Link
                                 href="/blog"
-                                className="inline-flex items-center gap-2 text-white/80 hover:text-white font-bold transition-colors"
+                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-bold transition-colors text-sm tracking-widest uppercase"
                             >
-                                <ArrowLeft size={18} />
+                                <ArrowLeft size={16} />
                                 Volver al blog
                             </Link>
                         </div>
