@@ -21,13 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
         openGraph: {
             title: 'Finde Largo Glorias Navales Las Trancas | Escapada 21 Mayo Ñuble — TreePod',
             description: `Vive el finde largo de las Glorias Navales en Valle Las Trancas. Domos con tinaja exclusiva opcional. ${priceText}.`,
-            images: ['/images/hero/Otono1.jpg'],
+            images: ['/images/hero/Otono2.jpg'],
         },
         twitter: {
             card: 'summary_large_image',
             title: 'Finde Largo Glorias Navales Las Trancas | Escapada 21 Mayo Ñuble — TreePod',
             description: `Vive el finde largo de las Glorias Navales. Domos con tinaja exclusiva opcional. ${priceText}.`,
-            images: ['/images/hero/Otono1.jpg'],
+            images: ['/images/hero/Otono2.jpg'],
         }
     };
 }
