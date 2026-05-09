@@ -22,8 +22,8 @@ export default async function GloriasNavalesPage() {
             <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
-                        src="/images/hero/Las Trancas Bosque Nativo 4.jpeg"
-                        alt="Finde largo Glorias Navales Las Trancas TreePod"
+                        src="/images/hero/Otono1.jpg"
+                        alt="Otoño en Valle Las Trancas — Glorias Navales TreePod"
                         fill
                         priority
                         className="object-cover object-center"
@@ -41,7 +41,7 @@ export default async function GloriasNavalesPage() {
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
                         Tu finde largo de Glorias Navales <br className="hidden md:block" />
-                        en el bosque nativo <span className="text-primary italic-display block md:inline">(con tinaja privada disponible)</span>
+                        en el bosque nativo <span className="text-primary italic-display block md:inline">(con tinaja exclusiva opcional)</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -57,7 +57,7 @@ export default async function GloriasNavalesPage() {
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
                         4 días completos en la cordillera, con el silencio del bosque nativo <br className="hidden md:block" />
-                        y tu propia tinaja termal bajo las estrellas.
+                        y la opción de tinaja termal bajo las estrellas (servicio extra).
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -106,8 +106,8 @@ export default async function GloriasNavalesPage() {
                             },
                             {
                                 icon: Waves,
-                                title: "Tu tinaja termal exclusiva",
-                                desc: "Después de planificar tu finde largo, mereces sumergirte en tu propia tinaja de ciprés bajo las estrellas. Solicítala con 1 día de anticipación para tu momento de relajación total."
+                                title: "Tinaja termal exclusiva (servicio extra)",
+                                desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Servicio opcional con valor de $38.000 por hora para 2 personas. Solicítala con 1 día de anticipación."
                             },
                             {
                                 icon: Coffee,
@@ -176,8 +176,8 @@ export default async function GloriasNavalesPage() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tu tinaja exclusiva</p>
-                                <p className="text-xs opacity-80">Reserva 1 día antes</p>
+                                <p className="font-black text-sm">Tinaja exclusiva</p>
+                                <p className="text-xs opacity-80">Servicio extra · $38.000/hora</p>
                             </div>
                         </div>
 
