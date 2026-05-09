@@ -5,11 +5,11 @@ export default function News() {
     const activities = [
         {
             image: "/images/real/NODomootono.jpeg",
-            title: "Finde Largo Mayo Las Trancas",
-            description: "El finde largo del día del trabajo perfecto en Valle Las Trancas. Escapada 1 mayo Ñuble con domos geodésicos y tinaja privada en el bosque nativo.",
-            tag: "Mayo 2026",
-            details: "🌟 Finde largo perfecto",
-            href: "/finde-largo-dia-trabajo-las-trancas"
+            title: "Glorias Navales 21–24 Mayo",
+            description: "Tu finde largo de Glorias Navales en Valle Las Trancas. 4 días en bosque nativo con domos geodésicos y tinaja privada. Escapada 21 mayo Ñuble.",
+            tag: "21–24 Mayo 2026",
+            details: "⚓ Finde largo de 4 días",
+            href: "/glorias-navales-las-trancas"
         },
         {
             image: "/images/Galeria/Domo3noche.jpeg",
