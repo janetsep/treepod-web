@@ -4,7 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Star } from "lucide-react";
 
 
 export default function Hero() {
@@ -64,7 +64,7 @@ export default function Hero() {
           onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
           className="hero-badge group !hidden lg:flex"
         >
-          <span className="star">⭐</span>
+          <Star className="star text-yellow-400 fill-yellow-400" size={18} strokeWidth={2} />
           <span className="rating-text">4.9/5 - 200+ HUÉSPEDES</span>
         </div>
 
