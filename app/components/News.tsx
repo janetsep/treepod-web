@@ -8,7 +8,7 @@ export default function News() {
             title: "Glorias Navales 21–24 Mayo",
             description: "Tu finde largo de Glorias Navales en Valle Las Trancas. 4 días en bosque nativo con domos geodésicos y tinaja exclusiva opcional. Escapada 21 mayo Ñuble.",
             tag: "21–24 Mayo 2026",
-            details: "⚓ Finde largo de 4 días",
+            details: "Finde largo de 4 días",
             href: "/glorias-navales-las-trancas"
         },
         {
@@ -16,7 +16,7 @@ export default function News() {
             title: "Otoño Valle Las Trancas",
             description: "Vive el otoño más mágico en el corazón del Valle Las Trancas. Colores únicos, aire puro y la tranquilidad absoluta que solo esta época puede ofrecerte.",
             tag: "Temporada Especial",
-            details: "🍂 Descubre la magia del otoño",
+            details: "Descubre la magia del otoño",
             href: "/otono-valle-las-trancas"
         },
         {
@@ -24,7 +24,7 @@ export default function News() {
             title: "Domos Geodésicos Chillán",
             description: "Experimenta el glamping más auténtico del sur de Chile. Domos geodésicos únicos con tinaja privada, a minutos de las pistas de ski de Nevados de Chillán.",
             tag: "Glamping Premium",
-            details: "⛷️ Ski + Glamping perfecto",
+            details: "Ski + Glamping perfecto",
             href: "/domos-geodesicos-chillan"
         },
         {
@@ -32,7 +32,7 @@ export default function News() {
             title: "Glamping Valle Las Trancas",
             description: "Descubre por qué Valle Las Trancas es el destino de glamping más exclusivo de Chile. Naturaleza, aventura y comodidad en perfecta armonía.",
             tag: "Experiencia Única",
-            details: "🌲 El mejor glamping del valle",
+            details: "El mejor glamping del valle",
             href: "/glamping-valle-las-trancas"
         },
         {
@@ -40,7 +40,7 @@ export default function News() {
             title: "Escapada Romántica",
             description: "Una escapada perfecta para parejas que buscan reconectarse. Tinaja privada bajo las estrellas, cenas íntimas y la magia del bosque nativo.",
             tag: "Solo Para Dos",
-            details: "💕 Romance en el bosque",
+            details: "Romance en el bosque",
             href: "/escapada-romantica-las-trancas"
         }
     ];
