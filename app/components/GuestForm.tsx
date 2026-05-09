@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getStoredUTMs, getStoredLandingPage } from "./UTMCapture";
 
 interface GuestData {
     nombre: string;
@@ -29,12 +30,29 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
         setLoading(true);
 
         try {
+            // Captura UTMs + landing_page del sessionStorage (capturados al primer touch)
+            const utms = getStoredUTMs();
+            const landing_page = getStoredLandingPage();
+            const session_id = (() => {
+                try {
+                    let sid = sessionStorage.getItem("treepod_session_id");
+                    if (!sid) {
+                        sid = crypto.randomUUID();
+                        sessionStorage.setItem("treepod_session_id", sid);
+                    }
+                    return sid;
+                } catch { return null; }
+            })();
+
             const res = await fetch("/api/reservas/actualizar-huesped", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     reservaId,
                     ...formData,
+                    ...utms,
+                    landing_page,
+                    session_id,
                 }),
             });
 

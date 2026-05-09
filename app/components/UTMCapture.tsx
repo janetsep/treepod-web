@@ -12,6 +12,7 @@ export interface UTMParams {
 }
 
 const STORAGE_KEY = 'treepod_utms';
+const LANDING_KEY = 'treepod_landing_page';
 
 export function getStoredUTMs(): UTMParams {
   if (typeof window === 'undefined') return {};
@@ -21,10 +22,24 @@ export function getStoredUTMs(): UTMParams {
   } catch { return {}; }
 }
 
+export function getStoredLandingPage(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return sessionStorage.getItem(LANDING_KEY);
+  } catch { return null; }
+}
+
 export default function UTMCapture() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Captura landing_page en el primer touch (cualquier página, con o sin UTMs)
+    try {
+      if (!sessionStorage.getItem(LANDING_KEY)) {
+        sessionStorage.setItem(LANDING_KEY, window.location.pathname + window.location.search);
+      }
+    } catch {}
+
     const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
     const incoming: UTMParams = {};
     utmKeys.forEach((key) => {

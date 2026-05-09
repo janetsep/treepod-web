@@ -6,7 +6,19 @@ export async function POST(req: Request) {
         const body = await req.json();
         console.log("📝 Payload recibido:", body);
 
-        const { reservaId, nombre, apellido, email } = body;
+        const {
+            reservaId,
+            nombre,
+            apellido,
+            email,
+            utm_source,
+            utm_medium,
+            utm_campaign,
+            utm_content,
+            utm_term,
+            landing_page,
+            session_id,
+        } = body;
 
         // Validation
         if (!reservaId || !nombre || !apellido || !email) {
@@ -76,7 +88,7 @@ export async function POST(req: Request) {
             );
         }
 
-        // 3. Registrar Lead en leads_checkout
+        // 3. Registrar Lead en leads_checkout (con UTMs + landing + session)
         if (reservaActualizada) {
             const { error: leadError } = await supabaseAdmin
                 .from("leads_checkout")
@@ -87,6 +99,13 @@ export async function POST(req: Request) {
                     fecha_inicio: reservaActualizada.fecha_inicio,
                     fecha_fin: reservaActualizada.fecha_fin,
                     total: reservaActualizada.total,
+                    utm_source: utm_source || null,
+                    utm_medium: utm_medium || null,
+                    utm_campaign: utm_campaign || null,
+                    utm_content: utm_content || null,
+                    utm_term: utm_term || null,
+                    landing_page: landing_page || null,
+                    session_id: session_id || null,
                 });
             if (leadError) {
                 console.warn("⚠️ Error registrando lead:", leadError.message);
