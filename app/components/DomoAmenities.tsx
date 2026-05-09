@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Wifi, Waves, Flame, Utensils, Sparkles, Coffee } from "lucide-react";
+import { Wifi, Waves, Flame, Utensils, Sparkles, Coffee, PawPrint } from "lucide-react";
 
 
 export default function DomoAmenities() {
@@ -123,7 +123,7 @@ export default function DomoAmenities() {
                                     {item.icon === "hot_tub" && <Waves className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {item.icon === "fireplace" && <Flame className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {item.icon === "coffee" && <Coffee className="text-primary w-6 h-6" strokeWidth={2.5} />}
-                                    {item.icon === "paw" && <span className="text-primary text-2xl">🐾</span>}
+                                    {item.icon === "paw" && <PawPrint className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "outdoor_grill" || item.title === "Cena Privada") && <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     <h4 className="h4-display text-text-main">{item.title}</h4>
