@@ -102,25 +102,30 @@ export default function BlogPage() {
         <div className="bg-white text-text-main min-h-screen">
             <TrackView eventName="view_blog_page" />
 
-            {/* HERO SECTION */}
-            <section className="relative py-20 md:py-28 bg-background-light">
+            {/* HERO editorial estilo Awasi */}
+            <section className="pt-32 pb-16 md:pb-20 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                            <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
-                                Blog TreePod
-                            </span>
-                        </div>
+                    <div className="max-w-3xl mx-auto text-center">
+                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-8 block">
+                            Editorial TreePod
+                        </span>
 
-                        <h1 className="h1-display mb-6 text-text-main leading-tight">
-                            Guías Valle Las Trancas para tu <br />
-                            <span className="text-primary italic-display">aventura perfecta</span>
+                        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-text-main leading-[1.15] mb-8 tracking-tight">
+                            Guías y reflexiones <br />
+                            <span className="italic font-medium">desde Valle Las Trancas</span>
                         </h1>
 
-                        <p className="text-xl text-text-sub font-bold leading-relaxed max-w-3xl mx-auto">
+                        <p className="text-lg md:text-xl text-text-sub font-medium italic font-display leading-relaxed max-w-2xl mx-auto">
                             Todo lo que necesitas saber sobre Valle Las Trancas, Nevados de Chillán
-                            y cómo vivir la mejor experiencia de glamping.
+                            y cómo planear tu escapada al bosque nativo.
                         </p>
+
+                        {/* Separador ornamental */}
+                        <div className="flex items-center justify-center mt-12">
+                            <span className="w-12 h-px bg-text-sub/30"></span>
+                            <span className="mx-4 text-primary text-2xl font-display italic">~</span>
+                            <span className="w-12 h-px bg-text-sub/30"></span>
+                        </div>
                     </div>
                 </div>
             </section>
