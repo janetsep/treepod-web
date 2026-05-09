@@ -22,11 +22,11 @@ export default async function GloriasNavalesPage() {
             <section className="relative h-[85vh] min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
-                        src="/images/hero/Otono1.jpg"
+                        src="/images/hero/Otono2.jpg"
                         alt="Otoño en Valle Las Trancas — Glorias Navales TreePod"
                         fill
                         priority
-                        className="object-cover object-center"
+                        className="object-cover object-[center_30%]"
                         sizes="100vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/60 z-10"></div>
