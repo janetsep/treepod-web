@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, ArrowRight, Calendar, Clock, Info } from 'lucide-react';
 import TrackView from '../../components/TrackView';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -18,136 +19,122 @@ const availableArticles = [
 const articleContent: Record<string, any> = {
     'que-hacer-valle-las-trancas-por-temporada': {
         title: 'Qué Hacer en Valle Las Trancas por Temporada',
-        excerpt: 'Guía completa de actividades en Valle Las Trancas según la época del año',
+        excerpt: 'Guía general de actividades en Valle Las Trancas según la época del año.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         content: `
-# Qué Hacer en Valle Las Trancas por Temporada
+Valle Las Trancas, en plena cordillera de la Región del Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
 
-Valle Las Trancas ofrece actividades únicas durante todo el año. Aquí tienes la guía completa para planificar tu visita según la temporada.
+## Invierno (junio a septiembre)
 
-## Invierno (Junio - Septiembre)
+### Ski y snowboard en Nevados de Chillán
+A 8 km del valle se encuentra el centro de ski **Nevados de Chillán**, con pistas para todos los niveles, escuela de ski y arriendo de equipos. La temporada parte usualmente en junio y se extiende hasta septiembre, dependiendo de las condiciones de nieve.
 
-### Ski y Snowboard
-- **Nevados de Chillán**: Pistas para todos los niveles
-- **Temporada**: Junio a septiembre
-- **Precios day pass**: Desde $35.000 adulto
-- **Escuela de ski**: Disponible todos los días
+### Termas de Chillán
+Las **Termas de Chillán** ofrecen piscinas termales rodeadas de cordillera. Es un panorama relajante después de un día en la nieve, y especialmente atractivo en invierno.
 
-### Termas en Invierno
-Las termas son especialmente mágicas en invierno:
-- **Termas de Chillán**: Experiencia completa
-- **Shangri-La**: Más íntima y exclusiva
-- **Termas naturales**: Acceso gratuito en algunos puntos
+### Otros panoramas
+- Caminatas suaves por senderos cercanos al valle (consultar condiciones de nieve antes de salir)
+- Restaurantes locales con cocina de montaña
+- Fotografía de paisajes nevados
 
-## Primavera (Septiembre - Diciembre)
+## Primavera (septiembre a diciembre)
 
-### Trekking y Senderismo
-- **Sendero Shangri-La**: 3 km, dificultad fácil
-- **Laguna Huemul**: 8 km, dificultad media
-- **Mirador Los Cóndores**: Vista panorámica increíble
+### Trekking y caminatas
+La nieve empieza a retirarse y se abren los senderos por el bosque nativo. Hay varias rutas en la zona — recomendamos consultar con tu hospedaje o **Sernatur Ñuble** sobre los senderos abiertos según la fecha de tu visita.
 
-### Flora y Fauna
-La primavera despierta el valle con:
-- Floración de especies nativas
-- Avistamiento de aves
-- Fotografía de paisajes
+### Flora y fauna
+La primavera trae floración de especies nativas y mayor actividad de aves. Es buena época para fotografía de naturaleza.
 
-## Verano (Diciembre - Marzo)
+## Verano (diciembre a marzo)
 
-### Actividades Acuáticas
-- **Río Renegado**: Pesca deportiva y kayak
-- **Pozas naturales**: Refrescantes y cristalinas
-- **Rafting**: En ríos cercanos
+### Río Renegado y entorno
+El **Río Renegado** atraviesa la zona y ofrece paisajes preciosos para caminatas y fotografía. Algunas pozas son aptas para refrescarse.
 
-### Mountain Bike y Trekking
-- **Circuitos señalizados** para MTB
-- **Senderos de gran recorrido**
-- **Camping** bajo las estrellas
+### Mountain bike y ciclismo
+Existen circuitos de mountain bike en el área de Nevados de Chillán durante temporada de verano.
 
-## Otoño (Marzo - Junio)
+### Camping y caminatas
+Días largos y temperaturas agradables para recorrer el valle a pie.
 
-### Espectáculo de Colores
-- **Bosque nativo**: Rojos y dorados únicos
-- **Fotografía**: Luz perfecta para retratos
-- **Tranquilidad**: Menos turistas, más paz
+## Otoño (marzo a junio)
 
-### Actividades Relajantes
-- **Termas**: Perfectas con aire fresco
-- **Caminatas suaves**: Entre hojas otoñales
-- **Contemplación**: Silencio y naturaleza
+### Espectáculo de colores
+El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
-## Cuándo Venir Según tus Intereses
+### Tinaja y descanso
+Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y libros junto a la estufa.
 
-| Actividad | Mejor Época | Por Qué |
-|-----------|-------------|---------|
-| **Ski** | Julio - Agosto | Nieve garantizada |
-| **Trekking** | Diciembre - Marzo | Senderos libres |
-| **Termas** | Todo el año | Cada época tiene su magia |
-| **Fotografía** | Marzo - Abril | Colores otoñales |
-| **Tranquilidad** | Mayo - Junio | Menos visitantes |
+## Resumen rápido
 
-Valle Las Trancas te espera con experiencias únicas en cada temporada. Solo necesitas elegir cuándo vivir tu aventura.
+| Buscas... | Mejor temporada |
+|---|---|
+| Ski y nieve | Julio – agosto |
+| Trekking sin nieve | Diciembre – marzo |
+| Termas | Todo el año |
+| Fotografía y colores | Marzo – mayo |
+| Tranquilidad y poco turismo | Mayo – junio |
+
+> **Nota:** Las actividades, precios y operadores cambian según la temporada y el operador. Te recomendamos verificar disponibilidad con cada centro (Nevados de Chillán, Termas de Chillán, etc.) antes de tu viaje.
+
+---
+
+¿Listo para venir? Reserva tu domo en TreePod con confirmación inmediata.
 `,
         category: 'Guías',
-        readTime: '6 min',
+        readTime: '4 min',
         publishDate: '2026-04-15'
     },
     'como-llegar-valle-las-trancas-desde-santiago': {
         title: 'Cómo Llegar a Valle Las Trancas desde Santiago',
-        excerpt: 'Todas las opciones de transporte para llegar a Valle Las Trancas',
+        excerpt: 'Las opciones más comunes para llegar a Valle Las Trancas desde Santiago y otras ciudades.',
         image: '/images/Galeria/Las Trancas Bosque Nativo 2.jpeg',
         content: `
-# Cómo Llegar a Valle Las Trancas desde Santiago
+Valle Las Trancas se ubica en la Región del Ñuble, a unos 80 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
 
-## En Auto (Recomendado)
+## En auto (la más cómoda)
 
-### Ruta Principal
-- **Distancia**: 425 km
-- **Tiempo**: 5.5 horas aprox.
-- **Ruta**: Santiago → Los Ángeles → Chillán → Valle Las Trancas
+### Ruta general desde Santiago
+- **Distancia aproximada:** 425 km
+- **Tiempo estimado:** entre 6 y 7 horas, dependiendo del tráfico
+- **Ruta:** Santiago → Ruta 5 Sur hasta Chillán → Ruta N-55 hasta Valle Las Trancas
 
-### Detalles del Viaje
-1. **Santiago a Los Ángeles**: 3.5 horas por Ruta 5 Sur
-2. **Los Ángeles a Chillán**: 1.5 horas por Ruta 5 Sur
-3. **Chillán a Valle Las Trancas**: 30 minutos por Ruta N-55
+### Tramos
+1. **Santiago a Chillán:** ~5 horas por la Ruta 5 Sur (autopista con peajes)
+2. **Chillán a Valle Las Trancas:** ~1 hora a 1 hora 15 por la Ruta N-55 (camino pavimentado)
 
-### Consejos Importantes
-- **Combustible**: Carga completa en Chillán (última estación)
-- **Peajes**: Aproximadamente $8.000 total
-- **Neumáticos**: Revisar antes del viaje
-- **Cadenas**: Obligatorias en invierno
+### Antes de viajar
+- **Combustible:** hay bencineras en el camino (Pinto, Recinto), pero conviene salir de Chillán con tanque lleno por seguridad
+- **Peajes:** suman varios miles de pesos en la Ruta 5 Sur — los valores cambian, consulta el sitio del **Ministerio de Obras Públicas** o las concesionarias antes del viaje
+- **Neumáticos en buen estado:** especialmente importante en invierno
+- **Cadenas:** pueden ser exigidas en invierno cuando hay nieve en la ruta hacia Nevados
 
-## En Bus
+## En bus
 
-### Buses a Chillán
-- **Líneas**: Tur Bus, Pullman Bus, Buses Bio Bio
-- **Frecuencia**: Cada 30 minutos
-- **Precio**: $15.000 - $25.000
-- **Duración**: 6 horas
+Las líneas que cubren la ruta Santiago–Chillán incluyen **Tur Bus**, **Pullman Bus** y **Buses Bío Bío**, entre otras. Los horarios y precios varían según día y temporada — consulta en pasajebus.com o directamente en cada empresa.
 
-### Desde Chillán a Las Trancas
-- **Buses rurales**: 3 servicios diarios
-- **Transfer privado**: $25.000 por trayecto
-- **Uber/taxi**: No disponible
+Una vez en Chillán, las opciones para llegar a Valle Las Trancas son:
+- **Buses rurales** con frecuencia limitada (generalmente algunas salidas al día)
+- **Transfer privado** o radiotaxi (precio sujeto a temporada)
+- **Auto arrendado** desde Chillán
 
-## En Avión + Auto
+> **Tip:** En Las Trancas no hay servicio de Uber ni taxis disponibles las 24 horas, así que es buena idea coordinar el transfer de vuelta con anticipación.
 
-### Vuelo Santiago - Concepción
-- **Aerolíneas**: Sky, JetSmart, LATAM
-- **Duración**: 1.5 horas
-- **Precio**: $80.000 - $150.000
+## En avión + auto
 
-### Desde Concepción
-- **Auto**: 2.5 horas hasta Valle Las Trancas
-- **Arriendo**: Desde $35.000/día
+Si vienes desde el norte y quieres ahorrar horas de manejo:
 
-## Dónde Hospedarse al Llegar
+- **Vuelo a Concepción:** operado por Sky, JetSmart y LATAM. Duración ~1h30 desde Santiago. Precios y disponibilidad varían — consulta directo en cada aerolínea.
+- **Desde Concepción a Valle Las Trancas:** ~3 horas en auto vía Chillán
 
-**TreePod** te espera con domos geodésicos únicos:
-- Ubicación privilegiada en el valle
-- Tinaja privada con agua termal
-- WiFi Starlink de alta velocidad
-- Estacionamiento privado
+Hay servicios de arriendo de auto en el aeropuerto de Concepción.
+
+## Una vez en TreePod
+
+Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez confirmes tu reserva. Tienes acceso a estacionamiento privado dentro del recinto.
+
+---
+
+> **Nota:** los tiempos, precios y servicios mencionados son referenciales y pueden cambiar. Recomendamos verificar valores actualizados con cada operador (peajes, buses, aerolíneas) antes de tu viaje.
 
 [Reserva tu estadía →](/disponibilidad)
 `,
@@ -236,28 +223,40 @@ export default async function BlogPost({ params }: Props) {
         <div className="bg-white text-text-main min-h-screen">
             <TrackView eventName="view_blog_post" params={{ slug }} />
 
-            {/* BREADCRUMB */}
-            <section className="py-6 bg-background-light border-b border-black/5">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="flex items-center gap-2 text-sm font-bold text-text-sub">
-                        <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-                        <span>→</span>
-                        <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-                        <span>→</span>
-                        <span className="text-primary">{article.category}</span>
-                    </div>
+            {/* HERO con imagen */}
+            <section className="relative h-[60vh] min-h-[420px] text-white overflow-hidden flex items-end pt-20">
+                <div className="absolute inset-0 bg-background-dark">
+                    <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        priority
+                        className="object-cover object-center"
+                        sizes="100vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80 z-10"></div>
                 </div>
-            </section>
 
-            {/* ARTICLE */}
-            <article className="py-16 md:py-20">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex flex-wrap items-center gap-4 mb-8">
-                            <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-black uppercase tracking-wide">
+                <div className="relative z-20 container mx-auto px-6 md:px-10 pb-12 md:pb-16">
+                    <div className="max-w-4xl">
+                        {/* Breadcrumb */}
+                        <div className="flex items-center gap-2 text-xs md:text-sm font-bold text-white/80 mb-6">
+                            <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
+                            <span>·</span>
+                            <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
+                            <span>·</span>
+                            <span className="text-primary">{article.category}</span>
+                        </div>
+
+                        <h1 className="h1-display mb-6 !text-white leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+                            {article.title}
+                        </h1>
+
+                        <div className="flex flex-wrap items-center gap-4">
+                            <span className="bg-primary text-white px-4 py-2 rounded-full text-xs md:text-sm font-black uppercase tracking-wide">
                                 {article.category}
                             </span>
-                            <span className="flex items-center gap-2 text-text-sub font-bold text-sm">
+                            <span className="flex items-center gap-2 text-white/90 font-bold text-sm">
                                 <Calendar size={16} />
                                 {new Date(article.publishDate).toLocaleDateString('es-ES', {
                                     day: 'numeric',
@@ -265,57 +264,82 @@ export default async function BlogPost({ params }: Props) {
                                     year: 'numeric'
                                 })}
                             </span>
-                            <span className="flex items-center gap-2 text-text-sub font-bold text-sm">
+                            <span className="flex items-center gap-2 text-white/90 font-bold text-sm">
                                 <Clock size={16} />
                                 {article.readTime}
                             </span>
                         </div>
+                    </div>
+                </div>
+            </section>
 
-                        <h1 className="h1-display mb-8 text-text-main leading-tight">
-                            {article.title}
-                        </h1>
-
+            {/* CONTENIDO */}
+            <article className="py-16 md:py-24">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="max-w-3xl mx-auto">
                         <div className="prose prose-lg max-w-none text-text-main leading-relaxed
                             prose-headings:font-display prose-headings:text-text-main
-                            prose-h1:text-3xl prose-h1:font-black prose-h1:mb-6
-                            prose-h2:text-2xl prose-h2:font-black prose-h2:mb-5 prose-h2:mt-12 prose-h2:pb-3 prose-h2:border-b prose-h2:border-black/10
+                            prose-h1:hidden
+                            prose-h2:text-3xl prose-h2:font-black prose-h2:mb-5 prose-h2:mt-12 prose-h2:pb-3 prose-h2:border-b prose-h2:border-primary/20
                             prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:text-text-main
-                            prose-p:text-lg prose-p:mb-6 prose-p:leading-relaxed
-                            prose-ul:mb-6 prose-ul:ml-2 prose-ul:list-disc prose-ul:pl-6
-                            prose-ol:mb-6 prose-ol:ml-2 prose-ol:list-decimal prose-ol:pl-6
-                            prose-li:mb-2 prose-li:text-lg prose-li:leading-relaxed
+                            prose-p:text-lg prose-p:mb-6 prose-p:leading-relaxed prose-p:text-text-sub
+                            prose-ul:mb-6 prose-ul:list-disc prose-ul:pl-6
+                            prose-ol:mb-6 prose-ol:list-decimal prose-ol:pl-6
+                            prose-li:mb-2 prose-li:text-lg prose-li:text-text-sub prose-li:leading-relaxed
                             prose-strong:text-text-main prose-strong:font-bold
                             prose-em:italic
                             prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-                            prose-table:w-full prose-table:border-collapse prose-table:my-6
+                            prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-background-light prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:not-italic prose-blockquote:font-bold prose-blockquote:text-text-main prose-blockquote:my-8
+                            prose-table:w-full prose-table:border-collapse prose-table:my-8 prose-table:rounded-2xl prose-table:overflow-hidden
                             prose-th:border prose-th:border-black/10 prose-th:p-3 prose-th:bg-background-light prose-th:font-bold prose-th:text-left
-                            prose-td:border prose-td:border-black/10 prose-td:p-3
-                            prose-hr:my-8 prose-hr:border-black/10
+                            prose-td:border prose-td:border-black/10 prose-td:p-3 prose-td:text-text-sub
+                            prose-hr:my-12 prose-hr:border-black/10
                         ">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
                             </ReactMarkdown>
                         </div>
 
-                        <div className="mt-16 pt-8 border-t border-black/10 flex justify-between items-center">
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all"
-                            >
-                                <ArrowLeft size={20} />
-                                Volver al blog
-                            </Link>
-
-                            <Link
-                                href="/disponibilidad"
-                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-3 px-6 rounded-full transition-all items-center gap-2 tracking-wide uppercase"
-                            >
-                                Reservar ahora
-                            </Link>
+                        {/* DISCLAIMER */}
+                        <div className="mt-16 bg-background-light rounded-[2rem] p-6 md:p-8 border border-black/5 flex items-start gap-4">
+                            <Info className="text-primary flex-shrink-0 mt-1" size={24} strokeWidth={2.5} />
+                            <p className="text-sm md:text-base text-text-sub font-bold leading-relaxed">
+                                <strong className="text-text-main">Datos referenciales:</strong> los precios, horarios y disponibilidad de operadores externos (Nevados de Chillán, Termas, buses, aerolíneas, etc.) cambian con frecuencia. Te recomendamos verificar valores actualizados directamente con cada operador antes de tu viaje.
+                            </p>
                         </div>
                     </div>
                 </div>
             </article>
+
+            {/* CTA FINAL */}
+            <section className="py-16 md:py-20 bg-background-dark text-white">
+                <div className="container mx-auto px-6 md:px-10">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <h2 className="h2-display mb-6 !text-white">
+                            ¿Listo para tu escapada en Valle Las Trancas?
+                        </h2>
+                        <p className="text-lg md:text-xl text-white/80 font-bold mb-10 leading-relaxed">
+                            Reserva tu domo TreePod con confirmación inmediata. Bosque nativo, calefacción 24/7, WiFi Starlink y opción de tinaja exclusiva.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                            <Link
+                                href="/disponibilidad"
+                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-xl items-center gap-2 tracking-widest uppercase"
+                            >
+                                Reservar mi domo
+                                <ArrowRight size={20} />
+                            </Link>
+                            <Link
+                                href="/blog"
+                                className="inline-flex items-center gap-2 text-white/80 hover:text-white font-bold transition-colors"
+                            >
+                                <ArrowLeft size={18} />
+                                Volver al blog
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
