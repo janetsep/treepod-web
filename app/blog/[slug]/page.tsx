@@ -25,7 +25,7 @@ const articleContent: Record<string, any> = {
 
 Valle Las Trancas ofrece actividades únicas durante todo el año. Aquí tienes la guía completa para planificar tu visita según la temporada.
 
-## 🏔️ Invierno (Junio - Septiembre)
+## Invierno (Junio - Septiembre)
 
 ### Ski y Snowboard
 - **Nevados de Chillán**: Pistas para todos los niveles
@@ -39,7 +39,7 @@ Las termas son especialmente mágicas en invierno:
 - **Shangri-La**: Más íntima y exclusiva
 - **Termas naturales**: Acceso gratuito en algunos puntos
 
-## 🌸 Primavera (Septiembre - Diciembre)
+## Primavera (Septiembre - Diciembre)
 
 ### Trekking y Senderismo
 - **Sendero Shangri-La**: 3 km, dificultad fácil
@@ -52,7 +52,7 @@ La primavera despierta el valle con:
 - Avistamiento de aves
 - Fotografía de paisajes
 
-## ☀️ Verano (Diciembre - Marzo)
+## Verano (Diciembre - Marzo)
 
 ### Actividades Acuáticas
 - **Río Renegado**: Pesca deportiva y kayak
@@ -64,7 +64,7 @@ La primavera despierta el valle con:
 - **Senderos de gran recorrido**
 - **Camping** bajo las estrellas
 
-## 🍂 Otoño (Marzo - Junio)
+## Otoño (Marzo - Junio)
 
 ### Espectáculo de Colores
 - **Bosque nativo**: Rojos y dorados únicos
@@ -76,7 +76,7 @@ La primavera despierta el valle con:
 - **Caminatas suaves**: Entre hojas otoñales
 - **Contemplación**: Silencio y naturaleza
 
-## 📅 Cuándo Venir Según tus Intereses
+## Cuándo Venir Según tus Intereses
 
 | Actividad | Mejor Época | Por Qué |
 |-----------|-------------|---------|
@@ -99,7 +99,7 @@ Valle Las Trancas te espera con experiencias únicas en cada temporada. Solo nec
         content: `
 # Cómo Llegar a Valle Las Trancas desde Santiago
 
-## 🚗 En Auto (Recomendado)
+## En Auto (Recomendado)
 
 ### Ruta Principal
 - **Distancia**: 425 km
@@ -117,7 +117,7 @@ Valle Las Trancas te espera con experiencias únicas en cada temporada. Solo nec
 - **Neumáticos**: Revisar antes del viaje
 - **Cadenas**: Obligatorias en invierno
 
-## 🚌 En Bus
+## En Bus
 
 ### Buses a Chillán
 - **Líneas**: Tur Bus, Pullman Bus, Buses Bio Bio
@@ -130,7 +130,7 @@ Valle Las Trancas te espera con experiencias únicas en cada temporada. Solo nec
 - **Transfer privado**: $25.000 por trayecto
 - **Uber/taxi**: No disponible
 
-## ✈️ En Avión + Auto
+## En Avión + Auto
 
 ### Vuelo Santiago - Concepción
 - **Aerolíneas**: Sky, JetSmart, LATAM
@@ -141,7 +141,7 @@ Valle Las Trancas te espera con experiencias únicas en cada temporada. Solo nec
 - **Auto**: 2.5 horas hasta Valle Las Trancas
 - **Arriendo**: Desde $35.000/día
 
-## 🏨 Dónde Hospedarse al Llegar
+## Dónde Hospedarse al Llegar
 
 **TreePod** te espera con domos geodésicos únicos:
 - Ubicación privilegiada en el valle
@@ -278,15 +278,19 @@ export default async function BlogPost({ params }: Props) {
                         <div className="prose prose-lg max-w-none text-text-main leading-relaxed
                             prose-headings:font-display prose-headings:text-text-main
                             prose-h1:text-3xl prose-h1:font-black prose-h1:mb-6
-                            prose-h2:text-2xl prose-h2:font-black prose-h2:mb-4 prose-h2:mt-10
-                            prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-6
-                            prose-p:text-lg prose-p:mb-6
-                            prose-ul:mb-6 prose-ul:ml-6 prose-li:mb-2 prose-li:text-lg
-                            prose-strong:text-primary prose-strong:font-black
-                            prose-a:text-primary prose-a:font-bold hover:prose-a:text-primary-dark
-                            prose-table:w-full prose-table:border-collapse prose-table:mb-6
+                            prose-h2:text-2xl prose-h2:font-black prose-h2:mb-5 prose-h2:mt-12 prose-h2:pb-3 prose-h2:border-b prose-h2:border-black/10
+                            prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:text-text-main
+                            prose-p:text-lg prose-p:mb-6 prose-p:leading-relaxed
+                            prose-ul:mb-6 prose-ul:ml-2 prose-ul:list-disc prose-ul:pl-6
+                            prose-ol:mb-6 prose-ol:ml-2 prose-ol:list-decimal prose-ol:pl-6
+                            prose-li:mb-2 prose-li:text-lg prose-li:leading-relaxed
+                            prose-strong:text-text-main prose-strong:font-bold
+                            prose-em:italic
+                            prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+                            prose-table:w-full prose-table:border-collapse prose-table:my-6
                             prose-th:border prose-th:border-black/10 prose-th:p-3 prose-th:bg-background-light prose-th:font-bold prose-th:text-left
                             prose-td:border prose-td:border-black/10 prose-td:p-3
+                            prose-hr:my-8 prose-hr:border-black/10
                         ">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
