@@ -6,6 +6,7 @@ import TrackView from '../components/TrackView';
 import { useState } from 'react';
 
 // Artículos del blog con contenido real
+// `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
         slug: 'que-hacer-valle-las-trancas-por-temporada',
@@ -39,7 +40,8 @@ const blogPosts = [
         readTime: '5 min',
         publishDate: '2026-04-08',
         author: 'TreePod Team',
-        tags: ['Restaurantes', 'Comida', 'Valle Las Trancas', 'Gastronomía']
+        tags: ['Restaurantes', 'Comida', 'Valle Las Trancas', 'Gastronomía'],
+        comingSoon: true
     },
     {
         slug: 'termas-nevados-chillan-precios-horarios-2026',
@@ -50,7 +52,8 @@ const blogPosts = [
         readTime: '4 min',
         publishDate: '2026-04-05',
         author: 'TreePod Team',
-        tags: ['Termas', 'Nevados Chillán', 'Precios', 'Relajación']
+        tags: ['Termas', 'Nevados Chillán', 'Precios', 'Relajación'],
+        comingSoon: true
     },
     {
         slug: 'que-llevar-glamping-valle-las-trancas-lista',
@@ -61,7 +64,8 @@ const blogPosts = [
         readTime: '3 min',
         publishDate: '2026-04-01',
         author: 'TreePod Team',
-        tags: ['Glamping', 'Qué llevar', 'Valle Las Trancas', 'Tips']
+        tags: ['Glamping', 'Qué llevar', 'Valle Las Trancas', 'Tips'],
+        comingSoon: true
     },
     {
         slug: 'clima-valle-las-trancas-por-mes-2026',
@@ -72,7 +76,8 @@ const blogPosts = [
         readTime: '5 min',
         publishDate: '2026-03-28',
         author: 'TreePod Team',
-        tags: ['Clima', 'Tiempo', 'Valle Las Trancas', 'Planificación']
+        tags: ['Clima', 'Tiempo', 'Valle Las Trancas', 'Planificación'],
+        comingSoon: true
     }
 ];
 
@@ -153,74 +158,91 @@ export default function BlogPage() {
             <section className="py-16 md:py-24">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {filteredPosts.map((post) => (
-                            <article key={post.slug} className="group bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-black/5">
-                                <div className="relative h-64 overflow-hidden">
-                                    <Image
-                                        src={post.image}
-                                        alt={post.title}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <span className="bg-primary text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide">
-                                            {post.category}
-                                        </span>
-                                    </div>
-                                    {post.featured && (
-                                        <div className="absolute top-4 right-4">
-                                            <span className="bg-background-dark text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide">
-                                                Destacado
+                        {filteredPosts.map((post) => {
+                            const isComingSoon = (post as any).comingSoon === true;
+                            const CardContent = (
+                                <article className={`group bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-black/5 h-full flex flex-col ${isComingSoon ? 'opacity-70' : 'hover:shadow-2xl transition-all duration-500 cursor-pointer'}`}>
+                                    <div className="relative h-64 overflow-hidden shrink-0">
+                                        <Image
+                                            src={post.image}
+                                            alt={post.title}
+                                            fill
+                                            className={`object-cover ${!isComingSoon ? 'transition-transform duration-700 group-hover:scale-110' : ''}`}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        />
+                                        <div className="absolute top-4 left-4">
+                                            <span className="bg-primary text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide">
+                                                {post.category}
                                             </span>
                                         </div>
-                                    )}
-                                </div>
-
-                                <div className="p-8">
-                                    <div className="flex items-center gap-4 text-text-sub text-sm font-bold mb-4">
-                                        <span className="flex items-center gap-1">
-                                            <Calendar size={16} />
-                                            {new Date(post.publishDate).toLocaleDateString('es-ES', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric'
-                                            })}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <Clock size={16} />
-                                            {post.readTime}
-                                        </span>
+                                        {post.featured && !isComingSoon && (
+                                            <div className="absolute top-4 right-4">
+                                                <span className="bg-background-dark text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide">
+                                                    Destacado
+                                                </span>
+                                            </div>
+                                        )}
+                                        {isComingSoon && (
+                                            <div className="absolute top-4 right-4">
+                                                <span className="bg-text-sub/80 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wide">
+                                                    Próximamente
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    <h2 className="text-xl font-display font-black mb-4 text-text-main leading-tight group-hover:text-primary transition-colors">
-                                        {post.title}
-                                    </h2>
-
-                                    <p className="text-text-sub leading-relaxed mb-6 text-sm">
-                                        {post.excerpt}
-                                    </p>
-
-                                    <div className="flex flex-wrap gap-2 mb-6">
-                                        {post.tags.slice(0, 3).map((tag) => (
-                                            <span
-                                                key={tag}
-                                                className="bg-background-light text-text-sub px-3 py-1 rounded-full text-xs font-bold"
-                                            >
-                                                {tag}
+                                    <div className="p-8 flex flex-col grow">
+                                        <div className="flex items-center gap-4 text-text-sub text-sm font-bold mb-4">
+                                            <span className="flex items-center gap-1">
+                                                <Calendar size={16} />
+                                                {new Date(post.publishDate).toLocaleDateString('es-ES', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    year: 'numeric'
+                                                })}
                                             </span>
-                                        ))}
-                                    </div>
+                                            <span className="flex items-center gap-1">
+                                                <Clock size={16} />
+                                                {post.readTime}
+                                            </span>
+                                        </div>
 
-                                    <div className="text-center">
-                                        <span className="inline-flex items-center gap-2 text-primary font-bold text-sm">
-                                            Leer artículo completo
-                                            <ArrowRight size={16} />
-                                        </span>
+                                        <h2 className={`text-xl font-display font-black mb-4 text-text-main leading-tight transition-colors ${!isComingSoon ? 'group-hover:text-primary' : ''}`}>
+                                            {post.title}
+                                        </h2>
+
+                                        <p className="text-text-sub leading-relaxed mb-6 text-sm grow">
+                                            {post.excerpt}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-2 mb-6">
+                                            {post.tags.slice(0, 3).map((tag) => (
+                                                <span
+                                                    key={tag}
+                                                    className="bg-background-light text-text-sub px-3 py-1 rounded-full text-xs font-bold"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        <div className="text-center mt-auto">
+                                            <span className={`inline-flex items-center gap-2 font-bold text-sm transition-transform ${isComingSoon ? 'text-text-sub italic' : 'text-primary group-hover:translate-x-1'}`}>
+                                                {isComingSoon ? 'Pronto disponible' : 'Leer artículo completo'}
+                                                {!isComingSoon && <ArrowRight size={16} />}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
-                        ))}
+                                </article>
+                            );
+                            return isComingSoon ? (
+                                <div key={post.slug} className="h-full">{CardContent}</div>
+                            ) : (
+                                <Link key={post.slug} href={`/blog/${post.slug}`} className="block h-full">
+                                    {CardContent}
+                                </Link>
+                            );
+                        })}
                     </div>
 
                     {filteredPosts.length === 0 && (

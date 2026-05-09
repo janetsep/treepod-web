@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import TrackView from '../../components/TrackView';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // Lista simple de artículos disponibles
 const availableArticles = [
@@ -272,11 +274,22 @@ export default function BlogPost({ params }: Props) {
                             {article.title}
                         </h1>
 
-                        <div className="prose prose-lg max-w-none">
-                            <div
-                                className="text-text-main leading-relaxed [&>h1]:text-3xl [&>h1]:font-display [&>h1]:font-black [&>h1]:mb-6 [&>h1]:text-text-main [&>h2]:text-2xl [&>h2]:font-display [&>h2]:font-black [&>h2]:mb-4 [&>h2]:mt-8 [&>h2]:text-text-main [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-3 [&>h3]:mt-6 [&>h3]:text-text-main [&>p]:mb-6 [&>p]:text-lg [&>ul]:mb-6 [&>ul]:ml-6 [&>li]:mb-2 [&>li]:text-lg [&>strong]:text-primary [&>strong]:font-black [&>a]:text-primary [&>a]:font-bold [&>a]:underline hover:[&>a]:text-primary-dark [&>table]:w-full [&>table]:border-collapse [&>table]:mb-6 [&>th]:border [&>th]:border-black/10 [&>th]:p-3 [&>th]:bg-background-light [&>th]:font-bold [&>th]:text-left [&>td]:border [&>td]:border-black/10 [&>td]:p-3"
-                                dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }}
-                            />
+                        <div className="prose prose-lg max-w-none text-text-main leading-relaxed
+                            prose-headings:font-display prose-headings:text-text-main
+                            prose-h1:text-3xl prose-h1:font-black prose-h1:mb-6
+                            prose-h2:text-2xl prose-h2:font-black prose-h2:mb-4 prose-h2:mt-10
+                            prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-6
+                            prose-p:text-lg prose-p:mb-6
+                            prose-ul:mb-6 prose-ul:ml-6 prose-li:mb-2 prose-li:text-lg
+                            prose-strong:text-primary prose-strong:font-black
+                            prose-a:text-primary prose-a:font-bold hover:prose-a:text-primary-dark
+                            prose-table:w-full prose-table:border-collapse prose-table:mb-6
+                            prose-th:border prose-th:border-black/10 prose-th:p-3 prose-th:bg-background-light prose-th:font-bold prose-th:text-left
+                            prose-td:border prose-td:border-black/10 prose-td:p-3
+                        ">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {article.content}
+                            </ReactMarkdown>
                         </div>
 
                         <div className="mt-16 pt-8 border-t border-black/10 flex justify-between items-center">
