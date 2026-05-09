@@ -165,25 +165,26 @@ export async function generateStaticParams() {
 }
 
 interface Props {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export async function generateMetadata({ params }: Props) {
-    const article = articleContent[params.slug];
+    const { slug } = await params;
+    const article = articleContent[slug];
     if (!article) return {};
     return {
         title: `${article.title} | Blog TreePod`,
         description: article.excerpt,
         alternates: {
-            canonical: `/blog/${params.slug}`,
+            canonical: `/blog/${slug}`,
         },
     };
 }
 
-export default function BlogPost({ params }: Props) {
-    const { slug } = params;
+export default async function BlogPost({ params }: Props) {
+    const { slug } = await params;
 
     if (!availableArticles.includes(slug)) {
         notFound();
