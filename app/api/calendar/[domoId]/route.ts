@@ -22,9 +22,9 @@ function escapeICalText(text: string): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { domoId: string } }
+  { params }: { params: Promise<{ domoId: string }> }
 ) {
-  const { domoId } = params;
+  const { domoId } = await params;
 
   // Solo permitir domos que están en Airbnb
   if (!DOMOS_AIRBNB[domoId]) {
