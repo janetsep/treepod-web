@@ -31,6 +31,8 @@ export default function AdminDashboard() {
     const [adminRole, setAdminRole] = useState<string | null>(null);
     const [adminEmail, setAdminEmail] = useState<string | null>(null);
     const [sortConfig, setSortConfig] = useState<{ key: 'fecha_inicio' | 'fecha_fin', order: 'asc' | 'desc' } | null>(null);
+    const [syncingAirbnb, setSyncingAirbnb] = useState(false);
+    const [syncResult, setSyncResult] = useState<string | null>(null);
     const ITEMS_PER_PAGE = 30;
 
     useEffect(() => {
@@ -57,6 +59,27 @@ export default function AdminDashboard() {
     async function fetchDomos() {
         const { data } = await supabase.from("domos").select("*").order("nombre");
         if (data) setDomos(data);
+    }
+
+    async function syncAirbnb() {
+        setSyncingAirbnb(true);
+        setSyncResult(null);
+        try {
+            const res = await fetch("/api/admin/sync-airbnb?manual=1");
+            const data = await res.json();
+            if (data.ok) {
+                const msg = `✅ Airbnb sincronizado: ${data.total_creadas} nueva${data.total_creadas !== 1 ? 's' : ''}, ${data.total_actualizadas} actualizada${data.total_actualizadas !== 1 ? 's' : ''}`;
+                setSyncResult(msg);
+                await fetchReservas(); // refrescar lista
+            } else {
+                setSyncResult(`⚠️ ${data.error || "Error en sync"}`);
+            }
+        } catch {
+            setSyncResult("⚠️ Error de conexión al sincronizar");
+        } finally {
+            setSyncingAirbnb(false);
+            setTimeout(() => setSyncResult(null), 8000);
+        }
     }
 
     async function fetchReservas() {
@@ -515,16 +538,36 @@ export default function AdminDashboard() {
 
                         {/* Calendar View */}
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                            <button 
-                                onClick={() => setExpandedCalendar(!expandedCalendar)}
-                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
-                            >
-                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
-                                    <Calendar className="w-6 h-6 text-primary" />
-                                    Ocupación del Refugio
-                                </h2>
-                                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedCalendar ? 'rotate-180' : ''}`} />
-                            </button>
+                            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                                <button
+                                    onClick={() => setExpandedCalendar(!expandedCalendar)}
+                                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                                >
+                                    <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                                        <Calendar className="w-6 h-6 text-primary" />
+                                        Ocupación del Domo
+                                    </h2>
+                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedCalendar ? 'rotate-180' : ''}`} />
+                                </button>
+                                <div className="flex items-center gap-3">
+                                    {syncResult && (
+                                        <span className="text-xs font-bold text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
+                                            {syncResult}
+                                        </span>
+                                    )}
+                                    {['admin', 'superadmin'].includes(adminRole || '') && (
+                                        <button
+                                            onClick={syncAirbnb}
+                                            disabled={syncingAirbnb}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF5A5F]/10 border border-[#FF5A5F]/30 text-[#FF5A5F] text-xs font-black uppercase tracking-widest hover:bg-[#FF5A5F]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title="Sincronizar reservas desde Airbnb"
+                                        >
+                                            <RefreshCw className={`w-3.5 h-3.5 ${syncingAirbnb ? 'animate-spin' : ''}`} />
+                                            {syncingAirbnb ? 'Sincronizando...' : 'Sync Airbnb'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                             {expandedCalendar && (
                                 <div className="p-8 animate-in fade-in slide-in-from-top-2 duration-300">
                                     {loading ? (
