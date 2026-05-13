@@ -178,13 +178,18 @@ export async function GET(request: NextRequest) {
         const icalText = await response.text();
         const events = parseICalText(icalText);
 
-        // 3. Filtrar solo reservas reales (no bloqueos propios ni nuestro propio iCal)
+        // 3. Filtrar solo reservas reales de huéspedes
         const reservas = events.filter((e) => {
           // Ignorar eventos que nosotros exportamos (uid contiene nuestro dominio)
           if (e.uid.includes("domostreepod.cl")) return false;
-          // Ignorar bloqueos de "Not available" sin UID de Airbnb real
+          // Ignorar TODOS los bloqueos de calendario (reflejos de nuestro propio iCal)
+          // Airbnb los devuelve con summary "Airbnb (Not available)" o "Not available"
           const summaryLower = e.summary.toLowerCase();
-          if (summaryLower === "not available" || summaryLower === "no disponible") return false;
+          if (summaryLower.includes("not available")) return false;
+          if (summaryLower.includes("no disponible")) return false;
+          if (summaryLower.includes("bloqueado")) return false;
+          // Solo importar reservas reales ("Reserved")
+          if (!summaryLower.includes("reserved") && !summaryLower.includes("reservado")) return false;
           return true;
         });
 
@@ -217,6 +222,28 @@ export async function GET(request: NextRequest) {
               (domoResult.actualizadas as number)++;
             }
           } else {
+            // Antes de crear, verificar si ya existe una reserva manual con las mismas fechas
+            // (ingresada antes de tener sync automático)
+            const { data: existingManual } = await supabaseAdmin
+              .from("reservas")
+              .select("id")
+              .eq("domo_id", domo.id)
+              .eq("fecha_inicio", event.dtstart)
+              .eq("fecha_fin", event.dtend)
+              .in("fuente", ["airbnb", "manual_admin"])
+              .is("airbnb_uid", null)
+              .single();
+
+            if (existingManual) {
+              // Marcar la reserva existente con el UID para evitar duplicados futuros
+              await supabaseAdmin
+                .from("reservas")
+                .update({ airbnb_uid: event.uid })
+                .eq("id", existingManual.id);
+              (domoResult.actualizadas as number)++;
+              continue;
+            }
+
             // Crear nueva reserva desde Airbnb
             const { error: insertError } = await supabaseAdmin
               .from("reservas")
