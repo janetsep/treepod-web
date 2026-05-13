@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 interface Domo {
     id: string;
     nombre: string;
@@ -20,16 +22,29 @@ interface DomoCalendarProps {
     domos: Domo[];
 }
 
+const MONTH_NAMES = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
 
 export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
 
-    // Generate date range: 5 days before today + today + 30 days forward
-    const today = new Date();
-    const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 5); // 5 días antes de hoy
+    // viewDate is the anchor for the displayed month. Defaults to today.
+    const [viewDate, setViewDate] = useState<Date>(() => {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        return d;
+    });
 
-    const endDate = new Date(today);
-    endDate.setDate(today.getDate() + 30); // 30 días después de hoy
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+
+    // Show the full month being viewed (1st to last day)
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0); // last day of month
 
     const dates: Date[] = [];
     const currentDate = new Date(startDate);
@@ -38,9 +53,18 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
         currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Set today to start of day for comparison
-    const todayComparison = new Date(today);
-    todayComparison.setHours(0, 0, 0, 0);
+    const todayComparison = today;
+
+    const goPrevMonth = () => setViewDate(new Date(year, month - 1, 1));
+    const goNextMonth = () => setViewDate(new Date(year, month + 1, 1));
+    const goToday = () => {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        setViewDate(d);
+    };
+
+    const isViewingCurrentMonth =
+        year === today.getFullYear() && month === today.getMonth();
 
 
     const isReserved = (domoId: string, date: Date) => {
@@ -66,16 +90,41 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
     return (
         <div className="space-y-4">
             {/* Controls */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-gray-700">Rango de ocupación:</span>
-                    <span className="text-xs text-gray-500">5 días anteriores + HOY + 30 días futuros</span>
+                    <button
+                        onClick={goPrevMonth}
+                        className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors"
+                        title="Mes anterior"
+                    >
+                        ◀
+                    </button>
+                    <div className="min-w-[180px] text-center">
+                        <span className="text-sm font-black text-gray-800 uppercase tracking-wider">
+                            {MONTH_NAMES[month]} {year}
+                        </span>
+                    </div>
+                    <button
+                        onClick={goNextMonth}
+                        className="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors"
+                        title="Mes siguiente"
+                    >
+                        ▶
+                    </button>
+                    {!isViewingCurrentMonth && (
+                        <button
+                            onClick={goToday}
+                            className="px-3 py-2 rounded-lg bg-primary/10 border border-primary/30 text-primary text-xs font-black uppercase tracking-widest hover:bg-primary/20 transition-colors"
+                        >
+                            Hoy
+                        </button>
+                    )}
                 </div>
                 <button
                     onClick={() => window.location.reload()}
                     className="px-3 py-2 rounded-lg border border-primary/30 text-primary text-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-colors"
                 >
-                    Actualizar Vista
+                    Actualizar Datos
                 </button>
             </div>
 
