@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  async rewrites() {
+    return [
+      // Airbnb requiere que la URL termine en .ics
+      {
+        source: '/api/calendar/:domoId.ics',
+        destination: '/api/calendar/:domoId',
+      },
+    ];
+  },
   async redirects() {
     return [
       // WWW to non-WWW redirects (SEO Fix)
