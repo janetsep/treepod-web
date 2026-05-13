@@ -38,12 +38,17 @@ export async function GET(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // Traer reservas activas (no canceladas) para este domo
+  // Traer reservas activas (no canceladas) para este domo, desde hace 30 días en adelante
+  const desde = new Date();
+  desde.setDate(desde.getDate() - 30);
+  const desdeStr = desde.toISOString().slice(0, 10);
+
   const { data: reservas, error } = await supabase
     .from("reservas")
     .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado")
     .eq("domo_id", domoId)
     .neq("estado", "cancelada")
+    .gte("fecha_fin", desdeStr)
     .order("fecha_inicio", { ascending: true });
 
   if (error) {
@@ -55,7 +60,7 @@ export async function GET(
   const now = new Date()
     .toISOString()
     .replace(/[-:]/g, "")
-    .replace(/\.\d{3}/, "");
+    .replace(/\.\d{3}Z$/, "Z"); // resultado: 20260513T183431Z (un solo Z)
 
   // Construir el iCal
   const lines: string[] = [
@@ -89,7 +94,7 @@ export async function GET(
 
     lines.push("BEGIN:VEVENT");
     lines.push(`UID:${uid}`);
-    lines.push(`DTSTAMP:${now}Z`);
+    lines.push(`DTSTAMP:${now}`);
     lines.push(`DTSTART;VALUE=DATE:${dtstart}`);
     lines.push(`DTEND;VALUE=DATE:${dtend}`);
     lines.push(`SUMMARY:${summary}`);
