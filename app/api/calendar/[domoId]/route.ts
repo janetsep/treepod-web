@@ -12,6 +12,13 @@ function formatICalDate(dateStr: string): string {
   return dateStr.replace(/-/g, "");
 }
 
+function addOneDayStr(dateStr: string): string {
+  // Suma 1 día a una fecha "YYYY-MM-DD" y devuelve "YYYYMMDD"
+  const d = new Date(dateStr + "T12:00:00Z");
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10).replace(/-/g, "");
+}
+
 function escapeICalText(text: string): string {
   return text
     .replace(/\\/g, "\\\\")
@@ -45,10 +52,12 @@ export async function GET(
 
   const { data: reservas, error } = await supabase
     .from("reservas")
-    .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado")
+    .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado, fuente, airbnb_uid")
     .eq("domo_id", domoId)
     .neq("estado", "cancelada")
     .gte("fecha_fin", desdeStr)
+    // Excluir bloqueos automáticos de Airbnb ("Not available") que no son reservas reales
+    .not("apellido", "ilike", "%(Not available)%")
     .order("fecha_inicio", { ascending: true });
 
   if (error) {
@@ -72,20 +81,38 @@ export async function GET(
     `X-WR-CALNAME:TreePod ${domoNombre} - Reservas`,
     "X-WR-TIMEZONE:America/Santiago",
     "X-WR-CALDESC:Calendario de ocupación TreePod Glamping Las Trancas",
+    // Definición de zona horaria Chile (necesaria para DTSTART/DTEND con TZID)
+    "BEGIN:VTIMEZONE",
+    "TZID:America/Santiago",
+    "BEGIN:STANDARD",
+    "DTSTART:19700101T000000",
+    "TZOFFSETFROM:-0300",
+    "TZOFFSETTO:-0400",
+    "TZNAME:CLT",
+    "END:STANDARD",
+    "BEGIN:DAYLIGHT",
+    "DTSTART:19700101T000000",
+    "TZOFFSETFROM:-0400",
+    "TZOFFSETTO:-0300",
+    "TZNAME:CLST",
+    "END:DAYLIGHT",
+    "END:VTIMEZONE",
   ];
 
   for (const reserva of reservas || []) {
-    // Check-in: día de llegada (Airbnb bloquea el día completo)
-    // Check-out: día siguiente al último día (iCal DTEND es exclusivo para eventos de día completo)
-    const dtstart = formatICalDate(reserva.fecha_inicio);
+    // Check-in: día de llegada a las 16:00 hora Chile
+    const dtstart = formatICalDate(reserva.fecha_inicio) + "T160000";
 
-    // DTEND en iCal all-day es el día DESPUÉS del último día ocupado
-    const endDate = new Date(reserva.fecha_fin + "T12:00:00");
-    endDate.setDate(endDate.getDate() + 1);
-    const dtend = endDate
-      .toISOString()
-      .slice(0, 10)
-      .replace(/-/g, "");
+    // Convención de fecha_fin difiere según origen:
+    // - Reservas importadas desde Airbnb (airbnb_uid IS NOT NULL):
+    //   fecha_fin = última noche de estadía → checkout = fecha_fin + 1 día
+    // - Reservas WEB / manuales / airbnb sin uid:
+    //   fecha_fin = día de checkout (día en que sale el huésped) → usar directo
+    const isAirbnbSynced = reserva.fuente === "airbnb" && reserva.airbnb_uid;
+    const checkoutDayStr = isAirbnbSynced
+      ? addOneDayStr(reserva.fecha_fin)
+      : formatICalDate(reserva.fecha_fin);
+    const dtend = checkoutDayStr + "T120000";
 
     const uid = `treepod-${reserva.id}@domostreepod.cl`;
     const summary = escapeICalText(
@@ -95,8 +122,8 @@ export async function GET(
     lines.push("BEGIN:VEVENT");
     lines.push(`UID:${uid}`);
     lines.push(`DTSTAMP:${now}`);
-    lines.push(`DTSTART;VALUE=DATE:${dtstart}`);
-    lines.push(`DTEND;VALUE=DATE:${dtend}`);
+    lines.push(`DTSTART;TZID=America/Santiago:${dtstart}`);
+    lines.push(`DTEND;TZID=America/Santiago:${dtend}`);
     lines.push(`SUMMARY:${summary}`);
     lines.push(`STATUS:CONFIRMED`);
     lines.push("END:VEVENT");
