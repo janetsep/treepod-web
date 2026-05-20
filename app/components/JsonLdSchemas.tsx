@@ -33,7 +33,7 @@ const JsonLdSchemas = () => {
       "@context": "https://schema.org",
       "@type": "LodgingBusiness",
       "name": "TreePod Glamping",
-      "description": "Domos geodésicos con tinaja privada en el bosque nativo de Valle Las Trancas, cerca de Termas de Chillán.",
+      "description": "Domos geodésicos en el bosque nativo de Valle Las Trancas, cerca de Termas de Chillán y Nevados de Chillán.",
       "url": "https://domostreepod.cl",
       "telephone": "+56984643307",
       "email": "reservas@domostreepod.cl",

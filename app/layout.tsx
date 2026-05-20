@@ -49,7 +49,7 @@ const notoSans = Noto_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL('https://domostreepod.cl'),
   title: 'Glamping en Valle Las Trancas | Domos TreePod - Chillán',
-  description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly en Valle Las Trancas, cerca de Termas de Chillán. Reserva tu refugio hoy.',
+  description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán. Reserva tu refugio hoy.',
   keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'alojamiento pet friendly chile', 'donde alojar en las trancas', 'turismo nuble'],
   icons: {
     icon: [
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
-    description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly en Valle Las Trancas, cerca de Termas de Chillán.',
+    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán.',
     images: ['/images/hero/domo-treepod-ok-12.jpg'],
     locale: 'es_CL',
     type: 'website',
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
-    description: 'Domos geodésicos con tinaja privada en el bosque nativo. Glamping pet friendly cerca de Termas de Chillán.',
+    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán.',
     images: ['/images/hero/domo-treepod-ok-12.jpg'],
   },
 };
