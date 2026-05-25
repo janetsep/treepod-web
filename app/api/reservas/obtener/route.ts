@@ -13,6 +13,7 @@ export async function GET(request: Request) {
         .from("reservas")
         .select(`
             *,
+            domos (nombre),
             reserva_servicios (
                 *,
                 servicios (nombre)

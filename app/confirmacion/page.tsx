@@ -3,7 +3,6 @@
 import { ArrowDown, CheckCircle2, ChevronRight, Home, MapPin, MessageSquare, Info } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import Stepper from '../components/Stepper';
 
 function ConfirmacionContent() {
@@ -27,16 +26,13 @@ function ConfirmacionContent() {
 
         // Note: GA4 purchase event will be triggered after reserva data is loaded
 
-        // Cargar datos de la reserva
+        // Vía endpoint de servidor (service role): la anon key no puede leer reservas por RLS.
         if (reservaId) {
-            supabase
-                .from('reservas')
-                .select('*, domos(nombre), reserva_servicios(*, servicios(nombre))')
-                .eq('id', reservaId)
-                .single()
-                .then(({ data, error }: { data: any, error: any }) => {
-                    if (error) {
-                        console.error('Error cargando reserva:', error);
+            fetch(`/api/reservas/obtener?id=${reservaId}`)
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data: any) => {
+                    if (!data || data.error) {
+                        console.error('Error cargando reserva:', data?.error);
                     } else {
                         setReserva(data);
 
@@ -88,6 +84,10 @@ function ConfirmacionContent() {
                             console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel con datos completos');
                         }
                     }
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error cargando reserva:', error);
                     setLoading(false);
                 });
         } else {
