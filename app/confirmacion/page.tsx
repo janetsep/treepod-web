@@ -109,10 +109,10 @@ function ConfirmacionContent() {
     if (!reserva) {
         return (
             <div className="min-h-screen flex items-center justify-center px-4 bg-background-dark">
-                <div className="max-w-md w-full bg-white/5 rounded-[2.5rem] shadow-lg p-10 text-center border border-white/10 backdrop-blur-sm">
+                <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 text-center border border-black/10">
                     <div className="text-red-500 text-5xl mb-6">⚠️</div>
-                    <h1 className="text-2xl font-display font-bold mb-4 text-white">Reserva no encontrada</h1>
-                    <p className="text-gray-400 mb-8 leading-relaxed">No pudimos encontrar los detalles de tu reserva o ha ocurrido un error al procesar el pago.</p>
+                    <h1 className="text-2xl font-display font-bold mb-4 text-gray-900">Reserva no encontrada</h1>
+                    <p className="text-gray-600 mb-8 leading-relaxed">No pudimos encontrar los detalles de tu reserva o ha ocurrido un error al procesar el pago.</p>
                     <button
                         onClick={() => router.push('/disponibilidad')}
                         className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-bold uppercase tracking-widest text-xs"
