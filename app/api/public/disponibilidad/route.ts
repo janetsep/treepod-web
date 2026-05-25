@@ -31,6 +31,8 @@ export async function GET(request: Request) {
             .from("reservas")
             .select("fecha_inicio, fecha_fin, domo_id, estado, email")
             .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago"])
+            .is("deleted_at", null)
+            .not("domo_id", "is", null)
             .lt("fecha_inicio", toStr)
             .gt("fecha_fin", fromStr);
 

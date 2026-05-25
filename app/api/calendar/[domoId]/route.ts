@@ -54,7 +54,9 @@ export async function GET(
     .from("reservas")
     .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado, fuente, airbnb_uid")
     .eq("domo_id", domoId)
-    .neq("estado", "cancelada")
+    // No exportar reservas borradas (papelera) ni estados que no ocupan realmente
+    .is("deleted_at", null)
+    .not("estado", "in", "(cancelada,rechazado,expirada)")
     .gte("fecha_fin", desdeStr)
     // Excluir bloqueos automáticos de Airbnb ("Not available") que no son reservas reales
     .not("apellido", "ilike", "%(Not available)%")

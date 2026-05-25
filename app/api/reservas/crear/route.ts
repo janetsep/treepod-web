@@ -90,6 +90,7 @@ export async function POST(req: Request) {
       .select("domo_id, estado, expires_at, email")
       .in("domo_id", domosPosibles)
       .in("estado", ["pagado", "pendiente", "pendiente_pago", "confirmado"])
+      .is("deleted_at", null)
       .lt("fecha_inicio", salida)
       .gt("fecha_fin", entrada);
 
