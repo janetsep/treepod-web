@@ -44,6 +44,8 @@ export default function PagarButton({
     baseUrl?: string;
     error?: string;
     details?: string;
+    alreadyPaid?: boolean;
+    redirectUrl?: string;
   };
 
   const redirectToWebpay = (url: string, token: string) => {
@@ -99,6 +101,11 @@ export default function PagarButton({
           data?.details ||
           `Error iniciando pago (HTTP ${res.status})`;
         alert(message);
+        return;
+      }
+
+      if (data?.alreadyPaid && data?.redirectUrl) {
+        window.location.href = data.redirectUrl;
         return;
       }
 

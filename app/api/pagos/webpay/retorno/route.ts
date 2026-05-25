@@ -123,18 +123,41 @@ async function handleReturn(req: Request) {
       amount: commit.amount,
     });
 
-    const { data: reserva, error: reservaError } = await supabaseAdmin
+    // Buscar por reserva_id (clave confiable de la return_url); /crear sobrescribe payment_intent_id en cada intento.
+    const reservaQuery = supabaseAdmin
       .from("reservas")
-      .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin, adultos")
-      .eq("payment_intent_id", token)
-      .single();
+      .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin, adultos, estado, numero_transaccion, monto_pagado");
+
+    const { data: reserva, error: reservaError } = await (
+      reservaId
+        ? reservaQuery.eq("id", reservaId)
+        : reservaQuery.eq("payment_intent_id", token)
+    ).single();
 
     if (reservaError || !reserva) {
-      console.log("❌ No se encontró reserva por payment_intent_id", {
+      console.log("❌ No se encontró reserva", {
         token,
+        reservaId,
         reservaError: reservaError?.message,
       });
       return NextResponse.redirect(new URL("/disponibilidad?error=reserva_no_encontrada", baseUrl), 303);
+    }
+
+    // Idempotencia: si ya está pagada, no re-procesar finanzas; redirigir a confirmación.
+    if (reserva.estado === "pagado" && reserva.numero_transaccion) {
+      if (reserva.numero_transaccion !== token) {
+        console.warn("⚠️ POSIBLE DOBLE COBRO: reserva ya pagada con otra transacción", {
+          reservaId: reserva.id,
+          transaccionPrevia: reserva.numero_transaccion,
+          transaccionNueva: token,
+        });
+      }
+      const dupRedirect = new URL("/confirmacion", baseUrl);
+      dupRedirect.searchParams.set("reserva_id", reserva.id);
+      dupRedirect.searchParams.set("amount", String(reserva.monto_pagado ?? commit.amount ?? reserva.total));
+      dupRedirect.searchParams.set("transaction_id", reserva.numero_transaccion);
+      dupRedirect.searchParams.set("status", "SUCCESS");
+      return NextResponse.redirect(dupRedirect, 303);
     }
 
     const { data: reservaServicios } = await supabaseAdmin

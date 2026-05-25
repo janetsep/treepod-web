@@ -163,6 +163,15 @@ export async function POST(req: Request) {
       estado: reserva.estado
     });
 
+    // Si la reserva ya está pagada, no crear otra transacción (evita cobro doble).
+    if (reserva.estado === 'pagado') {
+      console.log('⚠️ Reserva ya pagada, no se crea nueva transacción:', reserva.id);
+      return NextResponse.json({
+        alreadyPaid: true,
+        redirectUrl: `/confirmacion?reserva_id=${reserva.id}&status=SUCCESS`,
+      });
+    }
+
     // 3. Procesar el pago
     console.log('💳 Procesando pago...');
     const monto = Math.round(reserva.total * 0.5);
