@@ -4,15 +4,7 @@ import Image from "next/image";
 export default function News() {
     const activities = [
         {
-            image: "/images/real/Otono2.jpg",
-            title: "Glorias Navales 21–24 Mayo",
-            description: "Tu finde largo de Glorias Navales en Valle Las Trancas. 4 días en bosque nativo con domos geodésicos y tinaja exclusiva opcional. Escapada 21 mayo Ñuble.",
-            tag: "21–24 Mayo 2026",
-            details: "Finde largo de 4 días",
-            href: "/glorias-navales-las-trancas"
-        },
-        {
-            image: "/images/Galeria/Domo3noche.jpeg",
+            image: "/images/real/VegetacionOtono.jpg",
             title: "Otoño Valle Las Trancas",
             description: "Vive el otoño más mágico en el corazón del Valle Las Trancas. Colores únicos, aire puro y la tranquilidad absoluta que solo esta época puede ofrecerte.",
             tag: "Temporada Especial",
