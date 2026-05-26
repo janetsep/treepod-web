@@ -45,6 +45,8 @@ type KpiData = {
     }
 };
 
+const MESES = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
 export default function DashboardAdmin() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<KpiData>({
@@ -56,6 +58,7 @@ export default function DashboardAdmin() {
         detailedReservations: [],
         analytics: { activeUsers: 0, sessions: 0, engagementRate: 0 }
     });
+    const [matriz, setMatriz] = useState<{ years: number[]; matriz: { mes: number; valores: number[] }[]; totalesPorAnio: number[] } | null>(null);
 
     const handleExportPDF = () => {
         const doc = new jsPDF();
@@ -177,6 +180,14 @@ export default function DashboardAdmin() {
                 }
             } catch (e) {
                 console.error("Failed to fetch analytics", e);
+            }
+
+            // Matriz de ingresos por mes y año (reservas)
+            try {
+                const mRes = await fetch('/api/admin/ingresos-matriz');
+                if (mRes.ok) setMatriz(await mRes.json());
+            } catch (e) {
+                console.error("Failed to fetch matriz ingresos", e);
             }
 
             setData({
@@ -435,6 +446,45 @@ export default function DashboardAdmin() {
                         </div>
                     </div>
                 </div>
+
+                {/* MATRIZ DE INGRESOS POR MES Y AÑO */}
+                {matriz && matriz.years.length > 0 && (
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide">Ingresos por mes y año (reservas)</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr className="border-b border-gray-200">
+                                        <th className="text-left font-bold text-gray-500 uppercase text-xs py-3 px-3 sticky left-0 bg-white">Mes</th>
+                                        {matriz.years.map((y) => (
+                                            <th key={y} className="text-right font-bold text-gray-700 py-3 px-3 whitespace-nowrap">{y}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {matriz.matriz.map((row) => (
+                                        <tr key={row.mes} className="border-b border-gray-50 hover:bg-gray-50/50">
+                                            <td className="text-left font-bold text-gray-700 py-2.5 px-3 sticky left-0 bg-white">{MESES[row.mes]}</td>
+                                            {row.valores.map((v, i) => (
+                                                <td key={i} className={`text-right py-2.5 px-3 whitespace-nowrap tabular-nums ${v > 0 ? "text-gray-800" : "text-gray-300"}`}>
+                                                    {v > 0 ? `$${Math.round(v).toLocaleString("es-CL")}` : "—"}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="border-t-2 border-gray-200">
+                                        <td className="text-left py-3 px-3 uppercase text-xs font-black text-primary sticky left-0 bg-white">Total</td>
+                                        {matriz.totalesPorAnio.map((t, i) => (
+                                            <td key={i} className="text-right py-3 px-3 whitespace-nowrap tabular-nums font-black text-gray-900">${Math.round(t).toLocaleString("es-CL")}</td>
+                                        ))}
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
                 {/* CHART SECTION */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
