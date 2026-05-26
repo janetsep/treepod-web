@@ -52,7 +52,7 @@ export async function GET(
 
   const { data: reservas, error } = await supabase
     .from("reservas")
-    .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado, fuente, airbnb_uid")
+    .select("id, fecha_inicio, fecha_fin, nombre, apellido, estado, fuente, airbnb_uid, notas")
     .eq("domo_id", domoId)
     // No exportar reservas borradas (papelera) ni estados que no ocupan realmente
     .is("deleted_at", null)
@@ -117,8 +117,11 @@ export async function GET(
     const dtend = checkoutDayStr + "T120000";
 
     const uid = `treepod-${reserva.id}@domostreepod.cl`;
+    // Para bloqueos manuales mostramos el motivo (de las notas), no un nombre de huésped
     const summary = escapeICalText(
-      `Reservado - ${reserva.nombre} ${reserva.apellido}`
+      reserva.estado === "bloqueado"
+        ? `Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
+        : `Reservado - ${reserva.nombre ?? ""} ${reserva.apellido ?? ""}`.trim()
     );
 
     lines.push("BEGIN:VEVENT");

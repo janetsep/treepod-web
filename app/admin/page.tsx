@@ -699,9 +699,11 @@ export default function AdminDashboard() {
                                             ) : paginatedReservas.length === 0 ? (
                                                 <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros.</td></tr>
                                             ) : paginatedReservas.map((reserva) => {
-                                                const clientName = reserva.clientes?.nombre
-                                                    ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
-                                                    : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
+                                                const clientName = reserva.estado === "bloqueado"
+                                                    ? `🔒 Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
+                                                    : reserva.clientes?.nombre
+                                                        ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
+                                                        : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
 
                                                 const clientEmail = reserva.clientes?.email || reserva.email || "Email no registrado";
                                                 const isVip = reserva.clientes?.vip_tier && reserva.clientes.vip_tier !== 'Standard';
