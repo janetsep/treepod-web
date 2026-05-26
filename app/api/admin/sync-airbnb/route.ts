@@ -102,14 +102,14 @@ function extractGuestInfo(summary: string, description: string): {
   notas: string;
 } {
   // Airbnb summary suele ser: "RESERVADO - Nombre Apellido" o solo "Reserved"
-  let nombre = "Airbnb";
-  let apellido = "Guest";
+  let nombre = "";
+  let apellido = "";
 
   const summaryClean = summary.replace(/^(Reserved|Reservado|RESERVADO)\s*[-–]?\s*/i, "").trim();
   if (summaryClean && summaryClean.toLowerCase() !== "reserved") {
     const parts = summaryClean.split(" ");
-    nombre = parts[0] || "Airbnb";
-    apellido = parts.slice(1).join(" ") || "Guest";
+    nombre = parts[0] || "";
+    apellido = parts.slice(1).join(" ") || "";
   }
 
   // Intentar extraer nombre del DESCRIPTION si está disponible
@@ -120,7 +120,23 @@ function extractGuestInfo(summary: string, description: string): {
     apellido = parts.slice(1).join(" ") || apellido;
   }
 
-  return { nombre, apellido, notas: description.slice(0, 500) };
+  // Airbnb no entrega el nombre por iCal: usar código de reserva (HM...) y teléfono parcial
+  const codeMatch = description.match(/reservations\/details\/([A-Z0-9]+)/i);
+  const phoneMatch = description.match(/Last 4 Digits\)?:\s*(\d{3,4})/i);
+  const code = codeMatch ? codeMatch[1] : null;
+  const phone = phoneMatch ? phoneMatch[1] : null;
+
+  if (!nombre && !apellido) {
+    nombre = "Reserva Airbnb";
+    apellido = code || "sin código";
+  }
+
+  const notasParts: string[] = [];
+  if (code) notasParts.push(`Código Airbnb: ${code}`);
+  if (phone) notasParts.push(`Tel (últimos 4): ${phone}`);
+  if (description) notasParts.push(description.slice(0, 400));
+
+  return { nombre, apellido, notas: notasParts.join(" · ") };
 }
 
 // ─── Handler principal ────────────────────────────────────────────────────────
