@@ -18,7 +18,6 @@ export default function AdminDashboard() {
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
-    const [expandedFinancial, setExpandedFinancial] = useState(false);
     const [expandedReservas, setExpandedReservas] = useState(true);
     const [expandedCalendar, setExpandedCalendar] = useState(false);
 
@@ -319,36 +318,6 @@ export default function AdminDashboard() {
         setCurrentPage(1);
     }, [searchTerm]);
 
-    // Helper: Resumen Mensual
-    const getMonthlyStats = () => {
-        const stats: Record<string, { count: number; total: number; confirmed: number }> = {};
-
-        validReservas.forEach(r => {
-            const date = new Date(r.fecha_inicio);
-            if (isNaN(date.getTime())) return;
-
-            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
-
-            if (!stats[monthKey]) stats[monthKey] = { count: 0, total: 0, confirmed: 0 };
-
-            stats[monthKey].count += 1;
-            stats[monthKey].total += (r.monto_pagado || 0);
-            if (r.estado === 'pagado' || r.estado === 'confirmado') {
-                stats[monthKey].confirmed += 1;
-            }
-        });
-
-        return Object.entries(stats)
-            .sort((a, b) => b[0].localeCompare(a[0])) // Descending date
-            .map(([key, data]) => {
-                const [year, month] = key.split('-');
-                const monthName = new Date(Number(year), Number(month) - 1).toLocaleString('es-CL', { month: 'long', year: 'numeric' });
-                return { label: monthName, ...data };
-            });
-    };
-
-    const monthlyStats = getMonthlyStats();
-
     // Filtered lists
     const todayStr = new Date().toISOString().split('T')[0];
     const upcomingReservations = validReservas.filter(r => r.fecha_inicio >= todayStr);
@@ -456,84 +425,13 @@ export default function AdminDashboard() {
                     <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
                     <>
-                        {/* KPI Cards: RESUMEN GENERAL */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
-                                <p className="text-3xl font-display font-black text-primary">
-                                    {upcomingReservations.length}
-                                </p>
-                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500 transition-all hover:shadow-md">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Reales</p>
-                                <p className="text-3xl font-display font-black text-green-600">
-                                    ${validReservas.reduce((acc: number, curr: any) => acc + (curr.monto_pagado || 0), 0).toLocaleString()}
-                                </p>
-                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Abonos y pagos totales recibidos</p>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-400 transition-all hover:shadow-md">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Pendientes Pago</p>
-                                <p className="text-3xl font-display font-black text-yellow-600">
-                                    {validReservas.filter(r => r.estado === 'pendiente_pago' || r.estado === 'pendiente').length}
-                                </p>
-                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Requieren seguimiento comercial</p>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 transition-all opacity-80 hover:opacity-100">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Ingresos Proyectados</p>
-                                <p className="text-3xl font-display font-black text-gray-600">
-                                    ${validReservas.filter(r => r.estado !== 'cancelada').reduce((acc: number, curr: any) => acc + (curr.total || 0), 0).toLocaleString()}
-                                </p>
-                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Total si todas se pagaran al 100%</p>
-                            </div>
-                        </div>
-
-                        {/* MONTHLY SUMMARY ROW - COLLAPSIBLE */}
-                        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                            <button
-                                onClick={() => setExpandedFinancial(!expandedFinancial)}
-                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
-                            >
-                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
-                                    <BarChart3 className="w-6 h-6 text-primary" />
-                                    Resumen Financiero Mensual
-                                </h2>
-                                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedFinancial ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {expandedFinancial && (
-                                <div className="overflow-x-auto p-4 animate-fade-in">
-                                    <table className="w-full text-left">
-                                        <thead className="text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
-                                            <tr>
-                                                <th className="px-6 py-4">Mes</th>
-                                                <th className="px-6 py-4 text-center">Reservas</th>
-                                                <th className="px-6 py-4 text-center">Confirmadas</th>
-                                                <th className="px-6 py-4 text-right">Ingresos Recaudados</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-50">
-                                            {monthlyStats.map((stat, idx) => (
-                                                <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                                                    <td className="px-6 py-4 font-bold text-gray-900 capitalize">{stat.label}</td>
-                                                    <td className="px-6 py-4 text-sm text-center font-medium text-gray-500">{stat.count}</td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-black text-[10px] uppercase tracking-wider">
-                                                            {stat.confirmed} OK
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-6 py-4 font-black text-primary text-right text-lg">
-                                                        ${stat.total.toLocaleString()}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            {monthlyStats.length === 0 && (
-                                                <tr><td colSpan={4} className="p-12 text-center text-gray-400 text-sm font-bold italic">No hay datos financieros registrados aún.</td></tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
+                        {/* KPI Card: Próximas Llegadas */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md w-full sm:max-w-xs">
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
+                            <p className="text-3xl font-display font-black text-primary">
+                                {upcomingReservations.length}
+                            </p>
+                            <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
                         </div>
 
                         {/* Calendar View */}
