@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       .from("reservas")
       .select("domo_id, estado, expires_at, email")
       .in("domo_id", domosPosibles)
-      .in("estado", ["pagado", "pendiente", "pendiente_pago", "confirmado"])
+      .in("estado", ["pagado", "pendiente", "pendiente_pago", "confirmado", "pending_transfer_confirmation"])
       .is("deleted_at", null)
       .lt("fecha_inicio", salida)
       .gt("fecha_fin", entrada);
@@ -101,8 +101,8 @@ export async function POST(req: Request) {
     // - Pendientes de pago (Web): SOLO ocupan si el cliente ya ingresó sus datos (email).
     //   Si no hay email, es un carrito vacío/abandonado y NO debe bloquear el calendario.
     const ocupadosRes = (rawConflicts || []).filter((r: any) => {
-      // Estados firmes bloquean siempre
-      if (['pagado', 'confirmado', 'pendiente'].includes(r.estado)) return true;
+      // Estados firmes bloquean siempre (incluye transferencia por confirmar)
+      if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(r.estado)) return true;
 
       // Estado temporal web: Solo bloquea si hay "intención real" (datos ingresados)
       if (r.estado === 'pendiente_pago') {

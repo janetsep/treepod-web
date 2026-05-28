@@ -1,0 +1,129 @@
+import { NextRequest, NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY || "re_123_placeholder");
+
+const ADMIN_EMAIL = "janetsep@gmail.com";
+
+/**
+ * Reporte diario de PRÓXIMAS LLEGADAS enviado por email.
+ *
+ * Pensado como RESPALDO operativo: aunque el sistema/web falle, Janet tiene en su
+ * correo la lista de reservas futuras (entrada/salida, huésped, domo, teléfono,
+ * estado y saldo).
+ *
+ * Disparadores:
+ *  - Cron de Vercel (Authorization: Bearer CRON_SECRET) — diario.
+ *  - Manual desde el navegador admin: ?manual=1  (envía el correo)
+ *  - Vista previa sin enviar:        ?preview=1  (devuelve el HTML y el conteo)
+ */
+export async function GET(request: NextRequest) {
+    const authHeader = request.headers.get("authorization");
+    const cronSecret = process.env.CRON_SECRET;
+    const isManual = request.nextUrl.searchParams.get("manual") === "1";
+    const isPreview = request.nextUrl.searchParams.get("preview") === "1";
+
+    // El modo preview devuelve datos de huéspedes en la respuesta → solo fuera de producción.
+    if (isPreview && process.env.NODE_ENV === "production") {
+        return NextResponse.json({ error: "Preview no disponible en producción" }, { status: 403 });
+    }
+    // Cron protegido; manual permitido (botón admin), igual que el sync de Airbnb.
+    if (cronSecret && !isManual && !isPreview && authHeader !== `Bearer ${cronSecret}`) {
+        return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    }
+
+    try {
+        // "Hoy" en formato YYYY-MM-DD (el cron corre en la mañana → fecha UTC == fecha Chile)
+        const hoyStr = new Date().toISOString().slice(0, 10);
+
+        const { data: reservasRaw, error } = await supabaseAdmin
+            .from("reservas")
+            .select("id, fecha_inicio, fecha_fin, nombre, apellido, telefono, email, adultos, total, monto_pagado, estado, fuente, domos(nombre)")
+            .is("deleted_at", null)
+            .gte("fecha_inicio", hoyStr)
+            .not("estado", "in", "(cancelada,rechazado,expirada)")
+            .order("fecha_inicio", { ascending: true });
+
+        if (error) throw error;
+
+        // Excluir carritos web abandonados (pendiente_pago sin email = sin intención real)
+        const reservas = (reservasRaw || []).filter(
+            (r: any) => !(r.estado === "pendiente_pago" && !r.email)
+        );
+
+        const fmtFecha = (d: string) =>
+            new Date(d + "T12:00:00").toLocaleDateString("es-CL", { weekday: "short", day: "2-digit", month: "short" });
+        const fmtMonto = (n: number) => "$" + (Number(n) || 0).toLocaleString("es-CL");
+
+        const estadoLabel: Record<string, string> = {
+            pagado: "Pagado",
+            confirmado: "Confirmado",
+            pending_transfer_confirmation: "Transf. por confirmar",
+            pendiente_pago: "Abono pendiente",
+            pendiente: "Pendiente",
+            bloqueado: "Bloqueo",
+        };
+
+        const filas = reservas.map((r: any) => {
+            const nombre = `${r.nombre || ""} ${r.apellido || ""}`.trim() || "—";
+            const domo = r.domos?.nombre || "—";
+            const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
+            const saldoColor = saldo > 0 ? "#b45309" : "#16a34a";
+            return `
+              <tr>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;font-weight:bold;white-space:nowrap;">${fmtFecha(r.fecha_inicio)} → ${fmtFecha(r.fecha_fin)}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;">${nombre}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;white-space:nowrap;">${domo}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;white-space:nowrap;">${r.telefono || "—"}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;white-space:nowrap;">${estadoLabel[r.estado] || r.estado}</td>
+                <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap;">${fmtMonto(r.monto_pagado)} / ${fmtMonto(r.total)}<br/><span style="font-size:11px;color:${saldoColor};">Saldo ${fmtMonto(saldo)}</span></td>
+              </tr>`;
+        }).join("");
+
+        const fechaReporte = new Date().toLocaleDateString("es-CL", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+        const html = `
+          <div style="font-family:sans-serif;color:#333;max-width:760px;margin:0 auto;">
+            <div style="background:#4A7C2E;padding:22px 20px;text-align:center;border-radius:12px 12px 0 0;">
+              <h1 style="color:#fff;margin:0;font-size:20px;">Reporte diario · Próximas llegadas</h1>
+              <p style="color:rgba(255,255,255,0.9);margin:6px 0 0;font-size:13px;">${fechaReporte}</p>
+            </div>
+            <div style="padding:24px 20px;border:1px solid #eee;border-top:none;border-radius:0 0 12px 12px;">
+              <p style="font-size:14px;color:#555;margin:0 0 16px;">Tienes <strong>${reservas.length}</strong> reserva(s) de hoy en adelante. Este correo es tu respaldo: si el panel no funciona, aquí está la información esencial.</p>
+              ${reservas.length === 0 ? `<p style="text-align:center;color:#888;font-style:italic;padding:24px;">No hay próximas llegadas registradas.</p>` : `
+              <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                  <tr style="background:#f5f5f5;text-align:left;color:#666;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;">
+                    <th style="padding:10px 8px;">Estadía</th>
+                    <th style="padding:10px 8px;">Huésped</th>
+                    <th style="padding:10px 8px;">Domo</th>
+                    <th style="padding:10px 8px;">Teléfono</th>
+                    <th style="padding:10px 8px;">Estado</th>
+                    <th style="padding:10px 8px;text-align:right;">Pagado / Total</th>
+                  </tr>
+                </thead>
+                <tbody>${filas}</tbody>
+              </table>`}
+              <p style="font-size:11px;color:#999;margin-top:20px;">Generado automáticamente por TreePod · ${new Date().toLocaleString("es-CL")}</p>
+            </div>
+          </div>`;
+
+        // Vista previa: no envía correo, devuelve el HTML para revisar
+        if (isPreview) {
+            return new NextResponse(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+        }
+
+        await resend.emails.send({
+            from: "TreePod Reportes <info@domostreepod.cl>",
+            to: [ADMIN_EMAIL],
+            subject: `📋 Próximas llegadas TreePod — ${reservas.length} reserva(s) · ${hoyStr}`,
+            html,
+        });
+
+        return NextResponse.json({ ok: true, total: reservas.length, enviado_a: ADMIN_EMAIL });
+    } catch (e: any) {
+        console.error("Error generando reporte diario:", e);
+        return NextResponse.json({ error: e.message }, { status: 500 });
+    }
+}

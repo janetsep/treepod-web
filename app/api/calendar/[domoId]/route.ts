@@ -12,13 +12,6 @@ function formatICalDate(dateStr: string): string {
   return dateStr.replace(/-/g, "");
 }
 
-function addOneDayStr(dateStr: string): string {
-  // Suma 1 día a una fecha "YYYY-MM-DD" y devuelve "YYYYMMDD"
-  const d = new Date(dateStr + "T12:00:00Z");
-  d.setUTCDate(d.getUTCDate() + 1);
-  return d.toISOString().slice(0, 10).replace(/-/g, "");
-}
-
 function escapeICalText(text: string): string {
   return text
     .replace(/\\/g, "\\\\")
@@ -105,16 +98,9 @@ export async function GET(
     // Check-in: día de llegada a las 16:00 hora Chile
     const dtstart = formatICalDate(reserva.fecha_inicio) + "T160000";
 
-    // Convención de fecha_fin difiere según origen:
-    // - Reservas importadas desde Airbnb (airbnb_uid IS NOT NULL):
-    //   fecha_fin = última noche de estadía → checkout = fecha_fin + 1 día
-    // - Reservas WEB / manuales / airbnb sin uid:
-    //   fecha_fin = día de checkout (día en que sale el huésped) → usar directo
-    const isAirbnbSynced = reserva.fuente === "airbnb" && reserva.airbnb_uid;
-    const checkoutDayStr = isAirbnbSynced
-      ? addOneDayStr(reserva.fecha_fin)
-      : formatICalDate(reserva.fecha_fin);
-    const dtend = checkoutDayStr + "T120000";
+    // fecha_fin = día de checkout para TODAS las reservas (web, manual y Airbnb).
+    // Check-out a las 12:00 hora Chile.
+    const dtend = formatICalDate(reserva.fecha_fin) + "T120000";
 
     const uid = `treepod-${reserva.id}@domostreepod.cl`;
     // Para bloqueos manuales mostramos el motivo (de las notas), no un nombre de huésped

@@ -484,6 +484,7 @@ export const NotificationService = {
     startDate: string;
     endDate: string;
     attendeeEmail?: string;
+    eventId?: string; // id determinístico → evita eventos duplicados (idempotencia)
   }) {
     try {
       // Configurar autenticación con Service Account
@@ -520,15 +521,85 @@ export const NotificationService = {
       // Agregar a calendario principal de Janet
       const response = await calendar.events.insert({
         calendarId: 'janetsep@gmail.com',
-        requestBody: calendarEvent,
+        requestBody: event.eventId ? { ...calendarEvent, id: event.eventId } : calendarEvent,
         sendUpdates: 'all', // Enviar invitaciones si hay attendees
       });
 
       console.log(`✅ Evento creado en Google Calendar: ${response.data.id}`);
       return { success: true, eventId: response.data.id };
     } catch (error: any) {
+      // 409 / "duplicate" → el evento con ese id ya existe: es idempotente, no es un error real
+      const status = error?.code ?? error?.response?.status;
+      const reason = error?.errors?.[0]?.reason || error?.response?.data?.error?.errors?.[0]?.reason;
+      if (String(status) === '409' || reason === 'duplicate') {
+        console.log(`📅 Evento ya existía en Google Calendar (idempotente): ${event.eventId}`);
+        return { success: true, duplicate: true, eventId: event.eventId };
+      }
       console.error('🔥 Error creando evento en Google Calendar:', error);
       throw error;
+    }
+  },
+
+  /**
+   * Sincroniza UNA reserva con Google Calendar de forma idempotente.
+   * Usa un id de evento determinístico (derivado del id de la reserva), así se puede
+   * llamar desde cualquier flujo (web, Airbnb, admin) sin crear duplicados.
+   * NUNCA lanza: si algo falla, solo registra el error para no romper el pago/sync.
+   */
+  async syncReservaToCalendar(reserva: {
+    id: string;
+    nombre?: string | null;
+    apellido?: string | null;
+    email?: string | null;
+    telefono?: string | null;
+    fecha_inicio: string;
+    fecha_fin: string;
+    adultos?: number | null;
+    total?: number | null;
+    monto_pagado?: number | null;
+    estado?: string | null;
+    fuente?: string | null;
+    domoNombre?: string | null;
+    extras?: string[];
+  }) {
+    try {
+      // Si no hay credenciales de Google configuradas, se omite limpiamente (sin gastar recursos).
+      if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+        return { success: false, skipped: true };
+      }
+
+      const shortId = reserva.id.slice(0, 8).toUpperCase();
+      const guestName = `${reserva.nombre || ''} ${reserva.apellido || ''}`.trim() || 'Huésped';
+      const domo = reserva.domoNombre || 'Domo';
+      const saldo = (Number(reserva.total) || 0) - (Number(reserva.monto_pagado) || 0);
+
+      const descripcion = [
+        `Huésped: ${guestName}`,
+        reserva.telefono ? `Teléfono: ${reserva.telefono}` : null,
+        reserva.email ? `Email: ${reserva.email}` : null,
+        `Código: #${shortId}`,
+        reserva.adultos ? `Adultos: ${reserva.adultos}` : null,
+        `Total: $${(Number(reserva.total) || 0).toLocaleString('es-CL')}`,
+        `Pagado: $${(Number(reserva.monto_pagado) || 0).toLocaleString('es-CL')}`,
+        saldo > 0 ? `Saldo pendiente: $${saldo.toLocaleString('es-CL')}` : 'Pagado completo',
+        reserva.fuente ? `Fuente: ${reserva.fuente}` : null,
+        reserva.extras && reserva.extras.length ? `Extras: ${reserva.extras.join(', ')}` : null,
+      ].filter(Boolean).join('\n');
+
+      // id válido para Google Calendar (base32hex: 0-9 y a-v). El UUID es hex (0-9 a-f) → válido.
+      const eventId = `tp${reserva.id.replace(/-/g, '').toLowerCase()}`;
+
+      // Nota: no agregamos al huésped como "attendee" para no enviarle invitaciones de calendario.
+      return await this.addToGoogleCalendar({
+        summary: `${domo} - ${guestName}`,
+        description: descripcion,
+        startDate: reserva.fecha_inicio,
+        endDate: reserva.fecha_fin,
+        eventId,
+      });
+    } catch (error: any) {
+      console.error('🔥 Error en syncReservaToCalendar (no bloqueante):', error?.message || error);
+      return { success: false, error: error?.message };
     }
   }
 };

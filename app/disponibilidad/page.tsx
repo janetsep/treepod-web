@@ -47,6 +47,8 @@ function DisponibilidadContent() {
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Disponibilidad REAL por domo para el rango elegido (null = aún no verificado)
+  const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null }>({ checking: false, disponible: null });
   const router = useRouter();
   const [initialCalcDone, setInitialCalcDone] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
@@ -139,6 +141,28 @@ function DisponibilidadContent() {
     }
   }, [entrada, salida, adultos]);
 
+  // Verificar disponibilidad REAL (un domo libre toda la estadía) al cambiar fechas/huéspedes
+  useEffect(() => {
+    if (!entrada || !salida || salida <= entrada) {
+      setDisponibilidad({ checking: false, disponible: null });
+      return;
+    }
+    let cancelado = false;
+    setDisponibilidad({ checking: true, disponible: null });
+    const timer = setTimeout(async () => {
+      try {
+        const params = new URLSearchParams({ from: entrada, to: salida, adultos: adultos.toString() });
+        const res = await fetch(`/api/public/disponibilidad/rango?${params}`);
+        const data = await res.json();
+        if (cancelado) return;
+        setDisponibilidad({ checking: false, disponible: res.ok ? !!data.disponible : null });
+      } catch (e) {
+        if (!cancelado) setDisponibilidad({ checking: false, disponible: null });
+      }
+    }, 400);
+    return () => { cancelado = true; clearTimeout(timer); };
+  }, [entrada, salida, adultos]);
+
   const calcularPrecio = async () => {
     setLoading(true);
     setError(null);
@@ -205,6 +229,12 @@ function DisponibilidadContent() {
   const reservar = async () => {
     try {
       if (!resultado) return;
+
+      // Bloquear si las fechas no tienen un domo libre toda la estadía
+      if (disponibilidad.disponible === false) {
+        setError("Estas fechas ya no están disponibles para una estadía completa. Por favor elige otras.");
+        return;
+      }
 
       // Disparar select_dome cuando usuario hace clic en reservar
       // Disparar evento GA4 via GTM
@@ -644,7 +674,18 @@ function DisponibilidadContent() {
                   </div>
                 </div>
 
-
+                {/* Aviso de disponibilidad real por domo */}
+                {entrada && salida && disponibilidad.disponible === false && (
+                  <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl text-xs font-bold flex items-start gap-2">
+                    <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
+                    <span>No tenemos un domo disponible para toda esta estadía. Prueba con otras fechas o escríbenos por WhatsApp y revisamos opciones.</span>
+                  </div>
+                )}
+                {entrada && salida && disponibilidad.checking && (
+                  <div className="text-[10px] font-black text-text-sub uppercase tracking-widest flex items-center gap-2 px-1">
+                    <RefreshCw className="w-3 h-3 animate-spin" /> Verificando disponibilidad…
+                  </div>
+                )}
 
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-xs font-bold animate-shake">
@@ -875,15 +916,15 @@ function DisponibilidadContent() {
 
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
-                      disabled={reserving}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4"
+                      disabled={reserving || disponibilidad.disponible === false}
+                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
                     >
                       {reserving ? (
                         <>
                           <RefreshCw className="w-5 h-5 animate-spin" />
                           <span>Procesando...</span>
                         </>
-                      ) : "Pagar Ahora"}
+                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar Ahora"}
                     </button>
 
                     <div className="flex flex-col items-center justify-center pt-6 opacity-70">
@@ -916,10 +957,10 @@ function DisponibilidadContent() {
               </div>
               <button
                 onClick={() => { trackEvent("click_reservar_sticky"); reservar(); }}
-                disabled={reserving}
-                className="flex-1 bg-primary text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                disabled={reserving || disponibilidad.disponible === false}
+                className="flex-1 bg-primary text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Pagar Ahora"}
+                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar Ahora"}
               </button>
             </div>
           </div>

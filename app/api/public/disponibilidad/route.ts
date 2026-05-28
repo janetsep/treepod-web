@@ -30,7 +30,7 @@ export async function GET(request: Request) {
         const { data: reservas, error: resErr } = await supabaseAdmin
             .from("reservas")
             .select("fecha_inicio, fecha_fin, domo_id, estado, email")
-            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago"])
+            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation"])
             .is("deleted_at", null)
             .not("domo_id", "is", null)
             .lt("fecha_inicio", toStr)
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
         // Filtrar reservas válidas
         const validReservations = (reservas || []).filter((r: any) => {
-            if (['pagado', 'confirmado', 'pendiente'].includes(r.estado)) return true;
+            if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(r.estado)) return true;
             if (r.estado === 'pendiente_pago' && r.email) return true;
             return false;
         });

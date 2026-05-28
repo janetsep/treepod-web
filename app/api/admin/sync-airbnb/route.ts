@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { NotificationService } from "@/services/NotificationService";
 
 // ─── Parser iCal mínimo (sin dependencias externas) ───────────────────────────
 
 interface ICalEvent {
   uid: string;
   summary: string;
-  dtstart: string; // YYYY-MM-DD
-  dtend: string;   // YYYY-MM-DD (exclusivo en iCal all-day → restamos 1 día)
+  dtstart: string; // YYYY-MM-DD (check-in)
+  dtend: string;   // YYYY-MM-DD (día de checkout = DTEND del iCal, igual que las reservas web)
   description: string;
 }
 
@@ -18,12 +19,6 @@ function parseICalDate(value: string): string {
     return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
   }
   return digits;
-}
-
-function subtractOneDay(dateStr: string): string {
-  const d = new Date(dateStr + "T12:00:00Z");
-  d.setUTCDate(d.getUTCDate() - 1);
-  return d.toISOString().slice(0, 10);
 }
 
 function parseICalText(text: string): ICalEvent[] {
@@ -49,15 +44,13 @@ function parseICalText(text: string): ICalEvent[] {
     if (line === "END:VEVENT") {
       inEvent = false;
       if (current.uid && current.dtstart && current.dtend) {
-        // dtend en iCal all-day es exclusivo → el último día ocupado es dtend - 1
-        const dtendExclusive = current.dtend;
-        const dtendInclusive = subtractOneDay(dtendExclusive);
-
+        // DTEND en iCal all-day es el día de checkout (exclusivo). Lo guardamos tal cual
+        // para que fecha_fin signifique SIEMPRE el día de salida, consistente con las reservas web.
         events.push({
           uid: current.uid,
           summary: current.summary || "Reservado",
           dtstart: current.dtstart,
-          dtend: dtendInclusive,
+          dtend: current.dtend,
           description: current.description || "",
         });
       }
@@ -261,7 +254,7 @@ export async function GET(request: NextRequest) {
             }
 
             // Crear nueva reserva desde Airbnb
-            const { error: insertError } = await supabaseAdmin
+            const { data: nuevaReserva, error: insertError } = await supabaseAdmin
               .from("reservas")
               .insert({
                 domo_id: domo.id,
@@ -280,7 +273,9 @@ export async function GET(request: NextRequest) {
                 airbnb_uid: event.uid,
                 enviar_confirmacion: false,
                 sincronizar_calendario: false,
-              });
+              })
+              .select("id")
+              .single();
 
             if (insertError) {
               (domoResult.errores as string[]).push(
@@ -288,6 +283,22 @@ export async function GET(request: NextRequest) {
               );
             } else {
               (domoResult.creadas as number)++;
+              // 📅 Sincronizar la nueva reserva de Airbnb con Google Calendar (idempotente, no bloqueante)
+              if (nuevaReserva?.id) {
+                await NotificationService.syncReservaToCalendar({
+                  id: nuevaReserva.id,
+                  nombre,
+                  apellido,
+                  fecha_inicio: event.dtstart,
+                  fecha_fin: event.dtend,
+                  adultos: 2,
+                  total: 0,
+                  monto_pagado: 0,
+                  estado: "confirmado",
+                  fuente: "airbnb",
+                  domoNombre: domo.nombre,
+                });
+              }
             }
           }
         }

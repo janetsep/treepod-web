@@ -74,10 +74,10 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
             if (r.estado === 'cancelada') return false;
             if (r.domo_id !== domoId) return false;
 
-            // Check-in es a las 16:00 del día de entrada
-            // Check-out es a las 12:00 del día de salida
-            // Marcar como ocupado desde fecha_inicio hasta fecha_fin (inclusive)
-            return r.fecha_inicio <= dateStr && r.fecha_fin >= dateStr;
+            // Check-in 16:00 del día de entrada; check-out 12:00 del día de salida.
+            // Ocupa las NOCHES [fecha_inicio, fecha_fin): el día de checkout queda libre
+            // para una nueva llegada. fecha_fin = día de salida en TODAS las reservas.
+            return r.fecha_inicio <= dateStr && r.fecha_fin > dateStr;
         });
     };
 

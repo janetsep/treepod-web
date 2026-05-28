@@ -307,6 +307,37 @@ async function handleReturn(req: Request) {
           });
         }
 
+        // 📅 Sincronizar con Google Calendar (idempotente, no bloqueante)
+        try {
+          let domoNombre: string | null = null;
+          if (reserva.domo_id) {
+            const { data: d } = await supabaseAdmin
+              .from("domos")
+              .select("nombre")
+              .eq("id", reserva.domo_id)
+              .single();
+            domoNombre = d?.nombre ?? null;
+          }
+          await NotificationService.syncReservaToCalendar({
+            id: reserva.id,
+            nombre: reserva.nombre,
+            apellido: reserva.apellido,
+            email: reserva.email,
+            fecha_inicio: reserva.fecha_inicio,
+            fecha_fin: reserva.fecha_fin,
+            adultos: reserva.adultos,
+            total: reserva.total,
+            monto_pagado: commit.amount || 0,
+            estado: "pagado",
+            fuente: "web",
+            domoNombre,
+            extras: extrasNames,
+          });
+          console.log("📅 Reserva web sincronizada con Google Calendar");
+        } catch (calErr) {
+          console.error("⚠️ Error sincronizando reserva web con Google Calendar:", calErr);
+        }
+
       } catch (error) {
         console.error("⚠️ Error crítico al registrar finanzas/notificación:", error);
         // No bloqueamos el redirect al usuario, pero logueamos el error grave
