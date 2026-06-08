@@ -10,10 +10,10 @@ import UsersConsole from "./components/UsersConsole";
 import ClientesConsole from "./components/ClientesConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings } from "lucide-react";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'papelera'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -292,10 +292,13 @@ export default function AdminDashboard() {
     };
     const todayStr = new Date().toISOString().split('T')[0];
     const validReservas = reservas.filter(isValidReserva);
-    // Switch del Maestro: por defecto solo actuales+futuras; el usuario puede ver todas (incluye pasadas).
-    const baseReservas = soloProximas
-        ? validReservas.filter((r: any) => r.fecha_fin >= todayStr)
-        : validReservas;
+    // Pestaña "Historial": solo reservas pasadas (fecha_fin < hoy).
+    // Pestaña "Dashboard": switch entre solo actuales+futuras (default) o todas.
+    const baseReservas = view === 'historial'
+        ? validReservas.filter((r: any) => r.fecha_fin < todayStr)
+        : soloProximas
+            ? validReservas.filter((r: any) => r.fecha_fin >= todayStr)
+            : validReservas;
     const filteredReservas = baseReservas.filter((r: any) => {
         if (!searchTerm) return true;
         const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""} ${r.nombre || ""} ${r.apellido || ""}`.toLowerCase();
@@ -304,8 +307,9 @@ export default function AdminDashboard() {
         return clientName.includes(search) || email.includes(search) || r.id.toLowerCase().includes(search);
     });
 
-    // Orden por defecto: si "solo próximas" → más cercanas arriba (ASC).
-    //                    Si "todas" → más recientes arriba, históricas al final (DESC).
+    // Orden por defecto:
+    //  - Dashboard + solo próximas → ASC (las más cercanas arriba)
+    //  - Dashboard "todas" o Historial → DESC (más recientes arriba; pasadas remotas al final)
     const sortedReservas = [...filteredReservas].sort((a, b) => {
         if (sortConfig) {
             const aValue = new Date(a[sortConfig.key]).getTime();
@@ -313,7 +317,8 @@ export default function AdminDashboard() {
             return sortConfig.order === 'asc' ? aValue - bValue : bValue - aValue;
         }
         const cmp = (a.fecha_inicio || '').localeCompare(b.fecha_inicio || '');
-        return soloProximas ? cmp : -cmp;
+        const asc = view !== 'historial' && soloProximas;
+        return asc ? cmp : -cmp;
     });
 
     // Pagination Logic
@@ -398,6 +403,13 @@ export default function AdminDashboard() {
                         CRM / Clientes
                     </button>
                     <button
+                        onClick={() => { setView('historial'); setCurrentPage(1); }}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <Clock className="w-4 h-4" />
+                        Historial
+                    </button>
+                    <button
                         onClick={() => setView('papelera')}
                         className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
                     >
@@ -434,7 +446,8 @@ export default function AdminDashboard() {
                     <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
                     <>
-                        {/* KPI Card: Próximas Llegadas */}
+                        {/* KPI y Calendario solo en Dashboard (no en Historial) */}
+                        {view !== 'historial' && (
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md w-full sm:max-w-xs">
                             <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
                             <p className="text-3xl font-display font-black text-primary">
@@ -442,8 +455,10 @@ export default function AdminDashboard() {
                             </p>
                             <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
                         </div>
+                        )}
 
                         {/* Calendar View */}
+                        {view !== 'historial' && (
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                             <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                                 <button
@@ -485,6 +500,7 @@ export default function AdminDashboard() {
                                 </div>
                             )}
                         </div>
+                        )}
 
                         {/* List View - COLLAPSIBLE */}
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
@@ -493,8 +509,8 @@ export default function AdminDashboard() {
                                 className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
                             >
                                 <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
-                                    <LayoutDashboard className="w-6 h-6 text-primary" />
-                                    Maestro de Reservas
+                                    {view === 'historial' ? <Clock className="w-6 h-6 text-primary" /> : <LayoutDashboard className="w-6 h-6 text-primary" />}
+                                    {view === 'historial' ? 'Historial de Reservas' : 'Maestro de Reservas'}
                                 </h2>
                                 <div className="flex items-center gap-4">
                                     {selectedIds.length > 0 && ['admin', 'superadmin'].includes(adminRole || '') && (
@@ -529,17 +545,19 @@ export default function AdminDashboard() {
                                             className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
                                         />
                                     </div>
-                                    <button
-                                        onClick={() => { setSoloProximas(!soloProximas); setCurrentPage(1); }}
-                                        title={soloProximas ? "Mostrar también reservas pasadas" : "Volver a mostrar solo actuales y futuras"}
-                                        className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all whitespace-nowrap ${soloProximas
-                                            ? 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10'
-                                            : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
-                                    >
-                                        {soloProximas ? "📅 Solo próximas" : "🗂 Viendo todas (pasadas incluidas)"}
-                                    </button>
+                                    {view !== 'historial' && (
+                                        <button
+                                            onClick={() => { setSoloProximas(!soloProximas); setCurrentPage(1); }}
+                                            title={soloProximas ? "Mostrar también reservas pasadas" : "Volver a mostrar solo actuales y futuras"}
+                                            className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all whitespace-nowrap ${soloProximas
+                                                ? 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10'
+                                                : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
+                                        >
+                                            {soloProximas ? "📅 Solo próximas" : "🗂 Viendo todas (pasadas incluidas)"}
+                                        </button>
+                                    )}
                                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        Registros: {filteredReservas.length} / {baseReservas.length} {soloProximas ? "(actuales y futuras)" : "(todas)"}
+                                        Registros: {filteredReservas.length} / {baseReservas.length} {view === 'historial' ? "(pasadas)" : soloProximas ? "(actuales y futuras)" : "(todas)"}
                                     </div>
                                 </div>
 
