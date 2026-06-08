@@ -19,6 +19,7 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [expandedReservas, setExpandedReservas] = useState(true);
+    const [soloProximas, setSoloProximas] = useState(true);
     const [expandedCalendar, setExpandedCalendar] = useState(false);
 
     // Modal State
@@ -291,9 +292,11 @@ export default function AdminDashboard() {
     };
     const todayStr = new Date().toISOString().split('T')[0];
     const validReservas = reservas.filter(isValidReserva);
-    // Maestro: SOLO reservas actuales y futuras (las que ya terminaron quedan fuera del listado)
-    const activasYFuturas = validReservas.filter((r: any) => r.fecha_fin >= todayStr);
-    const filteredReservas = activasYFuturas.filter((r: any) => {
+    // Switch del Maestro: por defecto solo actuales+futuras; el usuario puede ver todas (incluye pasadas).
+    const baseReservas = soloProximas
+        ? validReservas.filter((r: any) => r.fecha_fin >= todayStr)
+        : validReservas;
+    const filteredReservas = baseReservas.filter((r: any) => {
         if (!searchTerm) return true;
         const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""} ${r.nombre || ""} ${r.apellido || ""}`.toLowerCase();
         const email = (r.email || r.clientes?.email || "").toLowerCase();
@@ -301,14 +304,16 @@ export default function AdminDashboard() {
         return clientName.includes(search) || email.includes(search) || r.id.toLowerCase().includes(search);
     });
 
-    // Sorting Logic — por defecto: por fecha de llegada ASCENDENTE (las más próximas primero, luego futuras)
+    // Orden por defecto: si "solo próximas" → más cercanas arriba (ASC).
+    //                    Si "todas" → más recientes arriba, históricas al final (DESC).
     const sortedReservas = [...filteredReservas].sort((a, b) => {
         if (sortConfig) {
             const aValue = new Date(a[sortConfig.key]).getTime();
             const bValue = new Date(b[sortConfig.key]).getTime();
             return sortConfig.order === 'asc' ? aValue - bValue : bValue - aValue;
         }
-        return (a.fecha_inicio || '').localeCompare(b.fecha_inicio || '');
+        const cmp = (a.fecha_inicio || '').localeCompare(b.fecha_inicio || '');
+        return soloProximas ? cmp : -cmp;
     });
 
     // Pagination Logic
@@ -524,8 +529,17 @@ export default function AdminDashboard() {
                                             className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
                                         />
                                     </div>
+                                    <button
+                                        onClick={() => { setSoloProximas(!soloProximas); setCurrentPage(1); }}
+                                        title={soloProximas ? "Mostrar también reservas pasadas" : "Volver a mostrar solo actuales y futuras"}
+                                        className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all whitespace-nowrap ${soloProximas
+                                            ? 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10'
+                                            : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
+                                    >
+                                        {soloProximas ? "📅 Solo próximas" : "🗂 Viendo todas (pasadas incluidas)"}
+                                    </button>
                                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        Registros: {filteredReservas.length} / {activasYFuturas.length} (actuales y futuras)
+                                        Registros: {filteredReservas.length} / {baseReservas.length} {soloProximas ? "(actuales y futuras)" : "(todas)"}
                                     </div>
                                 </div>
 

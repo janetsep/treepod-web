@@ -67,17 +67,27 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
         year === today.getFullYear() && month === today.getMonth();
 
 
-    const isReserved = (domoId: string, date: Date) => {
-        const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const dateToStr = (date: Date) =>
+        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
+    const isReserved = (domoId: string, date: Date) => {
+        const dateStr = dateToStr(date);
         return reservas.filter(r => {
             if (r.estado === 'cancelada') return false;
             if (r.domo_id !== domoId) return false;
-
-            // Check-in 16:00 del día de entrada; check-out 12:00 del día de salida.
-            // Ocupa las NOCHES [fecha_inicio, fecha_fin): el día de checkout queda libre
-            // para una nueva llegada. fecha_fin = día de salida en TODAS las reservas.
+            // Ocupa las NOCHES [fecha_inicio, fecha_fin): el día de checkout queda libre.
             return r.fecha_inicio <= dateStr && r.fecha_fin > dateStr;
+        });
+    };
+
+    // Día de SALIDA de alguna reserva (huésped se va a las 12:00). Se usa para pintar
+    // una franja "aseo" en ese día, aunque la noche ya no esté ocupada.
+    const isCheckoutDay = (domoId: string, date: Date) => {
+        const dateStr = dateToStr(date);
+        return reservas.filter(r => {
+            if (r.estado === 'cancelada') return false;
+            if (r.domo_id !== domoId) return false;
+            return r.fecha_fin === dateStr;
         });
     };
 
@@ -156,6 +166,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                                     </td>
                                     {dates.map((date, i) => {
                                         const matches = isReserved(domo.id, date);
+                                        const checkouts = isCheckoutDay(domo.id, date);
                                         let cellClass = "bg-transparent";
                                         let content = null;
 
@@ -172,17 +183,41 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                                                 content = res.id.slice(-5).toUpperCase();
                                             }
 
-                                            const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                                            const dateStr = dateToStr(date);
                                             const isStart = res.fecha_inicio === dateStr;
                                             if (isStart) cellClass += " rounded-l-md ml-1";
 
                                             return (
                                                 <td key={i} className="p-1 relative h-10 border-r border-dashed border-gray-100">
+                                                    {/* Franja "aseo" si ese mismo día también es salida de otra reserva (recambio) */}
+                                                    {checkouts.length > 0 && (
+                                                        <div
+                                                            className="absolute inset-y-1 left-0 w-1/3 bg-amber-300 border-l-2 border-amber-500 rounded-l-md z-10 flex items-center justify-center"
+                                                            title={`Aseo · sale 12:00 ${checkouts[0].nombre} ${checkouts[0].apellido}`}
+                                                        >
+                                                            <span className="text-[10px]">🧹</span>
+                                                        </div>
+                                                    )}
                                                     <div
                                                         className={`w-full h-8 flex items-center justify-center text-[9px] font-bold shadow-sm cursor-pointer transition-all hover:brightness-110 ${cellClass}`}
                                                         title={`${res.nombre} ${res.apellido} (${res.estado}) - COD: ${res.id.slice(-5).toUpperCase()}`}
                                                     >
                                                         {content}
+                                                    </div>
+                                                </td>
+                                            );
+                                        }
+
+                                        // Sin noche ocupada: si es día de salida, pintar la franja "aseo" en la izquierda.
+                                        if (checkouts.length > 0) {
+                                            const co = checkouts[0];
+                                            return (
+                                                <td key={i} className="p-1 h-10 border-r border-dashed border-gray-100 relative">
+                                                    <div
+                                                        className="absolute inset-y-1 left-0 w-1/3 bg-amber-300 border-l-2 border-amber-500 rounded-l-md flex items-center justify-center cursor-pointer hover:bg-amber-400 transition-colors"
+                                                        title={`Aseo · sale 12:00 ${co.nombre} ${co.apellido}`}
+                                                    >
+                                                        <span className="text-[10px]">🧹</span>
                                                     </div>
                                                 </td>
                                             );
@@ -199,10 +234,11 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                         </tbody>
                     </table>
                 </div>
-                <div className="mt-4 flex gap-4 text-xs text-gray-500 justify-end">
+                <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500 justify-end">
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-500 rounded"></span> Pagado</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-400 rounded"></span> Pendiente</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-red-500 rounded"></span> Conflicto</div>
+                    <div className="flex items-center gap-2"><span className="w-4 h-4 bg-amber-300 border-l-2 border-amber-500 rounded-l-md"></span> Día de salida · 🧹 aseo</div>
                 </div>
             </div>
         </div>
