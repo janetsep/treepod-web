@@ -506,12 +506,13 @@ export const NotificationService = {
       const calendarEvent = {
         summary: event.summary,
         description: event.description,
+        // Evento con horario explícito: check-in 16:00, check-out 12:00 (hora Chile)
         start: {
-          date: event.startDate,
+          dateTime: `${event.startDate}T16:00:00`,
           timeZone: 'America/Santiago',
         },
         end: {
-          date: event.endDate,
+          dateTime: `${event.endDate}T12:00:00`,
           timeZone: 'America/Santiago',
         },
         attendees: event.attendeeEmail ? [{ email: event.attendeeEmail }] : undefined,

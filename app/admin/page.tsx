@@ -289,8 +289,11 @@ export default function AdminDashboard() {
 
         return true;
     };
+    const todayStr = new Date().toISOString().split('T')[0];
     const validReservas = reservas.filter(isValidReserva);
-    const filteredReservas = validReservas.filter(r => {
+    // Maestro: SOLO reservas actuales y futuras (las que ya terminaron quedan fuera del listado)
+    const activasYFuturas = validReservas.filter((r: any) => r.fecha_fin >= todayStr);
+    const filteredReservas = activasYFuturas.filter((r: any) => {
         if (!searchTerm) return true;
         const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""} ${r.nombre || ""} ${r.apellido || ""}`.toLowerCase();
         const email = (r.email || r.clientes?.email || "").toLowerCase();
@@ -298,12 +301,14 @@ export default function AdminDashboard() {
         return clientName.includes(search) || email.includes(search) || r.id.toLowerCase().includes(search);
     });
 
-    // Sorting Logic
+    // Sorting Logic — por defecto: por fecha de llegada ASCENDENTE (las más próximas primero, luego futuras)
     const sortedReservas = [...filteredReservas].sort((a, b) => {
-        if (!sortConfig) return 0;
-        const aValue = new Date(a[sortConfig.key]).getTime();
-        const bValue = new Date(b[sortConfig.key]).getTime();
-        return sortConfig.order === 'asc' ? aValue - bValue : bValue - aValue;
+        if (sortConfig) {
+            const aValue = new Date(a[sortConfig.key]).getTime();
+            const bValue = new Date(b[sortConfig.key]).getTime();
+            return sortConfig.order === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+        return (a.fecha_inicio || '').localeCompare(b.fecha_inicio || '');
     });
 
     // Pagination Logic
@@ -319,9 +324,8 @@ export default function AdminDashboard() {
     }, [searchTerm]);
 
     // Filtered lists
-    const todayStr = new Date().toISOString().split('T')[0];
-    const upcomingReservations = validReservas.filter(r => r.fecha_inicio >= todayStr);
-    const pastReservations = validReservas.filter(r => r.fecha_inicio < todayStr);
+    const upcomingReservations = validReservas.filter((r: any) => r.fecha_inicio >= todayStr);
+    const pastReservations = validReservas.filter((r: any) => r.fecha_inicio < todayStr);
 
     const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
@@ -521,7 +525,7 @@ export default function AdminDashboard() {
                                         />
                                     </div>
                                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        Registros: {filteredReservas.length} / {validReservas.length}
+                                        Registros: {filteredReservas.length} / {activasYFuturas.length} (actuales y futuras)
                                     </div>
                                 </div>
 
