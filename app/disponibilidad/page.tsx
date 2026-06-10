@@ -569,12 +569,20 @@ function DisponibilidadContent() {
                             <span className="text-[10px] text-text-sub font-black uppercase tracking-widest bg-black/5 px-2 py-0.5 rounded-full">
                               {s.multiplicador_personas ? 'por persona' : 'precio fijo'}
                             </span>
-                            {serviciosSeleccionados.has(s.id) && (s.multiplicador_noches || isDinner || isTinaja || isBreakfast) && (
-                              <span className="text-[10px] text-primary font-black uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">
-                                x {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
+                            {(s.multiplicador_noches || isDinner || isTinaja || isBreakfast) && (
+                              <span className="text-[10px] text-text-sub/60 font-bold">
+                                × {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
                               </span>
                             )}
                           </div>
+                          {serviciosSeleccionados.has(s.id) && resultado && (
+                            <div className="mt-2 flex items-center gap-1.5">
+                              <span className="text-[10px] text-text-sub/50 font-bold">Subtotal:</span>
+                              <span className="text-sm font-black text-primary">
+                                ${getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[s.id]).toLocaleString("es-CL")}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
