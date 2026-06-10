@@ -121,7 +121,7 @@ export async function POST(request: Request) {
             if (serviciosData && serviciosData.length > 0) {
                 const registros = serviciosData.map((servicio) => {
                     const esCortesia = cortesiaSet.has(servicio.id);
-                    const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico");
+                    const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico") || servicio.nombre.toLowerCase().includes("almuerzo");
                     // Para cena: usar noches elegidas por el admin; para otros: todas las noches
                     const nochesEste = (esCena && nochesPorServicio[servicio.id])
                         ? nochesPorServicio[servicio.id]

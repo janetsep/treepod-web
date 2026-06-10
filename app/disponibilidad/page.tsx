@@ -292,7 +292,7 @@ function DisponibilidadContent() {
             if (!s) return null;
 
             const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
-            const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+            const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
             const isTinaja = s.nombre.toLowerCase().includes("tinaja");
 
             // Si es desayuno, multiplica por noches por defecto. 
@@ -345,7 +345,7 @@ function DisponibilidadContent() {
 
   const getServiceCost = (s: Servicio, numAdultos: number, nochesEstadia: number, nochesEspecificas?: number) => {
     const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
-    const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+    const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
     const isTinaja = s.nombre.toLowerCase().includes("tinaja");
 
     const basePrecio = s.precio;
@@ -517,7 +517,7 @@ function DisponibilidadContent() {
                       displayImage = "/images/Galeria/domonieve2.jpeg";
                   }
 
-                  const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+                  const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
                   const isTinaja = s.nombre.toLowerCase().includes("tinaja");
                   const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
                   
@@ -590,7 +590,7 @@ function DisponibilidadContent() {
                       {serviciosSeleccionados.has(s.id) && (isDinner || isTinaja) && (
                         <div className="bg-white border border-primary/20 rounded-2xl p-4 mt-1 shadow-sm animate-fade-in mx-2">
                           <p className="text-[10px] font-black text-text-sub uppercase tracking-widest mb-3">
-                            {isDinner ? "¿Prefieres la cena para toda tu estadía o solo algunas noches?" : "¿Cuántas noches de tinaja deseas disfrutar?"}
+                            {isTinaja ? "¿Cuántas noches de tinaja deseas disfrutar?" : "¿Para cuántas noches lo deseas?"}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             <button
@@ -805,7 +805,7 @@ function DisponibilidadContent() {
                             if (!s) return null;
                             const costo = getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id]);
                             const isBreakfastSrv = s.nombre.toLowerCase().includes("desayuno");
-                            const isDinnerSrv = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico");
+                            const isDinnerSrv = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
                             const isTinajaSrv = s.nombre.toLowerCase().includes("tinaja");
                             const multNochesDefaultSrv = (s.multiplicador_noches || isBreakfastSrv) && !isDinnerSrv && !isTinajaSrv;
                             const nochesSrv = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNochesDefaultSrv ? resultado.noches : 1);

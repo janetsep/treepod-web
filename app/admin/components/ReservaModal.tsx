@@ -591,7 +591,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                         {serviciosDisponibles.map((servicio) => {
                                             const selected = serviciosSeleccionados.includes(servicio.id);
                                             const esCortesia = serviciosCortesia.includes(servicio.id);
-                                            const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico");
+                                            const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico") || servicio.nombre.toLowerCase().includes("almuerzo");
                                             // Noches a usar: cena usa selector, el resto siempre todas las noches
                                             const nochesEste = esCena
                                                 ? (nochesPorServicio[servicio.id] ?? 1)
