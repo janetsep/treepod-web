@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       .from("reservas")
       .select("domo_id, estado, expires_at, email")
       .in("domo_id", domosPosibles)
-      .in("estado", ["pagado", "pendiente", "pendiente_pago", "confirmado", "pending_transfer_confirmation"])
+      .in("estado", ["pagado", "pendiente", "pendiente_pago", "confirmado", "pending_transfer_confirmation", "bloqueado"])
       .is("deleted_at", null)
       .lt("fecha_inicio", salida)
       .gt("fecha_fin", entrada);
@@ -101,13 +101,14 @@ export async function POST(req: Request) {
     // - Pendientes de pago (Web): SOLO ocupan si el cliente ya ingresó sus datos (email).
     //   Si no hay email, es un carrito vacío/abandonado y NO debe bloquear el calendario.
     const ocupadosRes = (rawConflicts || []).filter((r: any) => {
-      // Estados firmes bloquean siempre (incluye transferencia por confirmar)
-      if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(r.estado)) return true;
+      // Estados firmes bloquean siempre (incluye transferencia por confirmar y bloqueos técnicos)
+      if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation', 'bloqueado'].includes(r.estado)) return true;
 
-      // Estado temporal web: Solo bloquea si hay "intención real" (datos ingresados)
+      // Carrito web (pendiente_pago): bloquea solo si hay intención real (email)
+      // Y la retención aún no vence. Un carrito abandonado libera el domo al expirar.
       if (r.estado === 'pendiente_pago') {
-        // Nota: r.email debe venir en el select. Asegurarse de haberlo pedido en la query anterior.
-        return !!r.email;
+        const vigente = !r.expires_at || new Date(r.expires_at) > now;
+        return !!r.email && vigente;
       }
       return false;
     });
@@ -131,7 +132,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Lo sentimos, ya no quedan domos disponibles para estas fechas" }, { status: 409 });
     }
 
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+    // Retención del domo mientras el huésped paga: 10 minutos.
+    // Al vencer, el carrito deja de bloquear disponibilidad automáticamente.
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     // 4. Insertar la reserva con fallback para columnas de descuento
     const insertPayload: any = {

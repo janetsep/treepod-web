@@ -753,7 +753,9 @@ export default function AdminDashboard() {
                                                         </td>
                                                         <td className="px-4 py-4">
                                                             <span className={`px-2 py-1 rounded text-[7px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
-                                                                {reserva.estado === 'pendiente_pago' ? 'Check-out Web' : reserva.estado}
+                                                                {reserva.estado === 'pendiente_pago'
+                                                                    ? (reserva.expires_at && new Date(reserva.expires_at) < new Date() ? 'Carrito expirado' : 'Check-out Web')
+                                                                    : reserva.estado}
                                                             </span>
                                                             {reserva.fuente && (
                                                                 <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-300 mt-1">
@@ -763,7 +765,7 @@ export default function AdminDashboard() {
                                                         </td>
                                                         <td className="px-5 py-4 text-right">
                                                             <div className="flex justify-end items-center gap-1.5">
-                                                                 {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && adminRole !== 'viewer' && (
+                                                                 {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && reserva.estado !== 'bloqueado' && adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => confirmReserva(reserva.id)}
                                                                         disabled={actionLoading === reserva.id}

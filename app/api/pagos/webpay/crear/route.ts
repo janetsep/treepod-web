@@ -229,7 +229,12 @@ export async function POST(req: Request) {
       throw new Error(`Error al procesar el pago: ${errorObj.message || 'Error desconocido'}`);
     }
 
-    // 4. Actualizar la reserva
+    // 4. Actualizar la reserva.
+    // - monto_pagado NO se toca aquí: solo el retorno de Webpay (pago confirmado)
+    //   registra dinero real. Antes se anotaba el 50% al crear la transacción,
+    //   generando "pagos fantasma" en carritos abandonados.
+    // - expires_at se renueva +10 min: el huésped que entra a Webpay tiene la
+    //   retención completa para terminar de pagar.
     console.log('🔄 Actualizando estado de la reserva...');
     const { error: updateError } = await supabaseAdmin
       .from("reservas")
@@ -237,7 +242,7 @@ export async function POST(req: Request) {
         metodo_pago_inicial: "webpay",
         payment_intent_id: response.token,
         estado: 'pendiente_pago',
-        monto_pagado: monto,
+        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
         updated_at: new Date().toISOString()
       })
       .eq("id", reservaId);

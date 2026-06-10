@@ -45,19 +45,24 @@ export async function GET(request: Request) {
         //    Estados que bloquean (incluye pending_transfer_confirmation: transferencia por confirmar).
         const { data: rawConflicts, error: resErr } = await supabaseAdmin
             .from("reservas")
-            .select("domo_id, estado, email")
+            .select("domo_id, estado, email, expires_at")
             .in("domo_id", domosPosibles)
-            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation"])
+            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation", "bloqueado"])
             .is("deleted_at", null)
             .lt("fecha_inicio", to)
             .gt("fecha_fin", from);
 
         if (resErr) throw resErr;
 
-        // Filtro en memoria (idéntico a crear): los pendientes_pago solo bloquean si hay intención real (email).
+        // Filtro en memoria (idéntico a crear): los pendientes_pago solo bloquean si hay
+        // intención real (email) Y su retención sigue vigente (no expirada).
+        const ahora = new Date();
         const ocupadosRes = (rawConflicts || []).filter((r: any) => {
-            if (["pagado", "confirmado", "pendiente", "pending_transfer_confirmation"].includes(r.estado)) return true;
-            if (r.estado === "pendiente_pago") return !!r.email;
+            if (["pagado", "confirmado", "pendiente", "pending_transfer_confirmation", "bloqueado"].includes(r.estado)) return true;
+            if (r.estado === "pendiente_pago") {
+                const vigente = !r.expires_at || new Date(r.expires_at) > ahora;
+                return !!r.email && vigente;
+            }
             return false;
         });
 

@@ -29,8 +29,8 @@ export async function GET(request: Request) {
         // Los pendientes solo si tienen email (intención real), similar a crear_reserva logic.
         const { data: reservas, error: resErr } = await supabaseAdmin
             .from("reservas")
-            .select("fecha_inicio, fecha_fin, domo_id, estado, email")
-            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation"])
+            .select("fecha_inicio, fecha_fin, domo_id, estado, email, expires_at")
+            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation", "bloqueado"])
             .is("deleted_at", null)
             .not("domo_id", "is", null)
             .lt("fecha_inicio", toStr)
@@ -52,9 +52,13 @@ export async function GET(request: Request) {
         const days = eachDayOfInterval({ start: fromDate, end: toDate });
 
         // Filtrar reservas válidas
+        const ahora = new Date();
         const validReservations = (reservas || []).filter((r: any) => {
-            if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(r.estado)) return true;
-            if (r.estado === 'pendiente_pago' && r.email) return true;
+            if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation', 'bloqueado'].includes(r.estado)) return true;
+            // Carrito web: bloquea solo mientras su retención esté vigente
+            if (r.estado === 'pendiente_pago' && r.email) {
+                return !r.expires_at || new Date(r.expires_at) > ahora;
+            }
             return false;
         });
 

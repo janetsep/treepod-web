@@ -18,6 +18,23 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
         }
 
+        // Solo se pueden confirmar reservas reales: nunca bloqueos técnicos ni canceladas.
+        const { data: reservaActual } = await supabaseAdmin
+            .from("reservas")
+            .select("estado")
+            .eq("id", reservaId)
+            .single();
+
+        if (!reservaActual) {
+            return NextResponse.json({ error: "Reserva no encontrada" }, { status: 404 });
+        }
+        if (reservaActual.estado === 'bloqueado') {
+            return NextResponse.json({ error: "Esto es un bloqueo técnico, no una reserva: no se puede confirmar como pagado." }, { status: 400 });
+        }
+        if (['cancelada', 'expirada', 'rechazado'].includes(reservaActual.estado)) {
+            return NextResponse.json({ error: `La reserva está ${reservaActual.estado}: restáurala o edítala antes de confirmar un pago.` }, { status: 400 });
+        }
+
         // Actualizar a estado PAGADO
         const { error: updateError } = await supabaseAdmin
             .from("reservas")

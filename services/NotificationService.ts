@@ -419,6 +419,60 @@ export const NotificationService = {
   },
 
   /**
+   * Avisa a la administradora que un huésped declaró pago por transferencia
+   * (estado pending_transfer_confirmation) y debe validarse el depósito.
+   */
+  async sendTransferPendingAlert(data: {
+    reservaId: string;
+    guestName: string;
+    guestEmail?: string | null;
+    guestPhone?: string | null;
+    fechaInicio: string;
+    fechaFin: string;
+    total: number;
+    domoNombre?: string | null;
+  }) {
+    const shortId = data.reservaId.slice(0, 8).toUpperCase();
+    const abono = Math.round((data.total || 0) * 0.5);
+    try {
+      await getResend().emails.send({
+        from: 'TreePod Reservas <info@domostreepod.cl>',
+        to: ['janetsep@gmail.com'],
+        subject: `⏳ Transferencia por confirmar: ${data.guestName} · ${data.fechaInicio}`,
+        html: `
+          <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="background: #f59e0b; padding: 22px 20px; text-align: center; border-radius: 12px 12px 0 0;">
+              <h1 style="color: white; margin: 0; font-size: 20px;">Transferencia por confirmar</h1>
+              <p style="color: rgba(255,255,255,0.95); margin: 6px 0 0; font-size: 13px;">El huésped declaró que pagará por transferencia — revisa la cuenta y confirma en el panel</p>
+            </div>
+            <div style="padding: 24px 20px; border: 1px solid #eee; border-top: none; border-radius: 0 0 12px 12px;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                <tr><td style="padding: 8px 0; color: #666; width: 40%;">Código</td><td style="padding: 8px 0; font-weight: bold; font-family: monospace;">#${shortId}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Huésped</td><td style="padding: 8px 0; font-weight: bold;">${data.guestName}</td></tr>
+                ${data.guestEmail ? `<tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;">${data.guestEmail}</td></tr>` : ''}
+                ${data.guestPhone ? `<tr><td style="padding: 8px 0; color: #666;">Teléfono</td><td style="padding: 8px 0;">${data.guestPhone}</td></tr>` : ''}
+                ${data.domoNombre ? `<tr><td style="padding: 8px 0; color: #666;">Domo</td><td style="padding: 8px 0;">${data.domoNombre}</td></tr>` : ''}
+                <tr><td style="padding: 8px 0; color: #666;">Estadía</td><td style="padding: 8px 0; font-weight: bold;">${data.fechaInicio} → ${data.fechaFin}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Total</td><td style="padding: 8px 0;">$${(data.total || 0).toLocaleString('es-CL')}</td></tr>
+                <tr><td style="padding: 8px 0; color: #666;">Abono esperado (50%)</td><td style="padding: 8px 0; font-weight: bold; color: #b45309;">$${abono.toLocaleString('es-CL')}</td></tr>
+              </table>
+              <div style="text-align: center; margin-top: 22px;">
+                <a href="https://domostreepod.cl/admin" style="background: #1a1a1a; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 14px;">Validar en el Panel</a>
+              </div>
+              <p style="font-size: 11px; color: #999; margin-top: 18px;">Cuando llegue el depósito, usa el botón "Confirmar" de la reserva para pasarla a pagado. La reserva bloquea el domo mientras esté en este estado.</p>
+            </div>
+          </div>
+        `,
+      });
+      console.log(`📧 Alerta de transferencia pendiente enviada (reserva ${shortId})`);
+      return { success: true };
+    } catch (error: any) {
+      console.error('🔥 Error enviando alerta de transferencia pendiente:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  /**
    * Envía alerta de seguridad al administrador
    */
   async sendSecurityAlert(type: string, data: { email: string, details?: any }) {

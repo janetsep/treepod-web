@@ -25,14 +25,27 @@ export async function POST(request: Request) {
 
         const domosPosibles = domosComp.map((d: any) => d.id);
 
-        // 2. Buscar ocupación (reservas activas)
-        const { data: ocupadosRes, error: resErr } = await supabaseAdmin
+        // 2. Buscar ocupación (misma lógica que /api/public/disponibilidad/rango).
+        // Antes este endpoint tenía un typo ("cancelado" en vez de "cancelada") que hacía
+        // contar reservas canceladas como ocupadas, y no filtraba papelera ni carritos vencidos.
+        const { data: rawConflicts, error: resErr } = await supabaseAdmin
             .from("reservas")
-            .select("domo_id")
+            .select("domo_id, estado, email, expires_at")
             .in("domo_id", domosPosibles)
-            .not("estado", "in", '("rechazado","cancelado")')
+            .in("estado", ["pagado", "confirmado", "pendiente", "pendiente_pago", "pending_transfer_confirmation", "bloqueado"])
+            .is("deleted_at", null)
             .lt("fecha_inicio", salida)
             .gt("fecha_fin", entrada);
+
+        const ahora = new Date();
+        const ocupadosRes = (rawConflicts || []).filter((r: any) => {
+            if (["pagado", "confirmado", "pendiente", "pending_transfer_confirmation", "bloqueado"].includes(r.estado)) return true;
+            if (r.estado === "pendiente_pago") {
+                const vigente = !r.expires_at || new Date(r.expires_at) > ahora;
+                return !!r.email && vigente;
+            }
+            return false;
+        });
 
         // 3. Buscar bloqueos
         const { data: ocupadosBloq, error: bloqErr } = await supabaseAdmin
@@ -67,7 +80,7 @@ export async function POST(request: Request) {
             disponible: true,
             domos: disponibles.map((d: any) => d.nombre),
             cotizacion: precioData ? precioData[0] : null,
-            politicas: "Entrada 15:00, Salida 12:00. Incluye tinaja exclusiva.",
+            politicas: "Entrada 16:00, Salida 12:00. Incluye tinaja exclusiva.",
             whatsapp_cta: "https://wa.me/56989208256"
         });
 
