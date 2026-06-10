@@ -59,6 +59,7 @@ export default function DashboardAdmin() {
         analytics: { activeUsers: 0, sessions: 0, engagementRate: 0 }
     });
     const [matriz, setMatriz] = useState<{ years: number[]; matriz: { mes: number; valores: number[] }[]; totalesPorAnio: number[] } | null>(null);
+    const [ocupacion, setOcupacion] = useState<{ years: number[]; matriz: { mes: number; valores: (number | null)[] }[]; promedioPorAnio: (number | null)[]; domosConsiderados: number } | null>(null);
 
     const handleExportPDF = () => {
         const doc = new jsPDF();
@@ -188,6 +189,14 @@ export default function DashboardAdmin() {
                 if (mRes.ok) setMatriz(await mRes.json());
             } catch (e) {
                 console.error("Failed to fetch matriz ingresos", e);
+            }
+
+            // Matriz de ocupación (%) por mes y año
+            try {
+                const oRes = await fetch('/api/admin/ocupacion-matriz');
+                if (oRes.ok) setOcupacion(await oRes.json());
+            } catch (e) {
+                console.error("Failed to fetch ocupación", e);
             }
 
             setData({
@@ -478,6 +487,54 @@ export default function DashboardAdmin() {
                                         <td className="text-left py-3 px-3 uppercase text-xs font-black text-primary sticky left-0 bg-white">Total</td>
                                         {matriz.totalesPorAnio.map((t, i) => (
                                             <td key={i} className="text-right py-3 px-3 whitespace-nowrap tabular-nums font-black text-gray-900">${Math.round(t).toLocaleString("es-CL")}</td>
+                                        ))}
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* MATRIZ DE OCUPACIÓN POR MES Y AÑO (%) */}
+                {ocupacion && ocupacion.years.length > 0 && (
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Ocupación por mes y año (%)</h3>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Meta ≥ 70% · sobre {ocupacion.domosConsiderados} domos</span>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr className="border-b border-gray-200">
+                                        <th className="text-left font-bold text-gray-500 uppercase text-xs py-3 px-3 sticky left-0 bg-white">Mes</th>
+                                        {ocupacion.years.map((y) => (
+                                            <th key={y} className="text-right font-bold text-gray-700 py-3 px-3 whitespace-nowrap">{y}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {ocupacion.matriz.map((row) => (
+                                        <tr key={row.mes} className="border-b border-gray-50 hover:bg-gray-50/50">
+                                            <td className="text-left font-bold text-gray-700 py-2.5 px-3 sticky left-0 bg-white">{MESES[row.mes]}</td>
+                                            {row.valores.map((v, i) => (
+                                                <td key={i} className="text-right py-2.5 px-3 whitespace-nowrap tabular-nums">
+                                                    {v === null ? <span className="text-gray-300">—</span> : (
+                                                        <span className={`px-2 py-0.5 rounded-lg font-bold ${v >= 70 ? 'bg-emerald-50 text-emerald-700' : v >= 50 ? 'bg-amber-50 text-amber-700' : 'text-gray-500'}`}>
+                                                            {v}%
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="border-t-2 border-gray-200">
+                                        <td className="text-left py-3 px-3 uppercase text-xs font-black text-primary sticky left-0 bg-white">Promedio</td>
+                                        {ocupacion.promedioPorAnio.map((p, i) => (
+                                            <td key={i} className="text-right py-3 px-3 whitespace-nowrap tabular-nums font-black">
+                                                {p === null ? '—' : <span className={p >= 70 ? 'text-emerald-600' : p >= 50 ? 'text-amber-600' : 'text-gray-600'}>{p}%</span>}
+                                            </td>
                                         ))}
                                     </tr>
                                 </tfoot>

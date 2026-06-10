@@ -34,6 +34,11 @@ export default function AdminDashboard() {
     const [sortConfig, setSortConfig] = useState<{ key: 'fecha_inicio' | 'fecha_fin', order: 'asc' | 'desc' } | null>(null);
     const [syncingAirbnb, setSyncingAirbnb] = useState(false);
     const [syncResult, setSyncResult] = useState<string | null>(null);
+    // Modal "Registrar pago de saldo"
+    const [pagoReserva, setPagoReserva] = useState<any | null>(null);
+    const [pagoMonto, setPagoMonto] = useState<string>("");
+    const [pagoMetodo, setPagoMetodo] = useState<string>("efectivo");
+    const [pagoLoading, setPagoLoading] = useState(false);
     const ITEMS_PER_PAGE = 30;
 
     useEffect(() => {
@@ -270,6 +275,38 @@ export default function AdminDashboard() {
         }
     }
 
+    const abrirPago = (reserva: any) => {
+        const saldo = (Number(reserva.total) || 0) - (Number(reserva.monto_pagado) || 0);
+        setPagoReserva(reserva);
+        setPagoMonto(String(saldo > 0 ? saldo : ""));
+        setPagoMetodo("efectivo");
+    };
+
+    async function registrarPago() {
+        if (!pagoReserva) return;
+        const monto = Math.round(Number(pagoMonto));
+        if (!monto || monto <= 0) { alert("Ingresa un monto válido"); return; }
+        setPagoLoading(true);
+        try {
+            const res = await adminFetch("/api/admin/reservas/registrar-pago", {
+                method: "POST",
+                body: JSON.stringify({ reservaId: pagoReserva.id, monto, metodo: pagoMetodo })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert(`✅ Pago registrado. ${data.saldo > 0 ? `Saldo restante: $${data.saldo.toLocaleString('es-CL')}` : 'Reserva pagada por completo.'}`);
+                setPagoReserva(null);
+                fetchReservas();
+            } else {
+                alert(`❌ ${data.error}`);
+            }
+        } catch {
+            alert("Error de conexión al registrar el pago.");
+        } finally {
+            setPagoLoading(false);
+        }
+    }
+
     const openNewReserva = () => {
         setEditingReserva(null);
         setIsModalOpen(true);
@@ -337,6 +374,12 @@ export default function AdminDashboard() {
     // Filtered lists
     const upcomingReservations = validReservas.filter((r: any) => r.fecha_inicio >= todayStr);
     const pastReservations = validReservas.filter((r: any) => r.fecha_inicio < todayStr);
+
+    // Vista operativa HOY (solo reservas firmes)
+    const estadosFirmes = ['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'];
+    const llegadasHoy = validReservas.filter((r: any) => r.fecha_inicio === todayStr && estadosFirmes.includes(r.estado));
+    const salidasHoy = validReservas.filter((r: any) => r.fecha_fin === todayStr && estadosFirmes.includes(r.estado));
+    const domosRecambio = new Set(salidasHoy.map((s: any) => s.domo_id).filter((d: any) => llegadasHoy.some((l: any) => l.domo_id === d)));
 
     const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
@@ -447,14 +490,71 @@ export default function AdminDashboard() {
                     <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
                     <>
-                        {/* KPI y Calendario solo en Dashboard (no en Historial) */}
+                        {/* VISTA OPERATIVA HOY (no en Historial) */}
                         {view !== 'historial' && (
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary transition-all hover:shadow-md w-full sm:max-w-xs">
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
-                            <p className="text-3xl font-display font-black text-primary">
-                                {upcomingReservations.length}
-                            </p>
-                            <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Llegadas de hoy */}
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">🟢 Llegan hoy ({llegadasHoy.length}) · 16:00</p>
+                                {llegadasHoy.length === 0 ? (
+                                    <p className="text-xs text-gray-300 italic">Sin llegadas hoy</p>
+                                ) : llegadasHoy.map((r: any) => {
+                                    const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
+                                    const tel = r.telefono || r.clientes?.telefono;
+                                    return (
+                                        <div key={r.id} className="mb-3 pb-3 border-b border-gray-50 last:border-0 last:mb-0 last:pb-0">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <span className="font-bold text-sm text-gray-900">{`${r.nombre || ''} ${r.apellido || ''}`.trim() || 'Huésped'}</span>
+                                                <span className="text-[9px] font-black bg-gray-100 px-2 py-0.5 rounded uppercase">{r.domos?.nombre || '—'}</span>
+                                            </div>
+                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-500">
+                                                {tel && <a href={`tel:${tel}`} className="text-primary font-bold">{tel}</a>}
+                                                <span>{r.adultos || 2}p</span>
+                                                {saldo > 0
+                                                    ? <span className="text-amber-700 font-black bg-amber-50 px-2 py-0.5 rounded">Cobrar saldo ${saldo.toLocaleString('es-CL')}</span>
+                                                    : <span className="text-green-600 font-bold">Pagado ✓</span>}
+                                            </div>
+                                            {r.reserva_servicios?.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                                    {r.reserva_servicios.map((s: any) => (
+                                                        <span key={s.id} className="text-[9px] font-bold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded-full">{s.servicios?.nombre || 'Extra'}</span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            {/* Salidas de hoy */}
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-amber-400">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">🟡 Salen hoy ({salidasHoy.length}) · 12:00</p>
+                                {salidasHoy.length === 0 ? (
+                                    <p className="text-xs text-gray-300 italic">Sin salidas hoy</p>
+                                ) : salidasHoy.map((r: any) => {
+                                    const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
+                                    return (
+                                        <div key={r.id} className="mb-3 pb-3 border-b border-gray-50 last:border-0 last:mb-0 last:pb-0">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <span className="font-bold text-sm text-gray-900">{`${r.nombre || ''} ${r.apellido || ''}`.trim() || 'Huésped'}</span>
+                                                <span className="text-[9px] font-black bg-gray-100 px-2 py-0.5 rounded uppercase">{r.domos?.nombre || '—'}</span>
+                                            </div>
+                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-500">
+                                                <span>Aseo después de las 12:00</span>
+                                                {domosRecambio.has(r.domo_id) && <span className="text-red-600 font-black bg-red-50 px-2 py-0.5 rounded">⚡ Recambio: llega otro hoy</span>}
+                                                {saldo > 0 && <span className="text-amber-700 font-black">Saldo pendiente ${saldo.toLocaleString('es-CL')}</span>}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            {/* Próximas llegadas (KPI) */}
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary">
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
+                                <p className="text-3xl font-display font-black text-primary">
+                                    {upcomingReservations.length}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
+                            </div>
                         </div>
                         )}
 
@@ -765,6 +865,18 @@ export default function AdminDashboard() {
                                                         </td>
                                                         <td className="px-5 py-4 text-right">
                                                             <div className="flex justify-end items-center gap-1.5">
+                                                                {(() => {
+                                                                    const saldoR = (Number(reserva.total) || 0) - (Number(reserva.monto_pagado) || 0);
+                                                                    return saldoR > 0 && ['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(reserva.estado) && adminRole !== 'viewer' && (
+                                                                        <button
+                                                                            onClick={() => abrirPago(reserva)}
+                                                                            className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest transition-all shadow-lg shadow-amber-500/20"
+                                                                            title={`Registrar pago del saldo ($${saldoR.toLocaleString('es-CL')})`}
+                                                                        >
+                                                                            $ Saldo
+                                                                        </button>
+                                                                    );
+                                                                })()}
                                                                  {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && reserva.estado !== 'bloqueado' && adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => confirmReserva(reserva.id)}
@@ -863,6 +975,60 @@ export default function AdminDashboard() {
                             adminEmail={adminEmail}
                             adminRole={adminRole}
                         />
+
+                        {/* Modal: Registrar pago de saldo */}
+                        {pagoReserva && (
+                            <div className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => !pagoLoading && setPagoReserva(null)}>
+                                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
+                                    <h3 className="text-xl font-display font-black text-gray-900 mb-1">Registrar pago</h3>
+                                    <p className="text-sm text-gray-500 mb-5">
+                                        {`${pagoReserva.nombre || ''} ${pagoReserva.apellido || ''}`.trim()} · {pagoReserva.domos?.nombre || 'Domo'} · {pagoReserva.fecha_inicio} → {pagoReserva.fecha_fin}
+                                    </p>
+                                    <div className="bg-gray-50 rounded-xl p-4 mb-5 grid grid-cols-3 gap-2 text-center">
+                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Total</p><p className="font-bold text-sm">${(Number(pagoReserva.total) || 0).toLocaleString('es-CL')}</p></div>
+                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Pagado</p><p className="font-bold text-sm text-green-600">${(Number(pagoReserva.monto_pagado) || 0).toLocaleString('es-CL')}</p></div>
+                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Saldo</p><p className="font-black text-sm text-amber-600">${((Number(pagoReserva.total) || 0) - (Number(pagoReserva.monto_pagado) || 0)).toLocaleString('es-CL')}</p></div>
+                                    </div>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Monto recibido</label>
+                                    <input
+                                        type="number"
+                                        value={pagoMonto}
+                                        onChange={(e) => setPagoMonto(e.target.value)}
+                                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold mb-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                                        placeholder="0"
+                                        min={1}
+                                    />
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Método de pago</label>
+                                    <div className="grid grid-cols-2 gap-2 mb-6">
+                                        {[['efectivo', '💵 Efectivo'], ['transferencia', '🏦 Transferencia'], ['webpay', '💳 Webpay/Tarjeta'], ['otro', '✳️ Otro']].map(([val, label]) => (
+                                            <button
+                                                key={val}
+                                                onClick={() => setPagoMetodo(val)}
+                                                className={`px-3 py-2.5 rounded-xl text-xs font-bold border transition-all ${pagoMetodo === val ? 'bg-primary text-white border-primary shadow-md' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => setPagoReserva(null)}
+                                            disabled={pagoLoading}
+                                            className="flex-1 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            onClick={registrarPago}
+                                            disabled={pagoLoading}
+                                            className="flex-1 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-emerald-500 text-white hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                                        >
+                                            {pagoLoading ? 'Registrando…' : 'Registrar pago'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </>
                 )}
             </div>
