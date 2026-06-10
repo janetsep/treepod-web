@@ -11,7 +11,7 @@ export default function TreePodDomes() {
             icon: "check_circle",
             title: "Independencia Total",
             benefit: "Siéntete en un refugio autónomo en medio del bosque nativo.",
-            proof: "Baño completo integrado y tinajas de ciprés con agua termal."
+            proof: "Baño completo privado integrado dentro del domo."
         },
         {
             icon: "check_circle",
