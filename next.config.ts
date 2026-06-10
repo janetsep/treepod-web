@@ -72,6 +72,34 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Eventos 2026 ya pasados (URL con año): redirect permanente
+      {
+        source: '/semana-santa-2026',
+        destination: '/disponibilidad',
+        permanent: true,
+      },
+      {
+        source: '/mundial-mtb-nevados-chillan-2026',
+        destination: '/disponibilidad',
+        permanent: true,
+      },
+      // Eventos pasados con URL reutilizable el próximo año: redirect temporal
+      // (para reactivar la página en 2027, basta eliminar el redirect)
+      {
+        source: '/glorias-navales-las-trancas',
+        destination: '/disponibilidad',
+        permanent: false,
+      },
+      {
+        source: '/glamping-dia-de-la-madre',
+        destination: '/disponibilidad',
+        permanent: false,
+      },
+      {
+        source: '/finde-largo-dia-trabajo-las-trancas',
+        destination: '/disponibilidad',
+        permanent: false,
+      },
     ];
   },
 };

@@ -568,7 +568,8 @@ function StatusBadge({ status }: { status: string }) {
         'confirmado': 'CONFIRMADA',
         'pending_transfer_confirmation': 'VALIDAR TRANSF.',
         'pendiente_pago': 'PENDIENTE',
-        'rechazado': 'CANCELADA',
+        'rechazado': 'PAGO RECHAZADO',
+        'cancelada': 'CANCELADA',
     };
 
     const s = styles[status] || styles['pendiente_pago'];

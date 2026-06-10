@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { NotificationService } from "@/services/NotificationService";
 
 export async function POST(request: Request) {
     try {
@@ -49,7 +50,34 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: updateError.message }, { status: 500 });
         }
 
-        // TODO: Aquí se podría disparar el envío de correo de confirmación manualmente si se desea en el futuro.
+        // Sincronizar con Google Calendar (idempotente, no bloqueante): cubre el caso
+        // de transferencias confirmadas, que antes nunca llegaban al calendario.
+        try {
+            const { data: r } = await supabaseAdmin
+                .from("reservas")
+                .select("id, nombre, apellido, email, telefono, fecha_inicio, fecha_fin, adultos, total, monto_pagado, fuente, domos(nombre)")
+                .eq("id", reservaId)
+                .single();
+            if (r) {
+                NotificationService.syncReservaToCalendar({
+                    id: r.id,
+                    nombre: r.nombre,
+                    apellido: r.apellido,
+                    email: r.email,
+                    telefono: r.telefono,
+                    fecha_inicio: r.fecha_inicio,
+                    fecha_fin: r.fecha_fin,
+                    adultos: r.adultos,
+                    total: r.total,
+                    monto_pagado: r.monto_pagado,
+                    estado: "pagado",
+                    fuente: r.fuente,
+                    domoNombre: (r as any).domos?.nombre || null,
+                }).catch((e) => console.error("Error sincronizando calendario al confirmar:", e));
+            }
+        } catch (e) {
+            console.error("No se pudo preparar sync de calendario al confirmar:", e);
+        }
 
         return NextResponse.json({ ok: true });
     } catch (e: any) {

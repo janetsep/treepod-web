@@ -50,6 +50,41 @@ export async function GET(request: NextRequest) {
             (r: any) => !(r.estado === "pendiente_pago" && !r.email)
         );
 
+        // ── Transferencias sin confirmar: aviso a las 24h y liberación automática a las 48h ──
+        const ahoraMs = Date.now();
+        const { data: transfersPend } = await supabaseAdmin
+            .from("reservas")
+            .select("id, nombre, apellido, fecha_inicio, fecha_fin, total, updated_at, notas, domos(nombre)")
+            .eq("estado", "pending_transfer_confirmation")
+            .is("deleted_at", null);
+
+        const transferPorVencer: any[] = [];
+        const transferLiberadas: any[] = [];
+        for (const t of transfersPend || []) {
+            const horas = (ahoraMs - new Date(t.updated_at).getTime()) / 3600000;
+            if (horas >= 48) {
+                // Liberar el domo: la transferencia nunca llegó / no fue confirmada.
+                // En modo preview solo se muestra, no se modifica nada.
+                if (!isPreview) {
+                    await supabaseAdmin
+                        .from("reservas")
+                        .update({
+                            estado: "cancelada",
+                            notas: `${t.notas ? t.notas + " · " : ""}Liberada automáticamente: transferencia no confirmada en 48h`,
+                            updated_at: new Date().toISOString(),
+                        })
+                        .eq("id", t.id);
+                }
+                transferLiberadas.push(t);
+            } else if (horas >= 24) {
+                transferPorVencer.push(t);
+            }
+        }
+
+        // Las recién liberadas ya no van en la tabla de próximas llegadas
+        const liberadasIds = new Set(transferLiberadas.map((t: any) => t.id));
+        const reservasParaTabla = reservas.filter((r: any) => !liberadasIds.has(r.id));
+
         const fmtFecha = (d: string) =>
             new Date(d + "T12:00:00").toLocaleDateString("es-CL", { weekday: "short", day: "2-digit", month: "short" });
         const fmtMonto = (n: number) => "$" + (Number(n) || 0).toLocaleString("es-CL");
@@ -63,7 +98,7 @@ export async function GET(request: NextRequest) {
             bloqueado: "Bloqueo",
         };
 
-        const filas = reservas.map((r: any) => {
+        const filas = reservasParaTabla.map((r: any) => {
             const nombre = `${r.nombre || ""} ${r.apellido || ""}`.trim() || "—";
             const domo = r.domos?.nombre || "—";
             const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
@@ -88,8 +123,20 @@ export async function GET(request: NextRequest) {
               <p style="color:rgba(255,255,255,0.9);margin:6px 0 0;font-size:13px;">${fechaReporte}</p>
             </div>
             <div style="padding:24px 20px;border:1px solid #eee;border-top:none;border-radius:0 0 12px 12px;">
-              <p style="font-size:14px;color:#555;margin:0 0 16px;">Tienes <strong>${reservas.length}</strong> reserva(s) de hoy en adelante. Este correo es tu respaldo: si el panel no funciona, aquí está la información esencial.</p>
-              ${reservas.length === 0 ? `<p style="text-align:center;color:#888;font-style:italic;padding:24px;">No hay próximas llegadas registradas.</p>` : `
+              ${transferLiberadas.length > 0 ? `
+              <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:14px;margin-bottom:16px;">
+                <p style="margin:0 0 8px;font-size:13px;font-weight:bold;color:#b91c1c;">🔓 ${transferLiberadas.length} reserva(s) liberadas: transferencia no confirmada en 48h</p>
+                ${transferLiberadas.map((t: any) => `<p style="margin:2px 0;font-size:12px;color:#7f1d1d;">• ${`${t.nombre || ""} ${t.apellido || ""}`.trim() || "Huésped"} · ${(t as any).domos?.nombre || "Domo"} · ${t.fecha_inicio} → ${t.fecha_fin} · ${fmtMonto(Number(t.total) || 0)}</p>`).join("")}
+                <p style="margin:8px 0 0;font-size:11px;color:#991b1b;">El domo volvió a estar disponible. Si el depósito sí llegó, restaura la reserva desde el panel y confírmala.</p>
+              </div>` : ""}
+              ${transferPorVencer.length > 0 ? `
+              <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:16px;">
+                <p style="margin:0 0 8px;font-size:13px;font-weight:bold;color:#b45309;">⏳ ${transferPorVencer.length} transferencia(s) por confirmar — se liberan automáticamente al cumplir 48h</p>
+                ${transferPorVencer.map((t: any) => `<p style="margin:2px 0;font-size:12px;color:#92400e;">• ${`${t.nombre || ""} ${t.apellido || ""}`.trim() || "Huésped"} · ${(t as any).domos?.nombre || "Domo"} · ${t.fecha_inicio} → ${t.fecha_fin} · esperado ${fmtMonto(Math.round((Number(t.total) || 0) * 0.5))}</p>`).join("")}
+                <p style="margin:8px 0 0;font-size:11px;color:#92400e;">Si el depósito ya llegó, confírmala en el panel para asegurar el domo.</p>
+              </div>` : ""}
+              <p style="font-size:14px;color:#555;margin:0 0 16px;">Tienes <strong>${reservasParaTabla.length}</strong> reserva(s) de hoy en adelante. Este correo es tu respaldo: si el panel no funciona, aquí está la información esencial.</p>
+              ${reservasParaTabla.length === 0 ? `<p style="text-align:center;color:#888;font-style:italic;padding:24px;">No hay próximas llegadas registradas.</p>` : `
               <table style="width:100%;border-collapse:collapse;font-size:13px;">
                 <thead>
                   <tr style="background:#f5f5f5;text-align:left;color:#666;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;">
@@ -119,11 +166,17 @@ export async function GET(request: NextRequest) {
         await resend.emails.send({
             from: "TreePod Reportes <info@domostreepod.cl>",
             to: [ADMIN_EMAIL],
-            subject: `📋 Próximas llegadas TreePod — ${reservas.length} reserva(s) · ${hoyStr}`,
+            subject: `📋 Próximas llegadas TreePod — ${reservasParaTabla.length} reserva(s) · ${hoyStr}${transferLiberadas.length > 0 ? ` · 🔓 ${transferLiberadas.length} liberada(s)` : ""}${transferPorVencer.length > 0 ? ` · ⏳ ${transferPorVencer.length} transf.` : ""}`,
             html,
         });
 
-        return NextResponse.json({ ok: true, total: reservas.length, enviado_a: ADMIN_EMAIL });
+        return NextResponse.json({
+            ok: true,
+            total: reservasParaTabla.length,
+            transferencias_liberadas: transferLiberadas.length,
+            transferencias_por_vencer: transferPorVencer.length,
+            enviado_a: ADMIN_EMAIL,
+        });
     } catch (e: any) {
         console.error("Error generando reporte diario:", e);
         return NextResponse.json({ error: e.message }, { status: 500 });
