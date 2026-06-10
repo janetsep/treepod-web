@@ -53,6 +53,14 @@ export default function DashboardAdmin() {
     const [stats, setStats] = useState<Estadisticas | null>(null);
     const [matriz, setMatriz] = useState<{ years: number[]; matriz: { mes: number; valores: number[] }[]; totalesPorAnio: number[] } | null>(null);
     const [ocupacion, setOcupacion] = useState<{ years: number[]; matriz: { mes: number; valores: (number | null)[] }[]; promedioPorAnio: (number | null)[]; domosConsiderados: number } | null>(null);
+    const [metaAds, setMetaAds] = useState<{
+        configurado: boolean;
+        error?: string;
+        gastoMesActual?: number;
+        gasto12m?: number;
+        porMes?: Array<{ mes: string; gasto: number }>;
+        porCampania?: Array<{ campania: string; gasto: number; impresiones: number; clics: number }>;
+    } | null>(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -61,6 +69,7 @@ export default function DashboardAdmin() {
                 fetch('/api/analytics').then(r => r.ok ? r.json() : null).then(d => d && setAnalytics(d)).catch(e => console.error("analytics", e)),
                 fetch('/api/admin/ingresos-matriz').then(r => r.ok ? r.json() : null).then(d => d && setMatriz(d)).catch(e => console.error("matriz", e)),
                 fetch('/api/admin/ocupacion-matriz').then(r => r.ok ? r.json() : null).then(d => d && setOcupacion(d)).catch(e => console.error("ocupacion", e)),
+                fetch('/api/admin/meta-ads').then(r => r.ok ? r.json() : null).then(d => d && setMetaAds(d)).catch(e => console.error("meta-ads", e)),
             ]);
             setLoading(false);
         }
@@ -229,7 +238,67 @@ export default function DashboardAdmin() {
                             </table>
                         </div>
                     )}
-                    <p className="text-[10px] text-gray-400 mt-4">Para medir CAC y ROMI por campaña falta conectar el gasto publicitario de Meta — se puede integrar cuando lo decidas.</p>
+                    {/* Gasto Meta Ads */}
+                    <div className="mt-6 pt-6 border-t border-gray-100">
+                        <h4 className="text-gray-700 font-bold text-xs uppercase tracking-wide mb-3">Gasto publicitario · Meta (Instagram/Facebook)</h4>
+                        {!metaAds || !metaAds.configurado ? (
+                            <p className="text-xs text-gray-400 italic">Meta Ads no está conectado todavía (falta el token de acceso).</p>
+                        ) : metaAds.error === "token_vencido" ? (
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 font-bold">
+                                ⚠️ El token de Meta venció — hay que renovarlo para volver a ver el gasto (caducan cada ~60 días).
+                            </div>
+                        ) : metaAds.error ? (
+                            <p className="text-xs text-red-500">Error consultando Meta Ads: {metaAds.error}</p>
+                        ) : (
+                            <>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                                    <div className="bg-gray-50 rounded-xl p-3 text-center">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase">Gasto mes actual</p>
+                                        <p className="font-bold text-sm">{fmt(metaAds.gastoMesActual || 0)}</p>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-xl p-3 text-center">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase">Gasto 12 meses</p>
+                                        <p className="font-bold text-sm">{fmt(metaAds.gasto12m || 0)}</p>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-xl p-3 text-center">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase">Ingresos web 12m</p>
+                                        <p className="font-bold text-sm">{fmt((stats?.canales || []).find(c => c.canal.includes('Web'))?.ingresos || 0)}</p>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-xl p-3 text-center">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase">ROMI web aprox.</p>
+                                        <p className="font-bold text-sm">{(() => {
+                                            const ing = (stats?.canales || []).find(c => c.canal.includes('Web'))?.ingresos || 0;
+                                            const g = metaAds.gasto12m || 0;
+                                            return g > 0 ? `${(ing / g).toFixed(1)}x` : '—';
+                                        })()}</p>
+                                    </div>
+                                </div>
+                                {(metaAds.porCampania || []).length > 0 && (
+                                    <table className="w-full text-xs border-collapse">
+                                        <thead>
+                                            <tr className="border-b border-gray-200 uppercase text-gray-500">
+                                                <th className="text-left font-bold py-2 px-2">Campaña</th>
+                                                <th className="text-right font-bold py-2 px-2">Gasto 12m</th>
+                                                <th className="text-right font-bold py-2 px-2">Impresiones</th>
+                                                <th className="text-right font-bold py-2 px-2">Clics</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {(metaAds.porCampania || []).slice(0, 8).map((c, i) => (
+                                                <tr key={i} className="border-b border-gray-50">
+                                                    <td className="py-2 px-2 font-bold text-gray-700">{c.campania}</td>
+                                                    <td className="py-2 px-2 text-right tabular-nums">{fmt(c.gasto)}</td>
+                                                    <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.impresiones.toLocaleString('es-CL')}</td>
+                                                    <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.clics.toLocaleString('es-CL')}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                                <p className="text-[10px] text-gray-400 mt-3">ROMI aprox. = ingresos web ÷ gasto Meta. Cuando uses links UTM en los anuncios, el CAC por campaña se calculará exacto.</p>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {/* FUNNEL DE CONVERSIÓN + FUENTES DE TRÁFICO */}
