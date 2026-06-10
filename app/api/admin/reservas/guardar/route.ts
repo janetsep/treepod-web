@@ -17,7 +17,8 @@ export async function POST(request: Request) {
         const adminEmail = admin.email;
 
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+        const cortesiaSet = new Set<string>(Array.isArray(servicios_cortesia) ? servicios_cortesia : []);
 
         // Validación básica
         if (!fecha_inicio || !fecha_fin || !domo_id) {
@@ -97,6 +98,12 @@ export async function POST(request: Request) {
             details: `El usuario ${adminData.nombre} (${adminData.rol}) ${isUpdate ? 'editó' : 'creó'} una reserva para ${nombre} ${apellido}. ID: ${id || result.data.id}${changeDetails}`
         });
 
+        // Calcular noches y personas (necesario para multiplicadores de servicios)
+        const noches = Math.round(
+            (new Date(fecha_fin).getTime() - new Date(fecha_inicio).getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const numAdultos = Number(adultos) || 2;
+
         // Insertar/actualizar servicios seleccionados en reserva_servicios
         const reservaId = id || result.data.id;
         let sumExtras = 0;
@@ -107,31 +114,37 @@ export async function POST(request: Request) {
 
             const { data: serviciosData } = await supabaseAdmin
                 .from("servicios")
-                .select("id, nombre, precio")
+                .select("id, nombre, precio, multiplicador_noches, multiplicador_personas")
                 .in("id", servicios_seleccionados);
 
             if (serviciosData && serviciosData.length > 0) {
-                sumExtras = serviciosData.reduce((s, sv) => s + (sv.precio || 0), 0);
-                const registros = serviciosData.map((servicio) => ({
-                    reserva_id: reservaId,
-                    servicio_id: servicio.id,
-                    cantidad: 1,
-                    precio_unitario: servicio.precio,
-                    total: servicio.precio,
-                }));
+                const registros = serviciosData.map((servicio) => {
+                    const esCortesia = cortesiaSet.has(servicio.id);
+                    // Calcular cantidad real según multiplicadores del servicio
+                    let cantidad = 1;
+                    if (servicio.multiplicador_noches) cantidad *= noches;
+                    if (servicio.multiplicador_personas) cantidad *= numAdultos;
+                    const precioUnitario = esCortesia ? 0 : (servicio.precio || 0);
+                    const subtotal = esCortesia ? 0 : precioUnitario * cantidad;
+                    if (!esCortesia) sumExtras += subtotal;
+                    return {
+                        reserva_id: reservaId,
+                        servicio_id: servicio.id,
+                        cantidad,
+                        precio_unitario: precioUnitario,
+                        total: subtotal,
+                        es_cortesia: esCortesia,
+                    };
+                });
                 await supabaseAdmin.from("reserva_servicios").insert(registros);
             }
         } else if (isUpdate) {
-            // Si se envió array vacío en una actualización, borrar los servicios existentes
             if (Array.isArray(servicios_seleccionados)) {
                 await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
             }
         }
 
         // Guardar precio_noche histórico (precio al momento de la venta, no el actual del catálogo)
-        const noches = Math.round(
-            (new Date(fecha_fin).getTime() - new Date(fecha_inicio).getTime()) / (1000 * 60 * 60 * 24)
-        );
         const precioNocheCalc = noches > 0 ? Math.round((Number(total || 0) - sumExtras) / noches) : 0;
         if (precioNocheCalc > 0) {
             await supabaseAdmin.from("reservas").update({ precio_noche: precioNocheCalc }).eq("id", reservaId);
