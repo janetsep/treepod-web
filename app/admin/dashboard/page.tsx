@@ -40,6 +40,8 @@ type Estadisticas = {
     };
     serie12m: Array<{ name: string; ingresos: number; noches: number; ocupacion: number }>;
     canales: Array<{ canal: string; reservas: number; ingresos: number }>;
+    campanias: Array<{ fuente: string; campania: string; medio: string; reservas: number; ingresos: number }>;
+    atribucionWeb: { total: number; conUtm: number };
     domosConsiderados: number;
 };
 
@@ -189,6 +191,45 @@ export default function DashboardAdmin() {
                             )}
                         </div>
                     </div>
+                </div>
+
+                {/* CAMPAÑAS · ATRIBUCIÓN WEB (UTM) */}
+                <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Campañas · de dónde vienen las reservas web</h3>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            {stats?.atribucionWeb?.conUtm || 0} de {stats?.atribucionWeb?.total || 0} reservas web con origen identificado (12m)
+                        </span>
+                    </div>
+                    {(stats?.campanias || []).length === 0 ? (
+                        <p className="text-xs text-gray-400 italic py-4">Aún no hay reservas web con campaña identificada. Cuando compartas links con códigos de campaña (ej: <span className="font-mono not-italic">domostreepod.cl?utm_source=instagram&utm_campaign=invierno2026</span>) en tus anuncios y posteos, cada reserva que generen aparecerá aquí con su plata.</p>
+                    ) : (
+                        <div className="overflow-x-auto mt-4">
+                            <table className="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr className="border-b border-gray-200 text-xs uppercase text-gray-500">
+                                        <th className="text-left font-bold py-2 px-3">Origen</th>
+                                        <th className="text-left font-bold py-2 px-3">Campaña</th>
+                                        <th className="text-left font-bold py-2 px-3">Medio</th>
+                                        <th className="text-right font-bold py-2 px-3">Reservas</th>
+                                        <th className="text-right font-bold py-2 px-3">Ingresos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {(stats?.campanias || []).map((c, i) => (
+                                        <tr key={i} className="border-b border-gray-50 hover:bg-gray-50/50">
+                                            <td className="py-2.5 px-3 font-bold text-gray-800">{c.fuente}</td>
+                                            <td className="py-2.5 px-3 text-gray-600">{c.campania}</td>
+                                            <td className="py-2.5 px-3 text-gray-500 text-xs">{c.medio}</td>
+                                            <td className="py-2.5 px-3 text-right tabular-nums">{c.reservas}</td>
+                                            <td className="py-2.5 px-3 text-right tabular-nums font-bold">{fmt(c.ingresos)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    <p className="text-[10px] text-gray-400 mt-4">Para medir CAC y ROMI por campaña falta conectar el gasto publicitario de Meta — se puede integrar cuando lo decidas.</p>
                 </div>
 
                 {/* FUNNEL DE CONVERSIÓN + FUENTES DE TRÁFICO */}

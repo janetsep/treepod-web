@@ -34,7 +34,7 @@ export async function GET() {
         for (let from = 0; ; from += PAGE) {
             const { data, error } = await supabaseAdmin
                 .from("reservas")
-                .select("fecha_inicio, fecha_fin, total, monto_pagado, fuente, estado")
+                .select("fecha_inicio, fecha_fin, total, monto_pagado, fuente, estado, utm_source, utm_medium, utm_campaign")
                 .in("estado", ["pagado", "confirmado", "pendiente", "pending_transfer_confirmation"])
                 .is("deleted_at", null)
                 .gte("fecha_fin", desde)
@@ -135,6 +135,34 @@ export async function GET() {
             .map(([canal, v]) => ({ canal, ...v }))
             .sort((a, b) => b.ingresos - a.ingresos);
 
+        // Campañas: atribución UTM de reservas web (últimos 12 meses)
+        const campMap: Record<string, { fuente: string; campania: string; medio: string; reservas: number; ingresos: number }> = {};
+        let webTotal = 0;
+        let webConUtm = 0;
+        for (const r of rows) {
+            const esWeb = (r.fuente || "").toLowerCase().includes("web");
+            if (!esWeb) continue;
+            const inicioKey = String(r.fecha_inicio).slice(0, 7);
+            if (!meses.some((mm) => mm.key === inicioKey)) continue;
+            webTotal++;
+            const src = (r.utm_source || "").trim();
+            if (!src) continue;
+            webConUtm++;
+            const key = `${src}|${r.utm_campaign || ""}`;
+            if (!campMap[key]) {
+                campMap[key] = {
+                    fuente: src,
+                    campania: (r.utm_campaign || "").trim() || "—",
+                    medio: (r.utm_medium || "").trim() || "—",
+                    reservas: 0,
+                    ingresos: 0,
+                };
+            }
+            campMap[key].reservas++;
+            campMap[key].ingresos += Number(r.monto_pagado) || 0;
+        }
+        const campanias = Object.values(campMap).sort((a, b) => b.ingresos - a.ingresos);
+
         return NextResponse.json({
             kpis: {
                 ingresosMesActual,
@@ -145,6 +173,8 @@ export async function GET() {
             },
             serie12m,
             canales: canalesArr,
+            campanias,
+            atribucionWeb: { total: webTotal, conUtm: webConUtm },
             domosConsiderados: nDomos,
         });
     } catch (e: any) {

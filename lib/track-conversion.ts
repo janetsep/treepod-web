@@ -7,7 +7,7 @@
  * 3. Feedback para optimización de anuncios
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export interface ConversionRecord {
     transaction_id: string;
@@ -32,7 +32,7 @@ export interface ConversionRecord {
  */
 export async function recordConversion(data: ConversionRecord) {
     try {
-        const { data: result, error } = await supabase
+        const { data: result, error } = await supabaseAdmin
             .from('conversiones')
             .insert({
                 transaction_id: data.transaction_id,
