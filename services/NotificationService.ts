@@ -1,8 +1,14 @@
 import { Resend } from 'resend';
 import { google } from 'googleapis';
 
-// Inicializar Resend con la key del entorno
-const resend = new Resend(process.env.RESEND_API_KEY || 're_123_placeholder');
+// Resend se inicializa al momento de enviar: si falta la API key el envío falla
+// con un error claro en los logs (antes fallaba en silencio con un placeholder).
+function getResend(): Resend {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY no configurada: no se pueden enviar emails');
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export const NotificationService = {
   /**
@@ -27,7 +33,7 @@ export const NotificationService = {
     const formatCLP = (n: number) => n.toLocaleString('es-CL');
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [recipient],
         subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera`,
@@ -114,7 +120,7 @@ export const NotificationService = {
 
       // 2. Correo de Alerta al Administrador
       const adminEmail = 'janetsep@gmail.com';
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `NUEVA RESERVA WEB - ${guestName}`,
@@ -157,7 +163,7 @@ export const NotificationService = {
     const adminEmail = 'janetsep@gmail.com';
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Glamping Domos TreePod <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `Nuevo Contacto: ${data.subject} - ${data.name}`,
@@ -202,7 +208,7 @@ export const NotificationService = {
     }
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'TreePod <info@domostreepod.cl>',
         to: [recipient],
         subject: 'Tu Guía de Retiro en la Montaña + Regalo Especial',
@@ -318,7 +324,7 @@ export const NotificationService = {
 
     try {
       // Email al admin con ICS
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'TreePod Admin <info@domostreepod.cl>',
         to: [adminTo],
         subject: `Nueva Reserva Manual: ${data.guestName} - ${data.domoNombre}`,
@@ -363,7 +369,7 @@ export const NotificationService = {
 
       // Email al huésped (si tiene email y se pidió enviarlo)
       if (data.sendGuestEmail && data.guestEmail && data.guestEmail.includes('@')) {
-        await resend.emails.send({
+        await getResend().emails.send({
           from: 'Glamping Domos TreePod <info@domostreepod.cl>',
           to: [data.guestEmail],
           subject: `¡Tu reserva en TreePod está confirmada! #${shortId}`,
@@ -400,22 +406,9 @@ export const NotificationService = {
         });
       }
 
-      // Sincronizar con Google Calendar si está habilitado
-      if (data.sincronizarCalendario) {
-        try {
-          await this.addToGoogleCalendar({
-            summary: `Reserva ${data.domoNombre} - ${data.guestName}`,
-            description: `Huésped: ${data.guestName}\nEmail: ${data.guestEmail}\nCódigo: #${shortId}\nAdultos: ${data.adultos}\nTotal: $${data.total.toLocaleString('es-CL')}\nPagado: $${data.montoPagado.toLocaleString('es-CL')}\nFuente: ${data.fuente}${data.extras && data.extras.length > 0 ? `\nExtras: ${data.extras.join(', ')}` : ''}${data.acompanantes ? `\nAcompañantes: ${data.acompanantes}` : ''}\nTipo Documento: ${data.tipoDocumento || 'boleta'}`,
-            startDate: data.fechaInicio,
-            endDate: data.fechaFin,
-            attendeeEmail: data.guestEmail
-          });
-          console.log(`📅 Evento agregado a Google Calendar para ${data.guestName}`);
-        } catch (calendarError: any) {
-          console.error('🔥 Error sincronizando con Google Calendar:', calendarError);
-          // No fallar todo el proceso por error de calendario
-        }
-      }
+      // Nota: la sincronización con Google Calendar ya NO se hace aquí.
+      // La maneja syncReservaToCalendar (id determinístico, sin duplicados) desde
+      // /api/admin/reservas/guardar para TODA reserva manual, creada o editada.
 
       console.log(`📧 Notificación de reserva manual enviada al admin y al huésped.`);
       return { success: true };
@@ -431,7 +424,7 @@ export const NotificationService = {
   async sendSecurityAlert(type: string, data: { email: string, details?: any }) {
     const adminEmail = 'janetsep@gmail.com';
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'TreePod Security <info@domostreepod.cl>',
         to: [adminEmail],
         subject: `ALERTA DE SEGURIDAD: ${type}`,
@@ -529,12 +522,42 @@ export const NotificationService = {
       console.log(`✅ Evento creado en Google Calendar: ${response.data.id}`);
       return { success: true, eventId: response.data.id };
     } catch (error: any) {
-      // 409 / "duplicate" → el evento con ese id ya existe: es idempotente, no es un error real
+      // 409 / "duplicate" → el evento con ese id ya existe: actualizarlo (las fechas o
+      // montos pueden haber cambiado en una edición). Sigue siendo idempotente.
       const status = error?.code ?? error?.response?.status;
       const reason = error?.errors?.[0]?.reason || error?.response?.data?.error?.errors?.[0]?.reason;
-      if (String(status) === '409' || reason === 'duplicate') {
-        console.log(`📅 Evento ya existía en Google Calendar (idempotente): ${event.eventId}`);
-        return { success: true, duplicate: true, eventId: event.eventId };
+      if (event.eventId && (String(status) === '409' || reason === 'duplicate')) {
+        try {
+          const auth = new google.auth.GoogleAuth({
+            credentials: {
+              type: 'service_account',
+              project_id: process.env.GOOGLE_PROJECT_ID,
+              private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+              private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+              client_email: process.env.GOOGLE_CLIENT_EMAIL,
+              client_id: process.env.GOOGLE_CLIENT_ID,
+            },
+            scopes: ['https://www.googleapis.com/auth/calendar'],
+          });
+          const calendar = google.calendar({ version: 'v3', auth });
+          await calendar.events.update({
+            calendarId: 'janetsep@gmail.com',
+            eventId: event.eventId,
+            requestBody: {
+              summary: event.summary,
+              description: event.description,
+              start: { dateTime: `${event.startDate}T16:00:00`, timeZone: 'America/Santiago' },
+              end: { dateTime: `${event.endDate}T12:00:00`, timeZone: 'America/Santiago' },
+              location: 'Valle Las Trancas, Km 72, Región del Ñuble, Chile',
+              status: 'confirmed',
+            },
+          });
+          console.log(`📅 Evento actualizado en Google Calendar: ${event.eventId}`);
+          return { success: true, updated: true, eventId: event.eventId };
+        } catch (updateErr: any) {
+          console.error('🔥 Error actualizando evento existente en Calendar:', updateErr?.message);
+          return { success: false, error: updateErr?.message };
+        }
       }
       console.error('🔥 Error creando evento en Google Calendar:', error);
       throw error;

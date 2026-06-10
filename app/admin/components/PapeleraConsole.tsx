@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import { Trash2, RotateCcw, AlertTriangle } from "lucide-react";
 
@@ -18,7 +19,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
 
     async function fetchPapelera() {
         try {
-            const res = await fetch("/api/admin/reservas/papelera");
+            const res = await adminFetch("/api/admin/reservas/papelera");
             const data = await res.json();
             if (res.ok) setReservas(data || []);
         } catch (e) {
@@ -36,7 +37,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
 
         setActionLoading(reservaId);
         try {
-            const res = await fetch("/api/admin/reservas/papelera", {
+            const res = await adminFetch("/api/admin/reservas/papelera", {
                 method: "POST",
                 body: JSON.stringify({ reservaId, adminEmail, action })
             });
@@ -59,7 +60,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
         setActionLoading("bulk");
         let count = 0;
         for (const r of reservas) {
-            const res = await fetch("/api/admin/reservas/papelera", {
+            const res = await adminFetch("/api/admin/reservas/papelera", {
                 method: "POST",
                 body: JSON.stringify({ reservaId: r.id, adminEmail, action: "restore" })
             });

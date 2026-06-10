@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
-// Configuración
+// Configuración — SIN credenciales de respaldo: si faltan las variables de entorno
+// el pago debe FALLAR ruidosamente, nunca procesarse contra el ambiente de prueba.
 const config = {
-  commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "597055555532",
-  apiKey: process.env.WEBPAY_API_KEY || process.env.TRANSBANK_API_KEY || "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-  environment: process.env.WEBPAY_ENV || process.env.TRANSBANK_ENVIRONMENT || "INTEGRATION",
+  commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "",
+  apiKey: process.env.WEBPAY_API_KEY || process.env.TRANSBANK_API_KEY || "",
+  environment: process.env.WEBPAY_ENV || process.env.TRANSBANK_ENVIRONMENT || "",
   apiUrl: (process.env.WEBPAY_ENV === "PRODUCTION" || process.env.TRANSBANK_ENVIRONMENT === "PRODUCTION")
     ? "https://webpay3g.transbank.cl"
     : "https://webpay3gint.transbank.cl"
@@ -85,6 +86,15 @@ function getBaseUrl(req: Request) {
 export async function POST(req: Request) {
   try {
     console.log('🔍 Iniciando proceso de pago...');
+
+    if (!config.commerceCode || !config.apiKey || !config.environment) {
+      console.error('❌ CRÍTICO: Credenciales de Transbank no configuradas en el entorno');
+      return NextResponse.json(
+        { error: "El sistema de pagos no está disponible en este momento. Por favor contáctanos por WhatsApp." },
+        { status: 503 }
+      );
+    }
+
     const { reservaId } = await req.json();
 
     // Validación básica
@@ -176,9 +186,9 @@ export async function POST(req: Request) {
     console.log('💳 Procesando pago...');
     const monto = Math.round(reserva.total * 0.5);
 
-    // Usar timestamp para orden de compra único
-    const timestamp = Date.now();
-    const ordenCompra = `res-${timestamp}`;
+    // Orden de compra única: id de la reserva + timestamp (evita colisiones entre
+    // peticiones simultáneas; máx 26 caracteres permitidos por Transbank)
+    const ordenCompra = `r${reserva.id.slice(0, 8)}-${Date.now().toString(36)}`;
 
     const baseUrl = getBaseUrl(req);
     const returnUrl = `${baseUrl}/api/pagos/webpay/retorno?reserva_id=${reserva.id}`;

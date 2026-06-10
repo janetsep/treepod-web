@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { getVerifiedAdmin } from '@/lib/admin-auth';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,21 +9,18 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: Request) {
   try {
-    const { userId, newPassword, adminEmail } = await req.json();
-
-    if ((!userId && !adminEmail) || !newPassword) {
-      return NextResponse.json({ error: 'Faltan datos requeridos' }, { status: 400 });
-    }
-
-    // Verificar que quien hace la petición es efectivamente un superadmin o admin
-    const { data: adminUser, error: adminError } = await supabaseAdmin
-      .from('authorized_admins')
-      .select('rol, nombre')
-      .eq('email', adminEmail)
-      .single();
-
-    if (adminError || !['admin', 'superadmin'].includes(adminUser.rol)) {
+    // Identidad verificada por token de sesión (no por el body)
+    const admin = await getVerifiedAdmin(req);
+    if (!admin || !['admin', 'superadmin'].includes(admin.rol)) {
       return NextResponse.json({ error: 'No autorizado para realizar esta acción' }, { status: 403 });
+    }
+    const adminUser = { rol: admin.rol, nombre: admin.nombre };
+    const adminEmail = admin.email;
+
+    const { userId, newPassword } = await req.json();
+
+    if (!userId || !newPassword) {
+      return NextResponse.json({ error: 'Faltan datos requeridos' }, { status: 400 });
     }
 
     // 1. Intentar obtener el usuario por ID o Email para asegurar que existe en Auth

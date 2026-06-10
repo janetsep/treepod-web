@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useState, useEffect } from "react";
 import { X, Upload, FileText, ExternalLink, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -264,7 +265,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         setLoading(true);
 
         try {
-            const res = await fetch("/api/admin/reservas/guardar", {
+            const res = await adminFetch("/api/admin/reservas/guardar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados }),

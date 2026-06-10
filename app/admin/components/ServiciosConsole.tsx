@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import { Save, RefreshCw, Plus, Trash2, AlertCircle } from "lucide-react";
 
@@ -31,7 +32,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch("/api/admin/servicios");
+            const res = await adminFetch("/api/admin/servicios");
             const data = await res.json();
             if (data.error) throw new Error(data.error);
             setServicios(data.servicios || []);
@@ -46,7 +47,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
         setSaving(servicio.id);
         setError(null);
         try {
-            const res = await fetch("/api/admin/servicios", {
+            const res = await adminFetch("/api/admin/servicios", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(servicio),
@@ -66,7 +67,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
         setSaving("new");
         setError(null);
         try {
-            const res = await fetch("/api/admin/servicios", {
+            const res = await adminFetch("/api/admin/servicios", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -95,7 +96,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
         if (!confirm(`¿Eliminar "${nombre}"?`)) return;
         setSaving(id);
         try {
-            const res = await fetch("/api/admin/servicios", {
+            const res = await adminFetch("/api/admin/servicios", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),

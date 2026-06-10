@@ -6,10 +6,12 @@ import { trackServerPurchase } from "@/lib/server-analytics";
 import { trackMetaConversion } from "@/lib/meta-capi";
 import { recordConversion, extractUTMParams, extractClientInfo } from "@/lib/track-conversion";
 
+// SIN credenciales de respaldo: si faltan variables de entorno, el commit debe fallar
+// ruidosamente — nunca confirmar pagos contra el ambiente de prueba por accidente.
 const config = {
-  commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "597055555532",
-  apiKey: process.env.WEBPAY_API_KEY || process.env.TRANSBANK_API_KEY || "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-  environment: process.env.WEBPAY_ENV || process.env.TRANSBANK_ENVIRONMENT || "INTEGRATION",
+  commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "",
+  apiKey: process.env.WEBPAY_API_KEY || process.env.TRANSBANK_API_KEY || "",
+  environment: process.env.WEBPAY_ENV || process.env.TRANSBANK_ENVIRONMENT || "",
   apiUrl: (process.env.WEBPAY_ENV === "PRODUCTION" || process.env.TRANSBANK_ENVIRONMENT === "PRODUCTION")
     ? "https://webpay3g.transbank.cl"
     : "https://webpay3gint.transbank.cl"
@@ -31,6 +33,9 @@ type WebpayCommitResponse = {
 };
 
 async function commitTransaction(token: string): Promise<WebpayCommitResponse> {
+  if (!config.commerceCode || !config.apiKey || !config.environment) {
+    throw new Error("Credenciales de Transbank no configuradas: no se puede confirmar el pago");
+  }
   const url = `${config.apiUrl}/rswebpaytransaction/api/webpay/v1.2/transactions/${encodeURIComponent(token)}`;
 
   const response = await fetch(url, {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export async function GET() {
     try {
@@ -31,23 +32,16 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        // Identidad verificada por token de sesión (no por el body)
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado: sesión inválida o expirada" }, { status: 401 });
+        }
+        const adminData = { rol: admin.rol, nombre: admin.nombre };
+        const adminEmail = admin.email;
+
         const body = await request.json();
-        const { type, id, adminEmail, ...payload } = body;
-
-        // VERIFICACIÓN DE IDENTIDAD Y PERMISOS
-        if (!adminEmail) {
-            return NextResponse.json({ error: "Se requiere identificación de administrador" }, { status: 401 });
-        }
-
-        const { data: adminData } = await supabaseAdmin
-            .from("authorized_admins")
-            .select("rol, nombre")
-            .eq("email", adminEmail)
-            .single();
-
-        if (!adminData) {
-            return NextResponse.json({ error: "Administrador no autorizado" }, { status: 403 });
-        }
+        const { type, id, ...payload } = body;
 
         const isViewer = adminData.rol === 'viewer';
         const isWriter = adminData.rol === 'writer';

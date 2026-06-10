@@ -1,3 +1,4 @@
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserPlus, Trash2, Shield, Mail, User, ShieldAlert, History, Key, Edit2, Check, X, Search } from "lucide-react";
@@ -129,7 +130,7 @@ export default function UsersConsole() {
             // Ajustaremos la API para aceptar el email en su lugar si es más fácil, 
             // o haremos un query previo si tenemos permisos.
             
-            const response = await fetch('/api/admin/users/update-password', {
+            const response = await adminFetch('/api/admin/users/update-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

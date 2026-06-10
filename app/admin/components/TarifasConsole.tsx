@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import { Save, RefreshCw, TrendingUp, Users, ArrowRight, Plus, Trash2 } from "lucide-react";
 
@@ -65,7 +66,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
     async function loadData() {
         setLoading(true);
         try {
-            const res = await fetch("/api/admin/tarifas");
+            const res = await adminFetch("/api/admin/tarifas");
             const data = await res.json();
             if (data.temporadas) {
                 const sortedTemporadas = data.temporadas.sort((a: any, b: any) => b.prioridad - a.prioridad);
@@ -89,7 +90,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
     const handleUpdatePrice = async (id: string, newPrice: number) => {
         setSaving(id);
         try {
-            const res = await fetch("/api/admin/tarifas", {
+            const res = await adminFetch("/api/admin/tarifas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, precio_noche: newPrice, adminEmail }),
@@ -109,7 +110,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
         setSaving('temporada');
         try {
             const actionType = isCreating ? 'create_temporada' : 'temporada';
-            const res = await fetch("/api/admin/tarifas", {
+            const res = await adminFetch("/api/admin/tarifas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -142,7 +143,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
 
         setSaving('delete');
         try {
-            const res = await fetch("/api/admin/tarifas", {
+            const res = await adminFetch("/api/admin/tarifas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ type: 'delete_temporada', id: targetId, adminEmail }),

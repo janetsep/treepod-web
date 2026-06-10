@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -65,7 +66,7 @@ export default function AdminDashboard() {
         setSyncingAirbnb(true);
         setSyncResult(null);
         try {
-            const res = await fetch("/api/admin/sync-airbnb?manual=1");
+            const res = await adminFetch("/api/admin/sync-airbnb?manual=1");
             const data = await res.json();
             if (data.ok) {
                 const msg = `✅ Airbnb sincronizado: ${data.total_creadas} nueva${data.total_creadas !== 1 ? 's' : ''}, ${data.total_actualizadas} actualizada${data.total_actualizadas !== 1 ? 's' : ''}`;
@@ -84,7 +85,7 @@ export default function AdminDashboard() {
 
     async function fetchReservas() {
         try {
-            const res = await fetch("/api/admin/reservas");
+            const res = await adminFetch("/api/admin/reservas");
             const data = await res.json();
 
             if (!res.ok) {
@@ -103,7 +104,7 @@ export default function AdminDashboard() {
 
         setActionLoading(id);
         try {
-            const res = await fetch("/api/admin/reservas/cancelar", {
+            const res = await adminFetch("/api/admin/reservas/cancelar", {
                 method: "POST",
                 body: JSON.stringify({ reservaId: id, adminEmail })
             });
@@ -132,7 +133,7 @@ export default function AdminDashboard() {
 
         setActionLoading(id);
         try {
-            const res = await fetch("/api/admin/reservas/eliminar", {
+            const res = await adminFetch("/api/admin/reservas/eliminar", {
                 method: "POST",
                 body: JSON.stringify({ reservaId: id, adminEmail })
             });
@@ -167,7 +168,7 @@ export default function AdminDashboard() {
 
             // Ejecutamos uno por uno para asegurar el flujo de la API de borrado que ya existe
             for (const id of selectedIds) {
-                const res = await fetch("/api/admin/reservas/eliminar", {
+                const res = await adminFetch("/api/admin/reservas/eliminar", {
                     method: "POST",
                     body: JSON.stringify({ reservaId: id, adminEmail })
                 });
@@ -199,7 +200,7 @@ export default function AdminDashboard() {
 
         setActionLoading(id);
         try {
-            const res = await fetch("/api/admin/reservas/confirmar", {
+            const res = await adminFetch("/api/admin/reservas/confirmar", {
                 method: "POST",
                 body: JSON.stringify({ reservaId: id, adminEmail })
             });

@@ -1,26 +1,23 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
     try {
-        const { reservaId, adminEmail } = await request.json();
+        // Identidad verificada por token de sesión (no por el body)
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado: sesión inválida o expirada" }, { status: 401 });
+        }
+        if (!['admin', 'superadmin'].includes(admin.rol)) {
+            return NextResponse.json({ error: "No tienes permisos para eliminar registros." }, { status: 403 });
+        }
+        const adminData = { rol: admin.rol, nombre: admin.nombre };
+        const adminEmail = admin.email;
 
+        const { reservaId } = await request.json();
         if (!reservaId) {
             return NextResponse.json({ error: "ID requerido" }, { status: 400 });
-        }
-
-        if (!adminEmail) {
-            return NextResponse.json({ error: "Se requiere identificación de administrador" }, { status: 401 });
-        }
-
-        const { data: adminData } = await supabaseAdmin
-            .from("authorized_admins")
-            .select("rol, nombre")
-            .eq("email", adminEmail)
-            .single();
-
-        if (!adminData || !['admin', 'superadmin'].includes(adminData.rol)) {
-            return NextResponse.json({ error: "No tienes permisos para eliminar registros." }, { status: 403 });
         }
 
         console.log(`🗑️ Soft-delete por ${adminEmail}: reserva ${reservaId}`);

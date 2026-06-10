@@ -1,35 +1,27 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
     try {
+        // Identidad verificada por token de sesión (no por el body)
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado: sesión inválida o expirada" }, { status: 401 });
+        }
+        if (admin.rol === 'viewer') {
+            return NextResponse.json({ error: "No tienes permisos para guardar o editar registros. Tu perfil es de solo lectura." }, { status: 403 });
+        }
+        const adminData = { rol: admin.rol, nombre: admin.nombre };
+        const adminEmail = admin.email;
+
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, adminEmail, servicios_seleccionados, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
-        
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+
         // Validación básica
         if (!fecha_inicio || !fecha_fin || !domo_id) {
             return NextResponse.json({ error: "Faltan datos obligatorios (Fechas, Domo)" }, { status: 400 });
-        }
-
-        // 1. Verificar administrador
-        if (!adminEmail) {
-            return NextResponse.json({ error: "Identificación de administrador requerida para registrar cambios" }, { status: 401 });
-        }
-
-        const { data: adminData } = await supabaseAdmin
-            .from("authorized_admins")
-            .select("rol, nombre")
-            .eq("email", adminEmail)
-            .single();
-
-        if (!adminData) {
-            return NextResponse.json({ error: "Usuario no autorizado para realizar cambios" }, { status: 403 });
-        }
-
-        // Bloqueo estricto para perfiles de solo lectura (viewer)
-        if (adminData.rol === 'viewer') {
-            return NextResponse.json({ error: "No tienes permisos para guardar o editar registros. Tu perfil es de solo lectura." }, { status: 403 });
         }
 
         const reservaData = {
@@ -134,24 +126,46 @@ export async function POST(request: Request) {
             }
         }
 
-        // Enviar notificación por email y sincronizar calendario según configuración
-        if (!isUpdate && (enviar_confirmacion || sincronizar_calendario)) {
-            const { data: domoData } = await supabaseAdmin
-                .from("domos")
+        const { data: domoData } = await supabaseAdmin
+            .from("domos")
+            .select("nombre")
+            .eq("id", domo_id)
+            .single();
+
+        // Obtener nombres de servicios para el correo/ICS/calendario
+        let extrasNombres: string[] = [];
+        if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
+            const { data: extrasData } = await supabaseAdmin
+                .from("servicios")
                 .select("nombre")
-                .eq("id", domo_id)
-                .single();
+                .in("id", servicios_seleccionados);
+            extrasNombres = (extrasData || []).map((s: any) => s.nombre);
+        }
 
-            // Obtener nombres de servicios para el correo/ICS
-            let extrasNombres: string[] = [];
-            if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
-                const { data: extrasData } = await supabaseAdmin
-                    .from("servicios")
-                    .select("nombre")
-                    .in("id", servicios_seleccionados);
-                extrasNombres = (extrasData || []).map((s: any) => s.nombre);
-            }
+        // Sincronizar SIEMPRE con Google Calendar (idempotente: crea o actualiza el
+        // mismo evento). Aplica a creaciones y ediciones; no bloquea el guardado si falla.
+        const estadoFinal = estado || 'pendiente';
+        if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(estadoFinal)) {
+            NotificationService.syncReservaToCalendar({
+                id: reservaId,
+                nombre,
+                apellido,
+                email,
+                telefono,
+                fecha_inicio,
+                fecha_fin,
+                adultos: adultos || 2,
+                total: total ? Number(total) : 0,
+                monto_pagado: monto_pagado ? Number(monto_pagado) : 0,
+                estado: estadoFinal,
+                fuente: fuente || 'manual_admin',
+                domoNombre: domoData?.nombre || 'Domo',
+                extras: extrasNombres,
+            }).catch(err => console.error('Error sincronizando calendario:', err));
+        }
 
+        // Enviar notificación por email según configuración (solo al crear)
+        if (!isUpdate && (enviar_confirmacion || sincronizar_calendario)) {
             await NotificationService.sendAdminManualReservationNotification({
                 guestName: `${nombre} ${apellido}`.trim(),
                 guestEmail: email || '',

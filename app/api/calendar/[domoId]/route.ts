@@ -76,31 +76,15 @@ export async function GET(
     `X-WR-CALNAME:TreePod ${domoNombre} - Reservas`,
     "X-WR-TIMEZONE:America/Santiago",
     "X-WR-CALDESC:Calendario de ocupación TreePod Glamping Las Trancas",
-    // Definición de zona horaria Chile (necesaria para DTSTART/DTEND con TZID)
-    "BEGIN:VTIMEZONE",
-    "TZID:America/Santiago",
-    "BEGIN:STANDARD",
-    "DTSTART:19700101T000000",
-    "TZOFFSETFROM:-0300",
-    "TZOFFSETTO:-0400",
-    "TZNAME:CLT",
-    "END:STANDARD",
-    "BEGIN:DAYLIGHT",
-    "DTSTART:19700101T000000",
-    "TZOFFSETFROM:-0400",
-    "TZOFFSETTO:-0300",
-    "TZNAME:CLST",
-    "END:DAYLIGHT",
-    "END:VTIMEZONE",
   ];
 
   for (const reserva of reservas || []) {
-    // Check-in: día de llegada a las 16:00 hora Chile
-    const dtstart = formatICalDate(reserva.fecha_inicio) + "T160000";
-
-    // fecha_fin = día de checkout para TODAS las reservas (web, manual y Airbnb).
-    // Check-out a las 12:00 hora Chile.
-    const dtend = formatICalDate(reserva.fecha_fin) + "T120000";
+    // Airbnb solo procesa de forma confiable eventos de DÍA COMPLETO (VALUE=DATE).
+    // Eventos con hora (16:00/12:00) los interpreta mal y deja noches sin bloquear.
+    // DTEND es exclusivo: usar el día de checkout bloquea exactamente las noches
+    // [fecha_inicio, fecha_fin) — el día de salida queda disponible para otra llegada.
+    const dtstart = formatICalDate(reserva.fecha_inicio);
+    const dtend = formatICalDate(reserva.fecha_fin);
 
     const uid = `treepod-${reserva.id}@domostreepod.cl`;
     // Para bloqueos manuales mostramos el motivo (de las notas), no un nombre de huésped
@@ -113,8 +97,8 @@ export async function GET(
     lines.push("BEGIN:VEVENT");
     lines.push(`UID:${uid}`);
     lines.push(`DTSTAMP:${now}`);
-    lines.push(`DTSTART;TZID=America/Santiago:${dtstart}`);
-    lines.push(`DTEND;TZID=America/Santiago:${dtend}`);
+    lines.push(`DTSTART;VALUE=DATE:${dtstart}`);
+    lines.push(`DTEND;VALUE=DATE:${dtend}`);
     lines.push(`SUMMARY:${summary}`);
     lines.push(`STATUS:CONFIRMED`);
     lines.push("END:VEVENT");

@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_123_placeholder");
-
 const ADMIN_EMAIL = "janetsep@gmail.com";
 
 /**
@@ -114,6 +112,10 @@ export async function GET(request: NextRequest) {
             return new NextResponse(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
         }
 
+        if (!process.env.RESEND_API_KEY) {
+            return NextResponse.json({ error: "RESEND_API_KEY no configurada" }, { status: 500 });
+        }
+        const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
             from: "TreePod Reportes <info@domostreepod.cl>",
             to: [ADMIN_EMAIL],

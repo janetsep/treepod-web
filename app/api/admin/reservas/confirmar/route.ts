@@ -1,27 +1,21 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
     try {
-        const { reservaId, adminEmail } = await request.json();
-
-        if (!reservaId || !adminEmail) {
-            return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
+        // Identidad verificada por token de sesión (no por el body)
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado: sesión inválida o expirada" }, { status: 401 });
         }
-
-        // Verificar permisos
-        const { data: adminData, error: adminError } = await supabaseAdmin
-            .from("authorized_admins")
-            .select("rol")
-            .eq("email", adminEmail)
-            .single();
-
-        if (adminError || !adminData) {
-            return NextResponse.json({ error: "No autorizado" }, { status: 403 });
-        }
-
-        if (adminData.rol === 'viewer') {
+        if (admin.rol === 'viewer') {
             return NextResponse.json({ error: "No tienes permisos para confirmar pagos" }, { status: 403 });
+        }
+
+        const { reservaId } = await request.json();
+        if (!reservaId) {
+            return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
         }
 
         // Actualizar a estado PAGADO

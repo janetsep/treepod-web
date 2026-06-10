@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
+
+// Verifica sesión + rol con permiso de escritura para PUT/POST/DELETE
+async function requireWriter(req: Request) {
+    const admin = await getVerifiedAdmin(req);
+    if (!admin) {
+        return NextResponse.json({ error: "No autorizado: sesión inválida o expirada" }, { status: 401 });
+    }
+    if (admin.rol === "viewer") {
+        return NextResponse.json({ error: "Tu perfil es de solo lectura" }, { status: 403 });
+    }
+    return null;
+}
 
 export async function GET() {
     try {
@@ -19,6 +32,8 @@ export async function GET() {
 
 export async function PUT(req: Request) {
     try {
+        const denied = await requireWriter(req);
+        if (denied) return denied;
         const body = await req.json();
         const { id, nombre, descripcion, precio, multiplicador_noches, multiplicador_personas, image_url, activo } = body;
 
@@ -38,6 +53,8 @@ export async function PUT(req: Request) {
 
 export async function POST(req: Request) {
     try {
+        const denied = await requireWriter(req);
+        if (denied) return denied;
         const body = await req.json();
         const { nombre, descripcion, precio, multiplicador_noches, multiplicador_personas, image_url, activo } = body;
 
@@ -56,6 +73,8 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
+        const denied = await requireWriter(req);
+        if (denied) return denied;
         const { id } = await req.json();
 
         const { error } = await supabaseAdmin
