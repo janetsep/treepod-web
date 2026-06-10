@@ -137,11 +137,18 @@ export async function POST(req: Request) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     // 4. Insertar la reserva con fallback para columnas de descuento
+    const nochesDiff = Math.round(
+      (new Date(salida).getTime() - new Date(entrada).getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const totalExtras = (servicios || []).reduce((sum: number, s: any) => sum + (Number(s.total) || 0), 0);
+    const precioNoche = nochesDiff > 0 ? Math.round((total - totalExtras) / nochesDiff) : 0;
+
     const insertPayload: any = {
       fecha_inicio: entrada,
       fecha_fin: salida,
       adultos,
       total,
+      precio_noche: precioNoche,
       domo_id: domoDisponible.id,
       estado: "pendiente_pago",
       expires_at: expiresAt,

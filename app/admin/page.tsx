@@ -11,10 +11,11 @@ import UsersConsole from "./components/UsersConsole";
 import ClientesConsole from "./components/ClientesConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock } from "lucide-react";
+import SicraConsole from "./components/SicraConsole";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -469,6 +470,13 @@ export default function AdminDashboard() {
                             Accesos
                         </button>
                     )}
+                    <button
+                        onClick={() => setView('sicra')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'sicra' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                    >
+                        <ShoppingCart className="w-4 h-4" />
+                        SICRA
+                    </button>
                     <Link
                         href="/admin/dashboard"
                         className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-400 hover:text-gray-600 hover:bg-white/50"
@@ -478,7 +486,9 @@ export default function AdminDashboard() {
                     </Link>
                 </div>
 
-                {view === 'tarifas' ? (
+                {view === 'sicra' ? (
+                    <SicraConsole />
+                ) : view === 'tarifas' ? (
                     <TarifasConsole adminRole={adminRole} adminEmail={adminEmail} />
                 ) : view === 'servicios' ? (
                     <ServiciosConsole adminRole={adminRole} />
@@ -801,15 +811,34 @@ export default function AdminDashboard() {
                                                                     "{reserva.notas || reserva.mensaje}"
                                                                 </div>
                                                             )}
-                                                            {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
-                                                                <div className="mt-2 flex flex-wrap gap-1">
-                                                                    {reserva.reserva_servicios.map((s: any) => (
-                                                                        <span key={s.id} className="bg-primary/8 text-primary border border-primary/20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tight">
-                                                                            {s.servicios?.nombre || 'Extra'}
-                                                                        </span>
-                                                                    ))}
-                                                                </div>
-                                                            )}
+                                                            {(() => {
+                                                                const noches = Math.round((new Date(reserva.fecha_fin).getTime() - new Date(reserva.fecha_inicio).getTime()) / 86400000);
+                                                                const extras = reserva.reserva_servicios || [];
+                                                                const sumExtras = extras.reduce((s: number, e: any) => s + (Number(e.total) || 0), 0);
+                                                                const pn = reserva.precio_noche
+                                                                    ? Number(reserva.precio_noche)
+                                                                    : noches > 0 ? Math.round((Number(reserva.total || 0) - sumExtras) / noches) : 0;
+                                                                return (
+                                                                    <div className="mt-2 space-y-0.5 text-[9px] text-gray-500 font-mono">
+                                                                        {pn > 0 && (
+                                                                            <div className="flex justify-between gap-3">
+                                                                                <span className="text-gray-400">🏠 {noches}n × ${pn.toLocaleString('es-CL')}</span>
+                                                                                <span className="font-bold text-gray-600">${(noches * pn).toLocaleString('es-CL')}</span>
+                                                                            </div>
+                                                                        )}
+                                                                        {extras.map((s: any) => (
+                                                                            <div key={s.id} className="flex justify-between gap-3">
+                                                                                <span className="text-gray-400">+ {s.servicios?.nombre || 'Extra'}{s.cantidad > 1 ? ` ×${s.cantidad}` : ''}</span>
+                                                                                <span className="font-bold text-gray-600">${(Number(s.total) || 0).toLocaleString('es-CL')}</span>
+                                                                            </div>
+                                                                        ))}
+                                                                        <div className="flex justify-between gap-3 pt-1 border-t border-gray-100 font-black text-gray-700">
+                                                                            <span>Total vendido</span>
+                                                                            <span>${(Number(reserva.total) || 0).toLocaleString('es-CL')}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })()}
                                                         </td>
                                                         <td className="px-4 py-4">
                                                             <div className="text-gray-800 font-bold text-[11px] whitespace-nowrap">

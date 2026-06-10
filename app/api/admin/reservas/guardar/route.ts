@@ -99,6 +99,7 @@ export async function POST(request: Request) {
 
         // Insertar/actualizar servicios seleccionados en reserva_servicios
         const reservaId = id || result.data.id;
+        let sumExtras = 0;
         if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
             if (isUpdate) {
                 await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
@@ -110,6 +111,7 @@ export async function POST(request: Request) {
                 .in("id", servicios_seleccionados);
 
             if (serviciosData && serviciosData.length > 0) {
+                sumExtras = serviciosData.reduce((s, sv) => s + (sv.precio || 0), 0);
                 const registros = serviciosData.map((servicio) => ({
                     reserva_id: reservaId,
                     servicio_id: servicio.id,
@@ -124,6 +126,15 @@ export async function POST(request: Request) {
             if (Array.isArray(servicios_seleccionados)) {
                 await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
             }
+        }
+
+        // Guardar precio_noche histórico (precio al momento de la venta, no el actual del catálogo)
+        const noches = Math.round(
+            (new Date(fecha_fin).getTime() - new Date(fecha_inicio).getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const precioNocheCalc = noches > 0 ? Math.round((Number(total || 0) - sumExtras) / noches) : 0;
+        if (precioNocheCalc > 0) {
+            await supabaseAdmin.from("reservas").update({ precio_noche: precioNocheCalc }).eq("id", reservaId);
         }
 
         const { data: domoData } = await supabaseAdmin
