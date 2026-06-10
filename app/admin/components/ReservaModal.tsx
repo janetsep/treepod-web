@@ -15,6 +15,8 @@ interface Servicio {
     nombre: string;
     precio: number;
     activo: boolean;
+    multiplicador_noches: boolean;
+    multiplicador_personas: boolean;
 }
 
 interface Reserva {
@@ -123,6 +125,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
     const [uploading, setUploading] = useState(false);
     const [serviciosDisponibles, setServiciosDisponibles] = useState<Servicio[]>([]);
     const [serviciosSeleccionados, setServiciosSeleccionados] = useState<string[]>([]);
+    const [serviciosCortesia, setServiciosCortesia] = useState<string[]>([]);
+    const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
     const [loadingServicios, setLoadingServicios] = useState(false);
     const [savedReservaData, setSavedReservaData] = useState<{ id: string; nombre: string; domoId: string } | null>(null);
 
@@ -176,6 +180,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     sincronizar_calendario: true
                 });
                 setServiciosSeleccionados([]);
+                setServiciosCortesia([]);
             }
 
             // Cargar servicios disponibles
@@ -195,6 +200,21 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     .map((rs: any) => rs.servicios?.id || rs.servicio_id)
                     .filter(Boolean);
                 setServiciosSeleccionados(ids);
+                const cortesiaIds = reservaToEdit.reserva_servicios
+                    .filter((rs: any) => rs.es_cortesia)
+                    .map((rs: any) => rs.servicios?.id || rs.servicio_id)
+                    .filter(Boolean);
+                setServiciosCortesia(cortesiaIds);
+                // Recuperar noches guardadas por servicio (para cena con noches parciales)
+                const nochesMap: Record<string, number> = {};
+                reservaToEdit.reserva_servicios.forEach((rs: any) => {
+                    const sid = rs.servicios?.id || rs.servicio_id;
+                    if (sid && rs.cantidad && rs.cantidad > 1) nochesMap[sid] = rs.cantidad;
+                });
+                setNochesPorServicio(nochesMap);
+            } else {
+                setServiciosCortesia([]);
+                setNochesPorServicio({});
             }
         }
     }, [isOpen, reservaToEdit, domos]);
@@ -258,6 +278,15 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         setServiciosSeleccionados((prev) =>
             prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
         );
+        // Si se deselecciona, quitar también de cortesía
+        setServiciosCortesia((prev) => prev.filter((s) => s !== id));
+    };
+
+    const toggleCortesia = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        setServiciosCortesia((prev) =>
+            prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+        );
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -268,7 +297,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
             const res = await adminFetch("/api/admin/reservas/guardar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados }),
+                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados, servicios_cortesia: serviciosCortesia, noches_por_servicio: nochesPorServicio }),
             });
             const data = await res.json();
 
@@ -552,42 +581,118 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         ) : serviciosDisponibles.length === 0 ? (
                             <p className="text-xs text-gray-400 font-bold py-2">No hay servicios adicionales disponibles.</p>
                         ) : (
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                {serviciosDisponibles.map((servicio) => {
-                                    const selected = serviciosSeleccionados.includes(servicio.id);
-                                    return (
-                                        <button
-                                            key={servicio.id}
-                                            type="button"
-                                            disabled={isViewer}
-                                            onClick={() => toggleServicio(servicio.id)}
-                                            className={`rounded-2xl p-4 text-left transition-all border-2 ${
-                                                selected
-                                                    ? "bg-primary/5 border-primary shadow-sm shadow-primary/10"
-                                                    : "bg-gray-50 border-gray-100 hover:border-gray-200"
-                                            } ${isViewer ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-                                        >
-                                            <div className="flex items-start justify-between gap-2">
-                                                <span className={`text-xs font-black leading-tight ${selected ? "text-primary" : "text-gray-700"}`}>
-                                                    {servicio.nombre}
-                                                </span>
-                                                <div className={`w-4 h-4 rounded-md border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all ${
-                                                    selected ? "bg-primary border-primary" : "border-gray-300"
-                                                }`}>
-                                                    {selected && (
-                                                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                        </svg>
+                            (() => {
+                                const noches = formData.fecha_inicio && formData.fecha_fin
+                                    ? Math.max(1, Math.round((new Date(formData.fecha_fin).getTime() - new Date(formData.fecha_inicio).getTime()) / 86400000))
+                                    : 1;
+                                const adultos = Number(formData.adultos) || 2;
+                                return (
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {serviciosDisponibles.map((servicio) => {
+                                            const selected = serviciosSeleccionados.includes(servicio.id);
+                                            const esCortesia = serviciosCortesia.includes(servicio.id);
+                                            const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico");
+                                            // Noches a usar: cena usa selector, el resto siempre todas las noches
+                                            const nochesEste = esCena
+                                                ? (nochesPorServicio[servicio.id] ?? 1)
+                                                : noches;
+                                            const cantidad = (servicio.multiplicador_noches ? nochesEste : 1)
+                                                           * (servicio.multiplicador_personas ? adultos : 1);
+                                            const subtotal = esCortesia ? 0 : servicio.precio * cantidad;
+                                            const etiqueta = (() => {
+                                                const partes = [];
+                                                if (servicio.multiplicador_noches) partes.push(`${nochesEste}n`);
+                                                if (servicio.multiplicador_personas) partes.push(`${adultos}p`);
+                                                return partes.length ? partes.join(" × ") : "fijo";
+                                            })();
+                                            return (
+                                                <div key={servicio.id} className="flex flex-col gap-1">
+                                                    <button
+                                                        type="button"
+                                                        disabled={isViewer}
+                                                        onClick={() => toggleServicio(servicio.id)}
+                                                        className={`rounded-2xl p-4 text-left transition-all border-2 w-full ${
+                                                            selected && esCortesia
+                                                                ? "bg-amber-50 border-amber-400 shadow-sm shadow-amber-100"
+                                                                : selected
+                                                                ? "bg-primary/5 border-primary shadow-sm shadow-primary/10"
+                                                                : "bg-gray-50 border-gray-100 hover:border-gray-200"
+                                                        } ${isViewer ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+                                                    >
+                                                        <div className="flex items-start justify-between gap-2">
+                                                            <span className={`text-xs font-black leading-tight ${
+                                                                selected && esCortesia ? "text-amber-700" : selected ? "text-primary" : "text-gray-700"
+                                                            }`}>
+                                                                {servicio.nombre}
+                                                            </span>
+                                                            <div className={`w-4 h-4 rounded-md border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all ${
+                                                                selected && esCortesia ? "bg-amber-400 border-amber-400" :
+                                                                selected ? "bg-primary border-primary" : "border-gray-300"
+                                                            }`}>
+                                                                {selected && (
+                                                                    <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                                            {esCortesia ? (
+                                                                <>
+                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString()}</span>
+                                                                    <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md">CORTESÍA</span>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <span className={`text-[10px] font-black ${selected ? "text-primary" : "text-gray-400"}`}>
+                                                                        ${servicio.precio.toLocaleString()} × {etiqueta}
+                                                                    </span>
+                                                                    {selected && cantidad > 1 && (
+                                                                        <span className="text-[10px] font-black text-green-700 bg-green-50 px-1.5 py-0.5 rounded-md">
+                                                                            = ${subtotal.toLocaleString()}
+                                                                        </span>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </button>
+                                                    {/* Selector de noches para cena (puede ser parcial) */}
+                                                    {selected && esCena && !esCortesia && !isViewer && (
+                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Noches:</span>
+                                                            <div className="flex items-center gap-1">
+                                                                <button type="button"
+                                                                    onClick={() => setNochesPorServicio(p => ({ ...p, [servicio.id]: Math.max(1, (p[servicio.id] ?? 1) - 1) }))}
+                                                                    className="w-5 h-5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600 font-black text-xs flex items-center justify-center"
+                                                                >−</button>
+                                                                <span className="text-xs font-black text-primary w-4 text-center">{nochesPorServicio[servicio.id] ?? 1}</span>
+                                                                <button type="button"
+                                                                    onClick={() => setNochesPorServicio(p => ({ ...p, [servicio.id]: Math.min(noches, (p[servicio.id] ?? 1) + 1) }))}
+                                                                    className="w-5 h-5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600 font-black text-xs flex items-center justify-center"
+                                                                >+</button>
+                                                            </div>
+                                                            <span className="text-[10px] text-gray-400 font-bold">de {noches}</span>
+                                                        </div>
+                                                    )}
+                                                    {selected && !isViewer && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => toggleCortesia(e, servicio.id)}
+                                                            className={`text-[10px] font-black uppercase tracking-widest py-1.5 rounded-xl transition-all ${
+                                                                esCortesia
+                                                                    ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                                                                    : "bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                                                            }`}
+                                                        >
+                                                            {esCortesia ? "✓ Cortesía (quitar)" : "Marcar como cortesía"}
+                                                        </button>
                                                     )}
                                                 </div>
-                                            </div>
-                                            <p className={`text-[10px] font-black mt-1.5 ${selected ? "text-primary/70" : "text-gray-400"}`}>
-                                                ${servicio.precio.toLocaleString()}
-                                            </p>
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })()
                         )}
                     </div>
 

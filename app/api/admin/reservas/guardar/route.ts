@@ -17,7 +17,8 @@ export async function POST(request: Request) {
         const adminEmail = admin.email;
 
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, noches_por_servicio, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+        const nochesPorServicio: Record<string, number> = noches_por_servicio || {};
         const cortesiaSet = new Set<string>(Array.isArray(servicios_cortesia) ? servicios_cortesia : []);
 
         // Validación básica
@@ -120,9 +121,14 @@ export async function POST(request: Request) {
             if (serviciosData && serviciosData.length > 0) {
                 const registros = serviciosData.map((servicio) => {
                     const esCortesia = cortesiaSet.has(servicio.id);
+                    const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico");
+                    // Para cena: usar noches elegidas por el admin; para otros: todas las noches
+                    const nochesEste = (esCena && nochesPorServicio[servicio.id])
+                        ? nochesPorServicio[servicio.id]
+                        : noches;
                     // Calcular cantidad real según multiplicadores del servicio
                     let cantidad = 1;
-                    if (servicio.multiplicador_noches) cantidad *= noches;
+                    if (servicio.multiplicador_noches) cantidad *= nochesEste;
                     if (servicio.multiplicador_personas) cantidad *= numAdultos;
                     const precioUnitario = esCortesia ? 0 : (servicio.precio || 0);
                     const subtotal = esCortesia ? 0 : precioUnitario * cantidad;
