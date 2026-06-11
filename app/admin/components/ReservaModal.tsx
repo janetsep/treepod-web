@@ -684,7 +684,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                     : "bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
                                                             }`}
                                                         >
-                                                            {esCortesia ? "✓ Cortesía (quitar)" : "Marcar como cortesía"}
+                                                            {esCortesia ? "Cortesia (quitar)" : "Marcar como cortesia"}
                                                         </button>
                                                     )}
                                                 </div>

@@ -75,14 +75,14 @@ export default function AdminDashboard() {
             const res = await adminFetch("/api/admin/sync-airbnb?manual=1");
             const data = await res.json();
             if (data.ok) {
-                const msg = `✅ Airbnb sincronizado: ${data.total_creadas} nueva${data.total_creadas !== 1 ? 's' : ''}, ${data.total_actualizadas} actualizada${data.total_actualizadas !== 1 ? 's' : ''}`;
+                const msg = `Airbnb sincronizado: ${data.total_creadas} nueva${data.total_creadas !== 1 ? 's' : ''}, ${data.total_actualizadas} actualizada${data.total_actualizadas !== 1 ? 's' : ''}`;
                 setSyncResult(msg);
                 await fetchReservas(); // refrescar lista
             } else {
-                setSyncResult(`⚠️ ${data.error || "Error en sync"}`);
+                setSyncResult(`Error: ${data.error || "Error en sync"}`);
             }
         } catch {
-            setSyncResult("⚠️ Error de conexión al sincronizar");
+            setSyncResult("Error de conexión al sincronizar");
         } finally {
             setSyncingAirbnb(false);
             setTimeout(() => setSyncResult(null), 8000);
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
     async function deleteReserva(id: string, estado: string, montoPagado: number) {
         const isConfirmed = estado === 'pagado' && montoPagado > 0;
         const msg = isConfirmed
-            ? `⚠️ Esta reserva tiene pago confirmado de $${montoPagado.toLocaleString()}. ¿Estás SEGURA que deseas eliminarla permanentemente? Esta acción es IRREVERSIBLE.`
+            ? `Esta reserva tiene pago confirmado de $${montoPagado.toLocaleString()}. ¿Estás SEGURA que deseas eliminarla permanentemente? Esta acción es IRREVERSIBLE.`
             : `¿Eliminar permanentemente este registro? Esta acción es irreversible.`;
 
         if (!confirm(msg)) return;
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
 
                 // Oferta de agregar al calendario
                 const reserva = reservas.find(r => r.id === id);
-                const quiereCalendario = confirm("✅ Reserva confirmada.\n\n¿Deseas agregar esta reserva a Google Calendar?");
+                const quiereCalendario = confirm("Reserva confirmada.\n\n¿Deseas agregar esta reserva a Google Calendar?");
 
                 if (quiereCalendario && reserva) {
                     const clientName = reserva.clientes?.nombre
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
 
                     const startDate = reserva.fecha_inicio?.replace(/-/g, "");
                     const endDate = reserva.fecha_fin?.replace(/-/g, "");
-                    const title = encodeURIComponent(`🏕 TreePod — ${clientName.trim()}`);
+                    const title = encodeURIComponent(`TreePod — ${clientName.trim()}`);
 
                     // Obtener desglose real de tarifas por tramo desde el RPC
                     let desgloseLinea = "";
@@ -295,7 +295,7 @@ export default function AdminDashboard() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert(`✅ Pago registrado. ${data.saldo > 0 ? `Saldo restante: $${data.saldo.toLocaleString('es-CL')}` : 'Reserva pagada por completo.'}`);
+                alert(`Pago registrado. ${data.saldo > 0 ? `Saldo restante: $${data.saldo.toLocaleString('es-CL')}` : 'Reserva pagada por completo.'}`);
                 setPagoReserva(null);
                 fetchReservas();
             } else {
@@ -522,7 +522,7 @@ export default function AdminDashboard() {
                                                 <span>{r.adultos || 2}p</span>
                                                 {saldo > 0
                                                     ? <span className="text-amber-700 font-black bg-amber-50 px-2 py-0.5 rounded">Cobrar saldo ${saldo.toLocaleString('es-CL')}</span>
-                                                    : <span className="text-green-600 font-bold">Pagado ✓</span>}
+                                                    : <span className="text-green-600 font-bold">Pagado</span>}
                                             </div>
                                             {r.reserva_servicios?.length > 0 && (
                                                 <div className="flex flex-wrap gap-1 mt-1.5">
@@ -745,7 +745,7 @@ export default function AdminDashboard() {
                                                 <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros.</td></tr>
                                             ) : paginatedReservas.map((reserva) => {
                                                 const clientName = reserva.estado === "bloqueado"
-                                                    ? `🔒 Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
+                                                    ? `Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
                                                     : reserva.clientes?.nombre
                                                         ? `${reserva.clientes.nombre} ${reserva.clientes.apellido || ""}`
                                                         : `${reserva.nombre || "Sin nombre"} ${reserva.apellido || ""}`;
@@ -822,7 +822,7 @@ export default function AdminDashboard() {
                                                                     <div className="mt-2 space-y-0.5 text-[9px] text-gray-500 font-mono">
                                                                         {pn > 0 && (
                                                                             <div className="flex justify-between gap-3">
-                                                                                <span className="text-gray-400">🏠 {noches}n × ${pn.toLocaleString('es-CL')}</span>
+                                                                                <span className="text-gray-400">{noches}n × ${pn.toLocaleString('es-CL')}</span>
                                                                                 <span className="font-bold text-gray-600">${(noches * pn).toLocaleString('es-CL')}</span>
                                                                             </div>
                                                                         )}

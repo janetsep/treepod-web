@@ -32,7 +32,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
     async function handleAction(reservaId: string, action: "restore" | "permanent_delete") {
         const msg = action === "restore"
             ? "¿Restaurar esta reserva?"
-            : "⚠️ ¿Eliminar PERMANENTEMENTE? Esta acción es IRREVERSIBLE.";
+            : "¿Eliminar PERMANENTEMENTE? Esta acción es IRREVERSIBLE.";
         if (!confirm(msg)) return;
 
         setActionLoading(reservaId);

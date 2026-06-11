@@ -162,7 +162,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                                             const res = matches[0];
                                             if (matches.length > 1) {
                                                 cellClass = "bg-red-500 text-white";
-                                                content = "⚠️";
+                                                content = "!";
                                             } else if (res.estado === 'pagado') {
                                                 cellClass = "bg-green-500 text-white";
                                                 content = res.id.slice(-5).toUpperCase();
