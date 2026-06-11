@@ -12,7 +12,7 @@ import ClientesConsole from "./components/ClientesConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
 import SicraConsole from "./components/SicraConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart } from "lucide-react";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail } from "lucide-react";
 
 export default function AdminDashboard() {
     const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra'>('reservas');
@@ -925,6 +925,17 @@ export default function AdminDashboard() {
                                                                         <XCircle className="w-3.5 h-3.5" />
                                                                     </button>
                                                                 )}
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        const { data: { session } } = await supabase.auth.getSession();
+                                                                        const token = session?.access_token || '';
+                                                                        window.open(`/api/admin/reservas/email-preview?id=${reserva.id}&token=${token}`, '_blank');
+                                                                    }}
+                                                                    className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-500 rounded-lg transition-all border border-blue-100"
+                                                                    title="Ver correo enviado al huésped"
+                                                                >
+                                                                    <Mail className="w-3.5 h-3.5" />
+                                                                </button>
                                                                 {['admin', 'superadmin'].includes(adminRole || '') && (
                                                                     <button
                                                                         onClick={() => deleteReserva(reserva.id, reserva.estado, reserva.monto_pagado || 0)}
