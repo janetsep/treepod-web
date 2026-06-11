@@ -245,7 +245,7 @@ export default function DashboardAdmin() {
                             <p className="text-xs text-gray-400 italic">Meta Ads no está conectado todavía (falta el token de acceso).</p>
                         ) : metaAds.error === "token_vencido" ? (
                             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 font-bold">
-                                ⚠️ El token de Meta venció — hay que renovarlo para volver a ver el gasto (caducan cada ~60 días).
+                                El token de Meta venció — hay que renovarlo para volver a ver el gasto (caducan cada ~60 días).
                             </div>
                         ) : metaAds.error ? (
                             <p className="text-xs text-red-500">Error consultando Meta Ads: {metaAds.error}</p>
