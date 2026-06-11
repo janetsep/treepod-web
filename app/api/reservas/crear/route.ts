@@ -220,6 +220,34 @@ export async function POST(req: Request) {
       }
     }
 
+    // 5. Registrar cobros históricos en reserva_cobros (inmutables, fuente de verdad para facturación)
+    const cobros: any[] = [];
+    if (precioNoche > 0) {
+      cobros.push({
+        reserva_id: data.id,
+        tipo: 'hospedaje',
+        concepto: 'Hospedaje',
+        cantidad: nochesDiff,
+        precio_unitario: precioNoche,
+        total: precioNoche * nochesDiff,
+        es_cortesia: false,
+      });
+    }
+    for (const s of (servicios || [])) {
+      cobros.push({
+        reserva_id: data.id,
+        tipo: 'extra',
+        concepto: s.nombre || 'Extra',
+        cantidad: s.cantidad || 1,
+        precio_unitario: s.precio_unitario || 0,
+        total: s.total || 0,
+        es_cortesia: false,
+      });
+    }
+    if (cobros.length > 0) {
+      await supabaseAdmin.from("reserva_cobros").insert(cobros);
+    }
+
     return NextResponse.json({ id: data.id });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Error desconocido";

@@ -156,6 +156,41 @@ export async function POST(request: Request) {
             await supabaseAdmin.from("reservas").update({ precio_noche: precioNocheCalc }).eq("id", reservaId);
         }
 
+        // Registrar cobros en reserva_cobros (inmutables — solo al crear, no al editar)
+        if (!isUpdate) {
+            const cobros: any[] = [];
+            if (precioNocheCalc > 0 && noches > 0) {
+                cobros.push({
+                    reserva_id: reservaId,
+                    tipo: 'hospedaje',
+                    concepto: 'Hospedaje',
+                    cantidad: noches,
+                    precio_unitario: precioNocheCalc,
+                    total: precioNocheCalc * noches,
+                    es_cortesia: false,
+                });
+            }
+            // Leer servicios que se acaban de insertar para agregarlos con sus totales reales
+            const { data: cobrosExtras } = await supabaseAdmin
+                .from("reserva_servicios")
+                .select("cantidad, precio_unitario, total, es_cortesia, servicios(nombre)")
+                .eq("reserva_id", reservaId);
+            for (const e of (cobrosExtras || [])) {
+                cobros.push({
+                    reserva_id: reservaId,
+                    tipo: 'extra',
+                    concepto: (e as any).servicios?.nombre || 'Extra',
+                    cantidad: e.cantidad || 1,
+                    precio_unitario: e.precio_unitario || 0,
+                    total: e.total || 0,
+                    es_cortesia: e.es_cortesia || false,
+                });
+            }
+            if (cobros.length > 0) {
+                await supabaseAdmin.from("reserva_cobros").insert(cobros);
+            }
+        }
+
         const { data: domoData } = await supabaseAdmin
             .from("domos")
             .select("nombre")
