@@ -170,6 +170,7 @@ export async function GET(request: NextRequest) {
         domo: domo.nombre,
         creadas: 0,
         actualizadas: 0,
+        canceladas: 0,
         errores: [] as string[],
       };
 
@@ -302,6 +303,43 @@ export async function GET(request: NextRequest) {
             }
           }
         }
+
+        // 5. Reconciliación de CANCELACIONES: una reserva cancelada en Airbnb desaparece
+        // del feed. Buscamos reservas de Airbnb en la BD (FUTURAS y activas) cuyo UID ya
+        // no está en el feed y las marcamos "cancelada" → libera las fechas automáticamente.
+        // Solo futuras: el iCal de Airbnb deja de listar las pasadas, y esas NO son cancelaciones.
+        // RESGUARDO: solo reconciliar si el feed es un calendario válido (evita cancelar
+        // reservas reales por un feed vacío/roto que igual devolvió 200).
+        if (!icalText.includes("BEGIN:VCALENDAR")) {
+          (domoResult.errores as string[]).push("Feed iCal inválido: se omitió la reconciliación de cancelaciones por seguridad.");
+          results.push(domoResult);
+          continue;
+        }
+        const uidsEnFeed = new Set(reservas.map((e) => e.uid));
+        const hoyStr = new Date().toISOString().slice(0, 10);
+        const { data: activasBd } = await supabaseAdmin
+          .from("reservas")
+          .select("id, airbnb_uid")
+          .eq("domo_id", domo.id)
+          .eq("fuente", "airbnb")
+          .not("airbnb_uid", "is", null)
+          .is("deleted_at", null)
+          .gte("fecha_fin", hoyStr)
+          .in("estado", ["confirmado", "pagado", "pendiente", "pending_transfer_confirmation"]);
+
+        for (const r of activasBd || []) {
+          if (r.airbnb_uid && !uidsEnFeed.has(r.airbnb_uid)) {
+            const { error: cancelErr } = await supabaseAdmin
+              .from("reservas")
+              .update({ estado: "cancelada", updated_at: new Date().toISOString() })
+              .eq("id", r.id);
+            if (cancelErr) {
+              (domoResult.errores as string[]).push(`Error cancelando ${r.airbnb_uid}: ${cancelErr.message}`);
+            } else {
+              (domoResult.canceladas as number)++;
+            }
+          }
+        }
       } catch (err: unknown) {
         (domoResult.errores as string[]).push(
           err instanceof Error ? err.message : "Error desconocido"
@@ -313,6 +351,7 @@ export async function GET(request: NextRequest) {
 
     const totalCreadas = results.reduce((s, r) => s + (r.creadas as number), 0);
     const totalActualizadas = results.reduce((s, r) => s + (r.actualizadas as number), 0);
+    const totalCanceladas = results.reduce((s, r) => s + (r.canceladas as number), 0);
 
     return NextResponse.json({
       ok: true,
@@ -321,6 +360,7 @@ export async function GET(request: NextRequest) {
       domos_sincronizados: domos.length,
       total_creadas: totalCreadas,
       total_actualizadas: totalActualizadas,
+      total_canceladas: totalCanceladas,
       detalle: results,
     });
   } catch (err: unknown) {
