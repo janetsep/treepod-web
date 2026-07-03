@@ -8,15 +8,15 @@ export async function generateMetadata(): Promise<Metadata> {
         : 'Tarifas dinámicas según temporada';
 
     return {
-        title: 'Domos Geodésicos Las Trancas | Tina y Mascotas — TreePod',
-        description: `Glamping Las Trancas con domos geodésicos. Acepta mascotas, tinaja exclusiva opcional, WiFi Starlink. ${priceText} en Valle Las Trancas.`,
+        title: 'Domos Geodésicos en Las Trancas | TreePod Glamping',
+        description: `Glamping Las Trancas con domos geodésicos. Tinaja exclusiva opcional, WiFi Starlink, estufa a pellet. ${priceText} en Valle Las Trancas.`,
         alternates: {
             canonical: '/domos',
         },
         openGraph: {
-            title: 'Domos Geodésicos en Las Trancas | Glamping con Tina Caliente y Mascotas',
-            description: 'Glamping Las Trancas con domos geodésicos. Acepta mascotas, tinaja exclusiva opcional, WiFi Starlink en Valle Las Trancas.',
-            images: ['/images/hero/domo-treepod-ok-12.jpg'],
+            title: 'Domos Geodésicos en Las Trancas | Glamping con Tinaja Caliente',
+            description: 'Glamping Las Trancas con domos geodésicos. Tinaja exclusiva opcional, WiFi Starlink y estufa a pellet en Valle Las Trancas.',
+            images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
         },
     };
 }

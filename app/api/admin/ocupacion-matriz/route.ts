@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +11,10 @@ export const dynamic = "force-dynamic";
  * Cuentan como vendidas las noches de reservas firmes: pagado, confirmado, pendiente,
  * pending_transfer_confirmation. Los bloqueos técnicos no suman ni restan (v1).
  */
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
         const { count: domosActivos } = await supabaseAdmin
             .from("domos")
             .select("*", { count: "exact", head: true })

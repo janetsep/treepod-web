@@ -10,6 +10,7 @@ export default function NotFound() {
                     src="/images/branding/logo-treepod.jpg"
                     alt="TreePod Logo"
                     fill
+                    sizes="256px"
                     className="object-contain"
                 />
             </div>

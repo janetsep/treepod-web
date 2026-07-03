@@ -12,31 +12,31 @@ export default function GuestGuidePage() {
         {
             title: "Llegada y Acceso",
             icon: "vpn_key",
-            content: "El Check-in es a partir de las 15:00 hrs. Tu domo cuenta con una cerradura digital. Recibirás tu código personal vía WhatsApp el día de tu llegada.",
+            content: "El check-in es a partir de las 16:00 hrs. Tu domo tiene cerradura digital. Recibirás tu código personal por WhatsApp el día de tu llegada.",
             items: [
-                "Llegada (Check-in): 15:00 hrs",
-                "Salida (Check-out): 11:00 hrs",
+                "Llegada (check-in): 16:00 hrs",
+                "Salida (check-out): 12:00 hrs",
                 "Código de acceso único por estadía"
             ]
         },
         {
             title: "Conexión en el Bosque",
             icon: "wifi",
-            content: "Sabemos que estar en la montaña no significa estar incomunicado. Contamos con Starlink de alta velocidad para que compartas tu experiencia o trabajes si lo necesitas.",
+            content: "Estar en la montaña no significa quedar incomunicado. Tenemos Starlink para que compartas tu estadía o trabajes si lo necesitas.",
             items: [
                 "Red: TreePod_Refugio",
                 "Clave: treepod2024",
-                "Cobertura en todo el domo y terraza"
+                "Cobertura en el domo y la terraza"
             ]
         },
         {
-            title: "Experiencia Tinaja Directa",
+            title: "Tinaja de Ciprés (servicio de temporada)",
             icon: "hot_tub",
-            content: "Nuestras tinajas de ciprés están diseñadas para un uso simple. El agua se mantiene a temperatura ideal mediante una caldera de leña de alta eficiencia.",
+            content: "Nuestras tinajas de ciprés son de uso simple. El agua se calienta con una caldera de leña. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             items: [
-                "Tiempo de calentamiento: 3-4 horas",
+                "Tiempo de calentamiento: 3 a 4 horas",
                 "Sales minerales de cortesía incluidas",
-                "Uso recomendado bajo las estrellas"
+                "Disponible solo en temporada (consúltanos)"
             ]
         },
         {
@@ -60,6 +60,7 @@ export default function GuestGuidePage() {
                     src="/images/interiors/interior-domo-acogedor-78-2.jpg"
                     alt="Interior Domo TreePod"
                     fill
+                    sizes="100vw"
                     className="object-cover"
                     priority
                 />
@@ -69,7 +70,7 @@ export default function GuestGuidePage() {
                         <span className="text-white text-xs font-black tracking-[0.2em] uppercase">Valle Las Trancas · Nevados de Chillán</span>
                     </div>
                     <h1 className="h1-display text-white mb-4 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">Guía del Huésped</h1>
-                    <p className="text-white/80 uppercase tracking-[0.3em] text-xs font-bold">Todo lo que necesitas saber para tu estadía perfecta</p>
+                    <p className="text-white/80 uppercase tracking-[0.3em] text-xs font-bold">Lo que necesitas saber para tu estadía</p>
                 </div>
             </section>
 

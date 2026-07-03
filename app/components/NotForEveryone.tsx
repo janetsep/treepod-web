@@ -41,8 +41,8 @@ export default function NotForEveryone() {
                             >
                                 Reservar mi escapada
                             </Link>
-                            <p className="text-[10px] md:text-xs text-text-sub font-bold italic pl-2">
-                                Haz clic en el botón para reservar tu domo y comenzar a disfrutar.
+                            <p className="text-[10px] md:text-xs text-text-sub font-bold pl-2">
+                                Reservas con el 50%. El saldo lo pagas en el check-in.
                             </p>
                         </div>
                     </div>
@@ -54,6 +54,7 @@ export default function NotForEveryone() {
                                 src="/images/concept/croquis-aereo-nuevo.png"
                                 alt="Nuestro glamping - Ubicación estratégica"
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                                 className="object-contain object-center transition-transform duration-[10s] group-hover:scale-110"
                             />
                         </div>

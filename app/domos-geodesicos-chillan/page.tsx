@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Domos Geodésicos en Chillán | Glamping TreePod - Valle Las Trancas',
-    description: 'Domos geodésicos habitables en Chillán, Valle Las Trancas. Estructura de 6 metros, tinaja privada, estufa a pellet y WiFi Starlink. A 15 min de Nevados de Chillán. Desde $110.000/noche.',
+    title: 'Domos Geodésicos en Chillán | TreePod Las Trancas',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estructura de 6m, estufa a pellet, cocina equipada y WiFi Starlink, a 15 min de Nevados de Chillán.',
     keywords: [
         'domos chillan',
         'domos en chillan',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Domos Geodésicos en Chillán | Glamping TreePod',
-        description: 'Domos geodésicos de 6m con tinaja privada en bosque nativo. A 15 min de Nevados de Chillán.',
+        description: 'Domos geodésicos de 6m en bosque nativo, con estufa a pellet y WiFi Starlink. A 15 min de Nevados de Chillán.',
         images: ['/images/Galeria/noche-domo-iluminado-2-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -38,7 +38,7 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "TreePod - Domos Geodésicos en Chillán",
-    "description": "Domos geodésicos habitables con tinaja privada en Valle Las Trancas, Chillán. A 15 minutos de Nevados de Chillán.",
+    "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 15 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/domos-geodesicos-chillan",
     "telephone": "+56984643307",
     "address": {
@@ -53,11 +53,11 @@ const jsonLd = {
         "latitude": -36.8972,
         "longitude": -71.4741
     },
-    "priceRange": "Desde $110.000 CLP por noche",
+    "priceRange": "$$",
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "reviewCount": "47"
+        "reviewCount": "59"
     }
 };
 
@@ -92,24 +92,19 @@ export default function DomosGeodesicosChillanPage() {
                         </span>
                     </div>
 
-                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
+                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-4xl mx-auto animate-fade-in-up delay-100 !text-white leading-tight">
                         Domos geodésicos en Chillán: <br className="hidden md:block" />
                         duerme bajo las estrellas <span className="text-primary italic-display block md:inline">sin pasar frío</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
-                        <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
-                            <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
-                            </span>
-                            <span className="block text-white/80 text-sm font-bold mt-1">
-                                Domos de 6m con equipamiento completo
-                            </span>
-                        </div>
+                        <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
+                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
+                        </p>
                     </div>
 
-                    <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Estructura geodésica de 6 metros de diámetro con vista panorámica al bosque nativo. Tinaja privada, estufa automática y todo el confort que no esperas en la montaña.
+                    <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
+                        Estructura geodésica de 6 metros de diámetro con vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -120,7 +115,7 @@ export default function DomosGeodesicosChillanPage() {
                             secondParams={{ event: "domos_geodesicos_chillan" }}
                             className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
-                            <span className="text-xl md:text-2xl">RESERVAR UN DOMO</span>
+                            <span className="text-lg md:text-xl">RESERVAR UN DOMO</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
                         </TrackedLink>
 
@@ -150,13 +145,13 @@ export default function DomosGeodesicosChillanPage() {
                         {[
                             {
                                 icon: Ruler,
-                                title: "6 metros de diámetro, vista panorámica total",
-                                desc: "La estructura geodésica permite ventanales que cubren gran parte del domo. Desde tu cama ves el bosque nativo, las estrellas y la cordillera de Ñuble."
+                                title: "6 metros de diámetro, vista panorámica",
+                                desc: "La estructura geodésica permite ventanales que cubren gran parte del domo. Desde tu cama ves el bosque nativo y la cordillera de Ñuble."
                             },
                             {
                                 icon: Shield,
-                                title: "Estructura que soporta nieve y viento extremo",
-                                desc: "El diseño geodésico distribuye la carga uniformemente. Soporta las nevadas del invierno cordillerano sin problemas. Probado en temporadas de ski intensas."
+                                title: "Estructura preparada para nieve y viento",
+                                desc: "El diseño geodésico distribuye la carga de forma pareja. Resiste las nevadas del invierno cordillerano, temporada tras temporada de ski."
                             },
                             {
                                 icon: Thermometer,
@@ -165,8 +160,8 @@ export default function DomosGeodesicosChillanPage() {
                             },
                             {
                                 icon: Waves,
-                                title: "Tu propia tinaja de ciprés en el bosque",
-                                desc: "Cada domo tiene acceso exclusivo a una tinaja de agua caliente rodeada de bosque nativo. Sin compartir, sin horarios, sin reservar turno."
+                                title: "Tinaja de ciprés privada (de temporada)",
+                                desc: "Cada domo tiene acceso a su propia tinaja de agua caliente, sin compartir. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
                             },
                             {
                                 icon: Mountain,
@@ -243,7 +238,7 @@ export default function DomosGeodesicosChillanPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Tinaja privada</p>
-                                <p className="text-xs opacity-80">Exclusiva por domo</p>
+                                <p className="text-xs opacity-80">Servicio de temporada</p>
                             </div>
                         </div>
 
@@ -282,7 +277,7 @@ export default function DomosGeodesicosChillanPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Reseñas reales de huéspedes</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 47 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import CinematicSection from "../components/CinematicSection";
 
 interface Servicio {
     id: string;
@@ -40,7 +41,7 @@ export default function PaquetesPage() {
 
                         return {
                             ...s,
-                            image_url: displayImage || "/images/Galeria/domonieve2.jpeg",
+                            image_url: displayImage || "/images/hero/domonieve2.jpeg",
                             category: s.nombre.toLowerCase().includes('pack') ? 'Romance & Especial' :
                                 s.nombre.toLowerCase().includes('tinaja') ? 'Bienestar' :
                                     s.nombre.toLowerCase().includes('desayuno') || s.nombre.toLowerCase().includes('asado') ? 'Gastronomía' : 'Servicios'
@@ -62,21 +63,32 @@ export default function PaquetesPage() {
     return (
         <div className="bg-white font-sans text-text-main min-h-screen flex flex-col transition-colors duration-300">
 
+            <CinematicSection
+                image="/images/Galeria/comidadomoafuerapizza.jpg"
+                alt="Cena y experiencias especiales en TreePod, Valle Las Trancas"
+                eyebrow="Experiencias TreePod"
+                title={<>Suma detalles<br className="hidden md:block" /> a tu estadía</>}
+                text="Desayunos, cenas y sorpresas para armar tu escapada a tu medida. La tinaja es servicio de temporada."
+                ctaText="Ver disponibilidad"
+                ctaHref="/disponibilidad"
+                priority
+                titleAs="h1"
+            />
 
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-10 py-16 md:py-24">
                 {/* Título editorial */}
                 <div className="mb-16 md:mb-24">
                     <div className="inline-block mb-4">
                         <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                            Experiencias TreePod
+                            Personaliza tu refugio
                         </span>
                     </div>
-                    <h1 className="h1-display text-text-main leading-tight mb-6">
-                        Detalles que <span className="italic-display text-primary">Elevan tu Estadía</span>
-                    </h1>
+                    <h2 className="h1-display text-text-main leading-tight mb-6">
+                        Cada servicio, <span className="italic-display text-primary">pensado en tu comodidad</span>
+                    </h2>
                     <div className="h-1.5 w-24 bg-primary mb-6"></div>
                     <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
-                        Personaliza tu refugio con servicios diseñados para capturar la esencia de la montaña.
+                        Suma a tu reserva lo que más disfrutes y aprovecha tu estadía en la montaña.
                     </p>
                 </div>
 
@@ -115,7 +127,7 @@ export default function PaquetesPage() {
                                     </div>
                                     <div className="flex items-center justify-between pt-10 mt-10 border-t border-black/5">
                                         <div className="flex flex-col">
-                                            <span className="text-[11px] text-text-sub font-black uppercase tracking-[0.3em] mb-1">Inversión</span>
+                                            <span className="text-[11px] text-text-sub font-black uppercase tracking-[0.3em] mb-1">Precio</span>
                                             <span className="font-display font-bold text-4xl text-primary">
                                                 {extra.precio > 0 ? `$${extra.precio.toLocaleString("es-CL")}` : "Consultar"}
                                             </span>

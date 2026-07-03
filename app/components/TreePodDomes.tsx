@@ -104,8 +104,8 @@ export default function TreePodDomes() {
                             >
                                 Reservar mi Domo
                             </Link>
-                            <p className="text-[10px] md:text-xs text-text-sub font-bold italic pl-2">
-                                Haz clic en el botón para reservar tu domo y comenzar a disfrutar.
+                            <p className="text-[10px] md:text-xs text-text-sub font-bold pl-2">
+                                Ves la disponibilidad y el precio al instante, sin compromiso.
                             </p>
                         </div>
                     </div>

@@ -41,7 +41,7 @@ export default async function GloriasNavalesPage() {
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
                         Tu finde largo de Glorias Navales <br className="hidden md:block" />
-                        en el bosque nativo <span className="text-primary italic-display block md:inline">(con tinaja exclusiva opcional)</span>
+                        en el bosque nativo de Valle Las Trancas <span className="text-primary italic-display block md:inline">(con tinaja privada opcional)</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -56,8 +56,8 @@ export default async function GloriasNavalesPage() {
                     </div>
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        4 días completos en la cordillera, con el silencio del bosque nativo <br className="hidden md:block" />
-                        y la opción de tinaja termal bajo las estrellas (servicio extra).
+                        4 días en la cordillera, con el silencio del bosque nativo <br className="hidden md:block" />
+                        y opción de tinaja privada (servicio de temporada, vuelve en primavera).
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -101,28 +101,28 @@ export default async function GloriasNavalesPage() {
                         {[
                             {
                                 icon: Mountain,
-                                title: "Otoño en la cordillera (sin multitudes)",
-                                desc: "Mayo en Las Trancas es perfecto: temperaturas ideales de día, noches frescas para la tinaja y colores otoñales únicos. Sin las multitudes de temporada alta de invierno."
+                                title: "Otoño en la cordillera, con menos gente",
+                                desc: "Mayo en Las Trancas tiene días templados, noches frescas y colores de otoño, lejos de las multitudes de la temporada alta de invierno."
                             },
                             {
                                 icon: Waves,
-                                title: "Tinaja termal exclusiva (servicio extra)",
-                                desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Servicio opcional con valor de $38.000 por hora para 2 personas. Solicítala con 1 día de anticipación."
+                                title: "Tinaja privada opcional (servicio de temporada)",
+                                desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Es un servicio de temporada que vuelve en primavera: consúltanos si está disponible para tus fechas."
                             },
                             {
                                 icon: Coffee,
                                 title: "Calefacción automática 24/7",
-                                desc: "Las noches de mayo son frescas pero perfectas. Tu domo mantiene temperatura ideal con estufa a pellet automática mientras disfrutas el clima otoñal afuera."
+                                desc: "Las noches de mayo son frescas. Tu domo mantiene una temperatura agradable con estufa a pellet automática mientras afuera disfrutas el otoño."
                             },
                             {
                                 icon: Calendar,
-                                title: "4 días completos para vivir la naturaleza",
-                                desc: "Jueves 21 (Glorias Navales), viernes 22 sandwich y fin de semana. El finde largo perfecto para realmente recargar energía en plena naturaleza, sin apuros."
+                                title: "4 días para estar en la naturaleza",
+                                desc: "Jueves 21 (Glorias Navales), viernes 22 sándwich y fin de semana. El finde largo justo para recargar en la naturaleza, sin apuros."
                             },
                             {
                                 icon: Check,
-                                title: "WiFi Starlink para cuando quieras",
-                                desc: "Conexión de alta velocidad disponible. Ideal para compartir fotos del otoño en Las Trancas o simplemente mantenerte conectado si es necesario."
+                                title: "WiFi Starlink cuando lo necesites",
+                                desc: "Conexión estable disponible. Ideal para compartir fotos del otoño en Las Trancas o seguir conectado si lo necesitas."
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
@@ -146,7 +146,7 @@ export default async function GloriasNavalesPage() {
                         <h2 className="h2-display text-text-main mb-6">Tu refugio otoñal en Valle Las Trancas</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            Todo lo necesario para un finde largo Glorias Navales perfecto
+                            Lo necesario para tu finde largo de Glorias Navales
                         </p>
                     </div>
 
@@ -169,15 +169,15 @@ export default async function GloriasNavalesPage() {
                         <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja1.jpg"
-                                alt="Tinaja termal privada para Glorias Navales"
+                                alt="Tinaja privada en el bosque para Glorias Navales"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tinaja exclusiva</p>
-                                <p className="text-xs opacity-80">Servicio extra · $38.000/hora</p>
+                                <p className="font-black text-sm">Tinaja privada</p>
+                                <p className="text-xs opacity-80">Servicio de temporada</p>
                             </div>
                         </div>
 
@@ -282,7 +282,7 @@ export default async function GloriasNavalesPage() {
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Las Glorias Navales son uno de los findes largos más buscados del año. Mayo en Valle Las Trancas es perfecto: clima ideal y colores otoñales únicos. No te quedes sin tu escapada 21 mayo Ñuble.
+                            Las Glorias Navales son uno de los findes largos más buscados del año. Mayo en Valle Las Trancas tiene buen clima y colores de otoño. Reserva con tiempo tu escapada del 21 de mayo en Ñuble.
                         </p>
 
                         <div className="text-center mb-10">

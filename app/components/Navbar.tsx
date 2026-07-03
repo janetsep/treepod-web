@@ -36,9 +36,22 @@ export default function Navbar() {
         };
     }, []);
 
-    const isHomePage = pathname === "/";
     const isDisponibilidadPage = pathname === "/disponibilidad";
-    const isNavbarSolid = isScrolled || !isHomePage;
+
+    // Páginas que abren con un hero cinematográfico OSCURO a sangre completa: ahí el
+    // navbar va transparente (inmersivo) arriba y se vuelve sólido al hacer scroll.
+    // Cualquier ruta fuera de esta lista queda sólida = seguro sobre fondos claros.
+    const immersiveHeroRoutes = new Set([
+        "/",
+        "/domos",
+        "/servicios",
+        "/galeria",
+        "/nosotros",
+        "/paquetes",
+        "/disponibilidad",
+    ]);
+    const hasImmersiveHero = immersiveHeroRoutes.has(pathname || "");
+    const isNavbarSolid = isScrolled || !hasImmersiveHero;
 
     const navLinks = [
         { name: "Inicio", href: "/" },
@@ -66,14 +79,14 @@ export default function Navbar() {
         >
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
                 <Link href="/" className="flex items-center space-x-2 group relative z-50">
-                    <div className={`h-[50px] md:h-[70px] relative w-44 md:w-56 transition-all duration-300 group-hover:scale-105 ${!isNavbarSolid ? 'drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]' : ''}`}>
+                    <div className={`h-[44px] md:h-[60px] relative w-40 md:w-48 transition-all duration-300 group-hover:scale-105 ${!isNavbarSolid ? 'drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]' : ''}`}>
                         <Logo className="w-full h-full object-contain" variant={isNavbarSolid ? "color" : "white"} />
                     </div>
                 </Link>
 
                 {/* DESKTOP MENU */}
-                <div className="hidden lg:flex items-center space-x-12">
-                    <div className="flex space-x-12 text-[14px] font-black tracking-[0.1em] uppercase">
+                <div className="hidden lg:flex items-center space-x-6 xl:space-x-10">
+                    <div className="flex space-x-5 xl:space-x-8 text-[13px] xl:text-[14px] font-black tracking-[0.1em] uppercase">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}

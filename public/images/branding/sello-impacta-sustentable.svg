@@ -1,0 +1,28 @@
+<svg viewBox="0 0 460 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sello Impacta Sustentable Travesia IS-2026-001">
+  <rect x="0" y="0" width="460" height="400" rx="26" fill="#2E8B6F"/>
+
+  <!-- Codigo de registro vertical -->
+  <text x="40" y="265" fill="#FFFFFF" fill-opacity="0.78" font-family="Montserrat, Arial, Helvetica, sans-serif" font-weight="600" font-size="17" letter-spacing="2" text-anchor="middle" transform="rotate(-90 40 265)">IS-2026-001</text>
+
+  <!-- SELLO (caja blanca, texto verde) -->
+  <rect x="30" y="24" width="150" height="50" rx="6" fill="#FFFFFF"/>
+  <text x="105" y="61" fill="#2E8B6F" font-family="Montserrat, Arial, Helvetica, sans-serif" font-weight="600" font-size="34" letter-spacing="1" text-anchor="middle">SELLO</text>
+
+  <!-- IMPACTA -->
+  <text x="192" y="66" fill="#FFFFFF" font-family="Montserrat, Arial, Helvetica, sans-serif" font-weight="800" font-size="50" letter-spacing="-0.5">IMPACTA</text>
+
+  <!-- SUSTENTABLE -->
+  <text x="30" y="124" fill="#FFFFFF" font-family="Montserrat, Arial, Helvetica, sans-serif" font-weight="800" font-size="50" letter-spacing="-0.5">SUSTENTABLE</text>
+
+  <!-- Panel blanco -->
+  <rect x="60" y="150" width="370" height="230" rx="20" fill="#FFFFFF"/>
+
+  <!-- Dos estrellas verdes -->
+  <g fill="#2E8B6F">
+    <path transform="translate(193 235) scale(0.95)" d="M0,-50 L11.22,-15.45 L47.55,-15.45 L18.17,5.90 L29.39,40.45 L0,19.1 L-29.39,40.45 L-18.17,5.90 L-47.55,-15.45 L-11.22,-15.45 Z"/>
+    <path transform="translate(297 235) scale(0.95)" d="M0,-50 L11.22,-15.45 L47.55,-15.45 L18.17,5.90 L29.39,40.45 L0,19.1 L-29.39,40.45 L-18.17,5.90 L-47.55,-15.45 L-11.22,-15.45 Z"/>
+  </g>
+
+  <!-- TRAVESIA -->
+  <text x="245" y="352" fill="#2E8B6F" font-family="Montserrat, Arial, Helvetica, sans-serif" font-weight="600" font-size="40" letter-spacing="3" text-anchor="middle">TRAVESÍA</text>
+</svg>

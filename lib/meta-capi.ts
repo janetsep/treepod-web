@@ -8,8 +8,12 @@
  * Meta CAPI es más confiable que el pixel del lado del cliente para conversiones.
  */
 
+import crypto from "crypto";
+
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_PIXEL_ID;
-const META_ACCESS_TOKEN = process.env.NEXT_PUBLIC_CONVERSIONS_API_TOKEN;
+// Token de servidor (Conversions API). SIN prefijo NEXT_PUBLIC_ para que nunca se
+// exponga al cliente. Se usa solo en el servidor (app/api/pagos/webpay/retorno).
+const META_ACCESS_TOKEN = process.env.META_CONVERSIONS_API_TOKEN;
 
 interface MetaConversionEvent {
     event_name: 'Purchase' | 'InitiateCheckout' | 'ViewContent' | 'Lead' | 'AddToCart';
@@ -159,9 +163,7 @@ function hashPhone(phone: string): string {
  * Hash SHA256 general para strings
  */
 function hashString(str: string): string {
-    // Nota: En Node.js, usamos crypto para hash SHA256
-    // Para una implementación completa, necesitarías: const crypto = require('crypto');
-    // Por ahora retornamos el string tal cual (Meta también acepta valores sin hash)
-    // TODO: Implementar hash SHA256 real si es necesario
-    return str.trim().toLowerCase();
+    // Meta EXIGE los datos personales hasheados con SHA256 (email, teléfono, nombre, etc.).
+    // Normalizamos (trim + minúsculas) y devolvemos el hash hexadecimal.
+    return crypto.createHash("sha256").update(str.trim().toLowerCase()).digest("hex");
 }

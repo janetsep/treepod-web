@@ -7,7 +7,8 @@ import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
 import { TrackingService } from '@/services/TrackingService';
-import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info } from "lucide-react";
+import { getStoredUTMs } from '../components/UTMCapture';
+import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info, Star } from "lucide-react";
 import Stepper from '../components/Stepper';
 
 type ResultadoPrecio = {
@@ -116,7 +117,8 @@ function DisponibilidadContent() {
         .order("precio", { ascending: true });
 
       if (error) throw error;
-      if (data) setServicios(data);
+      // La tinaja es un servicio de temporada (vuelve en primavera): no se ofrece como extra reservable en invierno.
+      if (data) setServicios(data.filter((s) => !s.nombre.toLowerCase().includes("tinaja")));
     } catch (err) {
       console.error("Error fetching services:", err);
     }
@@ -264,9 +266,7 @@ function DisponibilidadContent() {
       setReserving(true);
       setError(null);
 
-      // Agregar ANTES del fetch, leer UTMs del sessionStorage:
-      const savedUtms = sessionStorage.getItem('treepod_utms');
-      const utms = savedUtms ? JSON.parse(savedUtms) : {};
+      const utms = getStoredUTMs();
 
       const res = await fetch("/api/reservas/crear", {
         method: "POST",
@@ -370,26 +370,51 @@ function DisponibilidadContent() {
 
   return (
     <div className="min-h-screen bg-surface font-sans text-text-main transition-colors duration-300">
-      <div className="h-16 md:h-20"></div>
+      {/* Banner compacto premium: foto real con Ken Burns + señales de confianza,
+          sin empujar el formulario de reserva fuera de la vista. */}
+      <section className="relative pt-44 pb-10 md:pt-48 md:pb-14 overflow-hidden">
+        <Image
+          src="/images/hero/domo-iluminado-noche.jpg"
+          alt="Domo TreePod iluminado de noche en Valle Las Trancas"
+          fill
+          priority
+          quality={75}
+          sizes="100vw"
+          className="object-cover object-center ken-burns-soft"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/80" />
+        <div className="relative z-10 container max-w-7xl mx-auto px-6">
+          <span className="inline-block text-[#00ADEF] text-xs font-black tracking-[0.3em] uppercase mb-3">
+            Reserva directa
+          </span>
+          <h1 className="font-display font-black !text-white text-3xl md:text-5xl leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]">
+            Reserva tu <span className="text-[#00ADEF] italic-display">glamping</span> en Las Trancas
+          </h1>
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-white/85 text-[12px] md:text-sm font-medium">
+            <span className="inline-flex items-center gap-1.5">
+              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" /> 4,9 · 59 reseñas
+            </span>
+            <span className="text-white/40">•</span>
+            <span>Mejor precio directo, sin comisiones</span>
+            <span className="text-white/40 hidden sm:inline">•</span>
+            <span className="hidden sm:inline">Reserva con el 50%, saldo en el check-in</span>
+          </div>
+        </div>
+      </section>
 
-      <main className="container max-w-7xl mx-auto px-6 py-8 md:py-12 flex-1">
+      <main className="container max-w-7xl mx-auto px-6 py-8 md:py-10 flex-1">
         {/* Cambio #2: Checkout Stepper */}
         <Stepper activeStep={1} />
 
         {/* HEADER & LEGEND */}
-        <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/5 pb-8">
-          <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight text-text-main">
-              Reserva tu <span className="text-primary italic-display">Glamping</span> en Las Trancas
-            </h1>
-            <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
-              {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
-            </p>
-          </div>
+        <header className="mb-8 border-b border-black/5 pb-6">
+          <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
+            {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
+          </p>
         </header>
 
         {/* THREE COLUMN HUD LAYOUT (CALENDAR - EXTRAS - SUMMARY) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pt-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-4 items-start">
 
           {/* COL 1: Step 1 - Calendar */}
           {!isMundialEvent && (
@@ -404,7 +429,7 @@ function DisponibilidadContent() {
                 <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
               </header>
 
-              <section className="bg-white p-6 lg:p-8 rounded-[2rem] border border-black/5 shadow-xl space-y-8">
+              <section className="bg-white p-5 lg:p-6 rounded-2xl border border-black/5 shadow-lg space-y-6">
                 {/* Guest Selection moved here */}
                 <div className="space-y-3">
                   <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">¿Cuántos huéspedes?</label>
@@ -412,7 +437,7 @@ function DisponibilidadContent() {
                     <select
                       value={adultos}
                       onChange={(e) => setAdultos(Number(e.target.value))}
-                      className="w-full bg-black/5 border border-black/10 rounded-2xl h-16 px-6 text-base font-bold appearance-none focus:border-primary transition-all outline-none text-text-main cursor-pointer"
+                      className="w-full bg-black/5 border border-black/10 rounded-xl h-14 px-5 text-base font-bold appearance-none focus:border-primary transition-all outline-none text-text-main cursor-pointer"
                     >
                       {[1, 2, 3, 4].map(n => (
                         <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'Persona' : 'Personas'}</option>
@@ -478,21 +503,19 @@ function DisponibilidadContent() {
           {/* COL 2: Step 2 - Extras */}
           {!isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
-              <header className="px-2 flex justify-between items-center">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                      <Sparkles className="text-primary w-4 h-4" />
-                    </div>
-                    <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h3>
+              <header className="px-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <Sparkles className="text-primary w-4 h-4" />
                   </div>
-                  <p className="text-[11px] font-black text-text-sub/60 uppercase tracking-widest ml-10">Packs & Experiencias</p>
+                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h3>
+                  {!(entrada && salida) && (
+                    <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-primary/10 animate-pulse">
+                      Elige fechas primero
+                    </span>
+                  )}
                 </div>
-                {!(entrada && salida) && (
-                  <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/10 animate-pulse">
-                    Elige fechas primero
-                  </span>
-                )}
+                <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Packs y experiencias</p>
               </header>
 
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
@@ -514,7 +537,7 @@ function DisponibilidadContent() {
                   } else if (s.nombre.toLowerCase().includes("almuerzo") || s.nombre.toLowerCase().includes("relajado") || s.nombre.toLowerCase().includes("aperitivo")) {
                       displayImage = "/images/wellness/Tinaja5.jpg";
                   } else if (!displayImage || displayImage === '') {
-                      displayImage = "/images/Galeria/domonieve2.jpeg";
+                      displayImage = "/images/hero/domonieve2.jpeg";
                   }
 
                   const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
@@ -532,7 +555,7 @@ function DisponibilidadContent() {
                       <div
                         key={s.id}
                         onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
-                        className={`group relative flex flex-col sm:flex-row gap-4 p-5 rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden extra-card-enhanced ${serviciosSeleccionados.has(s.id)
+                        className={`group relative flex flex-col sm:flex-row gap-4 p-4 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden extra-card-enhanced ${serviciosSeleccionados.has(s.id)
                           ? 'bg-primary/10 border-primary ring-1 ring-primary/20 shadow-lg'
                           : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
                           } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
@@ -542,6 +565,7 @@ function DisponibilidadContent() {
                             src={displayImage}
                             alt={displayNombre}
                             fill
+                            sizes="(max-width: 640px) 100vw, 96px"
                             className={`object-cover transition-transform duration-[2s] group-hover:scale-110 ${isDinner ? 'object-[center_75%]' : ''}`}
                           />
                           {serviciosSeleccionados.has(s.id) && (
@@ -562,6 +586,11 @@ function DisponibilidadContent() {
                           <p className="text-xs text-text-sub leading-relaxed font-bold mb-3">
                             {displayDescripcion}
                           </p>
+                          {isTinaja && (
+                            <span className="inline-flex items-center self-start gap-1 text-[9px] font-black uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full mb-3">
+                              Servicio de temporada · desde primavera
+                            </span>
+                          )}
                           <div className="flex flex-wrap items-baseline gap-2">
                             <span className="text-lg font-bold text-text-main">
                               ${(s.precio || 0).toLocaleString("es-CL")}
@@ -642,21 +671,20 @@ function DisponibilidadContent() {
 
           {/* COL 3: Final Summary */}
           <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
-            <div className="bg-white rounded-[2rem] border border-black/5 overflow-hidden shadow-xl">
-              <div className="bg-primary/5 p-6 border-b border-black/5 flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                    <Settings className="text-primary w-4 h-4" />
-                  </div>
-                  <div>
-                    <h2 className="font-display font-bold text-lg text-text-main tracking-tight uppercase leading-none">
-                      {isMundialEvent ? "Resumen Alojamiento Mundial MTB 2026" : "Resumen"}
-                    </h2>
-                  </div>
+            <header className="px-2">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <Settings className="text-primary w-4 h-4" />
                 </div>
+                <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
+                  {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
+                </h3>
               </div>
+              <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Tu reserva en un vistazo</p>
+            </header>
 
-              <div className="p-8 space-y-6">
+            <div className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-lg">
+              <div className="p-6 space-y-5">
                 <div className="space-y-4 border-b border-black/5 pb-6">
                   {/* Guest selection removed from here as it is now in Step 01 */}
                   <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-3">

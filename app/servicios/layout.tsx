@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Servicios y Experiencias | Glamping TreePod',
         description: 'Desayuno orgánico, cena privada, tinaja de ciprés y más en Valle Las Trancas.',
-        images: ['/images/hero/domo-treepod-ok-12.jpg'],
+        images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     },
 };
 

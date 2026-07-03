@@ -14,9 +14,9 @@ export default function DomoAmenities() {
     const amenities = [
         {
             icon: "hot_tub",
-            title: "Mejora tu estadía con una tinaja caliente privada",
-            description: "¿Quieres llevar tu desconexión al siguiente nivel? Añade el acceso a tu propia tinaja al aire libre por $38000 y asegúrate de no querer salir del agua por lo que dura esta experiencia.",
-            tag: "Bajo Reserva",
+            title: "Tinaja caliente privada al aire libre",
+            description: "Tu propia tinaja con agua mineralizada y vista al bosque, sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
+            tag: "Desde primavera",
             image: "/images/wellness/Tinaja5.jpg",
             size: "large",
             objectPosition: "object-center"
@@ -52,15 +52,6 @@ export default function DomoAmenities() {
             tag: "Tecnología",
             images: robotImages,
             size: "large"
-        },
-        {
-            icon: "paw",
-            title: "Trae a tu mejor amigo (Pet Friendly)",
-            description: "Sabemos que es parte de la familia. Martin y Molly, nuestros anfitriones, los invitan a disfrutar del bosque juntos (solo te pedimos cumplir unas normas básicas y lógicas de convivencia para mantener la paz del lugar).",
-            tag: "Familia",
-            images: ["/images/MollyMartin.jpg", "/images/MartinMolly.JPG"],
-            imagePositions: ["object-[50%_30%]", "object-[60%_40%]"],
-            size: "small"
         },
     ];
 
@@ -101,7 +92,8 @@ export default function DomoAmenities() {
                                                     src={img}
                                                     alt={`${item.title} ${imgIdx}`}
                                                     fill
-                                                    className={`object-cover ${item.imagePositions?.[imgIdx] || 'object-center'} transition-transform duration-[2s] group-hover:scale-110`}
+                                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                                    className={`object-cover object-center transition-transform duration-[2s] group-hover:scale-110`}
                                                 />
                                             </div>
                                         ))}
@@ -111,6 +103,7 @@ export default function DomoAmenities() {
                                         src={item.image!}
                                         alt={item.title}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 50vw"
                                         className={`object-cover ${item.objectPosition || 'object-center'} transition-transform duration-[2s] group-hover:scale-110`}
                                     />
                                 )}

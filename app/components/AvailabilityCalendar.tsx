@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { RefreshCw } from "lucide-react";
 import { DayPicker, DateRange } from "react-day-picker";
-import { format, addMonths, startOfToday, parseISO } from "date-fns";
+import { format, addMonths, startOfToday, parseISO, addDays } from "date-fns";
 import { es } from "date-fns/locale";
 import "react-day-picker/src/style.css";
 
@@ -19,7 +19,23 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     const [loading, setLoading] = useState(true);
     const [monthsToShow, setMonthsToShow] = useState(1);
     const [month, setMonth] = useState<Date | undefined>(defaultMonth || startOfToday());
+    // Regla de negocio: el sistema solo acepta reservas para HOY si son antes de las
+    // 14:00 (hora de Chile). Pasadas las 14:00, la fecha mínima de entrada es mañana.
+    const [minSelectable, setMinSelectable] = useState<Date>(startOfToday());
+    const [aviso, setAviso] = useState<string | null>(null);
     const rangeCompleteRef = useRef(false);
+
+    useEffect(() => {
+        const horaChile = parseInt(
+            new Intl.DateTimeFormat("es-CL", {
+                timeZone: "America/Santiago",
+                hour: "2-digit",
+                hour12: false,
+            }).format(new Date()),
+            10
+        ) % 24; // "24" (medianoche) -> 0
+        setMinSelectable(horaChile >= 14 ? addDays(startOfToday(), 1) : startOfToday());
+    }, []);
 
     // Track when both dates are selected (range is complete)
     useEffect(() => {
@@ -69,37 +85,64 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
         fetchAvailability();
     }, []);
 
+    // Una NOCHE está bloqueada si ese día está ocupado. El check-out NO ocupa noche
+    // (te vas en la mañana), por eso se valida el rango medio-abierto [entrada, salida).
+    const blockedSet = new Set(blockedDates.map((d) => format(d, "yyyy-MM-dd")));
+    const esNocheBloqueada = (d: Date) => blockedSet.has(format(d, "yyyy-MM-dd"));
+    const rangoTieneNocheBloqueada = (from: Date, to: Date) => {
+        let d = from;
+        const finStr = format(to, "yyyy-MM-dd");
+        while (format(d, "yyyy-MM-dd") < finStr) {
+            if (esNocheBloqueada(d)) return true;
+            d = addDays(d, 1);
+        }
+        return false;
+    };
+
     // Handle range selection with reset behavior:
     // If both dates are already selected and user clicks a new date,
     // start a NEW selection instead of extending the old range.
     const handleSelect = (range: DateRange | undefined) => {
+        let result = range;
+
         if (rangeCompleteRef.current && range?.from && range?.to) {
             // Both dates were selected and user clicked a new date.
             // react-day-picker extends the range by default, but we want to reset.
-            // Determine which date is the newly clicked one by checking which end changed.
             const prevFrom = selectedRange?.from?.getTime();
             const prevTo = selectedRange?.to?.getTime();
             const newFrom = range.from.getTime();
             const newTo = range.to.getTime();
 
-            // If 'from' changed, the user clicked before the old start -> use new from as start
-            // If 'to' changed, the user clicked after the old end -> use new to as start
-            // In either case, we start a new selection with just the clicked date
             let clickedDate: Date;
-            if (newFrom !== prevFrom) {
-                clickedDate = range.from;
-            } else if (newTo !== prevTo) {
-                clickedDate = range.to;
-            } else {
-                // Same range, just reset
-                clickedDate = range.from;
-            }
+            if (newFrom !== prevFrom) clickedDate = range.from;
+            else if (newTo !== prevTo) clickedDate = range.to;
+            else clickedDate = range.from;
 
-            onSelect({ from: clickedDate, to: undefined });
-            return;
+            result = { from: clickedDate, to: undefined };
         }
 
-        onSelect(range);
+        // Normaliza el click de un solo día (algunas versiones devuelven from === to)
+        const soloUnDia = result?.from && result?.to && result.from.getTime() === result.to.getTime();
+        if (soloUnDia) result = { from: result!.from, to: undefined };
+
+        // Validación de disponibilidad por noches
+        if (result?.from && result?.to) {
+            if (rangoTieneNocheBloqueada(result.from, result.to)) {
+                setAviso("Esas noches no están disponibles. Elige otra fecha de salida.");
+                onSelect({ from: result.from, to: undefined }); // mantiene la entrada, pide nueva salida
+                return;
+            }
+        } else if (result?.from && !result?.to) {
+            // Día de entrada: no puede ser una noche ocupada (ahí no se puede dormir)
+            if (esNocheBloqueada(result.from)) {
+                setAviso("Ese día no está disponible para la entrada.");
+                onSelect(undefined);
+                return;
+            }
+        }
+
+        setAviso(null);
+        onSelect(result);
     };
 
     const css = `
@@ -214,14 +257,18 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
                 pagedNavigation
                 locale={es}
                 disabled={[
-                    ...blockedDates,
-                    { before: startOfToday() }
+                    { before: minSelectable }
                 ]}
                 modifiers={{
                     unavailable: blockedDates
                 }}
                 className="font-sans"
             />
+            {aviso && (
+                <p className="mt-2 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-center max-w-xs">
+                    {aviso}
+                </p>
+            )}
         </div>
     );
 }

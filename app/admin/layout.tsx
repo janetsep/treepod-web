@@ -98,21 +98,19 @@ export default function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             {authorized && pathname !== "/admin/login" && (
                 <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                                <span className="text-white font-black text-xs">TP</span>
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-9 w-9 object-contain rounded-lg" />
                             <span className="font-display font-bold text-gray-900 hidden sm:block">TreePod Admin</span>
                         </div>
 
                         <div className="flex items-center gap-4">
                             <div className="hidden sm:flex flex-col text-right">
-                                <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Panel de Control</span>
-                                <span className="text-xs font-bold text-gray-500">Sesión Activa</span>
+                                <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Panel de Control</span>
+                                <span className="text-xs font-bold text-gray-900">Sesión Activa</span>
                             </div>
                             <button
                                 onClick={handleSignOut}

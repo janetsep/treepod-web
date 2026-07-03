@@ -11,7 +11,8 @@ import {
     ResponsiveContainer
 } from "recharts";
 import Link from "next/link";
-import { DollarSign, Wallet, BedDouble, Eye, TrendingUp, Users, ArrowLeft } from "lucide-react";
+import { DollarSign, Wallet, BedDouble, Eye, TrendingUp, Users, ArrowLeft, Receipt } from "lucide-react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Analytics = {
     activeUsers: number;
@@ -37,18 +38,28 @@ type Estadisticas = {
         ocupacionMesActual: number;
         nochesMesActual: number;
         reservasFuturas: number;
+        docsPorEmitir: number;
+        docsEmitidos: number;
+        ivaPorDeclarar?: number;
     };
     serie12m: Array<{ name: string; ingresos: number; noches: number; ocupacion: number }>;
     canales: Array<{ canal: string; reservas: number; ingresos: number }>;
     campanias: Array<{ fuente: string; campania: string; medio: string; reservas: number; ingresos: number }>;
     atribucionWeb: { total: number; conUtm: number };
     domosConsiderados: number;
+    documentosPorEmitir?: Array<DocItem>;
+    documentosEmitidos?: Array<DocItem>;
+    documentosPorEmitirMonto?: number;
+    documentosPorEmitirIva?: number;
 };
+
+type DocItem = { cliente: string; rut: string | null; doc: string; fecha: string; medio: string; folio: string | null; total: number; pagado: number; domos: number; iva?: number };
 
 const MESES = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 export default function DashboardAdmin() {
     const [loading, setLoading] = useState(true);
+    const [docTab, setDocTab] = useState<'pendientes' | 'emitidas'>('pendientes');
     const [analytics, setAnalytics] = useState<Analytics>({ activeUsers: 0, sessions: 0, engagementRate: 0 });
     const [stats, setStats] = useState<Estadisticas | null>(null);
     const [matriz, setMatriz] = useState<{ years: number[]; matriz: { mes: number; valores: number[] }[]; totalesPorAnio: number[] } | null>(null);
@@ -65,11 +76,11 @@ export default function DashboardAdmin() {
     useEffect(() => {
         async function fetchData() {
             await Promise.all([
-                fetch('/api/admin/estadisticas').then(r => r.ok ? r.json() : null).then(d => d && setStats(d)).catch(e => console.error("estadisticas", e)),
+                adminFetch('/api/admin/estadisticas').then(r => r.ok ? r.json() : null).then(d => d && setStats(d)).catch(e => console.error("estadisticas", e)),
                 fetch('/api/analytics').then(r => r.ok ? r.json() : null).then(d => d && setAnalytics(d)).catch(e => console.error("analytics", e)),
-                fetch('/api/admin/ingresos-matriz').then(r => r.ok ? r.json() : null).then(d => d && setMatriz(d)).catch(e => console.error("matriz", e)),
-                fetch('/api/admin/ocupacion-matriz').then(r => r.ok ? r.json() : null).then(d => d && setOcupacion(d)).catch(e => console.error("ocupacion", e)),
-                fetch('/api/admin/meta-ads').then(r => r.ok ? r.json() : null).then(d => d && setMetaAds(d)).catch(e => console.error("meta-ads", e)),
+                adminFetch('/api/admin/ingresos-matriz').then(r => r.ok ? r.json() : null).then(d => d && setMatriz(d)).catch(e => console.error("matriz", e)),
+                adminFetch('/api/admin/ocupacion-matriz').then(r => r.ok ? r.json() : null).then(d => d && setOcupacion(d)).catch(e => console.error("ocupacion", e)),
+                adminFetch('/api/admin/meta-ads').then(r => r.ok ? r.json() : null).then(d => d && setMetaAds(d)).catch(e => console.error("meta-ads", e)),
             ]);
             setLoading(false);
         }
@@ -145,6 +156,102 @@ export default function DashboardAdmin() {
                         color="border-l-indigo-500"
                     />
                 </div>
+
+                {/* BOLETAS / FACTURAS: por emitir vs ya emitidas */}
+                {(() => {
+                    const pendientes = stats?.documentosPorEmitir || [];
+                    const emitidas = stats?.documentosEmitidos || [];
+                    const docs = docTab === 'pendientes' ? pendientes : emitidas;
+                    const esPend = docTab === 'pendientes';
+                    const totalMonto = docs.reduce((a, d) => a + (d.total || 0), 0);
+                    const totalIva = docs.reduce((a, d) => a + (d.iva || 0), 0);
+                    return (
+                        <div className="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                            <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50/60">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${esPend ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                        <Receipt className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest">Boletas / facturas {new Date().getFullYear()}</h2>
+                                        <p className="text-xs text-gray-500 font-medium">{esPend ? 'Estadías pagadas sin folio DTE. Excluye pagos con Transbank.' : 'Estadías que ya tienen el documento (folio DTE) cargado.'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
+                                    <button onClick={() => setDocTab('pendientes')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${esPend ? 'bg-white text-rose-600 shadow-sm' : 'text-gray-500'}`}>Por emitir ({pendientes.length})</button>
+                                    <button onClick={() => setDocTab('emitidas')} className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${!esPend ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-500'}`}>Emitidas ({emitidas.length})</button>
+                                </div>
+                            </div>
+
+                            {docs.length > 0 && (
+                                <div className="grid grid-cols-3 divide-x divide-gray-100 border-b border-gray-100 bg-gray-50/40">
+                                    <div className="px-5 py-3">
+                                        <p className="text-[10px] uppercase tracking-widest text-gray-500 font-black">{esPend ? 'Monto por facturar' : 'Monto facturado'}</p>
+                                        <p className="text-base font-black text-gray-900">{fmt(totalMonto)}</p>
+                                    </div>
+                                    <div className="px-5 py-3">
+                                        <p className="text-[10px] uppercase tracking-widest text-gray-500 font-black">{esPend ? 'IVA por declarar (19%)' : 'IVA declarado (19%)'}</p>
+                                        <p className={`text-base font-black ${esPend ? 'text-rose-600' : 'text-emerald-600'}`}>{fmt(totalIva)}</p>
+                                    </div>
+                                    <div className="px-5 py-3">
+                                        <p className="text-[10px] uppercase tracking-widest text-gray-500 font-black">Neto</p>
+                                        <p className="text-base font-black text-gray-700">{fmt(totalMonto - totalIva)}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {docs.length === 0 ? (
+                                <p className="px-5 py-6 text-sm text-gray-500 font-medium">{esPend ? 'No hay documentos pendientes. Todo al día.' : 'Aún no hay documentos cargados este año.'}</p>
+                            ) : (
+                                <div className="max-h-[420px] overflow-y-auto">
+                                    <table className="w-full text-sm">
+                                        <thead className="sticky top-0 bg-white border-b border-gray-100 text-[10px] uppercase tracking-widest text-gray-500">
+                                            <tr>
+                                                <th className="text-left font-black px-5 py-2">Entrada</th>
+                                                <th className="text-left font-black px-3 py-2">Cliente</th>
+                                                <th className="text-left font-black px-3 py-2">Doc</th>
+                                                <th className="text-left font-black px-3 py-2">Medio</th>
+                                                <th className="text-right font-black px-3 py-2">Total</th>
+                                                <th className="text-right font-black px-3 py-2">IVA 19%</th>
+                                                <th className="text-right font-black px-5 py-2">{esPend ? 'Estado pago' : 'Folio'}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-50">
+                                            {docs.map((d, i) => {
+                                                const f = new Date(d.fecha + "T00:00:00");
+                                                const entrada = `${String(f.getDate()).padStart(2, "0")}-${String(f.getMonth() + 1).padStart(2, "0")}`;
+                                                const completo = d.pagado >= d.total;
+                                                return (
+                                                    <tr key={i} className="hover:bg-gray-50/60">
+                                                        <td className="px-5 py-2.5 font-bold text-gray-700 whitespace-nowrap">{entrada}</td>
+                                                        <td className="px-3 py-2.5 font-bold text-gray-900">
+                                                            {d.cliente}
+                                                            {d.domos > 1 && <span className="ml-1.5 text-[10px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded">{d.domos} domos</span>}
+                                                            {d.rut && <span className="block text-[10px] text-gray-400 font-medium">{d.rut}</span>}
+                                                        </td>
+                                                        <td className="px-3 py-2.5">
+                                                            <span className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded ${d.doc === "factura" ? "bg-indigo-50 text-indigo-600" : "bg-gray-100 text-gray-600"}`}>{d.doc}</span>
+                                                        </td>
+                                                        <td className="px-3 py-2.5 text-gray-600 font-medium">{d.medio}</td>
+                                                        <td className="px-3 py-2.5 text-right font-black text-gray-900 whitespace-nowrap">{fmt(d.total)}</td>
+                                                        <td className={`px-3 py-2.5 text-right font-bold whitespace-nowrap ${esPend ? 'text-rose-600' : 'text-emerald-600'}`}>{fmt(d.iva ?? 0)}</td>
+                                                        <td className="px-5 py-2.5 text-right whitespace-nowrap">
+                                                            {esPend
+                                                                ? (completo
+                                                                    ? <span className="text-[11px] font-black text-emerald-600">Pagado</span>
+                                                                    : <span className="text-[11px] font-black text-amber-600">Abono {fmt(d.pagado)}</span>)
+                                                                : <span className="text-[11px] font-black text-emerald-700">#{d.folio || '—'}</span>}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })()}
 
                 {/* INGRESOS 12 MESES + CANALES */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Glamping Valle Las Trancas | Domos y Mascotas — TreePod',
-    description: 'Glamping valle las trancas con domos geodésicos y mascotas. Tinaja privada, WiFi Starlink, bosque nativo. A 15 min Nevados de Chillán. Desde $110.000.',
+    title: 'Glamping Valle Las Trancas | Domos Geodésicos — TreePod',
+    description: 'Glamping valle las trancas con domos geodésicos. Estufa a pellet, cocina equipada, WiFi Starlink y bosque nativo. A 15 min de Nevados de Chillán.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/glamping-valle-las-trancas',
     },
     openGraph: {
-        title: 'Glamping en Valle Las Trancas | Domos con Tinaja Privada',
-        description: 'Domos geodésicos con tinaja privada en el bosque nativo. Estufa a pellet, cocina equipada y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        title: 'Glamping en Valle Las Trancas | Domos Geodésicos TreePod',
+        description: 'Domos geodésicos en el bosque nativo. Estufa a pellet, cocina equipada y WiFi Starlink. A 15 min de Nevados de Chillán.',
         images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'Glamping en Valle Las Trancas | Domos TreePod',
-        description: 'Domos geodésicos con tinaja privada en bosque nativo. Desde $110.000/noche.',
+        description: 'Domos geodésicos en bosque nativo, con estufa a pellet y WiFi Starlink.',
     },
 };
 
@@ -60,12 +60,12 @@ const jsonLd = {
         "latitude": -36.8972,
         "longitude": -71.4741
     },
-    "priceRange": "Desde $110.000 CLP por noche",
+    "priceRange": "$$",
     "starRating": { "@type": "Rating", "ratingValue": "4.9" },
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "reviewCount": "47"
+        "reviewCount": "59"
     },
     "amenityFeature": [
         { "@type": "LocationFeatureSpecification", "name": "Tinaja privada de ciprés", "value": true },
@@ -107,24 +107,19 @@ export default function GlampingValleLasTrancasPage() {
                         </span>
                     </div>
 
-                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
+                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-4xl mx-auto animate-fade-in-up delay-100 !text-white leading-tight">
                         Glamping en Valle Las Trancas: <br className="hidden md:block" />
-                        domos con tinaja privada <span className="text-primary italic-display block md:inline">en el bosque nativo</span>
+                        domos geodésicos <span className="text-primary italic-display block md:inline">en el bosque nativo</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
-                        <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
-                            <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
-                            </span>
-                            <span className="block text-white/80 text-sm font-bold mt-1">
-                                Tinaja + estufa + cocina + WiFi Starlink incluido
-                            </span>
-                        </div>
+                        <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
+                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
+                        </p>
                     </div>
 
-                    <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Tu propio refugio panorámico en la cordillera. Sin vecinos ruidosos, sin pasillos de hotel. Solo tú, el bosque y una tinaja hirviendo bajo las estrellas.
+                    <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
+                        Tu propio refugio en la cordillera. Sin vecinos ruidosos, sin pasillos de hotel. Solo tú, el bosque nativo y la montaña a un paso del domo.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -135,7 +130,7 @@ export default function GlampingValleLasTrancasPage() {
                             secondParams={{ event: "glamping_valle_las_trancas" }}
                             className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
-                            <span className="text-xl md:text-2xl">VER DISPONIBILIDAD Y TARIFAS</span>
+                            <span className="text-lg md:text-xl">VER DISPONIBILIDAD Y TARIFAS</span>
                             <span className="text-sm font-normal opacity-90">(Reserva directa, mejor precio)</span>
                         </TrackedLink>
 
@@ -168,8 +163,8 @@ export default function GlampingValleLasTrancasPage() {
                         {[
                             {
                                 icon: Waves,
-                                title: "Tinaja privada de ciprés bajo las estrellas",
-                                desc: "Cada domo tiene su propia tinaja de agua caliente con pasarela exclusiva por el bosque. No compartes con nadie. Disponible las 24 horas."
+                                title: "Tinaja privada de ciprés (de temporada)",
+                                desc: "Cada domo tiene su propia tinaja de agua caliente con pasarela por el bosque, sin compartir con nadie. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
                             },
                             {
                                 icon: Thermometer,
@@ -179,7 +174,7 @@ export default function GlampingValleLasTrancasPage() {
                             {
                                 icon: TreePine,
                                 title: "Bosque nativo real, no un jardín decorado",
-                                desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres. No hay cabañas pegadas ni vecinos a metros. Privacidad total."
+                                desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres. No hay cabañas pegadas ni vecinos a pocos metros. Privacidad de verdad."
                             },
                             {
                                 icon: Mountain,
@@ -189,7 +184,7 @@ export default function GlampingValleLasTrancasPage() {
                             {
                                 icon: Wifi,
                                 title: "WiFi Starlink de alta velocidad",
-                                desc: "Internet satelital real en la montaña. Trabaja remoto, sube fotos o haz streaming sin cortes. Conectado cuando quieras, desconectado cuando lo elijas."
+                                desc: "Internet satelital real en la montaña. Trabaja remoto, sube fotos o haz streaming sin cortes. Conectado cuando lo necesites, tranquilo cuando no."
                             },
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
@@ -229,7 +224,7 @@ export default function GlampingValleLasTrancasPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Domo panorámico</p>
-                                <p className="text-xs opacity-80">Vista 360° del bosque</p>
+                                <p className="text-xs opacity-80">Vista al bosque nativo</p>
                             </div>
                         </div>
 
@@ -259,7 +254,7 @@ export default function GlampingValleLasTrancasPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Tinaja privada</p>
-                                <p className="text-xs opacity-80">Ciprés + agua caliente 24h</p>
+                                <p className="text-xs opacity-80">Ciprés · servicio de temporada</p>
                             </div>
                         </div>
 
@@ -308,9 +303,9 @@ export default function GlampingValleLasTrancasPage() {
                             <h3 className="text-2xl font-display font-black mb-6 text-primary">Equipamiento</h3>
                             <ul className="space-y-4">
                                 {[
-                                    "Tinaja privada de ciprés (exclusiva por domo)",
+                                    "Tinaja privada de ciprés (servicio de temporada)",
                                     "Estufa a pellet automática y programable",
-                                    "Cama king con ropa de cama premium",
+                                    "Cama king con ropa de cama de calidad",
                                     "Cocina equipada con Nespresso",
                                     "Baño completo con agua caliente",
                                     "WiFi Starlink de alta velocidad",
@@ -329,8 +324,8 @@ export default function GlampingValleLasTrancasPage() {
                             <h3 className="text-2xl font-display font-black mb-6 text-primary">Experiencia</h3>
                             <ul className="space-y-4">
                                 {[
-                                    "Vista panorámica 360° del bosque nativo",
-                                    "Privacidad total, sin vecinos cercanos",
+                                    "Vista panorámica del bosque nativo",
+                                    "Privacidad real, sin vecinos cercanos",
                                     "Check-in flexible y autónomo",
                                     "Guía de experiencias locales",
                                     "A 15 min de Nevados de Chillán",
@@ -356,7 +351,7 @@ export default function GlampingValleLasTrancasPage() {
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen quienes ya se quedaron en TreePod</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            4.9 estrellas en Google con 47 reseñas verificadas
+                            4.9 estrellas en Google con 59 reseñas verificadas
                         </p>
                     </div>
 
@@ -382,7 +377,7 @@ export default function GlampingValleLasTrancasPage() {
             <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">Ubicación privilegiada en Valle Las Trancas</h2>
+                        <h2 className="h2-display text-text-main mb-6">Dónde estamos en Valle Las Trancas</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                     </div>
 

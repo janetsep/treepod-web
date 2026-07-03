@@ -7,7 +7,7 @@ export default function LandingPage() {
             TreePod · Domos en Valle Las Trancas
           </h1>
           <p className="mt-4 text-lg md:text-xl text-gray-600">
-            Comodidad y tranquilidad en la montaña.
+            Domos geodésicos en bosque nativo, a minutos de las pistas de Nevados de Chillán.
           </p>
 
           <a
@@ -41,10 +41,10 @@ export default function LandingPage() {
         <h2 className="text-xl font-semibold mb-6">¿Qué incluye tu estadía?</h2>
 
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-4 md:gap-y-6 md:gap-x-10 text-gray-700">
-          <li className="font-semibold text-gray-900">– Tinaja exclusiva</li>
-          <li>– Domo equipado</li>
-          <li>– Calefacción</li>
-          <li className="font-semibold text-gray-900">– Internet estable</li>
+          <li className="font-semibold text-gray-900">– Domo equipado</li>
+          <li>– Calefacción a pellet</li>
+          <li>– WiFi Starlink</li>
+          <li className="font-semibold text-gray-900">– Tinaja privada (servicio de temporada)</li>
         </ul>
       </section>
 

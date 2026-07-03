@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
         const { data: r, error: readErr } = await supabaseAdmin
             .from("reservas")
-            .select("id, nombre, apellido, email, telefono, fecha_inicio, fecha_fin, adultos, total, monto_pagado, estado, fuente, domo_id, domos(nombre)")
+            .select("id, nombre, apellido, email, telefono, fecha_inicio, fecha_fin, adultos, total, monto_pagado, estado, fuente, domo_id, metodo_pago, domos(nombre)")
             .eq("id", reservaId)
             .is("deleted_at", null)
             .single();
@@ -67,6 +67,9 @@ export async function POST(request: Request) {
                 ...(quedaPagadoCompleto && ["pendiente", "pending_transfer_confirmation", "pendiente_pago", "confirmado"].includes(r.estado)
                     ? { estado: "pagado" }
                     : {}),
+                // Registra el medio de pago en la reserva si aún no tenía uno (necesario para
+                // saber a quién emitir boleta/factura). No sobrescribe un método ya registrado.
+                ...((!r.metodo_pago || String(r.metodo_pago).trim() === "") ? { metodo_pago: metodo } : {}),
                 updated_at: new Date().toISOString(),
             })
             .eq("id", reservaId);

@@ -4,24 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import TrackView from '../components/TrackView';
 import { trackEvent } from '../lib/analytics';
+import CinematicSection from '../components/CinematicSection';
 
 
 export default function ServicesPage() {
     const mainServices = [
         {
             title: "Baño Privado Bajo las Estrellas",
-            subtitle: "Privacidad Absoluta",
-            description: "Nada de compartir deseando que se acabe el tiempo de otros. Cruza la pasarela de madera y sumérgete en agua mineralizada bajo las estrellas. Estarás rodeado únicamente por árboles y el silencio absoluto del bosque.",
+            subtitle: "Privacidad total · Servicio de temporada",
+            description: "Tu propia tinaja al aire libre, con agua mineralizada y vista al bosque. Sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             image: "/images/wellness/Tinaja1.jpg",
-            alt: "Relajación total en tinaja privada de ciprés",
-            features: ["Reserva de 1 hora de uso exclusivo", "Sin compartir con extraños", "Agua caliente a 48 grados celsius"],
-            buttonText: "Quiero añadir la tinaja a mi reserva",
+            alt: "Tinaja privada de ciprés al aire libre en TreePod",
+            features: ["Disponible desde primavera (no opera en invierno)", "Uso exclusivo, sin compartir", "Agua mineralizada al aire libre"],
+            buttonText: "Ver disponibilidad",
             href: "/disponibilidad"
         },
         {
-            title: "Desayunos de rey y asados en el bosque",
+            title: "Desayunos y asados en el bosque",
             subtitle: "Sabor Cordillerano",
-            description: "Disfruta de la montaña sin pasar hambre ni estrés. Despierta con un desayuno cordillerano increíble mirando por la ventana, o usa nuestro quincho equipado para prepararte el mejor asado de tu vida al aire libre.",
+            description: "Despierta con un desayuno cordillerano servido a la habitación, o usa el quincho equipado para preparar un asado al aire libre. Comes bien sin moverte del bosque.",
             image: "/images/real/comidatreepod.jpg",
             secondaryImage: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
@@ -35,6 +36,18 @@ export default function ServicesPage() {
         <div className="bg-white font-sans text-text-main transition-colors duration-300 min-h-screen">
             <TrackView eventName="view_servicios" />
 
+            <CinematicSection
+                image="/images/wellness/Tinaja1.jpg"
+                alt="Tinaja privada de agua mineralizada bajo las estrellas en TreePod"
+                eyebrow="Servicios TreePod"
+                title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
+                text="Desayunos a la cama, quincho equipado para asados y tinaja privada en temporada."
+                ctaText="Ver disponibilidad"
+                ctaHref="/disponibilidad"
+                priority
+                titleAs="h1"
+            />
+
             {/* Featured Services Grid */}
             <main className="py-16 md:py-24 container mx-auto px-6 md:px-10">
                 {/* Título editorial - Centered to match News/Amenities style */}
@@ -42,15 +55,15 @@ export default function ServicesPage() {
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-4">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Experiencias TreePod</span>
+                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Tu refugio en la cordillera</span>
                         </div>
-                        <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
-                            Diseñadas para que <br className="hidden md:block" />
-                            <span className="italic-display text-primary font-light">no muevas un dedo</span>
-                        </h1>
+                        <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
+                            Afuera el bosque, <br className="hidden md:block" />
+                            <span className="italic-display text-primary font-light">adentro el descanso</span>
+                        </h2>
                         <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed">
-                            Afuera el bosque salvaje, adentro el relajo total. <br className="hidden md:block" />
-                            Es tu refugio privado en la cordillera donde tu única preocupación será decidir si te tomas el café en la cama o en la terraza.
+                            Cada experiencia está pensada para que solo te preocupes de disfrutar. <br className="hidden md:block" />
+                            Tu única decisión del día será si te tomas el café en la cama o en la terraza.
                         </p>
                     </div>
                 </div>
@@ -69,6 +82,7 @@ export default function ServicesPage() {
                                                 alt={service.alt}
                                                 src={service.image}
                                                 fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
                                                 className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
@@ -127,6 +141,7 @@ export default function ServicesPage() {
                                                     alt={service.alt}
                                                     src={service.secondaryImage}
                                                     fill
+                                                    sizes="(max-width: 768px) 100vw, 50vw"
                                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                                 />
                                             </div>
@@ -135,6 +150,7 @@ export default function ServicesPage() {
                                                     alt="Asados y celebraciones en TreePod"
                                                     src={service.image}
                                                     fill
+                                                    sizes="(max-width: 768px) 100vw, 50vw"
                                                     className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
                                                 />
                                             </div>
@@ -146,6 +162,7 @@ export default function ServicesPage() {
                                                 alt={service.alt}
                                                 src={service.image}
                                                 fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
                                                 className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>

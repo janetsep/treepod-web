@@ -23,6 +23,7 @@ export default function Logo({ className = "h-12 w-auto", variant = "white" }: {
                 src="/images/branding/logo-white.png"
                 alt="TreePod Logo White"
                 fill
+                sizes="200px"
                 className={`object-contain transition-opacity duration-500 absolute inset-0 ${variant === 'white' ? 'opacity-100 ease-in' : 'opacity-0 ease-out'}`}
                 priority
             />

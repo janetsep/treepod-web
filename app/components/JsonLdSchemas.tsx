@@ -1,165 +1,81 @@
-'use client';
+// Server Component: renderiza el JSON-LD directamente en el HTML (visible para Google y
+// bots de IA sin ejecutar JS). Estático (sin llamadas a BD) para no penalizar la carga.
 
-import { useEffect } from 'react';
-import { getDomoPriceForNights } from '@/lib/pricing';
-
-const JsonLdSchemas = () => {
-  useEffect(() => {
-    let isMounted = true;
-
-    // Only add schemas on client side to avoid hydration mismatch
-    const addSchema = (id: string, schema: object) => {
-      if (document.getElementById(id)) return; // Schema already exists
-
-      const script = document.createElement('script');
-      script.id = id;
-      script.type = 'application/ld+json';
-      script.textContent = JSON.stringify(schema);
-      document.head.appendChild(script);
-    };
-
-    // Build FAQ price answer dynamically from DB
-    const buildFaqPriceAnswer = async (): Promise<string> => {
-      const price = await getDomoPriceForNights(1);
-      if (price) {
-        const formatted = new Intl.NumberFormat('es-CL').format(price);
-        return `La tarifa base para 2 personas es desde $${formatted} CLP por noche, según temporada. Los domos tienen capacidad para hasta 4 adultos.`;
-      }
-      return 'Las tarifas para 2 personas varían según temporada y duración de la estadía. Los domos tienen capacidad para hasta 4 adultos. Consulta disponibilidad en domostreepod.cl/disponibilidad.';
-    };
-
-    // Add LodgingBusiness schema
-    addSchema('schema-lodging-business', {
-      "@context": "https://schema.org",
-      "@type": "LodgingBusiness",
-      "name": "TreePod Glamping",
-      "description": "Domos geodésicos en el bosque nativo de Valle Las Trancas, cerca de Termas de Chillán y Nevados de Chillán.",
-      "url": "https://domostreepod.cl",
-      "telephone": "+56984643307",
-      "email": "reservas@domostreepod.cl",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
-        "addressLocality": "Valle Las Trancas",
-        "addressRegion": "Ñuble",
-        "postalCode": "3780000",
-        "addressCountry": "CL"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "-36.905",
-        "longitude": "-71.478"
-      },
-      "image": "https://domostreepod.cl/images/hero/domo-treepod-ok-12.jpg",
-      "priceRange": "$$$",
-      "starRating": {
-        "@type": "Rating",
-        "ratingValue": "4.9",
-        "bestRating": "5"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "47",
-        "bestRating": "5"
-      },
-      "amenityFeature": [
-        {"@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Pet Friendly", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Estufa a pellet automática", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Cafetera Nespresso", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Cocina equipada", "value": true},
-        {"@type": "LocationFeatureSpecification", "name": "Estacionamiento privado", "value": true}
-      ],
-      "petsAllowed": true,
-      "checkinTime": "15:00",
-      "checkoutTime": "15:00",
-      "numberOfRooms": 3,
-      "currenciesAccepted": "CLP",
-      "paymentAccepted": "Tarjeta de crédito, Transferencia bancaria, WebPay",
-      "sameAs": [
-        "https://www.instagram.com/domostreepod",
-        "https://www.facebook.com/domostreepod"
-      ]
-    });
-
-    // Add FAQPage schema (async — fetches price from DB)
-    (async () => {
-      const priceAnswer = await buildFaqPriceAnswer();
-      if (!isMounted) return;
-      addSchema('schema-faq-page', {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "¿Dónde queda TreePod Glamping?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "TreePod está en Valle Las Trancas, ruta N-55 km 71 hacia Nevados de Chillan, Región de Ñuble, Chile. A 72 km de Chillán y a unas 5.5 horas de Santiago."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Cuánto cuesta una noche en los domos?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": priceAnswer
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Se aceptan mascotas en TreePod?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí, TreePod es Pet Friendly. Tu mascota es bienvenida siguiendo las normas de convivencia del glamping."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Qué incluye la estadía en TreePod?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Cada domo incluye baño privado, cocina equipada, cafetera Nespresso, WiFi Starlink, estufa a pellet automática, terraza privada y estacionamiento. La tinaja de ciprés caliente es un servicio adicional."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Hay WiFi en los domos?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí, contamos con internet Starlink de alta velocidad. Perfecto para teletrabajar o ver películas sin cortes."
-          }
-        }
-      ]
-    });
-    })();
-
-    // Cleanup function para remover schemas al desmontar
-    return () => {
-      isMounted = false;
-      // Verificar que el documento existe y no estamos en SSR
-      if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-        try {
-          const schemaLodging = document.getElementById('schema-lodging-business');
-          if (schemaLodging && schemaLodging.parentNode && document.contains(schemaLodging)) {
-            schemaLodging.parentNode.removeChild(schemaLodging);
-          }
-
-          const schemaFaq = document.getElementById('schema-faq-page');
-          if (schemaFaq && schemaFaq.parentNode && document.contains(schemaFaq)) {
-            schemaFaq.parentNode.removeChild(schemaFaq);
-          }
-        } catch (error) {
-          // Silenciosamente ignorar errores de cleanup durante navegación
-          console.warn('Schema cleanup error (safe to ignore):', error);
-        }
-      }
-    };
-  }, []);
-
-  return null; // This component doesn't render anything
+const LODGING_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "TreePod Glamping",
+  "description": "Domos geodésicos en el bosque nativo de Valle Las Trancas, cerca de Termas de Chillán y Nevados de Chillán.",
+  "url": "https://domostreepod.cl",
+  "telephone": "+56984643307",
+  "email": "reservas@domostreepod.cl",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
+    "addressLocality": "Valle Las Trancas",
+    "addressRegion": "Ñuble",
+    "postalCode": "3780000",
+    "addressCountry": "CL",
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": "-36.905", "longitude": "-71.478" },
+  "image": "https://domostreepod.cl/images/hero/domo-treepod-camara-18-2.jpg",
+  "priceRange": "$$$",
+  "starRating": { "@type": "Rating", "ratingValue": "4.9", "bestRating": "5" },
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "59", "bestRating": "5" },
+  "amenityFeature": [
+    { "@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Estufa a pellet automática", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Cafetera Nespresso", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Cocina equipada", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Estacionamiento privado", "value": true },
+  ],
+  "petsAllowed": false,
+  "checkinTime": "16:00",
+  "checkoutTime": "12:00",
+  "numberOfRooms": 4,
+  "currenciesAccepted": "CLP",
+  "paymentAccepted": "Tarjeta de crédito, Transferencia bancaria, WebPay",
+  "sameAs": ["https://www.instagram.com/domostreepod", "https://www.facebook.com/domostreepod"],
 };
 
-export default JsonLdSchemas;
+const FAQ_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Dónde queda TreePod Glamping?",
+      "acceptedAnswer": { "@type": "Answer", "text": "TreePod está en Valle Las Trancas, ruta N-55 km 71 hacia Nevados de Chillan, Región de Ñuble, Chile. A 72 km de Chillán y a unas 5.5 horas de Santiago." },
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto cuesta una noche en los domos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Las tarifas para 2 personas varían según temporada y duración de la estadía. Los domos tienen capacidad para hasta 4 adultos. Consulta disponibilidad y precios en domostreepod.cl/disponibilidad." },
+    },
+    {
+      "@type": "Question",
+      "name": "¿Se aceptan mascotas en TreePod?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Por ahora no recibimos mascotas. Buscamos cuidar la tranquilidad del entorno y el bienestar de los propios animales, ya que los domos no son un espacio adecuado para dejarlos solos." },
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué incluye la estadía en TreePod?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Cada domo incluye baño privado, cocina equipada, cafetera Nespresso, WiFi Starlink, estufa a pellet automática, terraza privada y estacionamiento. La tinaja de ciprés caliente es un servicio adicional de temporada." },
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay WiFi en los domos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, contamos con internet Starlink de alta velocidad. Perfecto para teletrabajar o ver películas sin cortes." },
+    },
+  ],
+};
+
+export default function JsonLdSchemas() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LODGING_SCHEMA) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA) }} />
+    </>
+  );
+}

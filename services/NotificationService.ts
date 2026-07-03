@@ -1,5 +1,10 @@
 import { Resend } from 'resend';
 import { google } from 'googleapis';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { obtenerDetalleReserva, renderDetalleHTML } from '@/lib/email-reserva-detalle';
+
+// Copia de evidencia de cada correo enviado al huésped
+const COPIA_EVIDENCIA = 'janetsep@gmail.com';
 
 // Resend se inicializa al momento de enviar: si falta la API key el envío falla
 // con un error claro en los logs (antes fallaba en silencio con un placeholder).
@@ -14,7 +19,7 @@ export const NotificationService = {
   /**
    * Envía correo de bienvenida al huésped
    */
-  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string, guestsCount?: number, extras?: string[], amountPaid?: number, totalAmount?: number) {
+  async sendWelcomeEmail(to: string, guestName: string, bookingDates: string, googleMapsLink: string, shortId?: string, guestsCount?: number, extras?: string[], amountPaid?: number, totalAmount?: number, reservaId?: string) {
     if (!to || !to.includes('@')) {
       console.warn('❌ Email inválido para notificación:', to);
       return;
@@ -32,12 +37,45 @@ export const NotificationService = {
     const pendingAmount = totalAmount && amountPaid ? totalAmount - amountPaid : 0;
     const formatCLP = (n: number) => n.toLocaleString('es-CL');
 
-    try {
-      await getResend().emails.send({
-        from: 'Glamping Domos TreePod <info@domostreepod.cl>',
-        to: [recipient],
-        subject: testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera`,
-        html: `
+    // Bloques de evidencia (datos + desglose por noche/ítem + horarios + medio de
+    // pago) desde la fuente inmutable reserva_cobros. Si no hay reservaId o falla,
+    // se usa el desglose simple de respaldo (extras + totales).
+    let detalle = null;
+    if (reservaId) {
+      try { detalle = await obtenerDetalleReserva(reservaId); }
+      catch (e) { console.error('No se pudo cargar el detalle de cobros para el correo:', e); }
+    }
+
+    const bloquesDetalle = detalle ? renderDetalleHTML(detalle) : `
+                    <div style="background: #f5f5f5; padding: 24px; border-radius: 12px; margin: 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 16px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Datos de la reserva</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 8px 0; color: #64748b; width: 45%;">Código</td><td style="padding: 8px 0; font-weight: 700; color: #00ADEF; font-family: monospace; font-size: 16px;">#${shortId?.toUpperCase() || 'S/N'}</td></tr>
+                            <tr><td style="padding: 8px 0; color: #64748b;">Fechas</td><td style="padding: 8px 0; font-weight: 600;">${bookingDates}</td></tr>
+                            <tr><td style="padding: 8px 0; color: #64748b;">Huéspedes</td><td style="padding: 8px 0; font-weight: 600;">${guestsCount || 1} ${guestsCount === 1 ? 'persona' : 'personas'}</td></tr>
+                            ${extras && extras.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748b; vertical-align: top;">Extras</td><td style="padding: 8px 0; font-weight: 600;">${extras.join(', ')}</td></tr>` : ''}
+                            <tr><td style="padding: 8px 0; color: #64748b;">Ubicación</td><td style="padding: 8px 0; font-weight: 600;">Valle Las Trancas, Km 72</td></tr>
+                        </table>
+                    </div>
+                    ${totalAmount ? `
+                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Detalle de pago</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 6px 0; color: #64748b;">Total reserva</td><td style="padding: 6px 0; font-weight: 700; color: #1a1a1a; text-align: right;">$${formatCLP(totalAmount)}</td></tr>
+                            <tr><td style="padding: 6px 0; color: #64748b;">Abono pagado</td><td style="padding: 6px 0; font-weight: 700; color: #00ADEF; text-align: right;">$${formatCLP(amountPaid || 0)}</td></tr>
+                            ${pendingAmount > 0 ? `<tr><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; color: #64748b;">Saldo pendiente</td><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; font-weight: 700; text-align: right; color: #1a1a1a;">$${formatCLP(pendingAmount)}</td></tr>` : ''}
+                        </table>
+                        ${pendingAmount > 0 ? `<p style="font-size: 12px; color: #64748b; margin: 12px 0 0 0;">* El saldo pendiente se paga al momento del check-in.</p>` : ''}
+                    </div>
+                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
+                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Horarios</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                            <tr><td style="padding: 6px 0; color: #64748b; width: 45%;">Check-in</td><td style="padding: 6px 0; font-weight: 600;">A partir de las 16:00 hrs</td></tr>
+                            <tr><td style="padding: 6px 0; color: #64748b;">Check-out</td><td style="padding: 6px 0; font-weight: 600;">Hasta las 12:00 hrs</td></tr>
+                        </table>
+                    </div>` : ''}`;
+
+    const guestHtml = `
             <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; background: #ffffff;">
                 ${testEmail ? `<p style="background: #ffecb3; padding: 10px; border-radius: 5px;">🚧 <strong>MODO TEST</strong><br>Este correo iba dirigido a: ${to}</p>` : ''}
 
@@ -54,39 +92,11 @@ export const NotificationService = {
                     <p style="font-size: 16px; line-height: 1.6;">Hola <strong>${guestName}</strong>,</p>
                     <p style="font-size: 15px; line-height: 1.6; color: #555;">Estamos contentos de confirmar su estadía en nuestro glamping. Prepararemos todo para que su experiencia sea de un encuentro real con la naturaleza.</p>
 
-                    <div style="background: #f5f5f5; padding: 24px; border-radius: 12px; margin: 28px 0; border: 1px solid #e5e5e5;">
-                        <h4 style="margin: 0 0 16px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Datos de la reserva</h4>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                            <tr><td style="padding: 8px 0; color: #64748b; width: 45%;">Código</td><td style="padding: 8px 0; font-weight: 700; color: #00ADEF; font-family: monospace; font-size: 16px;">#${shortId?.toUpperCase() || 'S/N'}</td></tr>
-                            <tr><td style="padding: 8px 0; color: #64748b;">Fechas</td><td style="padding: 8px 0; font-weight: 600;">${bookingDates}</td></tr>
-                            <tr><td style="padding: 8px 0; color: #64748b;">Huéspedes</td><td style="padding: 8px 0; font-weight: 600;">${guestsCount || 1} ${guestsCount === 1 ? 'persona' : 'personas'}</td></tr>
-                            ${extras && extras.length > 0 ? `<tr><td style="padding: 8px 0; color: #64748b; vertical-align: top;">Extras</td><td style="padding: 8px 0; font-weight: 600;">${extras.join(', ')}</td></tr>` : ''}
-                            <tr><td style="padding: 8px 0; color: #64748b;">Ubicación</td><td style="padding: 8px 0; font-weight: 600;">Valle Las Trancas, Km 72</td></tr>
-                        </table>
-                    </div>
+                    ${bloquesDetalle}
 
-                    ${totalAmount ? `
-                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
-                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Detalle de pago</h4>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                            <tr><td style="padding: 6px 0; color: #64748b;">Total reserva</td><td style="padding: 6px 0; font-weight: 700; color: #1a1a1a; text-align: right;">$${formatCLP(totalAmount)}</td></tr>
-                            <tr><td style="padding: 6px 0; color: #64748b;">Abono pagado (50%)</td><td style="padding: 6px 0; font-weight: 700; color: #00ADEF; text-align: right;">$${formatCLP(amountPaid || 0)}</td></tr>
-                            ${pendingAmount > 0 ? `<tr><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; color: #64748b;">Saldo pendiente</td><td style="padding: 8px 0; border-top: 1px solid #e5e5e5; font-weight: 700; text-align: right; color: #1a1a1a;">$${formatCLP(pendingAmount)}</td></tr>` : ''}
-                        </table>
-                        ${pendingAmount > 0 ? `<p style="font-size: 12px; color: #64748b; margin: 12px 0 0 0;">* El saldo pendiente se paga al momento del check-in.</p>` : ''}
-                    </div>
-                    ` : ''}
-
-                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5;">
-                        <h4 style="margin: 0 0 12px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Horarios</h4>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                            <tr><td style="padding: 6px 0; color: #64748b; width: 45%;">Check-in</td><td style="padding: 6px 0; font-weight: 600;">A partir de las 16:00 hrs</td></tr>
-                            <tr><td style="padding: 6px 0; color: #64748b;">Check-out</td><td style="padding: 6px 0; font-weight: 600;">Hasta las 12:00 hrs</td></tr>
-                        </table>
-                        <p style="font-size: 12px; color: #64748b; margin: 10px 0 0 0;">
-                            Revisa nuestras <a href="https://domostreepod.cl/terminos" style="color: #00ADEF; text-decoration: underline;">políticas de cancelación y condiciones</a>.
-                        </p>
-                    </div>
+                    <p style="font-size: 12px; color: #64748b; margin: 0 0 28px 0;">
+                        Revisa nuestras <a href="https://domostreepod.cl/terminos" style="color: #00ADEF; text-decoration: underline;">políticas de cancelación y condiciones</a>.
+                    </p>
 
                     <h3 style="font-size: 17px; margin: 0 0 8px 0; color: #1e293b;">Cómo llegar</h3>
                     <p style="line-height: 1.6; color: #555; font-size: 14px; margin: 0 0 20px 0;">Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
@@ -115,8 +125,35 @@ export const NotificationService = {
                     <p style="font-size: 12px; color: #333333; margin: 0; font-weight: 600;">Registro SERNATUR N° 36806</p>
                 </div>
             </div>
-        `
+        `;
+
+    const asuntoHuesped = testEmail ? `[TEST] Para: ${guestName}` : `¡Reserva Confirmada! Tu domo en Valle Las Trancas te espera`;
+
+    try {
+      // 1. Correo al huésped, con copia de evidencia (BCC) a la administración
+      await getResend().emails.send({
+        from: 'Glamping Domos TreePod <info@domostreepod.cl>',
+        to: [recipient],
+        bcc: testEmail ? undefined : [COPIA_EVIDENCIA],
+        subject: asuntoHuesped,
+        html: guestHtml,
       });
+
+      // Guardar el correo enviado como evidencia inmutable ligada a la reserva
+      if (reservaId) {
+        try {
+          await supabaseAdmin.from('reserva_correos').insert({
+            reserva_id: reservaId,
+            tipo: 'confirmacion',
+            destinatario: to,
+            copia_a: testEmail ? null : COPIA_EVIDENCIA,
+            asunto: asuntoHuesped,
+            html: guestHtml,
+          });
+        } catch (persistErr) {
+          console.error('No se pudo guardar la evidencia del correo en reserva_correos:', persistErr);
+        }
+      }
 
       // 2. Correo de Alerta al Administrador
       const adminEmail = 'janetsep@gmail.com';
@@ -369,20 +406,12 @@ export const NotificationService = {
 
       // Email al huésped (si tiene email y se pidió enviarlo)
       if (data.sendGuestEmail && data.guestEmail && data.guestEmail.includes('@')) {
-        await getResend().emails.send({
-          from: 'Glamping Domos TreePod <info@domostreepod.cl>',
-          to: [data.guestEmail],
-          subject: `¡Tu reserva en TreePod está confirmada! #${shortId}`,
-          html: `
-            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-              <div style="text-align: center; padding: 30px 20px;">
-                <img src="https://domostreepod.cl/images/branding/logo-white.png" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 20px;" />
-                <h1 style="color: #00ADEF; font-size: 20px; margin: 0;">¡Reserva Confirmada!</h1>
-                <p style="color: #666; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;">Glamping Domos TreePod · Valle Las Trancas</p>
-              </div>
-              <div style="padding: 0 20px 30px;">
-                <p>Hola <strong>${data.guestName}</strong>,</p>
-                <p>Nos alegra confirmar tu reserva en nuestro glamping. Aquí tienes el resumen:</p>
+        // Mismo desglose de evidencia que el correo web (datos + ítems + medio de pago)
+        let detalleManual = null;
+        try { detalleManual = await obtenerDetalleReserva(data.reservaId); }
+        catch (e) { console.error('No se pudo cargar el detalle de cobros para el correo manual:', e); }
+
+        const resumenHtml = detalleManual ? renderDetalleHTML(detalleManual) : `
                 <div style="background: #f9f9f9; border-radius: 12px; padding: 24px; margin: 20px 0;">
                   <p style="margin: 0 0 10px 0;"><strong>Código de Reserva:</strong> <span style="color: #00ADEF; font-family: monospace; font-size: 18px;">#${shortId}</span></p>
                   <p style="margin: 0 0 10px 0;"><strong>Domo:</strong> ${data.domoNombre}</p>
@@ -394,7 +423,20 @@ export const NotificationService = {
                   <ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 14px; color: #555;">
                     ${data.extras.map(ex => `<li>${ex}</li>`).join('')}
                   </ul>` : ''}
-                </div>
+                </div>`;
+
+        const asuntoManual = `¡Tu reserva en TreePod está confirmada! #${shortId}`;
+        const guestHtmlManual = `
+            <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+              <div style="text-align: center; padding: 30px 20px;">
+                <img src="https://domostreepod.cl/images/branding/logo-white.png" alt="TreePod" style="width: 120px; height: auto; margin-bottom: 20px;" />
+                <h1 style="color: #00ADEF; font-size: 20px; margin: 0;">¡Reserva Confirmada!</h1>
+                <p style="color: #666; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;">Glamping Domos TreePod · Valle Las Trancas</p>
+              </div>
+              <div style="padding: 0 20px 30px;">
+                <p>Hola <strong>${data.guestName}</strong>,</p>
+                <p>Nos alegra confirmar tu reserva en nuestro glamping. Aquí tienes el detalle:</p>
+                ${resumenHtml}
                 <p>Si tienes alguna consulta, puedes contactarnos por WhatsApp o responder este correo.</p>
                 <p style="margin-top: 30px;">¡Nos vemos pronto en la montaña!<br/><strong>El equipo de TreePod</strong></p>
               </div>
@@ -402,8 +444,29 @@ export const NotificationService = {
                 © ${new Date().getFullYear()} TreePod Glamping · Valle Las Trancas, Chile
               </div>
             </div>
-          `
+          `;
+
+        await getResend().emails.send({
+          from: 'Glamping Domos TreePod <info@domostreepod.cl>',
+          to: [data.guestEmail],
+          bcc: [COPIA_EVIDENCIA],
+          subject: asuntoManual,
+          html: guestHtmlManual,
         });
+
+        // Guardar como evidencia inmutable ligada a la reserva
+        try {
+          await supabaseAdmin.from('reserva_correos').insert({
+            reserva_id: data.reservaId,
+            tipo: 'confirmacion_manual',
+            destinatario: data.guestEmail,
+            copia_a: COPIA_EVIDENCIA,
+            asunto: asuntoManual,
+            html: guestHtmlManual,
+          });
+        } catch (persistErr) {
+          console.error('No se pudo guardar la evidencia del correo manual en reserva_correos:', persistErr);
+        }
       }
 
       // Nota: la sincronización con Google Calendar ya NO se hace aquí.

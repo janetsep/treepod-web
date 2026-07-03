@@ -5,6 +5,8 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import TopBar from "./TopBar";
 import WhatsAppButton from "./WhatsAppButton";
+import RevealOnScroll from "./RevealOnScroll";
+import StickyReservar from "./StickyReservar";
 
 export default function AdminAwareLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -20,10 +22,12 @@ export default function AdminAwareLayout({ children }: { children: React.ReactNo
     // Layout estándar del sitio web
     return (
         <>
+            <RevealOnScroll />
             <TopBar />
             <Navbar />
             <WhatsAppButton />
             {children}
+            <StickyReservar />
             <Footer />
         </>
     );

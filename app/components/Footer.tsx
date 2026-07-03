@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
 
 import Logo from "./Logo";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -9,7 +8,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 export default function Footer() {
     return (
         <footer className="bg-[#030506] text-white pt-24 pb-12 transition-colors duration-300">
-            <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
+            {/* platform.js de Elfsight ya se carga una sola vez (global, layout.tsx) */}
             <div className="container mx-auto px-6 md:px-10">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 mb-16">
                     {/* Logo & About */}
@@ -73,16 +72,27 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Sello SERNATUR - Centrado en nueva línea */}
+                {/* Sellos: SERNATUR + Impacta Sustentable - Centrados en nueva línea */}
                 <div className="flex flex-col items-center gap-6 mb-16 py-10 border-t border-white/10">
-                    <div className="bg-white p-6 rounded-2xl flex items-center justify-center shadow-lg">
-                        <Image
-                            src="/images/branding/sello-sernatur-sin-fecha.png"
-                            alt="Servicio Turístico Registrado SERNATUR"
-                            width={300}
-                            height={100}
-                            className="h-24 md:h-32 w-auto object-contain"
-                        />
+                    <div className="flex flex-wrap items-center justify-center gap-5 md:gap-6">
+                        <div className="bg-white p-6 rounded-2xl flex items-center justify-center shadow-lg">
+                            <Image
+                                src="/images/branding/sello-sernatur-sin-fecha.png"
+                                alt="Servicio Turístico Registrado SERNATUR"
+                                width={300}
+                                height={100}
+                                className="h-24 md:h-32 w-auto object-contain"
+                            />
+                        </div>
+                        <div className="bg-white p-4 rounded-2xl flex items-center justify-center shadow-lg">
+                            <Image
+                                src="/images/branding/Sello_IS-2026-001-trim.png"
+                                alt="Sello Impacta Sustentable - Travesía - IS-2026-001"
+                                width={471}
+                                height={399}
+                                className="h-28 md:h-36 w-auto object-contain"
+                            />
+                        </div>
                     </div>
                     <div className="flex flex-col items-center gap-2">
                         <span className="text-white/60 text-sm tracking-widest font-black uppercase">Servicio Registrado</span>

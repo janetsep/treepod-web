@@ -17,7 +17,7 @@ function getPrioLabel(val: number) {
 function getPrioColor(val: number) {
     if (val >= 3) return "bg-red-50 text-red-600";
     if (val === 2) return "bg-yellow-50 text-yellow-600";
-    return "bg-gray-100 text-gray-500";
+    return "bg-gray-100 text-gray-900";
 }
 
 interface Tarifa {
@@ -170,7 +170,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
     );
 
     if (loading) {
-        return <div className="p-12 text-center text-gray-400 font-black italic animate-pulse">CARGANDO MAESTRO DE TARIFAS...</div>;
+        return <div className="p-12 text-center text-gray-700 font-black italic animate-pulse">CARGANDO MAESTRO DE TARIFAS...</div>;
     }
 
     return (
@@ -183,7 +183,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                             <TrendingUp className="w-6 h-6 text-primary" />
                             Administrador de Tarifas
                         </h2>
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Gestión de rangos de fechas y prioridades</p>
+                        <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Gestión de rangos de fechas y prioridades</p>
                     </div>
                     {!isViewer && (
                         <button
@@ -209,10 +209,10 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-gray-50/50">
                             <tr>
-                                <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">Prioridad</th>
-                                <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">Temporada / Rango</th>
-                                <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">Estado</th>
-                                <th className="px-8 py-4 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest">Acciones</th>
+                                <th className="px-8 py-4 text-[9px] font-black text-gray-700 uppercase tracking-widest">Prioridad</th>
+                                <th className="px-8 py-4 text-[9px] font-black text-gray-700 uppercase tracking-widest">Temporada / Rango</th>
+                                <th className="px-8 py-4 text-[9px] font-black text-gray-700 uppercase tracking-widest">Estado</th>
+                                <th className="px-8 py-4 text-right text-[9px] font-black text-gray-700 uppercase tracking-widest">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -233,7 +233,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     </td>
                                     <td className="px-8 py-5">
                                         <div className="font-black text-gray-900 group-hover:text-primary transition-all">{temp.nombre}</div>
-                                        <div className="text-[10px] text-gray-400 font-bold mt-1 flex items-center gap-2">
+                                        <div className="text-[10px] text-gray-700 font-bold mt-1 flex items-center gap-2">
                                             {new Date(temp.fecha_inicio).toLocaleDateString()} <ArrowRight size={8} /> {new Date(temp.fecha_fin).toLocaleDateString()}
                                         </div>
                                     </td>
@@ -243,7 +243,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                             const inicio = new Date(temp.fecha_inicio);
                                             const fin = new Date(temp.fecha_fin);
                                             if (today < inicio) return <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full">Próxima</span>;
-                                            if (today > fin) return <span className="px-3 py-1 bg-gray-100 text-gray-400 rounded-full">Vencida</span>;
+                                            if (today > fin) return <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">Vencida</span>;
                                             return <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>;
                                         })()}
                                     </td>
@@ -273,7 +273,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                         >
                             <ArrowRight className="w-4 h-4 rotate-180" />
                         </button>
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                        <span className="text-[9px] font-black text-gray-700 uppercase tracking-widest">
                             Página {temporadaPage} de {totalTemporadaPages}
                         </span>
                         <button
@@ -299,7 +299,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
 
                         <div className="space-y-4">
                             <div>
-                                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Nombre Descriptivo</label>
+                                <label className="text-[9px] font-black text-gray-700 uppercase tracking-widest block mb-2 px-1">Nombre Descriptivo</label>
                                 <input
                                     type="text"
                                     readOnly={isViewer}
@@ -310,7 +310,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Check-in desde</label>
+                                    <label className="text-[9px] font-black text-gray-700 uppercase tracking-widest block mb-2 px-1">Check-in desde</label>
                                     <input
                                         type="date"
                                         readOnly={isViewer}
@@ -320,7 +320,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Check-out hasta</label>
+                                    <label className="text-[9px] font-black text-gray-700 uppercase tracking-widest block mb-2 px-1">Check-out hasta</label>
                                     <input
                                         type="date"
                                         readOnly={isViewer}
@@ -331,7 +331,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Prioridad</label>
+                                <label className="text-[9px] font-black text-gray-700 uppercase tracking-widest block mb-2 px-1">Prioridad</label>
                                 <div className="flex gap-2">
                                     {PRIORIDADES.map((p) => (
                                         <button
@@ -344,7 +344,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                                     ? p.value >= 3 ? "bg-red-500 border-red-500 text-white"
                                                     : p.value === 2 ? "bg-yellow-400 border-yellow-400 text-white"
                                                     : "bg-gray-400 border-gray-400 text-white"
-                                                    : "bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-300"
+                                                    : "bg-gray-50 border-gray-100 text-gray-700 hover:border-gray-300"
                                             } ${isViewer ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                                         >
                                             {p.label}
@@ -371,7 +371,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                             <div className="flex justify-between items-end px-4">
                                 <div>
                                     <h3 className="text-lg font-black text-gray-900 italic">Matriz de Precios: {editingTemporada?.nombre}</h3>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2 mt-1">
+                                    <p className="text-[10px] text-gray-700 font-bold uppercase tracking-widest flex items-center gap-2 mt-1">
                                         <Users size={12} className="text-primary" /> {filteredTarifas.length} Configuraciones Activas
                                     </p>
                                 </div>
@@ -387,7 +387,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                 if (grupo.length === 0) return null;
                                 return (
                                     <div key={noches}>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400 px-1 mb-3">{label}</p>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 px-1 mb-3">{label}</p>
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                             {grupo.map((tarifa) => (
                                     <div key={tarifa.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm group hover:border-primary/20 transition-all">
@@ -395,10 +395,10 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-2xl font-black text-gray-900">{tarifa.adultos}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">Ad.</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Ad.</span>
                                                 </div>
                                             </div>
-                                            <span className="text-[8px] font-mono text-gray-300">#{tarifa.id.slice(-6)}</span>
+                                            <span className="text-[8px] font-mono text-gray-600">#{tarifa.id.slice(-6)}</span>
                                         </div>
 
                                         <div className="relative">
@@ -408,7 +408,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                                 readOnly={isViewer}
                                                 defaultValue={tarifa.precio_noche}
                                                 onBlur={(e) => !isViewer && handleUpdatePrice(tarifa.id, Number(e.target.value))}
-                                                className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
+                                                className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-700 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
                                             />
                                             {saving === tarifa.id && (
                                                 <div className="absolute right-4 top-1/2 -translate-y-1/2">

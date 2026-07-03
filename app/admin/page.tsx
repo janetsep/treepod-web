@@ -12,10 +12,12 @@ import ClientesConsole from "./components/ClientesConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
 import SicraConsole from "./components/SicraConsole";
-import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail } from "lucide-react";
+import ProyectosPanel from "./components/ProyectosPanel";
+import ClimaWidget from "./components/ClimaWidget";
+import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail, MailCheck, FolderOpen, Receipt } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra' | 'proyectos'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -29,6 +31,8 @@ export default function AdminDashboard() {
     const [editingReserva, setEditingReserva] = useState<any | null>(null);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [domoFilter, setDomoFilter] = useState("");
+    const [soloPorEmitir, setSoloPorEmitir] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [adminRole, setAdminRole] = useState<string | null>(null);
     const [adminEmail, setAdminEmail] = useState<string | null>(null);
@@ -331,14 +335,43 @@ export default function AdminDashboard() {
     };
     const todayStr = new Date().toISOString().split('T')[0];
     const validReservas = reservas.filter(isValidReserva);
+
+    // ¿A esta reserva le falta emitir boleta/factura? (misma regla que el dashboard de estadísticas)
+    // Estadía pagada del año en curso, sin folio DTE y que NO se pagó con Transbank (esos emiten solos).
+    const esTransbankDoc = (r: any) => {
+        const mp = `${r.metodo_pago || ""} ${r.metodo_pago_inicial || ""}`.toLowerCase();
+        return mp.includes("webpay") || mp.includes("transbank") || !!r.payment_intent_id || !!r.numero_transaccion;
+    };
+    // Se considera EMITIDA si tiene folio DTE registrado O si tiene el archivo de la
+    // boleta/factura subido (comprobante_url) — para Janet ese archivo ES el documento emitido.
+    const estaEmitidoDoc = (r: any) => {
+        const f = r.metadata && (r.metadata.folio_dte ?? r.metadata.folio);
+        const tieneFolio = f !== undefined && f !== null && String(f).trim() !== "";
+        return tieneFolio || !!r.comprobante_url;
+    };
+    const estadosExcluidosDoc = new Set(["bloqueado", "cancelado", "cancelada", "no show", "no-show", "suspendido"]);
+    const inicioAnioStr = `${new Date().getFullYear()}-01-01`;
+    const faltaEmitir = (r: any) => {
+        if (estadosExcluidosDoc.has((r.estado || "").toLowerCase())) return false;
+        if (!(Number(r.monto_pagado) > 0)) return false;
+        if (String(r.fecha_inicio) < inicioAnioStr) return false;
+        if (estaEmitidoDoc(r)) return false;
+        if (esTransbankDoc(r)) return false;
+        return true;
+    };
+    const porEmitirCount = validReservas.filter(faltaEmitir).length;
+
     // Pestaña "Historial": solo reservas pasadas (fecha_fin < hoy).
     // Pestaña "Dashboard": switch entre solo actuales+futuras (default) o todas.
+    // Con "Solo por emitir" activo se ignora el recorte de próximas (los documentos suelen ser de estadías ya cumplidas).
     const baseReservas = view === 'historial'
         ? validReservas.filter((r: any) => r.fecha_fin < todayStr)
-        : soloProximas
+        : (soloProximas && !soloPorEmitir)
             ? validReservas.filter((r: any) => r.fecha_fin >= todayStr)
             : validReservas;
     const filteredReservas = baseReservas.filter((r: any) => {
+        if (soloPorEmitir && !faltaEmitir(r)) return false;
+        if (domoFilter && r.domo_id !== domoFilter) return false;
         if (!searchTerm) return true;
         const clientName = `${r.clientes?.nombre || ""} ${r.clientes?.apellido || ""} ${r.nombre || ""} ${r.apellido || ""}`.toLowerCase();
         const email = (r.email || r.clientes?.email || "").toLowerCase();
@@ -367,10 +400,10 @@ export default function AdminDashboard() {
         currentPage * ITEMS_PER_PAGE
     );
 
-    // Reset page when search changes
+    // Reset page when search or domo filter changes
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, domoFilter, soloPorEmitir]);
 
     // Filtered lists
     const upcomingReservations = validReservas.filter((r: any) => r.fecha_inicio >= todayStr);
@@ -387,22 +420,26 @@ export default function AdminDashboard() {
             case "pagado": return "bg-green-100 text-green-800";
             case "pendiente": return "bg-yellow-100 text-yellow-800";
             case "pendiente_pago": return "bg-yellow-100 text-yellow-800";
+            case "suspendido": return "bg-orange-100 text-orange-800";
             case "cancelada": return "bg-red-100 text-red-800";
             default: return "bg-gray-100 text-gray-800";
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans">
+        <div className="min-h-screen bg-white p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con DomoTreePod.cl</p>
+                    <div className="flex items-center gap-4">
+                        <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-14 w-14 object-contain" />
+                        <div>
+                            <h1 className="text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
+                            <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con DomoTreePod.cl</p>
+                        </div>
                     </div>
                     <div className="flex items-center gap-6">
                         <div className="hidden md:flex flex-col text-right">
-                            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Estado Sistema</span>
+                            <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Estado Sistema</span>
                             <span className="text-xs font-bold text-green-500">Operativo · Online</span>
                         </div>
                         {adminRole !== 'viewer' && (
@@ -418,45 +455,45 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Tabs de Navegación Premium */}
-                <div className="flex gap-2 bg-gray-200/50 p-1.5 rounded-[1.8rem] w-fit">
+                <div className="flex gap-2 bg-gray-200/50 p-1.5 rounded-[1.8rem] w-fit overflow-x-auto max-w-full">
                     <button
                         onClick={() => setView('reservas')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'reservas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'reservas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <LayoutDashboard className="w-4 h-4" />
                         Dashboard
                     </button>
                     <button
                         onClick={() => setView('tarifas')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'tarifas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'tarifas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <TrendingUp className="w-4 h-4" />
                         Tarifas y Precios
                     </button>
                     <button
                         onClick={() => setView('servicios')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'servicios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'servicios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Settings className="w-4 h-4" />
                         Servicios / Extras
                     </button>
                     <button
                         onClick={() => setView('clientes')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'clientes' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'clientes' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <UserCircle className="w-4 h-4" />
                         CRM / Clientes
                     </button>
                     <button
                         onClick={() => { setView('historial'); setCurrentPage(1); }}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Clock className="w-4 h-4" />
                         Historial
                     </button>
                     <button
                         onClick={() => setView('papelera')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Trash2 className="w-4 h-4" />
                         Papelera
@@ -464,7 +501,7 @@ export default function AdminDashboard() {
                     {['admin', 'superadmin'].includes(adminRole || '') && (
                         <button
                             onClick={() => setView('usuarios')}
-                            className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'usuarios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'usuarios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                         >
                             <Users className="w-4 h-4" />
                             Accesos
@@ -472,21 +509,30 @@ export default function AdminDashboard() {
                     )}
                     <button
                         onClick={() => setView('sicra')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'sicra' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'sicra' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <ShoppingCart className="w-4 h-4" />
-                        SICRA
+                        ALMA
+                    </button>
+                    <button
+                        onClick={() => setView('proyectos')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'proyectos' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                    >
+                        <FolderOpen className="w-4 h-4" />
+                        Proyectos
                     </button>
                     <Link
                         href="/admin/dashboard"
-                        className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-400 hover:text-gray-600 hover:bg-white/50"
+                        className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"
                     >
                         <BarChart3 className="w-4 h-4" />
                         Estadísticas
                     </Link>
                 </div>
 
-                {view === 'sicra' ? (
+                {view === 'proyectos' ? (
+                    <ProyectosPanel />
+                ) : view === 'sicra' ? (
                     <SicraConsole />
                 ) : view === 'tarifas' ? (
                     <TarifasConsole adminRole={adminRole} adminEmail={adminEmail} />
@@ -505,9 +551,9 @@ export default function AdminDashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Llegadas de hoy */}
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">🟢 Llegan hoy ({llegadasHoy.length}) · 16:00</p>
+                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">🟢 Llegan hoy ({llegadasHoy.length}) · 16:00</p>
                                 {llegadasHoy.length === 0 ? (
-                                    <p className="text-xs text-gray-300 italic">Sin llegadas hoy</p>
+                                    <p className="text-xs text-gray-600 italic">Sin llegadas hoy</p>
                                 ) : llegadasHoy.map((r: any) => {
                                     const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
                                     const tel = r.telefono || r.clientes?.telefono;
@@ -517,7 +563,7 @@ export default function AdminDashboard() {
                                                 <span className="font-bold text-sm text-gray-900">{`${r.nombre || ''} ${r.apellido || ''}`.trim() || 'Huésped'}</span>
                                                 <span className="text-[9px] font-black bg-gray-100 px-2 py-0.5 rounded uppercase">{r.domos?.nombre || '—'}</span>
                                             </div>
-                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-500">
+                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-900">
                                                 {tel && <a href={`tel:${tel}`} className="text-primary font-bold">{tel}</a>}
                                                 <span>{r.adultos || 2}p</span>
                                                 {saldo > 0
@@ -537,9 +583,9 @@ export default function AdminDashboard() {
                             </div>
                             {/* Salidas de hoy */}
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-amber-400">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">🟡 Salen hoy ({salidasHoy.length}) · 12:00</p>
+                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">🟡 Salen hoy ({salidasHoy.length}) · 12:00</p>
                                 {salidasHoy.length === 0 ? (
-                                    <p className="text-xs text-gray-300 italic">Sin salidas hoy</p>
+                                    <p className="text-xs text-gray-600 italic">Sin salidas hoy</p>
                                 ) : salidasHoy.map((r: any) => {
                                     const saldo = (Number(r.total) || 0) - (Number(r.monto_pagado) || 0);
                                     return (
@@ -548,7 +594,7 @@ export default function AdminDashboard() {
                                                 <span className="font-bold text-sm text-gray-900">{`${r.nombre || ''} ${r.apellido || ''}`.trim() || 'Huésped'}</span>
                                                 <span className="text-[9px] font-black bg-gray-100 px-2 py-0.5 rounded uppercase">{r.domos?.nombre || '—'}</span>
                                             </div>
-                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-500">
+                                            <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-900">
                                                 <span>Aseo después de las 12:00</span>
                                                 {domosRecambio.has(r.domo_id) && <span className="text-red-600 font-black bg-red-50 px-2 py-0.5 rounded">⚡ Recambio: llega otro hoy</span>}
                                                 {saldo > 0 && <span className="text-amber-700 font-black">Saldo pendiente ${saldo.toLocaleString('es-CL')}</span>}
@@ -559,14 +605,31 @@ export default function AdminDashboard() {
                             </div>
                             {/* Próximas llegadas (KPI) */}
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-primary">
-                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Próximas Llegadas</p>
+                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-1">Próximas Llegadas</p>
                                 <p className="text-3xl font-display font-black text-primary">
                                     {upcomingReservations.length}
                                 </p>
-                                <p className="text-[10px] text-gray-400 mt-2 font-bold italic">Desde hoy en adelante</p>
+                                <p className="text-[10px] text-gray-700 mt-2 font-bold italic">Desde hoy en adelante</p>
                             </div>
                         </div>
                         )}
+
+                        {/* Clima Las Trancas */}
+                        {view !== 'historial' && (() => {
+                            // Fechas con llegadas o salidas en los próximos 7 días (para resaltar en el widget)
+                            const en7dias = new Date();
+                            en7dias.setDate(en7dias.getDate() + 7);
+                            const en7Str = en7dias.toISOString().split('T')[0];
+                            const fechasConReserva = [
+                                ...validReservas
+                                    .filter((r: any) => estadosFirmes.includes(r.estado) && r.fecha_inicio >= todayStr && r.fecha_inicio <= en7Str)
+                                    .map((r: any) => r.fecha_inicio),
+                                ...validReservas
+                                    .filter((r: any) => estadosFirmes.includes(r.estado) && r.fecha_fin >= todayStr && r.fecha_fin <= en7Str)
+                                    .map((r: any) => r.fecha_fin),
+                            ];
+                            return <ClimaWidget fechasReserva={fechasConReserva} />;
+                        })()}
 
                         {/* Calendar View */}
                         {view !== 'historial' && (
@@ -580,7 +643,7 @@ export default function AdminDashboard() {
                                         <Calendar className="w-6 h-6 text-primary" />
                                         Ocupación del Domo
                                     </h2>
-                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedCalendar ? 'rotate-180' : ''}`} />
+                                    <ChevronDown className={`w-5 h-5 text-gray-700 transition-transform duration-500 ${expandedCalendar ? 'rotate-180' : ''}`} />
                                 </button>
                                 <div className="flex items-center gap-3">
                                     {syncResult && (
@@ -604,7 +667,7 @@ export default function AdminDashboard() {
                             {expandedCalendar && (
                                 <div className="p-8 animate-in fade-in slide-in-from-top-2 duration-300">
                                     {loading ? (
-                                        <div className="h-40 flex items-center justify-center text-gray-400 animate-pulse font-bold italic">Cargando disponibilidad...</div>
+                                        <div className="h-40 flex items-center justify-center text-gray-700 animate-pulse font-bold italic">Cargando disponibilidad...</div>
                                     ) : (
                                         <DomoCalendar reservas={reservas} domos={domos} />
                                     )}
@@ -615,18 +678,20 @@ export default function AdminDashboard() {
 
                         {/* List View - COLLAPSIBLE */}
                         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                            <button
-                                onClick={() => setExpandedReservas(!expandedReservas)}
-                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                            <div
+                                className="w-full p-6 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 transition-colors cursor-pointer"
                             >
-                                <h2 className="text-xl font-display font-black text-gray-800 flex items-center gap-2">
+                                <h2
+                                    onClick={() => setExpandedReservas(!expandedReservas)}
+                                    className="flex-1 text-xl font-display font-black text-gray-800 flex items-center gap-2"
+                                >
                                     {view === 'historial' ? <Clock className="w-6 h-6 text-primary" /> : <LayoutDashboard className="w-6 h-6 text-primary" />}
                                     {view === 'historial' ? 'Historial de Reservas' : 'Maestro de Reservas'}
                                 </h2>
                                 <div className="flex items-center gap-4">
                                     {selectedIds.length > 0 && ['admin', 'superadmin'].includes(adminRole || '') && (
                                         <button
-                                            onClick={(e) => { e.stopPropagation(); bulkDelete(); }}
+                                            onClick={() => bulkDelete()}
                                             disabled={actionLoading === 'bulk-delete'}
                                             className="px-4 py-2 bg-red-100 text-red-600 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/10"
                                         >
@@ -635,19 +700,19 @@ export default function AdminDashboard() {
                                         </button>
                                     )}
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); loadData(); }}
+                                        onClick={() => loadData()}
                                         className="text-primary hover:text-primary-dark text-xs font-black uppercase tracking-widest flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full transition-all"
                                     >
                                         <RefreshCw className="w-3.5 h-3.5" /> Actualizar
                                     </button>
-                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-500 ${expandedReservas ? 'rotate-180' : ''}`} />
+                                    <ChevronDown onClick={() => setExpandedReservas(!expandedReservas)} className={`w-5 h-5 text-gray-700 transition-transform duration-500 ${expandedReservas ? 'rotate-180' : ''}`} />
                                 </div>
-                            </button>
+                            </div>
 
                             <div className={`transition-all duration-500 ease-in-out ${expandedReservas ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                                 <div className="p-6 border-b border-gray-100 bg-gray-50/30 flex flex-wrap items-center gap-4">
                                     <div className="relative flex-1 min-w-[300px]">
-                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                                         <input
                                             type="text"
                                             placeholder="Buscar por nombre, email o ID de reserva..."
@@ -656,6 +721,17 @@ export default function AdminDashboard() {
                                             className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
                                         />
                                     </div>
+                                    <select
+                                        value={domoFilter}
+                                        onChange={(e) => setDomoFilter(e.target.value)}
+                                        title="Filtrar por domo"
+                                        className={`px-4 py-2.5 rounded-xl text-sm bg-white border shadow-sm transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary ${domoFilter ? 'border-primary text-primary font-bold' : 'border-gray-200 text-gray-700'}`}
+                                    >
+                                        <option value="">Todos los domos</option>
+                                        {domos.map((d: any) => (
+                                            <option key={d.id} value={d.id}>{d.nombre}</option>
+                                        ))}
+                                    </select>
                                     {view !== 'historial' && (
                                         <button
                                             onClick={() => { setSoloProximas(!soloProximas); setCurrentPage(1); }}
@@ -667,14 +743,24 @@ export default function AdminDashboard() {
                                             {soloProximas ? "📅 Solo próximas" : "🗂 Viendo todas (pasadas incluidas)"}
                                         </button>
                                     )}
-                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    <button
+                                        onClick={() => { setSoloPorEmitir(!soloPorEmitir); setCurrentPage(1); }}
+                                        title="Mostrar solo las reservas a las que falta emitir boleta o factura"
+                                        className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all whitespace-nowrap flex items-center gap-1.5 ${soloPorEmitir
+                                            ? 'bg-rose-500 text-white border-rose-500 hover:bg-rose-600 shadow-lg shadow-rose-500/20'
+                                            : 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100'}`}
+                                    >
+                                        <Receipt className="w-3.5 h-3.5" />
+                                        Por emitir ({porEmitirCount})
+                                    </button>
+                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-700">
                                         Registros: {filteredReservas.length} / {baseReservas.length} {view === 'historial' ? "(pasadas)" : soloProximas ? "(actuales y futuras)" : "(todas)"}
                                     </div>
                                 </div>
 
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left">
-                                        <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
+                                        <thead className="bg-gray-50/50 text-gray-700 uppercase text-[10px] font-black tracking-[0.2em]">
                                             <tr>
                                                 <th className="px-8 py-5 w-[50px]">
                                                     <input
@@ -698,14 +784,14 @@ export default function AdminDashboard() {
                                                             <div className="flex flex-col">
                                                                 <button 
                                                                     onClick={() => setSortConfig({ key: 'fecha_inicio', order: 'asc' })}
-                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-600 hover:text-gray-700'}`}
                                                                     title="Ordenar por Entrada (Asc)"
                                                                 >
                                                                     <ChevronDown className="w-2.5 h-2.5 rotate-180" />
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => setSortConfig({ key: 'fecha_inicio', order: 'desc' })}
-                                                                    className={`p-0 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    className={`p-0 ${sortConfig?.key === 'fecha_inicio' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-600 hover:text-gray-700'}`}
                                                                     title="Ordenar por Entrada (Desc)"
                                                                 >
                                                                     <ChevronDown className="w-2.5 h-2.5" />
@@ -715,14 +801,14 @@ export default function AdminDashboard() {
                                                             <div className="flex flex-col">
                                                                 <button 
                                                                     onClick={() => setSortConfig({ key: 'fecha_fin', order: 'asc' })}
-                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    className={`p-0 -mb-1 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'asc' ? 'text-primary' : 'text-gray-600 hover:text-gray-700'}`}
                                                                     title="Ordenar por Salida (Asc)"
                                                                 >
                                                                     <ChevronDown className="w-2.5 h-2.5 rotate-180" />
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => setSortConfig({ key: 'fecha_fin', order: 'desc' })}
-                                                                    className={`p-0 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-300 hover:text-gray-400'}`}
+                                                                    className={`p-0 ${sortConfig?.key === 'fecha_fin' && sortConfig.order === 'desc' ? 'text-primary' : 'text-gray-600 hover:text-gray-700'}`}
                                                                     title="Ordenar por Salida (Desc)"
                                                                 >
                                                                     <ChevronDown className="w-2.5 h-2.5" />
@@ -740,9 +826,9 @@ export default function AdminDashboard() {
                                         </thead>
                                         <tbody className="divide-y divide-gray-100">
                                             {loading ? (
-                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando con base de datos...</td></tr>
+                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-700 font-bold italic">Sincronizando con base de datos...</td></tr>
                                             ) : paginatedReservas.length === 0 ? (
-                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron registros.</td></tr>
+                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-700 font-bold italic">No se encontraron registros.</td></tr>
                                             ) : paginatedReservas.map((reserva) => {
                                                 const clientName = reserva.estado === "bloqueado"
                                                     ? `Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
@@ -769,13 +855,13 @@ export default function AdminDashboard() {
                                                         <td className="px-4 py-4">
                                                             <div className="flex items-center gap-2 mb-0.5">
                                                                 <div className="font-extrabold text-gray-900 text-xs leading-none">{clientName}</div>
-                                                                <span className="bg-gray-100/80 text-gray-500 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{reserva.adultos || 2}p</span>
+                                                                <span className="bg-gray-100/80 text-gray-900 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{reserva.adultos || 2}p</span>
                                                                 {isVip && (
                                                                     <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
                                                                 )}
                                                             </div>
                                                             <div className="flex flex-col gap-0 mb-1.5">
-                                                                <div className="text-[10px] text-gray-400 font-medium leading-tight">{clientEmail}</div>
+                                                                <div className="text-[10px] text-gray-700 font-medium leading-tight">{clientEmail}</div>
                                                                 {(reserva.telefono || reserva.clientes?.telefono) && (
                                                                     <div className="text-[9px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
                                                                         {reserva.telefono || reserva.clientes?.telefono}
@@ -784,6 +870,16 @@ export default function AdminDashboard() {
                                                             </div>
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-[8px] font-black text-primary/60 uppercase tracking-tighter bg-primary/5 px-1 py-0.5 rounded">#{reserva.id.slice(0, 8).toUpperCase()}</span>
+                                                                {faltaEmitir(reserva) && adminRole !== 'viewer' && (
+                                                                    <button
+                                                                        onClick={() => openEditReserva(reserva)}
+                                                                        className="flex items-center gap-1 px-1.5 py-0.5 bg-rose-100 text-rose-700 rounded text-[8px] font-black uppercase tracking-tighter hover:bg-rose-200 transition-colors"
+                                                                        title={`Falta emitir ${reserva.tipo_documento || 'boleta'} — abrir ficha para cargar el folio`}
+                                                                    >
+                                                                        <Receipt className="w-2.5 h-2.5" />
+                                                                        Falta {reserva.tipo_documento || 'boleta'}
+                                                                    </button>
+                                                                )}
                                                                 {reserva.comprobante_url && (
                                                                     <a
                                                                         href={reserva.comprobante_url}
@@ -799,7 +895,7 @@ export default function AdminDashboard() {
                                                                  {adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => openEditReserva(reserva)}
-                                                                        className="text-[8px] font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-0.5 transition-colors"
+                                                                        className="text-[8px] font-black text-gray-700 hover:text-primary uppercase tracking-widest flex items-center gap-0.5 transition-colors"
                                                                     >
                                                                         <Pencil className="w-2.5 h-2.5" />
                                                                         Editar
@@ -819,16 +915,16 @@ export default function AdminDashboard() {
                                                                     ? Number(reserva.precio_noche)
                                                                     : noches > 0 ? Math.round((Number(reserva.total || 0) - sumExtras) / noches) : 0;
                                                                 return (
-                                                                    <div className="mt-2 space-y-0.5 text-[9px] text-gray-500 font-mono">
+                                                                    <div className="mt-2 space-y-0.5 text-[9px] text-gray-900 font-mono">
                                                                         {pn > 0 && (
                                                                             <div className="flex justify-between gap-3">
-                                                                                <span className="text-gray-400">{noches}n × ${pn.toLocaleString('es-CL')}</span>
+                                                                                <span className="text-gray-700">{noches}n × ${pn.toLocaleString('es-CL')}</span>
                                                                                 <span className="font-bold text-gray-600">${(noches * pn).toLocaleString('es-CL')}</span>
                                                                             </div>
                                                                         )}
                                                                         {extras.map((s: any) => (
                                                                             <div key={s.id} className="flex justify-between gap-3">
-                                                                                <span className="text-gray-400">+ {s.servicios?.nombre || 'Extra'}{s.cantidad > 1 ? ` ×${s.cantidad}` : ''}</span>
+                                                                                <span className="text-gray-700">+ {s.servicios?.nombre || 'Extra'}{s.cantidad > 1 ? ` ×${s.cantidad}` : ''}</span>
                                                                                 <span className="font-bold text-gray-600">${(Number(s.total) || 0).toLocaleString('es-CL')}</span>
                                                                             </div>
                                                                         ))}
@@ -843,10 +939,10 @@ export default function AdminDashboard() {
                                                         <td className="px-4 py-4">
                                                             <div className="text-gray-800 font-bold text-[11px] whitespace-nowrap">
                                                                 {(() => { const [y, m, d] = reserva.fecha_inicio.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' }); })()}
-                                                                <span className="text-gray-300 mx-1">→</span>
+                                                                <span className="text-gray-600 mx-1">→</span>
                                                                 {(() => { const [y, m, d] = reserva.fecha_fin.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' }); })()}
                                                             </div>
-                                                            <div className="text-[8px] text-gray-400 font-black uppercase tracking-widest mt-0.5">
+                                                            <div className="text-[8px] text-gray-700 font-black uppercase tracking-widest mt-0.5">
                                                                 {String(reserva.fecha_inicio).substring(0, 4)}
                                                             </div>
                                                         </td>
@@ -862,7 +958,7 @@ export default function AdminDashboard() {
                                                                     reserva.fuente === 'whatsapp' ? 'bg-green-50 text-green-600 border-green-100' :
                                                                     reserva.fuente === 'airbnb' ? 'bg-rose-50 text-rose-600 border-rose-100' :
                                                                     reserva.fuente === 'booking' ? 'bg-blue-50 text-blue-600 border-blue-100' :
-                                                                    'bg-gray-100 text-gray-500 border-gray-200'
+                                                                    'bg-gray-100 text-gray-900 border-gray-200'
                                                                 }`}>
                                                                     {reserva.fuente === 'web' && <Globe className="w-2.5 h-2.5" />}
                                                                     {reserva.fuente === 'whatsapp' && <MessageCircle className="w-2.5 h-2.5" />}
@@ -873,12 +969,32 @@ export default function AdminDashboard() {
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-4">
-                                                            <div className={`font-black text-xs ${reserva.monto_pagado >= reserva.total ? 'text-green-600' : 'text-gray-900'}`}>
-                                                                ${(reserva.monto_pagado || 0).toLocaleString()}
-                                                            </div>
-                                                            <div className="text-[8px] text-gray-400 font-black uppercase tracking-[0.05em] mt-0.5">
-                                                                / ${(reserva.total || 0).toLocaleString()}
-                                                            </div>
+                                                            {(() => {
+                                                                const pagado = Number(reserva.monto_pagado) || 0;
+                                                                const total = Number(reserva.total) || 0;
+                                                                const saldo = total - pagado;
+                                                                const estadoConSaldo = ['confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(reserva.estado);
+                                                                return (
+                                                                    <>
+                                                                        <div className={`font-black text-xs ${pagado >= total ? 'text-green-600' : 'text-gray-900'}`}>
+                                                                            ${pagado.toLocaleString('es-CL')}
+                                                                        </div>
+                                                                        <div className="text-[8px] text-gray-700 font-black uppercase tracking-[0.05em] mt-0.5">
+                                                                            / ${total.toLocaleString('es-CL')}
+                                                                        </div>
+                                                                        {saldo > 0 && estadoConSaldo && (
+                                                                            <div className="mt-1 px-1.5 py-0.5 bg-amber-50 border border-amber-200 rounded text-[8px] font-black text-amber-700 uppercase tracking-tight whitespace-nowrap">
+                                                                                Cobrar ${saldo.toLocaleString('es-CL')}
+                                                                            </div>
+                                                                        )}
+                                                                        {reserva.estado === 'suspendido' && pagado > 0 && (
+                                                                            <div className="mt-1 px-1.5 py-0.5 bg-orange-50 border border-orange-200 rounded text-[8px] font-black text-orange-700 uppercase tracking-tight whitespace-nowrap">
+                                                                                Anticipo retenido ${pagado.toLocaleString('es-CL')}
+                                                                            </div>
+                                                                        )}
+                                                                    </>
+                                                                );
+                                                            })()}
                                                         </td>
                                                         <td className="px-4 py-4">
                                                             <span className={`px-2 py-1 rounded text-[7px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
@@ -887,7 +1003,7 @@ export default function AdminDashboard() {
                                                                     : reserva.estado}
                                                             </span>
                                                             {reserva.fuente && (
-                                                                <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-300 mt-1">
+                                                                <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-600 mt-1">
                                                                     {reserva.fuente}
                                                                 </div>
                                                             )}
@@ -932,9 +1048,20 @@ export default function AdminDashboard() {
                                                                         window.open(`/api/admin/reservas/email-preview?id=${reserva.id}&token=${token}`, '_blank');
                                                                     }}
                                                                     className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-500 rounded-lg transition-all border border-blue-100"
-                                                                    title="Ver correo enviado al huésped"
+                                                                    title="Vista previa del correo (datos actuales)"
                                                                 >
                                                                     <Mail className="w-3.5 h-3.5" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        const { data: { session } } = await supabase.auth.getSession();
+                                                                        const token = session?.access_token || '';
+                                                                        window.open(`/api/admin/reservas/correos?reserva_id=${reserva.id}&token=${token}`, '_blank');
+                                                                    }}
+                                                                    className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-lg transition-all border border-emerald-100"
+                                                                    title="Correos enviados (respaldo guardado)"
+                                                                >
+                                                                    <MailCheck className="w-3.5 h-3.5" />
                                                                 </button>
                                                                 {['admin', 'superadmin'].includes(adminRole || '') && (
                                                                     <button
@@ -958,7 +1085,7 @@ export default function AdminDashboard() {
                                 {/* Pagination Controls */}
                                 {totalPages > 1 && (
                                     <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
-                                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-700">
                                             Página {currentPage} de {totalPages}
                                         </div>
                                         <div className="flex gap-2">
@@ -986,7 +1113,7 @@ export default function AdminDashboard() {
                                                         <button
                                                             key={i}
                                                             onClick={() => { if (typeof page === 'number') { setCurrentPage(page); setSelectedIds([]); } }}
-                                                            className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${currentPage === page ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-gray-400 hover:text-gray-600 hover:bg-gray-50 border border-gray-100'} ${typeof page !== 'number' ? 'cursor-default border-none' : ''}`}
+                                                            className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${currentPage === page ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-gray-700 hover:text-gray-600 hover:bg-gray-50 border border-gray-100'} ${typeof page !== 'number' ? 'cursor-default border-none' : ''}`}
                                                         >
                                                             {page}
                                                         </button>
@@ -1021,15 +1148,15 @@ export default function AdminDashboard() {
                             <div className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => !pagoLoading && setPagoReserva(null)}>
                                 <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
                                     <h3 className="text-xl font-display font-black text-gray-900 mb-1">Registrar pago</h3>
-                                    <p className="text-sm text-gray-500 mb-5">
+                                    <p className="text-sm text-gray-900 mb-5">
                                         {`${pagoReserva.nombre || ''} ${pagoReserva.apellido || ''}`.trim()} · {pagoReserva.domos?.nombre || 'Domo'} · {pagoReserva.fecha_inicio} → {pagoReserva.fecha_fin}
                                     </p>
                                     <div className="bg-gray-50 rounded-xl p-4 mb-5 grid grid-cols-3 gap-2 text-center">
-                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Total</p><p className="font-bold text-sm">${(Number(pagoReserva.total) || 0).toLocaleString('es-CL')}</p></div>
-                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Pagado</p><p className="font-bold text-sm text-green-600">${(Number(pagoReserva.monto_pagado) || 0).toLocaleString('es-CL')}</p></div>
-                                        <div><p className="text-[9px] font-black text-gray-400 uppercase">Saldo</p><p className="font-black text-sm text-amber-600">${((Number(pagoReserva.total) || 0) - (Number(pagoReserva.monto_pagado) || 0)).toLocaleString('es-CL')}</p></div>
+                                        <div><p className="text-[9px] font-black text-gray-700 uppercase">Total</p><p className="font-bold text-sm">${(Number(pagoReserva.total) || 0).toLocaleString('es-CL')}</p></div>
+                                        <div><p className="text-[9px] font-black text-gray-700 uppercase">Pagado</p><p className="font-bold text-sm text-green-600">${(Number(pagoReserva.monto_pagado) || 0).toLocaleString('es-CL')}</p></div>
+                                        <div><p className="text-[9px] font-black text-gray-700 uppercase">Saldo</p><p className="font-black text-sm text-amber-600">${((Number(pagoReserva.total) || 0) - (Number(pagoReserva.monto_pagado) || 0)).toLocaleString('es-CL')}</p></div>
                                     </div>
-                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Monto recibido</label>
+                                    <label className="block text-[10px] font-black text-gray-700 uppercase tracking-widest mb-2">Monto recibido</label>
                                     <input
                                         type="number"
                                         value={pagoMonto}
@@ -1038,7 +1165,7 @@ export default function AdminDashboard() {
                                         placeholder="0"
                                         min={1}
                                     />
-                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Método de pago</label>
+                                    <label className="block text-[10px] font-black text-gray-700 uppercase tracking-widest mb-2">Método de pago</label>
                                     <div className="grid grid-cols-2 gap-2 mb-6">
                                         {[['efectivo', '💵 Efectivo'], ['transferencia', '🏦 Transferencia'], ['webpay', '💳 Webpay/Tarjeta'], ['otro', '✳️ Otro']].map(([val, label]) => (
                                             <button

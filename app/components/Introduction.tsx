@@ -13,7 +13,7 @@ export default function Introduction() {
                             <Image
                                 alt="Vista frontal del domo TreePod bajo la nieve"
                                 className="object-cover object-center"
-                                src="/images/Galeria/domonieve2.jpeg"
+                                src="/images/hero/domonieve2.jpeg"
                                 fill
                                 sizes="(max-width: 768px) 100vw, 50vw"
                             />

@@ -4,10 +4,16 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // pdfjs-dist debe cargarse desde node_modules en runtime (no bundleado),
+  // para que su worker se resuelva correctamente en el servidor.
+  serverExternalPackages: ['pdfjs-dist'],
   turbopack: {
     root: path.join(__dirname),
   },
   images: {
+    // AVIF primero (≈30% más liviano que WebP), WebP de respaldo. next/image
+    // sirve el formato moderno según el navegador → LCP y peso mucho menores.
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -97,6 +103,13 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/finde-largo-dia-trabajo-las-trancas',
+        destination: '/disponibilidad',
+        permanent: false,
+      },
+      // Otoño: fuera de temporada en invierno. Reactivar el próximo otoño
+      // (abril–junio) eliminando este redirect.
+      {
+        source: '/otono-valle-las-trancas',
         destination: '/disponibilidad',
         permanent: false,
       },

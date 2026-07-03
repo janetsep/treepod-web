@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { sendWhatsAppAlert } from "@/lib/whatsapp-alert";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   try {
+    // Antiabuso: límite por IP para la creación de reservas (primera capa best-effort).
+    if (!rateLimit(`crear-reserva:${clientIp(req)}`, 15, 10 * 60 * 1000)) {
+      return NextResponse.json({ error: "Demasiados intentos. Espera unos minutos e intenta de nuevo." }, { status: 429 });
+    }
     const body = await req.json();
     const {
       entrada,
@@ -44,6 +50,39 @@ export async function POST(req: Request) {
 
     if (!entrada || !salida || !adultos || !total) {
       return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
+    }
+
+    // Regla de negocio: las reservas para el MISMO DÍA (check-in hoy) solo se aceptan
+    // hasta las 14:00 hrs (hora de Chile). Pasada esa hora, la entrada mínima es mañana.
+    // Se calcula con la zona horaria de Chile en el servidor (no depende del cliente).
+    {
+      const partes = new Intl.DateTimeFormat("es-CL", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        hour12: false,
+      }).formatToParts(new Date());
+      const val = (t: string) => partes.find((p) => p.type === t)?.value || "";
+      const hoyChile = `${val("year")}-${val("month")}-${val("day")}`;
+      const horaChile = parseInt(val("hour"), 10) % 24; // "24" (medianoche) -> 0
+
+      if (entrada < hoyChile) {
+        return NextResponse.json(
+          { error: "La fecha de entrada ya no está disponible. Elige una fecha futura." },
+          { status: 400 }
+        );
+      }
+      if (entrada === hoyChile && horaChile >= 14) {
+        return NextResponse.json(
+          {
+            error:
+              "Las reservas para el mismo día solo se aceptan hasta las 14:00 hrs. Por favor elige a partir de mañana.",
+          },
+          { status: 400 }
+        );
+      }
     }
 
     // Validate client data (critical for Transbank flow)
@@ -132,6 +171,41 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Lo sentimos, ya no quedan domos disponibles para estas fechas" }, { status: 409 });
     }
 
+    // ── Validación de precio en el SERVIDOR (evita que el total venga manipulado) ──
+    // Alojamiento: se recalcula con el mismo RPC que la web (incluye descuentos reales).
+    // Servicios: se valoran con el precio REAL de la BD (no el que venga en el body).
+    {
+      const { data: precioData, error: precioErr } = await supabaseAdmin.rpc("calcular_precio", {
+        p_fecha_inicio: entrada,
+        p_fecha_fin: salida,
+        p_adultos: adultos,
+      });
+      if (precioErr || !precioData || precioData.length === 0) {
+        return NextResponse.json({ error: "No pudimos calcular el precio de estas fechas. Recarga la página e intenta de nuevo." }, { status: 400 });
+      }
+      const alojamientoServidor = Number(precioData[0].total) || 0;
+
+      let serviciosServidor = 0;
+      if (Array.isArray(servicios) && servicios.length > 0) {
+        const ids = servicios.map((s: any) => s.id).filter(Boolean);
+        const { data: servDb } = await supabaseAdmin.from("servicios").select("id, precio").in("id", ids);
+        const precioDe = new Map((servDb || []).map((s: any) => [s.id, Number(s.precio) || 0]));
+        for (const s of servicios) {
+          const precio = precioDe.get(s.id) || 0;
+          const cantidad = Math.max(0, Number(s.cantidad) || 0);
+          serviciosServidor += precio * cantidad;
+        }
+      }
+
+      const totalServidor = Math.round(alojamientoServidor + serviciosServidor);
+      const totalCliente = Math.round(Number(total) || 0);
+      // Tolerancia mínima por redondeos. Si difiere más, se rechaza (precio manipulado o vencido).
+      if (totalCliente < alojamientoServidor - 1000 || Math.abs(totalCliente - totalServidor) > 1000) {
+        console.warn(`[crear] Precio no coincide. cliente=${totalCliente} servidor=${totalServidor} (aloj=${alojamientoServidor}, serv=${serviciosServidor})`);
+        return NextResponse.json({ error: "El precio no coincide o cambió. Por favor recarga la página e intenta de nuevo." }, { status: 400 });
+      }
+    }
+
     // Retención del domo mientras el huésped paga: 10 minutos.
     // Al vencer, el carrito deja de bloquear disponibilidad automáticamente.
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
@@ -218,6 +292,29 @@ export async function POST(req: Request) {
       if (servErr) {
         console.error("Error insertando servicios:", servErr);
       }
+    }
+
+    // 4.b Alerta de capacidad de aseo: si el día de ENTRADA ya tiene 2+ salidas (aseos)
+    // programadas, avisar por WhatsApp a la administración. No bloquea la reserva.
+    try {
+      const { data: salidasDia } = await supabaseAdmin
+        .from("reservas")
+        .select("id")
+        .is("deleted_at", null)
+        .eq("fecha_fin", entrada)
+        .in("estado", ["pagado", "confirmado", "pendiente", "pending_transfer_confirmation", "completada", "completado"])
+        .neq("id", data.id);
+      const aseos = salidasDia?.length || 0;
+      if (aseos >= 2) {
+        await sendWhatsAppAlert(
+          `TreePod · Aviso de aseo\n` +
+          `Nueva reserva web: ${nombre} ${apellido}\n` +
+          `Entrada ${entrada} · Domo ${domoDisponible.nombre || domoDisponible.id}\n` +
+          `Ese dia ya hay ${aseos} salidas/aseos. Por capacidad, evalua ingreso desde las 18:00. Revisa en el panel.`
+        );
+      }
+    } catch (e) {
+      console.error("Error en alerta de aseo (no bloquea la reserva):", e);
     }
 
     // 5. Registrar cobros históricos en reserva_cobros (inmutables, fuente de verdad para facturación)

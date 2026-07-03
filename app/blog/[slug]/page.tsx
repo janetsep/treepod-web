@@ -334,7 +334,7 @@ export default async function BlogPost({ params }: Props) {
                             Domos geodésicos en bosque nativo
                         </h2>
                         <p className="text-lg text-text-sub font-medium italic font-display leading-relaxed mb-10 max-w-xl mx-auto">
-                            Calefacción a pellet 24/7, WiFi Starlink, mascotas bienvenidas y opción de tinaja exclusiva. Reserva directa con confirmación inmediata.
+                            Calefacción a pellet 24/7, WiFi Starlink y opción de tinaja exclusiva. Reserva directa con confirmación inmediata.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
                             <Link

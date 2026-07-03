@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Semana Santa 2026 en TreePod | Glamping Valle Las Trancas',
-    description: 'Vive una Semana Santa de descanso real en nuestros domos geodésicos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico en Nevados de Chillán.',
+    description: 'Pasa Semana Santa con calma en nuestros domos geodésicos del Valle Las Trancas. Bosque nativo, estufa a pellet y descanso real cerca de Nevados de Chillán.',
     robots: {
         index: false,
         follow: false,
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Semana Santa 2026 en TreePod | Valle Las Trancas',
-        description: 'Vive una Semana Santa de descanso real en nuestros domos. Tinaja caliente exclusiva, bosque nativo y descanso auténtico.',
+        description: 'Pasa Semana Santa con calma en nuestros domos del Valle Las Trancas: bosque nativo, estufa a pellet y descanso real.',
         images: ['/images/Semana Santa en el bosque.png'],
     }
 };
@@ -53,8 +53,8 @@ export default function SemanaSantaPage() {
                     </div>
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
-                        Escapa del caos de Semana Santa <br className="hidden md:block" />
-                        y enciérrate en el bosque <span className="text-primary italic-display block md:inline">(con tu propia tinaja termal)</span>
+                        Pasa Semana Santa lejos del bullicio <br className="hidden md:block" />
+                        en un domo entre el bosque <span className="text-primary italic-display block md:inline">de Valle Las Trancas</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -69,8 +69,8 @@ export default function SemanaSantaPage() {
                     </div>
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        El 99% de la gente pasará sus vacaciones estresada en lugares llenos. <br className="hidden md:block" />
-                        Tú estarás en medio de la cordillera, sin escuchar a nadie y con el calor perfecto 24/7.
+                        Mientras los destinos de siempre se llenan, aquí tienes bosque nativo, aire puro <br className="hidden md:block" />
+                        y un domo cálido en plena cordillera de Ñuble. Sin filas, sin ruido, sin apuro.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -111,23 +111,23 @@ export default function SemanaSantaPage() {
                         {[
                             { 
                                 icon: Mountain, 
-                                title: "El único sonido será el del viento", 
-                                desc: "Estás lo suficientemente lejos del bullicio para relajarte de verdad. Duerme hasta la hora que quieras y despierta rodeado de bosque nativo." 
+                                title: "El sonido del viento y poco más",
+                                desc: "Estás lo bastante lejos del bullicio para descansar de verdad. Duerme hasta la hora que quieras y despierta rodeado de bosque nativo."
                             },
-                            { 
-                                icon: Waves, 
-                                title: "Tu propia Tinaja bajo las estrellas (Cero extraños)", 
-                                desc: "No compartas tu agua termal. Cruza tu pasarela exclusiva por el bosque y aíslate del mundo en tu propia tina de ciprés (Reserva con 1 día de anticipación para tu hora exclusiva sin compartir)." 
+                            {
+                                icon: Waves,
+                                title: "Bosque nativo y cielo estrellado",
+                                desc: "Domos separados entre sí e inmersos en bosque nativo, cada uno con su pasarela. De noche, el cielo despejado de Las Trancas. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
                             },
                             { 
                                 icon: Info, 
-                                title: "Afuera hace frío, adentro estás en polera", 
-                                desc: "Olvídate de sufrir o pasar frío en la montaña. Tu domo tiene una estufa a pellet automática que mantiene el espacio cálido y perfecto de día y de noche." 
+                                title: "Afuera hace frío, adentro estás en polera",
+                                desc: "Nada de pasar frío en la montaña. Tu domo tiene una estufa a pellet automática que lo mantiene cálido de día y de noche."
                             },
                             { 
                                 icon: Coffee, 
                                 title: "Mañanas sin prisa", 
-                                desc: "Despierta con la luz natural y tómate un café caliente en tu terraza exclusiva sin estrés." 
+                                desc: "Despierta con la luz natural y tómate un café caliente en tu terraza, sin apuro."
                             },
                             { 
                                 icon: Check, 
@@ -156,7 +156,7 @@ export default function SemanaSantaPage() {
                         <h2 className="h2-display text-text-main mb-6">Tu refugio privado en el bosque</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            Interior cálido, tinaja exclusiva y todo lo necesario para desconectarte del mundo
+                            Interior cálido, cocina equipada y todo lo necesario para descansar tranquilo
                         </p>
                     </div>
 
@@ -194,15 +194,15 @@ export default function SemanaSantaPage() {
                         <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja1.jpg"
-                                alt="Tinaja de agua termal privada"
+                                alt="Tinaja de ciprés rodeada de bosque nativo"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tu tinaja privada</p>
-                                <p className="text-xs opacity-80">Solo para ti</p>
+                                <p className="font-black text-sm">Tinaja de ciprés</p>
+                                <p className="text-xs opacity-80">Servicio de temporada (vuelve en primavera)</p>
                             </div>
                         </div>
 
@@ -288,16 +288,16 @@ export default function SemanaSantaPage() {
                         </div>
 
                         <h2 className="text-2xl md:text-4xl font-display font-black text-white mb-6 leading-tight">
-                            Semana Santa siempre colapsa en el Valle
+                            Semana Santa se llena rápido en el Valle
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Este es el fin de semana más buscado del año y tenemos una disponibilidad muy limitada. Si lo dejas para después, te quedarás atrapado en la ciudad o pagando de más por lugares repletos de gente.
+                            Es uno de los fines de semana más buscados del año y tenemos pocos domos disponibles para estas fechas. Si te interesa, conviene reservar con tiempo.
                         </p>
 
                         <div className="text-center mb-10">
                             <p className="text-primary text-xl font-black italic mx-auto">
-                                (Estadía exclusiva de mínimo 3 noches: 02 al 05 de abril)
+                                (Estadía mínima de 3 noches: 02 al 05 de abril)
                             </p>
                         </div>
 

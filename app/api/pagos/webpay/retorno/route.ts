@@ -176,6 +176,13 @@ async function handleReturn(req: Request) {
 
     const isApproved = commit.response_code === 0;
 
+    // Validación de monto (defensa en profundidad): el cobro debe ser el 50% del total.
+    // Con el precio ya validado en /reservas/crear, esto detecta cualquier discrepancia.
+    const montoEsperado = Math.round((Number(reserva.total) || 0) * 0.5);
+    if (isApproved && commit.amount != null && Math.abs(Number(commit.amount) - montoEsperado) > 1) {
+      console.error(`⚠️ ALERTA monto Webpay: cobrado=${commit.amount} esperado=${montoEsperado} reserva=${reserva.id}. Revisar en el panel.`);
+    }
+
     // Actualizar estado de la reserva
     const { error: dbUpdateError } = await supabaseAdmin
       .from("reservas")
@@ -245,7 +252,7 @@ async function handleReturn(req: Request) {
             email: reserva.email,
             first_name: reserva.nombre,
             last_name: reserva.apellido,
-            event_source_url: 'https://www.domostreepod.cl/confirmacion',
+            event_source_url: `${baseUrl}/confirmacion`,
             ...clientInfo,
             ...utmParams
           });
@@ -298,7 +305,8 @@ async function handleReturn(req: Request) {
               reserva.adultos,
               extrasNames,
               commit.amount || 0,
-              reserva.total
+              reserva.total,
+              reserva.id
             );
             console.log("📧 Email de bienvenida enviado exitosamente");
           } catch (emailError) {

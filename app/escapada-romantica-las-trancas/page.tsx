@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Escapada Romántica en Las Trancas | Domos con Tinaja Privada - TreePod',
-    description: 'Escapada romántica en domos geodésicos con tinaja privada en Valle Las Trancas. Privacidad total, bosque nativo, estufa a pellet y WiFi Starlink. Aniversario, cumpleaños o simplemente para dos. Desde $110.000/noche.',
+    title: 'Escapada Romántica en Las Trancas | Domos para Dos - TreePod',
+    description: 'Escapada romántica en domos geodésicos en Valle Las Trancas. Privacidad, bosque nativo, estufa a pellet y WiFi Starlink. Aniversario, cumpleaños o simplemente para dos.',
     keywords: [
         'escapada romantica las trancas',
         'escapada romantica chile',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Escapada Romántica en Las Trancas | Domos TreePod',
-        description: 'Domo privado con tinaja de ciprés en el bosque. La escapada perfecta para dos.',
+        description: 'Domo privado en el bosque nativo de Las Trancas. Una escapada para dos, sin nadie más alrededor.',
         images: ['/images/Galeria/domo-iluminado-noche.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -62,24 +62,19 @@ export default function EscapadaRomanticaPage() {
                         </span>
                     </div>
 
-                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
+                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-4xl mx-auto animate-fade-in-up delay-100 !text-white leading-tight">
                         Tu escapada romántica: <br className="hidden md:block" />
-                        un domo privado con tinaja <span className="text-rose-400 italic-display block md:inline">solo para ustedes dos</span>
+                        un domo en el bosque <span className="text-rose-400 italic-display block md:inline">solo para ustedes dos</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
-                        <div className="inline-block bg-rose-700/80 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
-                            <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
-                            </span>
-                            <span className="block text-white/80 text-sm font-bold mt-1">
-                                Aniversario, cumpleaños o simplemente porque sí
-                            </span>
-                        </div>
+                        <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
+                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
+                        </p>
                     </div>
 
-                    <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Sin vecinos, sin ruido, sin distracciones. Solo el bosque, las estrellas, una tinaja hirviendo y la persona que eliges para estar.
+                    <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
+                        Una escapada para dos: bosque nativo, el cielo estrellado de Las Trancas y privacidad, sin nadie más alrededor.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -90,7 +85,7 @@ export default function EscapadaRomanticaPage() {
                             secondParams={{ event: "escapada_romantica" }}
                             className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
-                            <span className="text-xl md:text-2xl">RESERVA TU ESCAPADA</span>
+                            <span className="text-lg md:text-xl">RESERVA TU ESCAPADA</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
                         </TrackedLink>
 
@@ -112,7 +107,7 @@ export default function EscapadaRomanticaPage() {
             <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
-                        <h2 className="h2-display text-text-main mb-6">Por qué TreePod es el lugar perfecto <span className="italic-display text-primary">para una escapada de pareja</span></h2>
+                        <h2 className="h2-display text-text-main mb-6">Por qué TreePod funciona bien <span className="italic-display text-primary">para una escapada de pareja</span></h2>
                         <div className="h-1.5 w-24 bg-rose-500 mx-auto mb-8"></div>
                     </div>
 
@@ -120,18 +115,18 @@ export default function EscapadaRomanticaPage() {
                         {[
                             {
                                 icon: Waves,
-                                title: "Tinaja privada: solo para ustedes",
-                                desc: "Cada domo tiene su propia tinaja de ciprés con pasarela exclusiva por el bosque. No la compartes con nadie. Disponible a cualquier hora del día o la noche."
+                                title: "Un domo solo para ustedes",
+                                desc: "Cada domo está separado del resto e inmerso en bosque nativo, con su propia pasarela. Sin pasillos ni vecinos al lado. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
                             },
                             {
                                 icon: Moon,
                                 title: "Noches bajo las estrellas sin salir del domo",
-                                desc: "El domo geodésico tiene ventanales panorámicos. Desde la cama ves las estrellas y el bosque nativo. Sin cortinas si no quieres, sin vecinos que vean."
+                                desc: "El domo geodésico tiene ventanales amplios. Desde la cama ves las estrellas y el bosque nativo. Sin cortinas si no quieres, sin vecinos al lado."
                             },
                             {
                                 icon: Thermometer,
                                 title: "Calor automático toda la noche",
-                                desc: "La estufa a pellet mantiene 22°C sin que tengas que levantarte. Despierta calentito, prepara un café en la Nespresso y quédate en la cama todo lo que quieras."
+                                desc: "La estufa a pellet mantiene el domo cálido sin que tengas que levantarte. Despierta tibio, prepara un café en la Nespresso y quédate en la cama todo lo que quieras."
                             },
                             {
                                 icon: Wine,
@@ -140,8 +135,8 @@ export default function EscapadaRomanticaPage() {
                             },
                             {
                                 icon: Star,
-                                title: "Privacidad absoluta en el bosque",
-                                desc: "Los domos están separados entre sí e inmersos en bosque nativo. No hay pasillos de hotel, no hay recepción con gente. Solo naturaleza y privacidad."
+                                title: "Privacidad en el bosque",
+                                desc: "Los domos están separados entre sí e inmersos en bosque nativo. No hay pasillos de hotel ni recepción con gente. Solo naturaleza y privacidad."
                             },
                             {
                                 icon: Heart,
@@ -197,8 +192,8 @@ export default function EscapadaRomanticaPage() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tinaja para dos</p>
-                                <p className="text-xs opacity-80">Privada y exclusiva</p>
+                                <p className="font-black text-sm">Tinaja de ciprés</p>
+                                <p className="text-xs opacity-80">Servicio de temporada (vuelve en primavera)</p>
                             </div>
                         </div>
 
@@ -252,7 +247,7 @@ export default function EscapadaRomanticaPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Parejas que ya vinieron a TreePod</h2>
                         <div className="h-1.5 w-24 bg-rose-500 mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 47 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
@@ -287,8 +282,8 @@ export default function EscapadaRomanticaPage() {
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Tinaja Privada</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Privacidad Total</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Bosque Nativo</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Privacidad Real</span>
                         </div>
                     </div>
                 </div>

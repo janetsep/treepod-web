@@ -190,7 +190,6 @@ export default function ContactoPage() {
                                                 <option>Información de Disponibilidad</option>
                                                 <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
                                                 <option>Convenios Corporativos</option>
-                                                <option>Consultas sobre Mascotas</option>
                                                 <option>Otros</option>
                                             </select>
                                             <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-primary">

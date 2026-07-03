@@ -94,6 +94,7 @@ export default function LeadMagnet() {
                         src="/images/interiors/interior-domo-acogedor-89-2.jpg"
                         alt="Interior Real del Domo TreePod"
                         fill
+                        sizes="(max-width: 768px) 100vw, 42vw"
                         className="w-full h-full object-cover object-center transition-transform duration-[10s] hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-surface/10 dark:md:to-background-dark/10"></div>

@@ -1,13 +1,14 @@
 'use client';
 
 import TrackView from '../components/TrackView';
+import CinematicSection from '../components/CinematicSection';
 
 const objetivosSociales = [
   {
     numero: "01",
     titulo: "Encadenamiento Productivo Local",
     descripcion:
-      "Compramos a productores del Valle Las Trancas y Ñuble: huevos, berries, pan de masa madre y verduras frescas. El 40% de nuestros insumos gastronómicos vienen de manos locales.",
+      "Compramos a productores del Valle Las Trancas y Ñuble: huevos, berries, pan de masa madre y verduras frescas. El 40% de nuestros insumos gastronómicos viene de manos locales.",
   },
   {
     numero: "02",
@@ -46,31 +47,16 @@ export default function NosotrosPage() {
     <div className="bg-surface text-text-main transition-colors duration-300">
       <TrackView eventName="view_nosotros" />
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-16 md:h-20"></div>
-
       {/* HERO SECTION */}
-      <section className="py-20 md:py-28 bg-background-light">
-        <div className="container mx-auto px-6 md:px-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-              <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
-                Quiénes Somos
-              </span>
-            </div>
-
-            <h1 className="h1-display mb-6 text-text-main leading-tight">
-              Glamping con propósito en el <br />
-              <span className="text-primary italic-display">Valle Las Trancas</span>
-            </h1>
-
-            <p className="text-xl text-text-sub font-bold leading-relaxed max-w-3xl mx-auto">
-              Cuatro domos geodésicos rodeados de montaña, con la calidez de lo
-              local y el compromiso de operar en armonía con la naturaleza.
-            </p>
-          </div>
-        </div>
-      </section>
+      <CinematicSection
+        image="/images/real/NOdomoaereo4.jpeg"
+        alt="Domos geodésicos TreePod integrados en el Valle Las Trancas"
+        eyebrow="Quiénes somos"
+        title={<>Glamping con propósito<br className="hidden md:block" /> en el Valle Las Trancas</>}
+        text="Cuatro domos rodeados de montaña, con la calidez de lo local y el compromiso de operar en armonía con la naturaleza."
+        priority
+        titleAs="h1"
+      />
 
       {/* MISIÓN Y VISIÓN */}
       <section className="py-20 md:py-28">
@@ -84,11 +70,10 @@ export default function NosotrosPage() {
                 </div>
                 <h2 className="h2-display text-text-main mb-6">Misión</h2>
                 <p className="text-text-sub text-lg leading-relaxed">
-                  En Domos TreePod creemos que el mejor viaje es el que te conecta con el lugar. Por eso
-                  ofrecemos experiencias únicas y memorables en domos geodésicos en el Valle Las Trancas,
-                  en el corazón de la Cordillera de la Región de Ñuble — con un servicio cercano,
-                  cocina de productos de la zona y un compromiso real con el medioambiente y la
-                  comunidad de montaña que nos rodea.
+                  En Domos TreePod ofrecemos alojamiento en domos geodésicos en el Valle Las Trancas,
+                  en la Cordillera de la Región de Ñuble, junto a los Nevados de Chillán. Trabajamos con
+                  un servicio cercano, cocina con productos de la zona y un compromiso real con el
+                  medioambiente y la comunidad de montaña que nos rodea.
                 </p>
               </div>
 
@@ -99,10 +84,9 @@ export default function NosotrosPage() {
                 </div>
                 <h2 className="h2-display text-text-main mb-6">Visión</h2>
                 <p className="text-text-sub text-lg leading-relaxed">
-                  Ser reconocidos como el mejor destino de glamping sustentable, un referente de
-                  turismo regenerativo de la región, donde cada visita conecta a las personas con
-                  la naturaleza, fortalece y apoya a la comunidad cordillerana y cuida el
-                  patrimonio natural que nos acoge.
+                  Ser un destino de glamping sustentable en el Valle Las Trancas, donde cada visita
+                  acerca a las personas a la naturaleza, apoya a la comunidad cordillerana y cuida el
+                  patrimonio natural que nos rodea.
                 </p>
               </div>
             </div>

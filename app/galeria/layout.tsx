@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Galería de Fotos | Glamping TreePod',
         description: 'Fotos reales de nuestros domos, bosque nativo y experiencias en Valle Las Trancas.',
-        images: ['/images/hero/domo-treepod-ok-12.jpg'],
+        images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     },
 };
 

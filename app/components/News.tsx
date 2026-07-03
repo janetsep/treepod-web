@@ -6,33 +6,33 @@ export default function News() {
         {
             image: "/images/real/VegetacionOtono.jpg",
             title: "Otoño Valle Las Trancas",
-            description: "Vive el otoño más mágico en el corazón del Valle Las Trancas. Colores únicos, aire puro y la tranquilidad absoluta que solo esta época puede ofrecerte.",
-            tag: "Temporada Especial",
-            details: "Descubre la magia del otoño",
+            description: "El otoño tiñe el Valle Las Trancas de rojos y dorados. Bosque nativo, aire puro y la calma de la temporada baja.",
+            tag: "Temporada baja",
+            details: "Ver otoño en Las Trancas",
             href: "/otono-valle-las-trancas"
         },
         {
             image: "/images/hero/domonieve2.jpeg",
             title: "Domos Geodésicos Chillán",
-            description: "Experimenta el glamping más auténtico del sur de Chile. Domos geodésicos únicos con tinaja privada, a minutos de las pistas de ski de Nevados de Chillán.",
-            tag: "Glamping Premium",
-            details: "Ski + Glamping perfecto",
+            description: "Domos geodésicos con tinaja privada, a minutos de las pistas de ski de Nevados de Chillán. Vuelve del cerro a una cama tibia.",
+            tag: "Temporada de nieve",
+            details: "Ver domos en Chillán",
             href: "/domos-geodesicos-chillan"
         },
         {
             image: "/images/Galeria/Las Trancas Bosque Nativo.jpeg",
             title: "Glamping Valle Las Trancas",
-            description: "Descubre por qué Valle Las Trancas es el destino de glamping más exclusivo de Chile. Naturaleza, aventura y comodidad en perfecta armonía.",
-            tag: "Experiencia Única",
-            details: "El mejor glamping del valle",
+            description: "Bosque nativo, montaña y aventura a un paso de tu domo. Naturaleza y comodidad en un mismo lugar del Valle Las Trancas.",
+            tag: "Valle Las Trancas",
+            details: "Conocer el valle",
             href: "/glamping-valle-las-trancas"
         },
         {
             image: "/images/wellness/Tinaja5.jpg",
             title: "Escapada Romántica",
-            description: "Una escapada perfecta para parejas que buscan reconectarse. Tinaja privada bajo las estrellas, cenas íntimas y la magia del bosque nativo.",
-            tag: "Solo Para Dos",
-            details: "Romance en el bosque",
+            description: "Una escapada para dos: cena íntima, bosque nativo y el cielo estrellado de Las Trancas, sin nadie más alrededor.",
+            tag: "Solo para dos",
+            details: "Ver escapada romántica",
             href: "/escapada-romantica-las-trancas"
         }
     ];
@@ -48,9 +48,7 @@ export default function News() {
                         </div>
                         <h2 className="h2-display text-text-main leading-tight mb-6">Vive el Valle al máximo: No vengas solo a encerrarte.</h2>
                         <p className="text-lg md:text-xl text-text-sub font-bold leading-relaxed">
-                            Descubre los secretos del bosque, la adrenalina de la montaña y los mejores planes que tenemos listos para ti esta temporada. 
-                            <br /><br />
-                            Haz clic en el botón para reservar tu domo y comenzar a disfrutar.
+                            Descubre los secretos del bosque, la adrenalina de la montaña y los mejores planes que tenemos listos para ti esta temporada.
                         </p>
                     </div>
                 </div>
@@ -65,6 +63,7 @@ export default function News() {
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-110"
                                         src={item.image}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
                                 </div>
                                 <div className="p-8 flex flex-col grow">

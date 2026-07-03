@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Otoño en Valle Las Trancas 2026 | Glamping TreePod - Colores del Bosque',
-    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores dorados, tinaja caliente entre las hojas, estufa a pellet y cero multitudes. Abril a junio en Domos TreePod. Desde $110.000/noche.',
+    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod. Desde $110.000/noche.',
     keywords: [
         'otoño valle las trancas',
         'otoño las trancas',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Otoño en Valle Las Trancas | Domos TreePod',
-        description: 'Bosque nativo en colores dorados, tinaja caliente y cero multitudes. La temporada más mágica del valle.',
+        description: 'Bosque nativo en colores rojos y dorados, aire puro y la calma de la temporada baja en Valle Las Trancas.',
         images: ['/images/real/VegetacionOtono.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -64,7 +64,7 @@ export default function OtonoValleLasTrancasPage() {
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
                         Otoño en Las Trancas: <br className="hidden md:block" />
-                        el bosque se pinta de dorado <span className="text-amber-400 italic-display block md:inline">y tú tienes tinaja caliente</span>
+                        el bosque se tiñe de rojos y dorados <span className="text-amber-400 italic-display block md:inline">y el valle está en calma</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -73,13 +73,13 @@ export default function OtonoValleLasTrancasPage() {
                                 Desde $110.000 por noche
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Temporada baja = precios bajos + cero multitudes
+                                Temporada baja: precios más bajos y menos gente
                             </span>
                         </div>
                     </div>
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        El otoño es el secreto mejor guardado del valle. Los robles se tiñen de naranja, los senderos están vacíos y la tinaja se disfruta con el frío justo. Sin filas, sin ruido, sin apuro.
+                        El otoño tiñe el Valle Las Trancas de rojos y dorados. Los robles cambian de color, los senderos quedan tranquilos y el bosque nativo se disfruta con el frío justo. Sin filas, sin ruido, sin apuro.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -112,7 +112,7 @@ export default function OtonoValleLasTrancasPage() {
             <section className="py-16 md:py-24 lg:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
-                        <h2 className="h2-display text-text-main mb-6">¿Por qué otoño es la mejor temporada para venir a <span className="italic-display text-primary">Las Trancas</span>?</h2>
+                        <h2 className="h2-display text-text-main mb-6">¿Por qué venir en otoño a <span className="italic-display text-primary">Las Trancas</span>?</h2>
                         <div className="h-1.5 w-24 bg-amber-500 mx-auto mb-8"></div>
                     </div>
 
@@ -120,33 +120,33 @@ export default function OtonoValleLasTrancasPage() {
                         {[
                             {
                                 icon: Leaf,
-                                title: "El bosque nativo explota en colores",
-                                desc: "Robles, coigües y ñirres se tiñen de naranja, dorado y rojo. El paisaje cambia cada semana entre abril y junio. Es la temporada más fotogénica del año en el valle."
+                                title: "El bosque nativo cambia de color",
+                                desc: "Robles, coigües y ñirres se tiñen de naranja, dorado y rojo. El paisaje cambia cada semana entre abril y junio."
                             },
                             {
                                 icon: Sun,
-                                title: "Cero multitudes, máxima privacidad",
-                                desc: "Otoño es temporada baja. Los senderos están vacíos, los domos disponibles y el valle es solo para ti. Sin las aglomeraciones de invierno o verano."
+                                title: "Menos gente, más privacidad",
+                                desc: "Otoño es temporada baja. Los senderos están tranquilos y hay más domos disponibles. Sin las aglomeraciones de invierno o verano."
                             },
                             {
-                                icon: Waves,
-                                title: "Tinaja caliente con el frío perfecto",
-                                desc: "Las primeras heladas hacen que la tinaja sea una experiencia completamente diferente. Agua hirviendo, aire frío, hojas cayendo alrededor. Imposible de replicar en otra temporada."
+                                icon: Thermometer,
+                                title: "Días frescos, noches frías",
+                                desc: "El otoño en la cordillera trae mañanas con neblina y noches frías. El clima ideal para caminar de día y quedarte en el domo al anochecer."
                             },
                             {
                                 icon: Thermometer,
                                 title: "Tu domo cálido mientras afuera refresca",
-                                desc: "La estufa a pellet mantiene el domo a 22°C toda la noche. Afuera baja a 2-5°C. El contraste térmico es parte de la magia del otoño cordillerano."
+                                desc: "La estufa a pellet mantiene el domo cálido toda la noche, mientras afuera la temperatura baja. Llegas del frío a un domo tibio."
                             },
                             {
                                 icon: Camera,
                                 title: "Fotografía de otoño en bosque nativo",
-                                desc: "Luz dorada filtrándose entre las hojas, neblina matutina en el valle, hongos en los troncos. Si te gusta la fotografía, otoño en Las Trancas es un paraíso."
+                                desc: "Luz dorada entre las hojas, neblina matutina en el valle, hongos en los troncos. Si te gusta la fotografía, el otoño en Las Trancas tiene mucho que mostrar."
                             },
                             {
                                 icon: TreePine,
                                 title: "Trekking sin calor y sin nieve",
-                                desc: "Los senderos están secos pero no hace calor. Trekking a la Laguna del Huemul, cascadas y rutas por el bosque en la temperatura perfecta para caminar."
+                                desc: "Los senderos están secos pero sin calor. Trekking a la Laguna del Huemul, cascadas y rutas por el bosque con buena temperatura para caminar."
                             },
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
@@ -193,15 +193,15 @@ export default function OtonoValleLasTrancasPage() {
                         <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja1.jpg"
-                                alt="Tinaja caliente rodeada de bosque otoñal"
+                                alt="Tinaja de ciprés rodeada de bosque nativo"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tinaja en otoño</p>
-                                <p className="text-xs opacity-80">Agua caliente + frío perfecto</p>
+                                <p className="font-black text-sm">Tinaja en el bosque</p>
+                                <p className="text-xs opacity-80">Servicio de temporada (vuelve en primavera)</p>
                             </div>
                         </div>
 
@@ -215,8 +215,8 @@ export default function OtonoValleLasTrancasPage() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Interior a 22°C</p>
-                                <p className="text-xs opacity-80">Estufa pellet automática</p>
+                                <p className="font-black text-sm">Interior cálido</p>
+                                <p className="text-xs opacity-80">Estufa a pellet automática</p>
                             </div>
                         </div>
 
@@ -231,7 +231,7 @@ export default function OtonoValleLasTrancasPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Tu domo en el bosque</p>
-                                <p className="text-xs opacity-80">Privacidad total en otoño</p>
+                                <p className="text-xs opacity-80">Privacidad entre el bosque nativo</p>
                             </div>
                         </div>
                     </div>
@@ -255,7 +255,7 @@ export default function OtonoValleLasTrancasPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen nuestros huéspedes</h2>
                         <div className="h-1.5 w-24 bg-amber-500 mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 47 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">

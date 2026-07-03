@@ -39,7 +39,7 @@ const SEASONS = [
         title: "Renacimiento",
         description: "El deshielo y el despertar de la fauna local. Vive la energía de la montaña en el centro estratégico de Las Trancas.",
         perk: "Proximidad a senderos de trekking",
-        image: "/images/Galeria/Las Trancas Bosque Nativo 3.jpeg",
+        image: "/images/Galeria/Las Trancas Bosque Nativo 2.jpeg",
     }
 ];
 

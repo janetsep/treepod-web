@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-    description: 'Vive el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo con tinaja exclusiva opcional. Escapada 1 mayo Ñuble perfecta.',
+    description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio de temporada). Escapada 1 mayo Ñuble.',
     keywords: ['finde largo mayo Las Trancas', 'escapada 1 mayo Ñuble', 'día del trabajo Valle Las Trancas', 'glamping finde largo', 'domos geodésicos mayo', 'alojamiento 1 mayo chile', 'finde largo ñuble', 'glamping día del trabajo'],
     robots: {
         index: true,
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-        description: 'Vive el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo con tinaja exclusiva opcional.',
+        description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio de temporada).',
         images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-        description: 'Vive el finde largo del día del trabajo en Valle Las Trancas. Domos con tinaja exclusiva opcional en el bosque.',
+        description: 'Finde largo del día del trabajo en Valle Las Trancas. Domos en el bosque, con tinaja privada opcional (servicio de temporada).',
         images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
     }
 };
@@ -60,8 +60,8 @@ export default function FindeLargoPage() {
                     </div>
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
-                        El mejor finde largo del año <br className="hidden md:block" />
-                        escondido en el bosque nativo <span className="text-primary italic-display block md:inline">(con tinaja exclusiva opcional)</span>
+                        Tu finde largo del día del trabajo <br className="hidden md:block" />
+                        en el bosque nativo de Valle Las Trancas <span className="text-primary italic-display block md:inline">(con tinaja privada opcional)</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
@@ -76,8 +76,8 @@ export default function FindeLargoPage() {
                     </div>
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Mientras todos se van a la playa en carretes masivos, <br className="hidden md:block" />
-                        tú estarás en la montaña con el silencio perfecto y la opción de tinaja termal (servicio extra).
+                        Tres días en la montaña, con el silencio del bosque y otoño en la cordillera. <br className="hidden md:block" />
+                        Con opción de tinaja privada (servicio de temporada, vuelve en primavera).
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -110,10 +110,10 @@ export default function FindeLargoPage() {
             <section className="py-24 md:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
-                        <h2 className="h2-display text-text-main mb-6">El finde largo que te <span className="italic-display text-primary">mereces</span> después de tanto trabajo</h2>
+                        <h2 className="h2-display text-text-main mb-6">El finde largo para <span className="italic-display text-primary">descansar</span> después del trabajo</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            Escapada 1 mayo Ñuble perfecta para descansar de verdad
+                            Escapada 1 mayo en Ñuble, para cortar la rutina y descansar
                         </p>
                     </div>
 
@@ -121,28 +121,28 @@ export default function FindeLargoPage() {
                         {[
                             {
                                 icon: Mountain,
-                                title: "Otoño en la cordillera (sin multitudes)",
-                                desc: "Mayo en Las Trancas es perfecto: temperaturas ideales de día, noches frescas para la tinaja y colores otoñales únicos. Sin las multitudes de temporada alta."
+                                title: "Otoño en la cordillera, con menos gente",
+                                desc: "Mayo en Las Trancas tiene días templados, noches frescas y colores de otoño, lejos de las multitudes de la temporada alta de invierno."
                             },
                             {
                                 icon: Waves,
-                                title: "Tinaja termal exclusiva (servicio extra)",
-                                desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Servicio opcional con valor de $38.000 por hora para 2 personas. Solicítala con 1 día de anticipación."
+                                title: "Tinaja privada opcional (servicio de temporada)",
+                                desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Es un servicio de temporada que vuelve en primavera: consúltanos si está disponible para tus fechas."
                             },
                             {
                                 icon: Coffee,
                                 title: "Calefacción automática 24/7",
-                                desc: "Las noches de mayo son frescas pero perfectas. Tu domo mantiene temperatura ideal con estufa a pellet automática mientras disfrutas el clima otoñal afuera."
+                                desc: "Las noches de mayo son frescas. Tu domo mantiene una temperatura agradable con estufa a pellet automática mientras afuera disfrutas el otoño."
                             },
                             {
                                 icon: Calendar,
-                                title: "3 días completos de descanso",
-                                desc: "Jueves 1, viernes 2 y fin de semana. El finde largo perfecto para realmente desconectarte del trabajo y recargar energías en plena naturaleza."
+                                title: "3 días para descansar",
+                                desc: "Jueves 1, viernes 2 y fin de semana. El finde largo justo para cortar la rutina del trabajo y recargar en la naturaleza."
                             },
                             {
                                 icon: Check,
-                                title: "WiFi Starlink para cuando quieras",
-                                desc: "Conexión de alta velocidad disponible. Ideal para compartir fotos del otoño en Las Trancas o simplemente mantenerte conectado si es necesario."
+                                title: "WiFi Starlink cuando lo necesites",
+                                desc: "Conexión estable disponible. Ideal para compartir fotos del otoño en Las Trancas o seguir conectado si lo necesitas."
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
@@ -166,7 +166,7 @@ export default function FindeLargoPage() {
                         <h2 className="h2-display text-text-main mb-6">Tu refugio otoñal en Valle Las Trancas</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            Todo lo necesario para un finde largo mayo Las Trancas perfecto
+                            Lo necesario para tu finde largo de mayo en Las Trancas
                         </p>
                     </div>
 
@@ -189,15 +189,15 @@ export default function FindeLargoPage() {
                         <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/wellness/Tinaja1.jpg"
-                                alt="Tinaja termal privada para el finde largo"
+                                alt="Tinaja privada en el bosque para el finde largo"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tinaja exclusiva</p>
-                                <p className="text-xs opacity-80">Servicio extra · $38.000/hora</p>
+                                <p className="font-black text-sm">Tinaja privada</p>
+                                <p className="text-xs opacity-80">Servicio de temporada</p>
                             </div>
                         </div>
 
@@ -302,7 +302,7 @@ export default function FindeLargoPage() {
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            El día del trabajo es uno de los findes largos más buscados del año. Mayo en Valle Las Trancas es perfecto: clima ideal y colores otoñales únicos. No te quedes sin tu escapada 1 mayo Ñuble.
+                            El día del trabajo es uno de los findes largos más buscados del año. Mayo en Valle Las Trancas tiene buen clima y colores de otoño. Reserva con tiempo tu escapada 1 mayo en Ñuble.
                         </p>
 
                         <div className="text-center mb-10">

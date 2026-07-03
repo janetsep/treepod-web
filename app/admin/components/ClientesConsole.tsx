@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { adminFetch } from "@/lib/admin-fetch";
 import { Search, UserCircle, Star, Phone, Mail, FileText, ChevronRight, Hash } from "lucide-react";
 
 export default function ClientesConsole() {
@@ -16,16 +16,13 @@ export default function ClientesConsole() {
     async function fetchClientes() {
         setLoading(true);
         try {
-            // Fetch clientes with their reservations to calculate total spend
-            const { data, error } = await supabase
-                .from("clientes")
-                .select("*, reservas(total, monto_pagado, estado, created_at)")
-                .order("nombre");
+            // Fetch clientes with their reservations to calculate total spend (vía servidor con login)
+            const res = await adminFetch("/api/admin/clientes");
+            if (!res.ok) throw new Error("No autorizado o error al cargar clientes");
+            const { clientes: data } = await res.json();
 
-            if (error) throw error;
-            
             // Transform data to include aggregated totals
-            const transformed = data.map(c => {
+            const transformed = (data || []).map((c: any) => {
                 const reservas = c.reservas || [];
                 const totalReservas = reservas.length;
                 const totalSpent = reservas.reduce((acc: number, r: any) => acc + (r.monto_pagado || 0), 0);
@@ -63,7 +60,7 @@ export default function ClientesConsole() {
             case 'platinum':
                 return "bg-amber-100 text-amber-600 border-amber-200";
             default:
-                return "bg-gray-100 text-gray-500 border-gray-200";
+                return "bg-gray-100 text-gray-900 border-gray-200";
         }
     };
 
@@ -77,12 +74,12 @@ export default function ClientesConsole() {
                         </div>
                         <div>
                             <h2 className="text-xl font-display font-black text-gray-800">Directorio de Clientes</h2>
-                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Relación de Huéspedes y Ventas Históricas</p>
+                            <p className="text-[10px] text-gray-700 font-black uppercase tracking-widest">Relación de Huéspedes y Ventas Históricas</p>
                         </div>
                     </div>
                     
                     <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                         <input
                             type="text"
                             placeholder="Buscar por nombre, email, RUT..."
@@ -95,7 +92,7 @@ export default function ClientesConsole() {
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-gray-50 text-gray-400 uppercase text-[10px] font-black tracking-[0.2em] border-b border-gray-100">
+                        <thead className="bg-gray-50 text-gray-700 uppercase text-[10px] font-black tracking-[0.2em] border-b border-gray-100">
                             <tr>
                                 <th className="px-8 py-5">Cliente</th>
                                 <th className="px-6 py-5">Contacto</th>
@@ -107,9 +104,9 @@ export default function ClientesConsole() {
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {loading ? (
-                                <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">Sincronizando directorio...</td></tr>
+                                <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-700 font-bold italic">Sincronizando directorio...</td></tr>
                             ) : filteredClientes.length === 0 ? (
-                                <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-400 font-bold italic">No se encontraron clientes coincidentes.</td></tr>
+                                <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-700 font-bold italic">No se encontraron clientes coincidentes.</td></tr>
                             ) : filteredClientes.map((c) => (
                                 <tr key={c.id} className="hover:bg-gray-50/50 transition-colors group">
                                     <td className="px-8 py-5">
@@ -119,14 +116,14 @@ export default function ClientesConsole() {
                                             </div>
                                             <div>
                                                 <div className="font-extrabold text-gray-900 text-sm">{c.nombre} {c.apellido}</div>
-                                                <div className="text-[10px] text-gray-400 font-medium">Desde {new Date(c.created_at).toLocaleDateString()}</div>
+                                                <div className="text-[10px] text-gray-700 font-medium">Desde {new Date(c.created_at).toLocaleDateString()}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-5">
                                         <div className="flex flex-col gap-1">
                                             <div className="flex items-center gap-1.5 text-xs text-gray-600 font-medium">
-                                                <Mail className="w-3 h-3 text-gray-300" /> {c.email}
+                                                <Mail className="w-3 h-3 text-gray-600" /> {c.email}
                                             </div>
                                             {c.telefono && (
                                                 <div className="flex items-center gap-1.5 text-[10px] text-primary font-black">
@@ -139,10 +136,10 @@ export default function ClientesConsole() {
                                         <div className="flex flex-col gap-1">
                                             {c.rut && (
                                                 <div className="flex items-center gap-1.5 text-xs font-bold text-gray-700">
-                                                    <FileText className="w-3 h-3 text-gray-300" /> {c.rut}
+                                                    <FileText className="w-3 h-3 text-gray-600" /> {c.rut}
                                                 </div>
                                             )}
-                                            <div className="text-[9px] font-black text-gray-400 uppercase tracking-tighter flex items-center gap-1">
+                                            <div className="text-[9px] font-black text-gray-700 uppercase tracking-tighter flex items-center gap-1">
                                                 <Hash className="w-2.5 h-2.5" /> {c.id.slice(0,8).toUpperCase()}
                                             </div>
                                         </div>
@@ -150,7 +147,7 @@ export default function ClientesConsole() {
                                     <td className="px-6 py-5 text-center">
                                         <div className="inline-flex flex-col items-center justify-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
                                             <span className="text-sm font-black text-gray-900">{c.stats.count}</span>
-                                            <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Estancias</span>
+                                            <span className="text-[8px] font-black text-gray-700 uppercase tracking-tighter">Estancias</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-5 text-right font-black text-primary text-base">

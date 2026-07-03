@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Galeria() {
   const images = [
     { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos" },
-    { src: "/images/Galeria/domonieve2.jpeg", alt: "Domo en la nieve" },
+    { src: "/images/hero/domonieve2.jpeg", alt: "Domo en la nieve" },
     { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada" },
     { src: "/images/interiors/interior-domo-acogedor-78-2.jpg", alt: "Interior del domo" },
     { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Cocina equipada" },

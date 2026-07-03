@@ -1,7 +1,7 @@
 "use client";
 
 import { adminFetch } from "@/lib/admin-fetch";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { X, Upload, FileText, ExternalLink, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -39,6 +39,8 @@ interface Reserva {
     enviar_confirmacion?: boolean;
     acompanantes?: string;
     tipo_documento?: string;
+    metodo_pago?: string;
+    folio_dte?: string;
     sincronizar_calendario?: boolean;
 }
 
@@ -119,6 +121,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         enviar_confirmacion: true,
         acompanantes: "",
         tipo_documento: "boleta",
+        metodo_pago: "",
+        folio_dte: "",
         sincronizar_calendario: true
     });
     const [loading, setLoading] = useState(false);
@@ -127,8 +131,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
     const [serviciosSeleccionados, setServiciosSeleccionados] = useState<string[]>([]);
     const [serviciosCortesia, setServiciosCortesia] = useState<string[]>([]);
     const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
+    const [preciosPorServicio, setPreciosPorServicio] = useState<Record<string, number>>({});
     const [loadingServicios, setLoadingServicios] = useState(false);
     const [savedReservaData, setSavedReservaData] = useState<{ id: string; nombre: string; domoId: string } | null>(null);
+    const [tarifaSugerida, setTarifaSugerida] = useState<{ precio_noche: number; total_hospedaje: number; temporada: string; es_fallback: boolean } | null>(null);
+    // Salidas (= aseos) ya programadas para la fecha de ENTRADA de esta reserva.
+    // Si hay 2 o más, por capacidad de aseo el ingreso debería ser desde las 18:00 (requiere tu aprobación).
+    const [aseosDia, setAseosDia] = useState<{ aseos: number; salidas: { cliente: string; domo: string }[] }>({ aseos: 0, salidas: [] });
+    // Valor del alojamiento (sin extras). El total = baseAlojamiento + extras de servicios,
+    // se recalcula en vivo. El backend persiste ese total ya con los extras incluidos.
+    const [baseAlojamiento, setBaseAlojamiento] = useState(0);
+    const [buscandoTarifa, setBuscandoTarifa] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -155,8 +168,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     enviar_confirmacion: reservaToEdit.enviar_confirmacion ?? true,
                     acompanantes: reservaToEdit.acompanantes || "",
                     tipo_documento: reservaToEdit.tipo_documento || "boleta",
+                    metodo_pago: reservaToEdit.metodo_pago || reservaToEdit.metodo_pago_inicial || "",
+                    folio_dte: reservaToEdit.metadata?.folio_dte ?? reservaToEdit.metadata?.folio ?? "",
                     sincronizar_calendario: reservaToEdit.sincronizar_calendario ?? true
                 });
+                // Base de alojamiento = total guardado menos los extras ya cobrados.
+                // Así el total vuelve a armarse como alojamiento + extras al recalcular en vivo.
+                const extrasPersistidos = Array.isArray(reservaToEdit.reserva_servicios)
+                    ? reservaToEdit.reserva_servicios.reduce((acc: number, rs: any) =>
+                        acc + (rs.es_cortesia ? 0 : (Number(rs.total) || (Number(rs.precio_unitario) || 0) * (Number(rs.cantidad) || 1))), 0)
+                    : 0;
+                setBaseAlojamiento(Math.max(0, (Number(reservaToEdit.total) || 0) - extrasPersistidos));
             } else {
                 setFormData({
                     fecha_inicio: new Date().toISOString().split('T')[0],
@@ -177,10 +199,13 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     enviar_confirmacion: true,
                     acompanantes: "",
                     tipo_documento: "boleta",
+                    metodo_pago: "",
+                    folio_dte: "",
                     sincronizar_calendario: true
                 });
                 setServiciosSeleccionados([]);
                 setServiciosCortesia([]);
+                setBaseAlojamiento(0);
             }
 
             // Cargar servicios disponibles
@@ -207,11 +232,14 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                 setServiciosCortesia(cortesiaIds);
                 // Recuperar noches guardadas por servicio (para cena con noches parciales)
                 const nochesMap: Record<string, number> = {};
+                const preciosMap: Record<string, number> = {};
                 reservaToEdit.reserva_servicios.forEach((rs: any) => {
                     const sid = rs.servicios?.id || rs.servicio_id;
                     if (sid && rs.cantidad && rs.cantidad > 1) nochesMap[sid] = rs.cantidad;
+                    if (sid && rs.precio_unitario) preciosMap[sid] = rs.precio_unitario;
                 });
                 setNochesPorServicio(nochesMap);
+                setPreciosPorServicio(preciosMap);
             } else {
                 setServiciosCortesia([]);
                 setNochesPorServicio({});
@@ -219,16 +247,98 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         }
     }, [isOpen, reservaToEdit, domos]);
 
+    // Buscar tarifa sugerida cuando cambia adultos, fecha_inicio o fecha_fin
+    useEffect(() => {
+        if (!isOpen) { setTarifaSugerida(null); return; }
+        const { fecha_inicio, fecha_fin, adultos } = formData;
+        if (!fecha_inicio || !fecha_fin || !adultos) { setTarifaSugerida(null); return; }
+
+        const noches = Math.round(
+            (new Date(fecha_fin).getTime() - new Date(fecha_inicio).getTime()) / 86400000
+        );
+        if (noches <= 0) { setTarifaSugerida(null); return; }
+
+        const timer = setTimeout(async () => {
+            setBuscandoTarifa(true);
+            try {
+                const res = await adminFetch(
+                    `/api/admin/tarifas/buscar?fecha=${fecha_inicio}&noches=${noches}&adultos=${adultos}`
+                );
+                const data = await res.json();
+                if (data.encontrado) {
+                    setTarifaSugerida({
+                        precio_noche: data.precio_noche,
+                        total_hospedaje: data.total_hospedaje,
+                        temporada: data.temporada,
+                        es_fallback: data.es_fallback,
+                    });
+                } else {
+                    setTarifaSugerida(null);
+                }
+            } catch {
+                setTarifaSugerida(null);
+            } finally {
+                setBuscandoTarifa(false);
+            }
+        }, 600);
+
+        return () => clearTimeout(timer);
+    }, [formData.adultos, formData.fecha_inicio, formData.fecha_fin, isOpen]);
+
+    // Noches de la estadía (mín. 1) según las fechas seleccionadas.
+    const nochesEstadia = useMemo(() => {
+        if (!formData.fecha_inicio || !formData.fecha_fin) return 1;
+        return Math.max(1, Math.round(
+            (new Date(formData.fecha_fin).getTime() - new Date(formData.fecha_inicio).getTime()) / 86400000
+        ));
+    }, [formData.fecha_inicio, formData.fecha_fin]);
+
+    // Suma de los servicios seleccionados (las cortesías valen $0). Misma lógica que el backend.
+    const sumExtras = useMemo(() => {
+        const adultos = Number(formData.adultos) || 2;
+        return serviciosSeleccionados.reduce((acc, id) => {
+            const serv = serviciosDisponibles.find((s) => s.id === id);
+            if (!serv || serviciosCortesia.includes(id)) return acc;
+            const esCena = serv.nombre.toLowerCase().includes("cena") || serv.nombre.toLowerCase().includes("romántico") || serv.nombre.toLowerCase().includes("almuerzo");
+            const nochesEste = esCena ? (nochesPorServicio[id] ?? 1) : nochesEstadia;
+            const cantidad = (serv.multiplicador_noches ? nochesEste : 1) * (serv.multiplicador_personas ? adultos : 1);
+            const precio = preciosPorServicio[id] ?? serv.precio;
+            return acc + precio * cantidad;
+        }, 0);
+    }, [serviciosSeleccionados, serviciosCortesia, nochesPorServicio, preciosPorServicio, serviciosDisponibles, formData.adultos, nochesEstadia]);
+
+    // Total a pagar = alojamiento + extras. Se mantiene sincronizado en formData.total
+    // para que se muestre y se guarde correctamente al agregar/quitar servicios.
+    useEffect(() => {
+        const nuevoTotal = Math.max(0, Math.round(baseAlojamiento + sumExtras));
+        setFormData((prev) => (prev.total === nuevoTotal ? prev : { ...prev, total: nuevoTotal }));
+    }, [baseAlojamiento, sumExtras]);
+
+    // Cuenta las salidas (aseos) programadas para la fecha de entrada de esta reserva.
+    useEffect(() => {
+        if (!isOpen || !formData.fecha_inicio) { setAseosDia({ aseos: 0, salidas: [] }); return; }
+        let cancelado = false;
+        const timer = setTimeout(async () => {
+            try {
+                const params = new URLSearchParams({ fecha: formData.fecha_inicio });
+                if (formData.id) params.set("excluir", formData.id);
+                const res = await adminFetch(`/api/admin/reservas/aseos-dia?${params.toString()}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!cancelado) setAseosDia({ aseos: data.aseos || 0, salidas: data.salidas || [] });
+            } catch { /* sin bloquear la ficha */ }
+        }, 400);
+        return () => { cancelado = true; clearTimeout(timer); };
+    }, [formData.fecha_inicio, formData.id, isOpen]);
+
     // Auto-completar datos si el cliente ya existe (CRM Lookup)
     useEffect(() => {
         if (!isOpen || reservaToEdit || !formData.email || formData.email.length < 5 || !formData.email.includes('@')) return;
 
         const timer = setTimeout(async () => {
-            const { data: client } = await supabase
-                .from("clientes")
-                .select("*")
-                .eq("email", formData.email)
-                .single();
+            const res = await adminFetch(`/api/admin/clientes?email=${encodeURIComponent(formData.email)}`);
+            if (!res.ok) return;
+            const { cliente: client } = await res.json();
 
             if (client) {
                 setFormData(prev => ({
@@ -291,13 +401,25 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Aviso de capacidad de aseo: si el día de entrada ya tiene 2+ salidas (aseos),
+        // requiere tu aprobación explícita antes de guardar (ingreso sugerido desde 18:00).
+        if (!isViewer && aseosDia.aseos >= 2) {
+            const ok = window.confirm(
+                `Este día tiene ${aseosDia.aseos} salidas (aseos) programadas.\n\n` +
+                `Por capacidad de aseo, el ingreso de esta reserva debería ser DESDE LAS 18:00 hrs.\n\n` +
+                `¿Apruebas la reserva con esta condición?`
+            );
+            if (!ok) return;
+        }
+
         setLoading(true);
 
         try {
             const res = await adminFetch("/api/admin/reservas/guardar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados, servicios_cortesia: serviciosCortesia, noches_por_servicio: nochesPorServicio }),
+                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados, servicios_cortesia: serviciosCortesia, noches_por_servicio: nochesPorServicio, precios_por_servicio: preciosPorServicio }),
             });
             const data = await res.json();
 
@@ -329,6 +451,12 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         onClose();
     };
 
+    const aplicarTarifa = () => {
+        if (!tarifaSugerida) return;
+        // El total se arma solo (alojamiento + extras) vía el efecto de sincronización.
+        setBaseAlojamiento(tarifaSugerida.total_hospedaje);
+    };
+
     const inputClasses = `w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`;
     const selectClasses = `w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold focus:bg-white focus:border-primary transition-all outline-none appearance-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`;
 
@@ -344,17 +472,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </h3>
                         {formData.id && (
                             <div className="mt-2 flex items-center gap-2">
-                                <span className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em]">Código Asignado:</span>
+                                <span className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em]">Código Asignado:</span>
                                 <span className="px-3 py-1 bg-primary text-white rounded-lg font-mono text-xs font-black shadow-md shadow-primary/20">
                                     #{formData.id.slice(0, 8).toUpperCase()}
                                 </span>
                             </div>
                         )}
                         {!formData.id && (
-                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
+                            <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
                         )}
                     </div>
-                    <button onClick={onClose} className="p-2 bg-white text-gray-400 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
+                    <button onClick={onClose} className="p-2 bg-white text-gray-700 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -368,7 +496,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Fecha Entrada</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Fecha Entrada</label>
                                 <input
                                     type="date"
                                     required
@@ -379,7 +507,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Fecha Salida</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Fecha Salida</label>
                                 <input
                                     type="date"
                                     required
@@ -390,7 +518,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Domo Asignado</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Domo Asignado</label>
                                 <select
                                     required
                                     disabled={isViewer}
@@ -405,6 +533,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 </select>
                             </div>
                         </div>
+
+                        {aseosDia.aseos >= 2 && (
+                            <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4">
+                                <p className="text-xs font-black text-amber-800 uppercase tracking-widest">Atención · Capacidad de aseo</p>
+                                <p className="text-sm font-bold text-amber-900 mt-1">
+                                    Este día ya tiene <span className="text-base">{aseosDia.aseos}</span> salidas (aseos) programadas. Por capacidad de aseo,
+                                    el ingreso de esta reserva debería ser <span className="underline">desde las 18:00 hrs</span>.
+                                </p>
+                                <p className="text-[11px] font-bold text-amber-700 mt-1.5">Verifica y aprueba al guardar. Salidas del día: {aseosDia.salidas.map(s => `${s.cliente}${s.domo ? ` (${s.domo})` : ""}`).join(" · ")}</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Sección: Huésped */}
@@ -422,7 +561,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Nombre</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Nombre</label>
                                 <input
                                     type="text"
                                     value={formData.nombre}
@@ -433,7 +572,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Apellido</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Apellido</label>
                                 <input
                                     type="text"
                                     value={formData.apellido}
@@ -444,7 +583,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Email</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Email</label>
                                 <input
                                     type="email"
                                     value={formData.email}
@@ -455,7 +594,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Teléfono</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Teléfono</label>
                                 <input
                                     type="tel"
                                     value={formData.telefono}
@@ -466,7 +605,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">RUT / Identificación</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">RUT / Identificación</label>
                                 <input
                                     type="text"
                                     value={formData.rut || ''}
@@ -487,7 +626,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">N° Personas (Adultos)</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">N° Personas (Adultos)</label>
                                 <input
                                     type="number"
                                     min="1"
@@ -498,7 +637,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Plataforma / Fuente</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Plataforma / Fuente</label>
                                 <select
                                     required
                                     value={formData.fuente}
@@ -516,7 +655,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 </select>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Estado Reserva</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Estado Reserva</label>
                                 <select
                                     required
                                     value={formData.estado}
@@ -528,6 +667,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     <option value="confirmado">Confirmada (Ocupado)</option>
                                     <option value="pendiente_pago">Abono Pendiente</option>
                                     <option value="pendiente">Manual Pendiente</option>
+                                    <option value="suspendido">Suspendido (Retomará)</option>
                                     <option value="cancelada">Cancelada / Baja</option>
                                     <option value="bloqueado">Bloqueo Técnico</option>
                                 </select>
@@ -543,15 +683,16 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Total Reserva ($)</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Alojamiento ($)</label>
                                 <input
                                     type="number"
-                                    value={formData.total || ''}
-                                    onChange={(e) => setFormData({ ...formData, total: isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber })}
+                                    value={baseAlojamiento || ''}
+                                    onChange={(e) => setBaseAlojamiento(isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber)}
                                     readOnly={isViewer}
                                     className={`w-full p-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-black text-gray-900 transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     placeholder="0"
                                 />
+                                <p className="text-[9px] text-gray-500 font-bold pl-1">Solo el valor del domo. Los servicios se suman abajo.</p>
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-green-600 uppercase tracking-widest pl-1">Monto Pagado ($)</label>
@@ -565,6 +706,41 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 />
                             </div>
                         </div>
+
+                        {/* Resumen: total a pagar y saldo, se recalcula al agregar/quitar servicios */}
+                        {(() => {
+                            const total = Number(formData.total) || 0;
+                            const pagado = Number(formData.monto_pagado) || 0;
+                            const saldo = total - pagado;
+                            return (
+                                <div className="rounded-2xl border border-gray-100 bg-gray-50/70 p-4 space-y-2">
+                                    <div className="flex items-center justify-between text-xs font-bold text-gray-700">
+                                        <span>Alojamiento</span>
+                                        <span>${(Number(baseAlojamiento) || 0).toLocaleString('es-CL')}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs font-bold text-gray-700">
+                                        <span>Servicios adicionales</span>
+                                        <span>${Math.round(sumExtras).toLocaleString('es-CL')}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-2 border-t border-gray-200 text-sm font-black text-gray-900">
+                                        <span className="uppercase tracking-widest text-[11px]">Total a pagar</span>
+                                        <span>${total.toLocaleString('es-CL')}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs font-black">
+                                        <span className="uppercase tracking-widest text-[10px] text-gray-600">Saldo por cobrar</span>
+                                        <span className={saldo > 0 ? 'text-amber-700' : 'text-green-700'}>
+                                            ${saldo.toLocaleString('es-CL')}{saldo <= 0 ? ' · pagado' : ''}
+                                        </span>
+                                    </div>
+                                    {formData.estado === 'suspendido' && pagado > 0 && (
+                                        <div className="flex items-center justify-between text-xs font-black pt-2 border-t border-orange-200">
+                                            <span className="uppercase tracking-widest text-[10px] text-orange-700">Anticipo retenido (a favor)</span>
+                                            <span className="text-orange-700">${pagado.toLocaleString('es-CL')}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
                     </div>
 
                     {/* Sección: Servicios Adicionales */}
@@ -574,12 +750,12 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Servicios Adicionales</h4>
                         </div>
                         {loadingServicios ? (
-                            <div className="flex items-center gap-2 py-3 text-gray-400">
+                            <div className="flex items-center gap-2 py-3 text-gray-700">
                                 <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
                                 <span className="text-xs font-bold">Cargando servicios...</span>
                             </div>
                         ) : serviciosDisponibles.length === 0 ? (
-                            <p className="text-xs text-gray-400 font-bold py-2">No hay servicios adicionales disponibles.</p>
+                            <p className="text-xs text-gray-700 font-bold py-2">No hay servicios adicionales disponibles.</p>
                         ) : (
                             (() => {
                                 const noches = formData.fecha_inicio && formData.fecha_fin
@@ -598,7 +774,9 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                 : noches;
                                             const cantidad = (servicio.multiplicador_noches ? nochesEste : 1)
                                                            * (servicio.multiplicador_personas ? adultos : 1);
-                                            const subtotal = esCortesia ? 0 : servicio.precio * cantidad;
+                                            // Precio: usa override si existe, si no el precio base del servicio
+                                            const precioEfectivo = preciosPorServicio[servicio.id] ?? servicio.precio;
+                                            const subtotal = esCortesia ? 0 : precioEfectivo * cantidad;
                                             const etiqueta = (() => {
                                                 const partes = [];
                                                 if (servicio.multiplicador_noches) partes.push(`${nochesEste}n`);
@@ -644,22 +822,46 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <span className={`text-[10px] font-black ${selected ? "text-primary" : "text-gray-400"}`}>
-                                                                        ${servicio.precio.toLocaleString()} × {etiqueta}
+                                                                    <span className={`text-[10px] font-black ${selected ? "text-primary" : "text-gray-700"}`}>
+                                                                        ${precioEfectivo.toLocaleString()} × {etiqueta}
                                                                     </span>
                                                                     {selected && cantidad > 1 && (
                                                                         <span className="text-[10px] font-black text-green-700 bg-green-50 px-1.5 py-0.5 rounded-md">
                                                                             = ${subtotal.toLocaleString()}
                                                                         </span>
                                                                     )}
+                                                                    {selected && preciosPorServicio[servicio.id] !== undefined && preciosPorServicio[servicio.id] !== servicio.precio && (
+                                                                        <span className="text-[10px] font-black text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-md">ajustado</span>
+                                                                    )}
                                                                 </>
                                                             )}
                                                         </div>
                                                     </button>
+                                                    {/* Editor de precio por servicio */}
+                                                    {selected && !esCortesia && !isViewer && (
+                                                        <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                                                            <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest flex-shrink-0">Precio:</span>
+                                                            <span className="text-[10px] text-gray-700">$</span>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                step="1000"
+                                                                value={preciosPorServicio[servicio.id] ?? servicio.precio}
+                                                                onChange={e => setPreciosPorServicio(p => ({ ...p, [servicio.id]: Number(e.target.value) }))}
+                                                                className="flex-1 min-w-0 text-xs font-black text-primary bg-white border border-gray-200 rounded-lg px-2 py-1 focus:border-primary outline-none"
+                                                            />
+                                                            {preciosPorServicio[servicio.id] !== undefined && preciosPorServicio[servicio.id] !== servicio.precio && (
+                                                                <button type="button"
+                                                                    onClick={() => setPreciosPorServicio(p => { const n = { ...p }; delete n[servicio.id]; return n; })}
+                                                                    className="text-[9px] text-gray-700 hover:text-gray-600 whitespace-nowrap font-bold"
+                                                                >reset</button>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                     {/* Selector de noches para cena (puede ser parcial) */}
                                                     {selected && esCena && !esCortesia && !isViewer && (
                                                         <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
-                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Noches:</span>
+                                                            <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Noches:</span>
                                                             <div className="flex items-center gap-1">
                                                                 <button type="button"
                                                                     onClick={() => setNochesPorServicio(p => ({ ...p, [servicio.id]: Math.max(1, (p[servicio.id] ?? 1) - 1) }))}
@@ -671,7 +873,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                     className="w-5 h-5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600 font-black text-xs flex items-center justify-center"
                                                                 >+</button>
                                                             </div>
-                                                            <span className="text-[10px] text-gray-400 font-bold">de {noches}</span>
+                                                            <span className="text-[10px] text-gray-700 font-bold">de {noches}</span>
                                                         </div>
                                                     )}
                                                     {selected && !isViewer && (
@@ -681,7 +883,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                             className={`text-[10px] font-black uppercase tracking-widest py-1.5 rounded-xl transition-all ${
                                                                 esCortesia
                                                                     ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                                                                    : "bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                                                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-600"
                                                             }`}
                                                         >
                                                             {esCortesia ? "Cortesia (quitar)" : "Marcar como cortesia"}
@@ -703,7 +905,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Detalle de Reserva</h4>
                         </div>
                         <div className="space-y-1.5">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Notas / Mensaje del Cliente</label>
+                            <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Notas / Mensaje del Cliente</label>
                             <textarea
                                 value={formData.mensaje}
                                 onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
@@ -733,7 +935,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                         value={formData.comprobante_url || ''}
                                         onChange={(e) => setFormData({ ...formData, comprobante_url: e.target.value })}
                                         readOnly={isViewer}
-                                        className={`w-full pl-3.5 pr-20 py-3.5 bg-green-50/20 border border-green-100 rounded-2xl text-[11px] font-bold placeholder:text-gray-300 focus:bg-white transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        className={`w-full pl-3.5 pr-20 py-3.5 bg-green-50/20 border border-green-100 rounded-2xl text-[11px] font-bold placeholder:text-gray-600 focus:bg-white transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
                                         placeholder="https://drive.google.com/file/d/..."
                                     />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -741,7 +943,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, comprobante_url: "" })}
-                                                className="p-1 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-lg transition-all"
+                                                className="p-1 hover:bg-red-50 text-gray-600 hover:text-red-500 rounded-lg transition-all"
                                                 title="Borrar link"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -769,7 +971,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 </div>
                             </div>
 
-                            <p className="text-[9px] text-gray-400 font-bold italic pl-1 italic">
+                            <p className="text-[9px] text-gray-700 font-bold italic pl-1 italic">
                                 Puedes pegar un link de Google Drive directamente o subir un archivo (PDF/IMG) desde tu dispositivo.
                             </p>
                         </div>
@@ -784,7 +986,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
                         {/* Tipo de Documento */}
                         <div className="space-y-1.5">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Tipo de Documento</label>
+                            <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Tipo de Documento</label>
                             <select
                                 value={formData.tipo_documento}
                                 onChange={(e) => setFormData({ ...formData, tipo_documento: e.target.value })}
@@ -796,9 +998,48 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             </select>
                         </div>
 
+                        {/* Medio de Pago */}
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Medio de Pago</label>
+                            <select
+                                value={formData.metodo_pago || ""}
+                                onChange={(e) => setFormData({ ...formData, metodo_pago: e.target.value })}
+                                disabled={isViewer}
+                                className={`w-full p-4 bg-gray-50 border border-gray-100 rounded-[2rem] text-sm font-medium transition-all outline-none ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            >
+                                <option value="">Sin especificar</option>
+                                <option value="transferencia">Transferencia</option>
+                                <option value="efectivo">Efectivo</option>
+                                <option value="webpay">Webpay / Transbank</option>
+                                <option value="airbnb">Airbnb</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                            <p className="text-[9px] text-gray-500 font-bold pl-1">Cómo pagó el cliente. Necesario para saber a quién emitir boleta/factura.</p>
+                        </div>
+
+                        {/* Folio Boleta / Factura (DTE) */}
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">
+                                Folio {formData.tipo_documento === "factura" ? "Factura" : "Boleta"}
+                                {formData.folio_dte && formData.folio_dte.trim() !== "" && (
+                                    <span className="ml-2 text-[9px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded normal-case tracking-normal">Documento emitido</span>
+                                )}
+                            </label>
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                value={formData.folio_dte || ""}
+                                onChange={(e) => setFormData({ ...formData, folio_dte: e.target.value })}
+                                readOnly={isViewer}
+                                placeholder="N° de folio del documento emitido"
+                                className={`w-full p-4 bg-gray-50 border rounded-[2rem] text-sm font-bold transition-all outline-none ${formData.folio_dte && formData.folio_dte.trim() !== "" ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-gray-100"} ${isViewer ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            />
+                            <p className="text-[9px] text-gray-500 font-bold pl-1">Escribe el folio al emitir el documento. Al guardarlo, la reserva pasa de &quot;Por emitir&quot; a &quot;Emitidas&quot; en el dashboard.</p>
+                        </div>
+
                         {/* Campo de Acompañantes */}
                         <div className="space-y-1.5">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Datos de Acompañantes</label>
+                            <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Datos de Acompañantes</label>
                             <textarea
                                 value={formData.acompanantes}
                                 onChange={(e) => setFormData({ ...formData, acompanantes: e.target.value })}
@@ -848,7 +1089,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 <h4 className="font-black text-gray-900 text-lg leading-tight">
                                     ¿Agregar esta reserva a tu calendario?
                                 </h4>
-                                <p className="text-xs text-gray-400 font-bold mt-1">
+                                <p className="text-xs text-gray-700 font-bold mt-1">
                                     Descarga el archivo .ics para abrirlo en Apple Calendar, Outlook u otro.
                                 </p>
                             </div>

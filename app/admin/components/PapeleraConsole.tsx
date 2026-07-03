@@ -97,7 +97,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
             </div>
 
             {reservas.length === 0 ? (
-                <div className="text-center py-20 text-gray-400">
+                <div className="text-center py-20 text-gray-700">
                     <Trash2 className="w-12 h-12 mx-auto mb-4 opacity-30" />
                     <p className="font-bold">La papelera está vacía</p>
                 </div>
@@ -110,12 +110,12 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-gray-100">
-                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-400">Huésped</th>
-                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-400">Fechas</th>
-                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-400">Domo</th>
-                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-400">Fuente</th>
-                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-400">Eliminada</th>
-                                <th className="px-6 py-4 text-right font-black text-xs uppercase tracking-widest text-gray-400">Acciones</th>
+                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Huésped</th>
+                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fechas</th>
+                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Domo</th>
+                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fuente</th>
+                                <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Eliminada</th>
+                                <th className="px-6 py-4 text-right font-black text-xs uppercase tracking-widest text-gray-700">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,9 +131,9 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                                         {r.domos?.nombre || "—"}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-500">{r.fuente}</span>
+                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-900">{r.fuente}</span>
                                     </td>
-                                    <td className="px-4 py-3 text-gray-400 text-xs">
+                                    <td className="px-4 py-3 text-gray-700 text-xs">
                                         {r.deleted_at ? new Date(r.deleted_at).toLocaleString("es-CL") : "—"}
                                     </td>
                                     <td className="px-6 py-3 text-right">

@@ -68,13 +68,14 @@ export default function AdminLogin() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-white px-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100 space-y-6">
-                <div className="text-center space-y-2">
+                <div className="text-center space-y-3">
+                    <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-16 w-16 object-contain mx-auto" />
                     <h1 className="text-2xl font-display font-bold text-gray-900">
                         {mode === 'login' ? 'TreePod Admin' : mode === 'signup' ? 'Crear Cuenta' : 'Recuperar Acceso'}
                     </h1>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                         {mode === 'login' ? 'Ingresa tus credenciales para acceder' :
                             mode === 'signup' ? 'Registra un nuevo usuario administrador' : 'Ingresa tu correo para recibir un enlace de recuperación'}
                     </p>
@@ -82,7 +83,7 @@ export default function AdminLogin() {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</label>
+                        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider">Email</label>
                         <input
                             type="email"
                             value={email}
@@ -95,7 +96,7 @@ export default function AdminLogin() {
 
                     {mode !== 'forgot-password' && (
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contraseña</label>
+                            <label className="text-xs font-bold text-gray-900 uppercase tracking-wider">Contraseña</label>
                             <input
                                 type="password"
                                 value={password}
@@ -137,7 +138,7 @@ export default function AdminLogin() {
                     {mode === 'login' && (
                         <button
                             onClick={() => { setMode('forgot-password'); setError(null); setMessage(null); }}
-                            className="block w-full text-xs text-gray-400 hover:text-primary transition-colors font-medium"
+                            className="block w-full text-xs text-gray-700 hover:text-primary transition-colors font-medium"
                         >
                             ¿Has olvidado tu contraseña?
                         </button>
@@ -159,7 +160,7 @@ export default function AdminLogin() {
                     )}
 
                     {mode === 'login' && typeof window !== 'undefined' && !window.location.search.includes('treepod_signup_enabled=true') && (
-                        <p className="text-xs text-gray-400">Sistema restringido a administradores autorizados.</p>
+                        <p className="text-xs text-gray-700">Sistema restringido a administradores autorizados.</p>
                     )}
                 </div>
             </div>

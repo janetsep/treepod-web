@@ -6,13 +6,13 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Glamping Día de la Madre en Ñuble | Domos con Tinaja — TreePod',
-    description: 'Regala glamping para el Día de la Madre en Chillán: domos geodésicos con tinaja privada en Valle Las Trancas. La escapada perfecta para mamá. Desde $110.000/noche.',
+    title: 'Glamping Día de la Madre en Ñuble | Domos en Las Trancas — TreePod',
+    description: 'Regala glamping para el Día de la Madre en Chillán: domos geodésicos en Valle Las Trancas, a minutos de Nevados de Chillán. Una escapada para mamá. Desde $110.000/noche.',
     keywords: [
         'glamping día de la madre',
         'glamping día de la madre chillán',
         'glamping chillán',
-        'domos de lujo ñuble',
+        'domos equipados ñuble',
         'glamping con tinaja',
         'escapada romántica con tinaja',
         'domos en chillán',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Glamping para el Día de la Madre | Domos TreePod Valle Las Trancas',
-        description: 'Regala una noche en domos geodésicos con tinaja privada en Valle Las Trancas. Una escapada que mamá va a recordar siempre.',
+        description: 'Regala una noche en domos geodésicos en Valle Las Trancas. Una escapada para mamá, entre bosque nativo y montaña.',
         images: ['/images/wellness/Tinaja1.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'Glamping Día de la Madre en Ñuble | TreePod',
-        description: 'Domos geodésicos con tinaja privada para mamá. Valle Las Trancas, a minutos de Nevados de Chillán.',
+        description: 'Domos geodésicos para mamá en Valle Las Trancas, a minutos de Nevados de Chillán.',
     },
 };
 
@@ -45,12 +45,12 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "TreePod Glamping — Día de la Madre",
-    "description": "Glamping en domos geodésicos con tinaja privada para el Día de la Madre en Valle Las Trancas, Ñuble.",
+    "description": "Glamping en domos geodésicos para el Día de la Madre en Valle Las Trancas, Ñuble.",
     "url": "https://domostreepod.cl/glamping-dia-de-la-madre",
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillán",
+        "streetAddress": "Ruta N-55 Km 72 hacia Nevados de Chillán",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
@@ -60,7 +60,7 @@ const jsonLd = {
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "reviewCount": "47"
+        "reviewCount": "59"
     },
 };
 
@@ -79,7 +79,7 @@ export default function GlampingDiaDeLaMadrePage() {
                 <div className="absolute inset-0 bg-background-dark">
                     <Image
                         src="/images/wellness/Tinaja1.jpg"
-                        alt="Tinaja privada en Domos TreePod Valle Las Trancas — regalo Día de la Madre"
+                        alt="Tinaja de ciprés en Domos TreePod Valle Las Trancas — Día de la Madre"
                         fill
                         priority
                         className="object-cover object-center"
@@ -99,8 +99,8 @@ export default function GlampingDiaDeLaMadrePage() {
                     </h1>
 
                     <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl drop-shadow leading-relaxed">
-                        Glamping en domos geodésicos con tinaja privada en el corazón de los Andes de Ñuble.
-                        No es una cosa — es una experiencia.
+                        Glamping en domos geodésicos en Valle Las Trancas, entre bosque nativo y la montaña de Ñuble.
+                        Un regalo distinto: tiempo para mamá.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -161,10 +161,10 @@ export default function GlampingDiaDeLaMadrePage() {
                             <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
                                 <Waves className="w-6 h-6 text-rose-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900">Tinaja privada de ciprés</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Tinaja de ciprés (de temporada)</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Agua caliente, vista a la montaña y cielo estrellado. El contraste con el aire
-                                fresco de la cordillera hace que la experiencia sea única. Disponible cada noche.
+                                Agua caliente, vista a la montaña y cielo estrellado. Es un servicio de temporada que
+                                vuelve en primavera; en invierno no opera. Consúltanos por la disponibilidad de tu fecha.
                             </p>
                         </div>
 
@@ -172,10 +172,10 @@ export default function GlampingDiaDeLaMadrePage() {
                             <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
                                 <TreePine className="w-6 h-6 text-emerald-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900">Domo geodésico premium</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Domo geodésico equipado</h3>
                             <p className="text-gray-600 leading-relaxed">
                                 Cama doble o twin, ropa de cama de calidad, calefacción, baño privado y vistas
-                                al bosque nativo de Ñuble. Diseño único que no existe en ningún hotel.
+                                al bosque nativo de Ñuble.
                             </p>
                         </div>
 
@@ -185,8 +185,8 @@ export default function GlampingDiaDeLaMadrePage() {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900">A minutos de las Termas</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Nevados de Chillán — termas y ski — está a solo 10 minutos. La estadía en TreePod
-                                da acceso a uno de los destinos naturales más completos de Chile.
+                                Nevados de Chillán — termas y ski — está a pocos minutos en auto. Desde TreePod
+                                tienes acceso fácil a uno de los principales destinos de montaña de Ñuble.
                             </p>
                         </div>
 
@@ -194,21 +194,21 @@ export default function GlampingDiaDeLaMadrePage() {
                             <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                                 <Star className="w-6 h-6 text-purple-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900">Certificados por SERNATUR</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Registro SERNATUR N° 36806</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Somos un establecimiento turístico certificado. Eso significa estándares reales
-                                de calidad, seguridad y servicio — no solo buenas fotos.
+                                Somos un establecimiento turístico registrado en SERNATUR. Eso respalda nuestros
+                                estándares de calidad, seguridad y servicio.
                             </p>
                         </div>
 
                         <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
                             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                <Heart className="w-6 h-6 text-blue-600" />
+                                <TreePine className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900">Mascotas bienvenidas</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Privacidad en el bosque</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Si mamá no concibe una escapada sin sus peludos, en TreePod los recibimos.
-                                La familia completa incluye a todos.
+                                Cada domo está separado del resto, rodeado de bosque nativo y silencio. Sin pasillos
+                                ni vecinos al lado: el descanso que mamá merece.
                             </p>
                         </div>
 
@@ -219,7 +219,7 @@ export default function GlampingDiaDeLaMadrePage() {
                             <h3 className="text-xl font-bold text-gray-900">Cocina equipada</h3>
                             <p className="text-gray-600 leading-relaxed">
                                 Cada domo tiene cocina completa para que preparen juntos el desayuno del
-                                Día de la Madre con vista a la cordillera. Un momento que no se compra en ningún restaurante.
+                                Día de la Madre con vista a la cordillera, a su propio ritmo.
                             </p>
                         </div>
                     </div>
@@ -245,13 +245,13 @@ export default function GlampingDiaDeLaMadrePage() {
                                 <span className="text-rose-600">desde la cama</span>
                             </h2>
                             <p className="text-gray-600 leading-relaxed text-lg">
-                                Las mamás que han estado en TreePod siempre describen lo mismo: el silencio
-                                de la montaña, el olor a madera, el calor de la tinaja cuando la temperatura cae.
-                                Cosas que no caben en una foto pero que se llevan guardadas.
+                                Las mamás que han estado en TreePod suelen describir lo mismo: el silencio
+                                de la montaña, el olor a madera y el calor del domo cuando la temperatura cae.
+                                Cosas que no caben en una foto pero que se quedan.
                             </p>
                             <ul className="flex flex-col gap-3">
                                 {[
-                                    'Check-in desde las 15:00, check-out a las 11:00',
+                                    'Check-in desde las 16:00, check-out a las 12:00',
                                     'Ropa de cama y toallas incluidas',
                                     'WiFi Starlink — conexión garantizada',
                                     'Estacionamiento privado sin costo',
@@ -282,7 +282,7 @@ export default function GlampingDiaDeLaMadrePage() {
                             <div className="text-sm font-bold text-gray-500 uppercase tracking-widest">Opción 1</div>
                             <h3 className="text-2xl font-black text-gray-900">Una noche</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Llegan el sábado 9 en la tarde, disfrutan la tinaja al anochecer y se despiertan
+                                Llegan el sábado 9 en la tarde, cenan tranquilos en el domo y se despiertan
                                 el domingo 10 — el Día de la Madre — con el paisaje de los Andes desde la cama.
                             </p>
                             <p className="text-rose-600 font-bold text-lg mt-auto">Desde $110.000 CLP/noche</p>
@@ -308,9 +308,8 @@ export default function GlampingDiaDeLaMadrePage() {
             {/* CTA FINAL */}
             <section className="py-24 bg-gradient-to-br from-rose-700 to-rose-900 text-white text-center">
                 <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-                    <div className="text-5xl mb-6">🌸</div>
                     <h2 className="text-3xl md:text-4xl font-black mb-4 leading-tight">
-                        El regalo que mamá va a contar por años
+                        Un regalo que mamá va a recordar
                     </h2>
                     <p className="text-rose-200 text-lg mb-10 leading-relaxed">
                         Reserva directamente en domostreepod.cl — sin intermediarios, con confirmación inmediata.

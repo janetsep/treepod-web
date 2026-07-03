@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 // Devuelve los ingresos de reservas (monto_pagado) agregados por mes y año,
 // para mostrar un cuadro/matriz comparativo entre años en el dashboard admin.
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const admin = await getVerifiedAdmin(request);
+    if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     const estadosValidos = ["pagado", "completada", "confirmado"];
 
     // Traer reservas paginando para superar el límite de 1000 filas de PostgREST

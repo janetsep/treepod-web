@@ -40,7 +40,9 @@ function ConfirmacionContent() {
                         const amount = searchParams.get('amount');
                         const transactionId = searchParams.get('transaction_id');
 
-                        if (!purchaseEventSent && data && amount && typeof window !== 'undefined') {
+                        // Solo disparar la conversión si el pago NO fue rechazado.
+                        const pagoOk = searchParams.get('status') !== 'FAILURE' && data.estado !== 'rechazado';
+                        if (!purchaseEventSent && data && amount && pagoOk && typeof window !== 'undefined') {
                             const domoName = data.domos?.nombre || 'TreePod Domo';
                             console.log('🎯 Disparando evento purchase a GA4 con datos completos', {
                                 reservaId: data.id,
@@ -119,6 +121,35 @@ function ConfirmacionContent() {
                     >
                         Volver a disponibilidad
                     </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Pago rechazado / no completado: NO mostrar confirmación exitosa.
+    const pagoRechazado = searchParams.get('status') === 'FAILURE' || reserva.estado === 'rechazado';
+    if (pagoRechazado) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-4 bg-background-dark">
+                <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 text-center border border-black/10">
+                    <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
+                        <span className="text-4xl text-red-600">✕</span>
+                    </div>
+                    <h1 className="text-2xl font-display font-bold mb-3 text-gray-900">Pago no completado</h1>
+                    <p className="text-gray-600 mb-2 leading-relaxed">Tu pago fue <strong>rechazado</strong> o no se pudo procesar, así que <strong>la reserva no quedó confirmada</strong>.</p>
+                    <p className="text-gray-500 text-sm mb-8">No se realizó ningún cobro. Puedes intentar de nuevo o escribirnos si necesitas ayuda.</p>
+                    <button
+                        onClick={() => router.push('/disponibilidad')}
+                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-xs mb-3"
+                    >
+                        Intentar de nuevo
+                    </button>
+                    <a
+                        href="https://wa.me/56984643307?text=Hola,%20tuve%20un%20problema%20con%20el%20pago%20de%20mi%20reserva"
+                        className="inline-block w-full text-primary font-bold text-sm py-2 hover:underline"
+                    >
+                        Escribir por WhatsApp
+                    </a>
                 </div>
             </div>
         );

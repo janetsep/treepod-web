@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
         const { data, error } = await supabaseAdmin
             .from("reservas")
             .select(`

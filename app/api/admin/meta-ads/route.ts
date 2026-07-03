@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,9 @@ const GRAPH = "https://graph.facebook.com/v19.0";
  *   { configurado: true, error: "token_vencido" } → renovar token
  *   { configurado: true, gastoMesActual, gasto12m, porMes, porCampania, moneda }
  */
-export async function GET() {
+export async function GET(request: Request) {
+    const admin = await getVerifiedAdmin(request);
+    if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     const token = process.env.META_ADS_TOKEN;
     const account = process.env.META_AD_ACCOUNT_ID;
 

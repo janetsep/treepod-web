@@ -6,6 +6,9 @@ export const metadata: Metadata = {
     alternates: {
         canonical: '/guia',
     },
+    // Es una página de "gracias por descargar" (thank-you del lead magnet), no debe indexarse.
+    // La guía pública indexable es /guia-huesped.
+    robots: { index: false, follow: false },
 };
 
 export default function GuiaLayout({ children }: { children: React.ReactNode }) {

@@ -120,7 +120,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
-                <RefreshCw className="w-6 h-6 animate-spin text-gray-400" />
+                <RefreshCw className="w-6 h-6 animate-spin text-gray-700" />
             </div>
         );
     }
@@ -130,7 +130,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-xl font-black text-gray-900">Servicios y Extras</h2>
-                    <p className="text-sm text-gray-500">Gestiona precios de desayuno, cena, tinaja, aseo, lavandería, almuerzo y más</p>
+                    <p className="text-sm text-gray-900">Gestiona precios de desayuno, cena, tinaja, aseo, lavandería, almuerzo y más</p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={loadServicios} className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all">
@@ -167,7 +167,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                             {/* Nombre */}
                             <div className="md:col-span-3">
-                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nombre</label>
+                                <label className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">Nombre</label>
                                 <input
                                     type="text"
                                     value={s.nombre}
@@ -179,7 +179,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
 
                             {/* Precio */}
                             <div className="md:col-span-2">
-                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Precio (CLP)</label>
+                                <label className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">Precio (CLP)</label>
                                 <input
                                     type="number"
                                     value={s.precio}
@@ -257,14 +257,14 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
                                 onChange={(e) => updateLocal(s.id, "descripcion", e.target.value)}
                                 disabled={isViewer}
                                 placeholder="Descripción del servicio..."
-                                className="w-full px-3 py-2 border border-gray-100 rounded-lg text-xs text-gray-500 focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:bg-gray-50"
+                                className="w-full px-3 py-2 border border-gray-100 rounded-lg text-xs text-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:bg-gray-50"
                             />
                         </div>
                     </div>
                 ))}
 
                 {servicios.length === 0 && (
-                    <div className="text-center py-12 text-gray-400">
+                    <div className="text-center py-12 text-gray-700">
                         <p className="text-sm">No hay servicios configurados</p>
                         <p className="text-xs mt-1">Haz clic en "Agregar Servicio" para crear uno</p>
                     </div>

@@ -24,7 +24,7 @@ export default function GuiaPage() {
                                         ¡Gracias por tu interés!
                                     </h1>
                                     <h2 className="text-white/80 text-base font-normal leading-relaxed md:text-lg">
-                                        Tu <span className="font-bold text-primary">Guía Exclusiva de Glamping</span> está lista para inspirar tu próxima aventura. Descubre consejos locales, listas de equipaje esenciales y rincones secretos para elevar tu experiencia.
+                                        Tu <span className="font-bold text-primary">Guía de Glamping en Las Trancas</span> está lista. Adentro encontrarás recomendaciones locales, qué llevar y lugares para visitar en el Valle Las Trancas.
                                     </h2>
                                     <p className="text-sm text-gray-500">
                                         Hemos enviado una copia de respaldo a tu correo electrónico.
@@ -53,8 +53,8 @@ export default function GuiaPage() {
                                             className="transition-transform duration-500 group-hover:scale-105"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
-                                            <p className="text-white text-sm font-medium tracking-widest uppercase opacity-90">Edición 2024</p>
-                                            <p className="text-white text-2xl font-display font-bold">Guía de Experiencias</p>
+                                            <p className="text-white text-sm font-medium tracking-widest uppercase opacity-90">TreePod</p>
+                                            <p className="text-white text-2xl font-display font-bold">Guía de Las Trancas</p>
                                         </div>
                                     </div>
                                 </div>
@@ -69,10 +69,10 @@ export default function GuiaPage() {
                         <div className="flex flex-col max-w-[960px] flex-1 text-center items-center gap-8">
                             <div className="flex flex-col gap-4 max-w-[720px]">
                                 <h2 className="text-white text-3xl font-bold font-display leading-tight tracking-[-0.015em] md:text-4xl">
-                                    ¿Listo para vivir la experiencia real?
+                                    ¿Listo para tu escapada a Las Trancas?
                                 </h2>
                                 <p className="text-gray-400 text-lg font-normal leading-relaxed">
-                                    Mientras lees tu guía, te invitamos a explorar nuestros domos de montaña. Encuentra el refugio perfecto para tu escapada.
+                                    Mientras revisas tu guía, mira nuestros domos en Valle Las Trancas y encuentra el indicado para tu escapada.
                                 </p>
                             </div>
                             <div className="flex flex-wrap justify-center gap-4 w-full">

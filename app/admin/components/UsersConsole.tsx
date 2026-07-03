@@ -186,13 +186,13 @@ export default function UsersConsole() {
                     <div className="flex gap-4 mt-2">
                         <button 
                             onClick={() => setActiveTab('users')}
-                            className={`text-[10px] font-black uppercase tracking-[0.2em] pb-1 border-b-2 transition-all ${activeTab === 'users' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] pb-1 border-b-2 transition-all ${activeTab === 'users' ? 'border-primary text-primary' : 'border-transparent text-gray-700 hover:text-gray-600'}`}
                         >
                             Usuarios Autorizados
                         </button>
                         <button 
                             onClick={() => setActiveTab('logs')}
-                            className={`text-[10px] font-black uppercase tracking-[0.2em] pb-1 border-b-2 transition-all ${activeTab === 'logs' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
+                            className={`text-[10px] font-black uppercase tracking-[0.2em] pb-1 border-b-2 transition-all ${activeTab === 'logs' ? 'border-primary text-primary' : 'border-transparent text-gray-700 hover:text-gray-600'}`}
                         >
                             Log de Actividad
                         </button>
@@ -216,9 +216,9 @@ export default function UsersConsole() {
                         <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
                             <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                                    <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest ml-1">Email</label>
                                     <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                                         <input
                                             type="email"
                                             required
@@ -230,9 +230,9 @@ export default function UsersConsole() {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nombre Completo</label>
+                                    <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest ml-1">Nombre Completo</label>
                                     <div className="relative">
-                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                                         <input
                                             type="text"
                                             placeholder="Nombre del administrador"
@@ -243,9 +243,9 @@ export default function UsersConsole() {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Rol / Permisos</label>
+                                    <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest ml-1">Rol / Permisos</label>
                                     <div className="relative">
-                                        <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                                         <select
                                             value={newUser.rol}
                                             onChange={(e) => setNewUser({ ...newUser, rol: e.target.value })}
@@ -272,7 +272,7 @@ export default function UsersConsole() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead className="bg-gray-50/50 border-b border-gray-100">
-                                    <tr className="text-gray-400 uppercase text-[10px] font-black tracking-[0.2em]">
+                                    <tr className="text-gray-700 uppercase text-[10px] font-black tracking-[0.2em]">
                                         <th className="px-8 py-5">Nombre / Usuario</th>
                                         <th className="px-8 py-5">Email</th>
                                         <th className="px-8 py-5">Rol</th>
@@ -293,12 +293,12 @@ export default function UsersConsole() {
                                                     />
                                                 ) : (
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500 font-bold">
+                                                        <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-900 font-bold">
                                                             {user.nombre?.charAt(0) || user.email.charAt(0).toUpperCase()}
                                                         </div>
                                                         <div className="flex flex-col">
                                                             <span className="font-bold text-gray-900">{user.nombre || "Sin nombre"}</span>
-                                                            <span className="text-[10px] text-gray-400 uppercase font-black tracking-widest">Activo</span>
+                                                            <span className="text-[10px] text-gray-700 uppercase font-black tracking-widest">Activo</span>
                                                         </div>
                                                     </div>
                                                 )}
@@ -330,7 +330,7 @@ export default function UsersConsole() {
                                                 )}
                                             </td>
                                             <td className="px-8 py-5">
-                                                <span className="text-xs text-gray-400 font-medium">
+                                                <span className="text-xs text-gray-700 font-medium">
                                                     {new Date(user.created_at).toLocaleDateString('es-CL', {
                                                         day: '2-digit',
                                                         month: 'long',
@@ -356,14 +356,14 @@ export default function UsersConsole() {
                                                                     setEditingUser(user.id);
                                                                     setEditData({ nombre: user.nombre, rol: user.rol });
                                                                 }}
-                                                                className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                                                                className="p-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
                                                                 title="Editar usuario"
                                                             >
                                                                 <Edit2 className="w-4 h-4" />
                                                             </button>
                                                             <button 
                                                                 onClick={() => setPasswordResetUser(user.id)}
-                                                                className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-all"
+                                                                className="p-2 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-all"
                                                                 title="Cambiar contraseña"
                                                             >
                                                                 <Key className="w-4 h-4" />
@@ -372,7 +372,7 @@ export default function UsersConsole() {
                                                                 <button
                                                                     onClick={() => handleRevoke(user.id, user.email)}
                                                                     disabled={actionLoading === user.id}
-                                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                                                    className="p-2 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                                                                     title="Revocar acceso"
                                                                 >
                                                                     <Trash2 className="w-4 h-4" />
@@ -393,7 +393,7 @@ export default function UsersConsole() {
                 <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-50 flex justify-between items-center">
                         <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Historial de Accesos Recientes</h3>
-                        <div className="flex items-center gap-2 text-[10px] text-gray-400 font-bold">
+                        <div className="flex items-center gap-2 text-[10px] text-gray-700 font-bold">
                             <History className="w-3 h-3" />
                             Últimos 50 eventos
                         </div>
@@ -401,7 +401,7 @@ export default function UsersConsole() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-gray-50/50">
-                                <tr className="text-gray-400 uppercase text-[9px] font-black tracking-[0.2em]">
+                                <tr className="text-gray-700 uppercase text-[9px] font-black tracking-[0.2em]">
                                     <th className="px-8 py-4">Fecha / Hora</th>
                                     <th className="px-8 py-4">Usuario</th>
                                     <th className="px-8 py-4">Acción</th>
@@ -411,7 +411,7 @@ export default function UsersConsole() {
                             <tbody className="divide-y divide-gray-50">
                                 {logs.map((log) => (
                                     <tr key={log.id} className="text-xs">
-                                        <td className="px-8 py-4 font-medium text-gray-500">
+                                        <td className="px-8 py-4 font-medium text-gray-900">
                                             {new Date(log.created_at).toLocaleString('es-CL')}
                                         </td>
                                         <td className="px-8 py-4 font-bold text-gray-900">{log.email}</td>
@@ -424,12 +424,12 @@ export default function UsersConsole() {
                                                 {log.action}
                                             </span>
                                         </td>
-                                        <td className="px-8 py-4 text-gray-400 italic">{log.details}</td>
+                                        <td className="px-8 py-4 text-gray-700 italic">{log.details}</td>
                                     </tr>
                                 ))}
                                 {logs.length === 0 && (
                                     <tr>
-                                        <td colSpan={4} className="px-8 py-10 text-center text-gray-400 italic">No hay registros de actividad aún.</td>
+                                        <td colSpan={4} className="px-8 py-10 text-center text-gray-700 italic">No hay registros de actividad aún.</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -447,7 +447,7 @@ export default function UsersConsole() {
                             </div>
                             <div>
                                 <h3 className="text-xl font-black text-gray-900">Cambiar Contraseña</h3>
-                                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">
+                                <p className="text-xs text-gray-700 font-bold uppercase tracking-widest mt-1">
                                     {users.find(u => u.id === passwordResetUser)?.email}
                                 </p>
                             </div>
@@ -455,7 +455,7 @@ export default function UsersConsole() {
 
                         <form onSubmit={handleResetPassword} className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nueva Contraseña</label>
+                                <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest ml-1">Nueva Contraseña</label>
                                 <input 
                                     type="text" // Usamos text para que el admin pueda ver qué está poniendo o generar una
                                     required
@@ -464,14 +464,14 @@ export default function UsersConsole() {
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-center text-lg tracking-widest"
                                 />
-                                <p className="text-[10px] text-gray-400 text-center italic mt-2">La nueva contraseña se aplicará de inmediato.</p>
+                                <p className="text-[10px] text-gray-700 text-center italic mt-2">La nueva contraseña se aplicará de inmediato.</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <button 
                                     type="button"
                                     onClick={() => setPasswordResetUser(null)}
-                                    className="px-6 py-4 bg-gray-100 text-gray-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-all"
+                                    className="px-6 py-4 bg-gray-100 text-gray-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-all"
                                 >
                                     Cancelar
                                 </button>

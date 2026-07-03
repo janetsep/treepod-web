@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Playfair_Display, Inter, Plus_Jakarta_Sans, Noto_Sans } from 'next/font/google';
+import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
 import { Suspense } from 'react';
@@ -11,16 +11,6 @@ import UTMCapture from './components/UTMCapture';
 import CanonicalURL from './components/CanonicalURL';
 import JsonLdSchemas from './components/JsonLdSchemas';
 
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 const playfair = Playfair_Display({
   variable: '--font-playfair',
@@ -34,23 +24,11 @@ const inter = Inter({
   display: 'swap',
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: '--font-plus-jakarta',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const notoSans = Noto_Sans({
-  variable: '--font-noto-sans',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://domostreepod.cl'),
   title: 'Glamping en Valle Las Trancas | Domos TreePod - Chillán',
-  description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán. Reserva tu refugio hoy.',
-  keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'alojamiento pet friendly chile', 'donde alojar en las trancas', 'turismo nuble'],
+  description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán. Reserva tu refugio hoy.',
+  keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'donde alojar en las trancas', 'turismo nuble'],
   icons: {
     icon: [
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
@@ -60,16 +38,16 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
-    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán.',
-    images: ['/images/hero/domo-treepod-ok-12.jpg'],
+    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán.',
+    images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     locale: 'es_CL',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
-    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping pet friendly cerca de Termas de Chillán y Nevados de Chillán.',
-    images: ['/images/hero/domo-treepod-ok-12.jpg'],
+    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán.',
+    images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
   },
 };
 
@@ -112,7 +90,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${inter.variable} ${plusJakarta.variable} ${notoSans.variable} antialiased`}
+        className={`${playfair.variable} ${inter.variable} antialiased`}
       >
         {/* Google Tag Manager (noscript) - Fallback */}
         <noscript>
@@ -132,9 +110,12 @@ export default function RootLayout({
           <UTMCapture />
         </Suspense>
 
+        {/* Datos estructurados (JSON-LD) en el HTML para Google y bots de IA */}
+        <JsonLdSchemas />
+
         {/* AdminAwareLayout gestiona la UI según la ruta (Admin vs Web) */}
         <AuthRecoveryRedirect />
-        <DebugGTM enabled={true} />
+        {process.env.NODE_ENV === 'development' && <DebugGTM enabled={true} />}
         <AdminAwareLayout>
           {children}
         </AdminAwareLayout>

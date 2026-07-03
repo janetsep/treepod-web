@@ -133,11 +133,11 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr>
-                                <th className="p-2 border-b border-gray-100 bg-white sticky left-0 z-10 w-40 text-left text-xs font-bold text-gray-500 uppercase">
+                                <th className="p-2 border-b border-gray-100 bg-white sticky left-0 z-10 w-40 text-left text-xs font-bold text-gray-900 uppercase">
                                     Domo / Fecha
                                 </th>
                                 {dates.map((date, i) => (
-                                    <th key={i} className={`p-1 border-b border-gray-100 min-w-[40px] text-[10px] font-medium text-center ${isToday(date) ? 'text-primary' : 'text-gray-400'}`}>
+                                    <th key={i} className={`p-1 border-b border-gray-100 min-w-[40px] text-[10px] font-medium text-center ${isToday(date) ? 'text-primary' : 'text-gray-700'}`}>
                                         <div className={`p-1 rounded ${isToday(date) ? 'bg-primary/10 ring-1 ring-primary/30' : date.getDay() === 0 || date.getDay() === 6 ? 'bg-gray-50' : ''}`}>
                                             {date.getDate()}
                                             <br />
@@ -198,7 +198,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                         </tbody>
                     </table>
                 </div>
-                <div className="mt-4 flex gap-4 text-xs text-gray-500 justify-end">
+                <div className="mt-4 flex gap-4 text-xs text-gray-900 justify-end">
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-500 rounded"></span> Pagado</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-400 rounded"></span> Pendiente</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-red-500 rounded"></span> Conflicto</div>

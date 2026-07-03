@@ -8,13 +8,13 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Alojamiento Mundial MTB 2026 | Glamping Domos TreePod Chillán',
-    description: 'Domos geodésicos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán para el Mundial MTB 2026.',
+    description: 'Domos geodésicos para 4 personas en Valle Las Trancas, a minutos de Nevados de Chillán. Base para tu equipo en el Mundial MTB 2026.',
     alternates: {
         canonical: '/mundial-mtb-nevados-chillan-2026',
     },
     openGraph: {
         title: 'Alojamiento Mundial MTB 2026 | Domos TreePod',
-        description: 'Domos para 4 personas con tinaja caliente en Valle Las Trancas. A minutos de Nevados de Chillán.',
+        description: 'Domos para 4 personas en Valle Las Trancas, a minutos de Nevados de Chillán. Base para tu equipo en el Mundial MTB 2026.',
         images: ['/images/Ciclista en sendero de bosque.png'],
     }
 };
@@ -50,13 +50,13 @@ export default function MundialMtbPage() {
                     </div>
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-5xl animate-fade-in-up delay-100 !text-white leading-tight">
-                        Tu única preocupación será <span className="text-primary italic">pedalear</span>. <br className="hidden md:block" />
-                        Nosotros nos encargamos de tu recuperación.
+                        Tú te concentras en <span className="text-primary italic">pedalear</span>. <br className="hidden md:block" />
+                        Nosotros te damos dónde descansar y recuperarte.
                     </h1>
 
                     <p className="text-lg md:text-2xl text-white/95 font-bold mb-12 max-w-4xl leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        El cuartel general exclusivo para tu equipo en el Mundial UCI MTB 2026. <br className="hidden md:block" />
-                        Domos a pasos de la competencia con tu propia tinaja hirviendo esperando por ti.
+                        La base para tu equipo durante el Mundial UCI MTB 2026 en Nevados de Chillán. <br className="hidden md:block" />
+                        Domos en Valle Las Trancas, con tinaja privada para recuperarte (servicio de temporada).
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -89,34 +89,34 @@ export default function MundialMtbPage() {
             <section className="py-24 md:py-32 bg-background-light">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="text-center max-w-4xl mx-auto mb-20">
-                        <h2 className="h2-display text-text-main mb-6">Diseñado para que tu equipo <span className="italic-display text-primary">rinda al máximo</span></h2>
+                        <h2 className="h2-display text-text-main mb-6">Pensado para que tu equipo <span className="italic-display text-primary">descanse bien</span></h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-text-sub text-xl font-bold leading-relaxed">
-                            Olvídate del estrés de la montaña. Aquí tienes todo lo que necesitas para enfocarte en la carrera:
+                            Lo necesario para enfocarte en la carrera, sin complicaciones de logística:
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                         {[
-                            { 
-                                icon: Mountain, 
-                                title: "Si duermes mal, corres mal", 
-                                desc: "Capacidad para 4 personas con camas de primer nivel preparadas para un descanso absoluto y profundo." 
+                            {
+                                icon: Mountain,
+                                title: "Descanso para rendir al día siguiente",
+                                desc: "Domo para 4 personas con buenas camas, pensado para que el equipo duerma bien entre etapas."
                             },
-                            { 
-                                icon: Check, 
-                                title: "Tus bicicletas bajo llave y a la vista", 
-                                desc: "Guarda tu equipo dentro o justo al lado del domo con total seguridad. Cero preocupaciones." 
+                            {
+                                icon: Check,
+                                title: "Guarda tus bicicletas a la vista",
+                                desc: "Deja tu equipo dentro o justo al lado del domo, seguro y a mano."
                             },
-                            { 
-                                icon: Mountain, 
-                                title: "Estacionamiento en tu puerta", 
-                                desc: "A un paso de tu cama para facilitar tu logística diaria y no perder ni un minuto cargando equipo." 
+                            {
+                                icon: Mountain,
+                                title: "Estacionamiento en tu puerta",
+                                desc: "Junto al domo, para facilitar la logística diaria y cargar el equipo sin vueltas."
                             },
-                            { 
-                                icon: Coffee, 
-                                title: "Tus comidas, a tu manera", 
-                                desc: "Cocina 100% equipada. Prepara tus suplementos, pastas y dietas exactamente como las necesitas y con total libertad." 
+                            {
+                                icon: Coffee,
+                                title: "Tus comidas, a tu manera",
+                                desc: "Cocina equipada. Prepara tus suplementos, pastas y dietas como las necesitas."
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
@@ -142,32 +142,33 @@ export default function MundialMtbPage() {
                                 src="/images/wellness/Tinaja1.jpg"
                                 alt="Tinaja caliente de recuperación"
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                                 className="object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             <div className="absolute bottom-12 left-12 text-white">
                                 <div className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-[0.3em] mb-4">
-                                    <Waves size={20} /> Recuperación Activa
+                                    <Waves size={20} /> Recuperación
                                 </div>
-                                <h3 className="font-display font-black text-3xl drop-shadow-md">Tu Ventaja después del Descenso</h3>
+                                <h3 className="font-display font-black text-3xl drop-shadow-md">Agua caliente al volver del cerro</h3>
                             </div>
                         </div>
 
                         <div>
                             <div className="inline-block mb-6">
                                 <span className="text-primary text-xs font-black tracking-[0.4em] uppercase">
-                                    La ventaja injusta para tus músculos
+                                    Recuperación para tus piernas
                                 </span>
                             </div>
-                            <h2 className="h2-display text-text-main mb-8 leading-tight">Tu propia <span className="italic-display text-primary">Tinaja Caliente</span></h2>
+                            <h2 className="h2-display text-text-main mb-8 leading-tight">Tu propia <span className="italic-display text-primary">tinaja caliente</span></h2>
                             <p className="text-xl text-text-sub leading-relaxed font-bold mb-10">
-                                El contraste ideal después de horas en el cerro. El agua a la temperatura perfecta acelera tu recuperación muscular, mejora tu circulación y reduce el riesgo de lesiones para el siguiente día de competencia.
+                                Después de horas en el cerro, el agua caliente ayuda a relajar y descargar las piernas para el día siguiente. La tinaja es un servicio de temporada (vuelve en primavera): consúltanos disponibilidad para tus fechas.
                             </p>
                             <ul className="space-y-6">
                                 {[
-                                    "Lista y a la temperatura ideal justo cuando regreses de la montaña.",
-                                    "Uso 100% exclusivo para tu domo (Reserva tu hora exclusiva sin compartir con otros).",
-                                    "Tranquilidad absoluta inmerso en el bosque nativo para resetear tu mente."
+                                    "Lista a buena temperatura cuando vuelves de la montaña.",
+                                    "Uso exclusivo para tu domo: reservas tu hora sin compartir.",
+                                    "Tranquilidad en el bosque nativo para descansar la mente."
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-5 text-text-main font-bold text-lg">
                                         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0 mt-1">
@@ -197,11 +198,11 @@ export default function MundialMtbPage() {
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-6 leading-relaxed max-w-2xl mx-auto">
-                            El alojamiento en el valle va a colapsar. Esta es una <span className="text-white">Edición Limitada</span> con máxima exclusividad y espacio para equipos durante el Mundial MTB 2026.
+                            En el Mundial MTB 2026 el alojamiento en el valle se llena rápido. Tenemos pocos domos disponibles, con espacio para equipos en Valle Las Trancas.
                         </p>
 
                         <p className="text-primary text-xl font-black mb-10 italic">
-                            No dejes a tu equipo durmiendo incómodo
+                            Asegura un buen descanso para tu equipo
                         </p>
 
                         <TrackedLink

@@ -17,8 +17,10 @@ export async function POST(request: Request) {
         const adminEmail = admin.email;
 
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, noches_por_servicio, enviar_confirmacion, acompanantes, tipo_documento, sincronizar_calendario } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, noches_por_servicio, precios_por_servicio, enviar_confirmacion, acompanantes, tipo_documento, metodo_pago, folio_dte, sincronizar_calendario } = body;
+        const folioTrim = (folio_dte ?? "").toString().trim();
         const nochesPorServicio: Record<string, number> = noches_por_servicio || {};
+        const preciosPorServicio: Record<string, number> = precios_por_servicio || {};
         const cortesiaSet = new Set<string>(Array.isArray(servicios_cortesia) ? servicios_cortesia : []);
 
         // Validación básica
@@ -44,6 +46,7 @@ export async function POST(request: Request) {
             enviar_confirmacion: enviar_confirmacion ?? true,
             acompanantes: acompanantes || null,
             tipo_documento: tipo_documento || 'boleta',
+            metodo_pago: metodo_pago || null,
             sincronizar_calendario: sincronizar_calendario ?? true,
         };
 
@@ -60,20 +63,50 @@ export async function POST(request: Request) {
                 .single();
 
             if (oldReserva) {
-                const changes = [];
-                if (oldReserva.fecha_inicio !== fecha_inicio) changes.push(`fecha inicio: ${oldReserva.fecha_inicio} -> ${fecha_inicio}`);
-                if (oldReserva.fecha_fin !== fecha_fin) changes.push(`fecha fin: ${oldReserva.fecha_fin} -> ${fecha_fin}`);
-                if (oldReserva.estado !== (estado || 'pendiente')) changes.push(`estado: ${oldReserva.estado} -> ${estado}`);
-                if (Number(oldReserva.total) !== Number(total)) changes.push(`total: $${oldReserva.total} -> $${total}`);
-                if (Number(oldReserva.monto_pagado) !== Number(monto_pagado)) changes.push(`pagado: $${oldReserva.monto_pagado} -> $${monto_pagado}`);
-                if (oldReserva.nombre !== nombre || oldReserva.apellido !== apellido) changes.push(`nombre: ${oldReserva.nombre} ${oldReserva.apellido} -> ${nombre} ${apellido}`);
-                
-                changeDetails = changes.length > 0 ? `. Cambios: ${changes.join(', ')}` : ". No hubo cambios significativos en los campos principales.";
+                const CAMPOS_AUDITADOS: Array<{ campo: string; label: string; viejo: () => string; nuevo: () => string; diferente: boolean }> = [
+                    { campo: "fecha_inicio",  label: "Fecha entrada",   viejo: () => oldReserva.fecha_inicio,                          nuevo: () => fecha_inicio,                             diferente: oldReserva.fecha_inicio !== fecha_inicio },
+                    { campo: "fecha_fin",     label: "Fecha salida",    viejo: () => oldReserva.fecha_fin,                             nuevo: () => fecha_fin,                                diferente: oldReserva.fecha_fin !== fecha_fin },
+                    { campo: "adultos",       label: "Personas",        viejo: () => String(oldReserva.adultos),                       nuevo: () => String(adultos),                          diferente: Number(oldReserva.adultos) !== Number(adultos) },
+                    { campo: "total",         label: "Total",           viejo: () => `$${oldReserva.total}`,                           nuevo: () => `$${total}`,                              diferente: Number(oldReserva.total) !== Number(total) },
+                    { campo: "monto_pagado",  label: "Monto pagado",    viejo: () => `$${oldReserva.monto_pagado}`,                    nuevo: () => `$${monto_pagado}`,                       diferente: Number(oldReserva.monto_pagado) !== Number(monto_pagado) },
+                    { campo: "estado",        label: "Estado",          viejo: () => oldReserva.estado,                                nuevo: () => estado || 'pendiente',                    diferente: oldReserva.estado !== (estado || 'pendiente') },
+                    { campo: "domo_id",       label: "Domo",            viejo: () => oldReserva.domo_id,                               nuevo: () => domo_id,                                  diferente: oldReserva.domo_id !== domo_id },
+                    { campo: "nombre",        label: "Nombre",          viejo: () => `${oldReserva.nombre} ${oldReserva.apellido}`,    nuevo: () => `${nombre} ${apellido}`,                  diferente: oldReserva.nombre !== nombre || oldReserva.apellido !== apellido },
+                ];
+
+                const snapshot = { ...oldReserva };
+                const logsInsert = CAMPOS_AUDITADOS
+                    .filter(c => c.diferente)
+                    .map(c => ({
+                        reserva_id: id,
+                        campo: c.campo,
+                        valor_anterior: c.viejo(),
+                        valor_nuevo: c.nuevo(),
+                        admin_email: adminEmail,
+                        snapshot,
+                    }));
+
+                if (logsInsert.length > 0) {
+                    await supabaseAdmin.from("reserva_cambios").insert(logsInsert);
+                }
+
+                const changes = logsInsert.map(l => `${l.campo}: ${l.valor_anterior} → ${l.valor_nuevo}`);
+                changeDetails = changes.length > 0 ? `. Cambios: ${changes.join(', ')}` : ". Sin cambios en campos principales.";
+            }
+
+            // Folio DTE: se guarda fusionando con el metadata existente (sin pisar otras claves).
+            const baseMeta = (oldReserva?.metadata && typeof oldReserva.metadata === "object") ? oldReserva.metadata : {};
+            const nuevaMeta: Record<string, any> = { ...baseMeta };
+            if (folioTrim) {
+                nuevaMeta.folio_dte = folioTrim;
+                if (!nuevaMeta.fecha_dte) nuevaMeta.fecha_dte = new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
+            } else {
+                delete nuevaMeta.folio_dte;
             }
 
             result = await supabaseAdmin
                 .from("reservas")
-                .update(reservaData)
+                .update({ ...reservaData, metadata: nuevaMeta })
                 .eq("id", id)
                 .select()
                 .single();
@@ -82,6 +115,7 @@ export async function POST(request: Request) {
                 .from("reservas")
                 .insert({
                     ...reservaData,
+                    ...(folioTrim ? { metadata: { folio_dte: folioTrim, fecha_dte: new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" }) } } : {}),
                     created_at: new Date().toISOString()
                 })
                 .select()
@@ -130,7 +164,8 @@ export async function POST(request: Request) {
                     let cantidad = 1;
                     if (servicio.multiplicador_noches) cantidad *= nochesEste;
                     if (servicio.multiplicador_personas) cantidad *= numAdultos;
-                    const precioUnitario = esCortesia ? 0 : (servicio.precio || 0);
+                    // Usar precio override si fue ajustado en el form, si no el precio base del servicio
+                    const precioUnitario = esCortesia ? 0 : (preciosPorServicio[servicio.id] ?? servicio.precio ?? 0);
                     const subtotal = esCortesia ? 0 : precioUnitario * cantidad;
                     if (!esCortesia) sumExtras += subtotal;
                     return {
