@@ -43,7 +43,7 @@ export default function Home() {
           alt="Domos TreePod en invierno, a pasos de la nieve"
           eyebrow="Invierno en Las Trancas"
           title={<>A pasos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
-          text="Vuelve del cerro a una cama tibia y a tu tinaja caliente bajo el cielo despejado."
+          text="Vuelve del cerro a una cama tibia y una estufa a pellet que mantiene tu domo cálido toda la noche."
           ctaText="Ver disponibilidad"
           ctaHref="/disponibilidad"
         />

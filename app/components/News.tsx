@@ -14,7 +14,7 @@ export default function News() {
         {
             image: "/images/hero/domonieve2.jpeg",
             title: "Domos Geodésicos Chillán",
-            description: "Domos geodésicos con tinaja privada, a minutos de las pistas de ski de Nevados de Chillán. Vuelve del cerro a una cama tibia.",
+            description: "Domos geodésicos con estufa a pellet, a minutos de las pistas de ski de Nevados de Chillán. Vuelve del cerro a una cama tibia.",
             tag: "Temporada de nieve",
             details: "Ver domos en Chillán",
             href: "/domos-geodesicos-chillan"
