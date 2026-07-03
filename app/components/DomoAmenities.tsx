@@ -57,7 +57,7 @@ export default function DomoAmenities() {
 
     return (
         <section className="py-12 md:py-20 border-t border-black/[0.06]" id="servicios">
-            <div className="container mx-auto px-6">
+            <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col items-center text-center mb-16">
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-6">
@@ -110,8 +110,8 @@ export default function DomoAmenities() {
                             </div>
 
                             {/* Content Section */}
-                            <div className="p-8 flex flex-col justify-center bg-white border-t border-black/5 min-h-[160px]">
-                                <div className="flex items-center gap-4 mb-3">
+                            <div className="p-5 md:p-8 flex flex-col justify-center bg-white border-t border-black/5 min-h-[160px]">
+                                <div className="flex items-center gap-3 md:gap-4 mb-3">
                                     {item.icon === "wifi" && <Wifi className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {item.icon === "hot_tub" && <Waves className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {item.icon === "fireplace" && <Flame className="text-primary w-6 h-6" strokeWidth={2.5} />}
@@ -121,7 +121,7 @@ export default function DomoAmenities() {
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     <h4 className="h4-display text-text-main">{item.title}</h4>
                                 </div>
-                                <p className="text-sm md:text-base text-text-sub leading-relaxed font-bold">
+                                <p className="text-xs sm:text-sm md:text-base text-text-sub leading-relaxed font-bold">
                                     {item.description}
                                 </p>
                             </div>

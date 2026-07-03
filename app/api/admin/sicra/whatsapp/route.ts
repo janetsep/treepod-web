@@ -258,7 +258,12 @@ export async function POST(request: Request) {
   const { mensaje } = await request.json();
   if (!mensaje?.trim()) return NextResponse.json({ error: "mensaje requerido" }, { status: 400 });
 
-  const { fecha, bloques } = parseMensaje(mensaje);
+  const { fecha: fechaDetectada, bloques } = parseMensaje(mensaje);
+  // Jaime casi nunca escribe la fecha explícita en el pedido del día (ej: "Desayuno
+  // Domo3 / A las 9"): si el parser no la encontró, se asume hoy en vez de dejar
+  // `fecha` en null, porque null rompe silenciosamente el match de reserva más abajo
+  // (fecha_inicio <= null / fecha_fin >= null nunca es true en Postgres).
+  const fecha = fechaDetectada || new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
 
   const [{ data: domos }, { data: productos }, { data: recetas }] = await Promise.all([
     supabaseAdmin.from("domos").select("id, nombre"),

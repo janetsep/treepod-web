@@ -5,8 +5,8 @@ import Link from "next/link";
 export default function NotForEveryone() {
     return (
         <section className="py-12 md:py-20 bg-white border-t border-black/[0.06]" id="concepto">
-            <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+            <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 items-start">
 
                     {/* Logic & Vision - Pluma Style */}
                     <div className="space-y-6">
@@ -22,7 +22,7 @@ export default function NotForEveryone() {
                             </h2>
                         </div>
 
-                        <div className="space-y-6 text-base md:text-lg leading-relaxed text-text-main">
+                        <div className="space-y-5 md:space-y-6 text-sm sm:text-base md:text-lg leading-relaxed text-text-main">
                             <p>
                                 <strong>Olvídate del frío:</strong> Afuera puede estar helando, pero tu domo siempre estará a la temperatura perfecta para tu bienestar.
                             </p>
