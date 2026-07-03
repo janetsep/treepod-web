@@ -52,6 +52,10 @@ export async function POST(request: Request) {
   const { reserva_id, producto_id, fecha, cantidad, concepto, nota } = await request.json();
   if (!reserva_id || !cantidad) return NextResponse.json({ error: "reserva_id y cantidad requeridos" }, { status: 400 });
 
+  // Si no viene fecha (asignación manual desde la pestaña Consumo), se usa hoy en vez
+  // de null: así el consumo queda agrupado por día en vez de caer en "Sin fecha asignada".
+  const fechaFinal = fecha || new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
+
   // Congelar el precio por unidad de consumo en el momento de asignar.
   let precioUnitario: number | null = null;
   if (producto_id) {
@@ -62,7 +66,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabaseAdmin
     .from("sicra_consumo_reserva")
-    .insert({ reserva_id, producto_id: producto_id || null, fecha: fecha || null, cantidad: Number(cantidad), concepto: concepto || null, nota: nota || null, precio_unitario: precioUnitario, registrado_por: admin.email })
+    .insert({ reserva_id, producto_id: producto_id || null, fecha: fechaFinal, cantidad: Number(cantidad), concepto: concepto || null, nota: nota || null, precio_unitario: precioUnitario, registrado_por: admin.email })
     .select()
     .single();
 

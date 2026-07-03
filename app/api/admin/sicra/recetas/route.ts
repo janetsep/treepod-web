@@ -165,6 +165,10 @@ export async function POST(request: Request) {
 
     const ingredientes = await expandirItems(items as any, mult);
 
+    // Si no viene fecha (asignación manual desde la pestaña Consumo), se usa hoy en vez
+    // de null: así el consumo queda agrupado por día en vez de caer en "Sin fecha asignada".
+    const fechaFinal = body.fecha || new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
+
     let insertados = 0;
     for (const ing of ingredientes) {
       const { data: prod } = await supabaseAdmin
@@ -180,6 +184,7 @@ export async function POST(request: Request) {
         receta_cantidad: mult,
         precio_unitario: precioUnitario,
         registrado_por: admin.email,
+        fecha: fechaFinal,
       });
 
       if (prod) {
