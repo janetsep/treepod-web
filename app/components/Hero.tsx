@@ -88,14 +88,14 @@ export default function Hero() {
           <span className="text-white text-[13px] font-bold tracking-wide">4,9 · 59 reseñas verificadas</span>
         </div>
 
-        <h1 className="h1-display mb-5 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-3xl sm:!text-4xl md:!text-5xl lg:!text-7xl !leading-[1.15] font-bold px-2 sm:px-0">
+        <h1 className="h1-display mb-5 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-[1.7rem] sm:!text-4xl md:!text-5xl lg:!text-7xl !leading-[1.15] font-bold px-1 sm:px-0">
           <span className="block">Glamping en Valle Las Trancas:</span>
-          <span className="text-[#00ADEF] italic-display block mt-1.5 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-3xl sm:!text-4xl md:!text-6xl lg:!text-7xl">
+          <span className="text-[#00ADEF] italic-display block mt-1.5 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-[1.7rem] sm:!text-4xl md:!text-6xl lg:!text-7xl">
             domos en el bosque nativo.
           </span>
         </h1>
 
-        <p className="text-white text-base sm:text-lg md:text-xl font-medium mb-8 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-2xl">
+        <p className="text-white text-sm sm:text-lg md:text-xl font-medium mb-8 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-2xl">
           Duerme en una cama increíble sin pasar una gota de frío.
         </p>
 
@@ -104,11 +104,9 @@ export default function Hero() {
           <BookingWidget embedded />
         </div>
 
-        {/* Fila de confianza */}
+        {/* Fila de confianza: sin repetir lo que ya dice la nota del buscador */}
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-white/85 text-[12px] md:text-[13px] font-medium animate-fade-in-up delay-300">
           <span>Mejor precio directo</span>
-          <span className="text-white/40">•</span>
-          <span>Reserva con el 50%, el saldo en el check-in</span>
           <span className="text-white/40 hidden sm:inline">•</span>
           <span className="hidden sm:inline">Registro SERNATUR N° 36806</span>
         </div>

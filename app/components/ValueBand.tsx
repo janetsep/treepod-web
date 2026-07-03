@@ -66,13 +66,13 @@ export default async function ValueBand() {
           <div className="hidden lg:block w-px h-12 bg-black/10" />
 
           {/* Palancas de reserva directa */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 sm:gap-y-4 flex-1">
             {items.map(({ Icon, t, s }) => (
               <div key={t} className="flex items-start gap-2.5">
                 <Icon className="w-5 h-5 text-[#00ADEF] shrink-0 mt-0.5" strokeWidth={2.2} />
                 <div className="min-w-0">
-                  <div className="text-[13px] font-bold text-gray-900 leading-tight">{t}</div>
-                  <div className="text-[11px] text-gray-500 leading-tight mt-0.5">{s}</div>
+                  <div className="text-sm sm:text-[13px] font-bold text-gray-900 leading-tight">{t}</div>
+                  <div className="text-xs sm:text-[11px] text-gray-500 leading-tight mt-0.5">{s}</div>
                 </div>
               </div>
             ))}

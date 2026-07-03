@@ -24,6 +24,9 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
 
   const baseField =
     "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm outline-none focus:border-[#00ADEF] focus:ring-2 focus:ring-[#00ADEF]/20 transition";
+  // appearance-none + color-scheme:light quitan el borde/sombra nativo que Safari iOS
+  // le agrega a <input type="date"> encima de nuestro estilo, y evitan el date picker oscuro.
+  const dateField = `${baseField} appearance-none [color-scheme:light]`;
 
   return (
     <div className={embedded ? "w-full" : "relative z-30 -mt-20 md:-mt-14 px-4"}>
@@ -35,16 +38,25 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
               <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
                 <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Llegada
               </span>
-              <input
-                type="date"
-                min={hoy}
-                value={entrada}
-                onChange={(e) => {
-                  setEntrada(e.target.value);
-                  if (salida && e.target.value && salida <= e.target.value) setSalida("");
-                }}
-                className={baseField}
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  min={hoy}
+                  value={entrada}
+                  onChange={(e) => {
+                    setEntrada(e.target.value);
+                    if (salida && e.target.value && salida <= e.target.value) setSalida("");
+                  }}
+                  className={`${dateField} ${!entrada ? "text-transparent" : ""}`}
+                />
+                {/* iOS Safari no muestra placeholder en <input type="date"> vacío: sin esto se ve como una caja en blanco.
+                    text-transparent oculta el "dd/mm/aaaa" nativo de Chrome para que no choque con este texto. */}
+                {!entrada && (
+                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-400 pointer-events-none">
+                    Elegir fecha
+                  </span>
+                )}
+              </div>
             </label>
 
             {/* Salida */}
@@ -52,13 +64,20 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
               <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
                 <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Salida
               </span>
-              <input
-                type="date"
-                min={entrada || hoy}
-                value={salida}
-                onChange={(e) => setSalida(e.target.value)}
-                className={baseField}
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  min={entrada || hoy}
+                  value={salida}
+                  onChange={(e) => setSalida(e.target.value)}
+                  className={`${dateField} ${!salida ? "text-transparent" : ""}`}
+                />
+                {!salida && (
+                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-400 pointer-events-none">
+                    Elegir fecha
+                  </span>
+                )}
+              </div>
             </label>
 
             {/* Huéspedes */}

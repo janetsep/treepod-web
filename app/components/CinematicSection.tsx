@@ -51,7 +51,7 @@ export default function CinematicSection({
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/45 to-transparent" />
 
       <div
-        className={`cine-enter relative z-10 container mx-auto px-6 md:px-12 pb-16 md:pb-24 ${
+        className={`cine-enter relative z-10 container mx-auto px-4 md:px-12 pb-16 md:pb-24 ${
           align === "center" ? "text-center mx-auto max-w-4xl" : "max-w-3xl"
         }`}
       >
@@ -60,12 +60,12 @@ export default function CinematicSection({
             {eyebrow}
           </span>
         )}
-        <TitleTag className="!text-white font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
+        <TitleTag className="!text-white font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
           {title}
         </TitleTag>
         {text && (
           <p
-            className={`text-white/90 text-lg md:text-2xl mt-6 leading-relaxed font-medium drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] ${
+            className={`text-white/90 text-sm sm:text-lg md:text-2xl mt-4 md:mt-6 leading-relaxed font-medium drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] ${
               align === "center" ? "mx-auto" : ""
             } max-w-2xl`}
           >
