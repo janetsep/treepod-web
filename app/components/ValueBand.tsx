@@ -1,55 +1,10 @@
-import { supabase } from "@/lib/supabase";
-import { BadgePercent, CalendarClock, ShieldCheck, MessageCircle } from "lucide-react";
+import { BadgePercent, CalendarClock, ShieldCheck, MessageCircle, Star } from "lucide-react";
+import { precioDesde, fmtCLP } from "@/lib/precio-desde";
 
 // Banda de valor + confianza bajo el hero. Visible de inmediato, comunica el precio
-// "desde" real y las palancas de RESERVA DIRECTA que más convierten (precio directo,
-// abono 50%, registro SERNATUR, respuesta instantánea). Server component: trae el
-// precio mínimo en vivo para que nunca quede desactualizado.
-// Precio "desde" de la TEMPORADA VIGENTE hoy (no el mínimo histórico de temporada
-// baja). Busca la temporada activa cuyo rango de fechas contiene la fecha de hoy y
-// toma su tarifa nocturna más baja PARA 2 ADULTOS (la reserva típica) — antes tomaba
-// el mínimo de toda la tabla, que resultaba ser la tarifa de 1 persona con mínimo 2
-// noches ($130.000), mostrando un precio que una pareja de 1 noche nunca podía pagar.
-// Devuelve también noches_min para poder avisar si esa tarifa exige estadía mínima.
-async function precioDesde(): Promise<{ precio: number; nochesMin: number }> {
-  const RESPALDO = { precio: 160000, nochesMin: 1 };
-  try {
-    const hoy = new Date().toISOString().slice(0, 10);
-    const { data: temps } = await supabase
-      .from("temporadas")
-      .select("id")
-      .eq("activa", true)
-      .lte("fecha_inicio", hoy)
-      .gte("fecha_fin", hoy)
-      .order("prioridad", { ascending: false })
-      .limit(1);
-    const tempId = temps?.[0]?.id;
-    if (tempId) {
-      const { data } = await supabase
-        .from("tarifas")
-        .select("precio_noche, noches_min")
-        .eq("temporada_id", tempId)
-        .eq("adultos", 2)
-        .gt("precio_noche", 0)
-        .order("precio_noche", { ascending: true })
-        .limit(1);
-      if (data?.[0]?.precio_noche) {
-        return { precio: data[0].precio_noche, nochesMin: data[0].noches_min || 1 };
-      }
-    }
-    const { data } = await supabase
-      .from("tarifas").select("precio_noche, noches_min").eq("adultos", 2).gt("precio_noche", 0)
-      .order("precio_noche", { ascending: true }).limit(1);
-    if (data?.[0]?.precio_noche) {
-      return { precio: data[0].precio_noche, nochesMin: data[0].noches_min || 1 };
-    }
-    return RESPALDO;
-  } catch {
-    return RESPALDO;
-  }
-}
-
-const fmtCLP = (n: number) => "$" + n.toLocaleString("es-CL");
+// "desde" real (2 adultos, temporada vigente — ver lib/precio-desde) junto al rating
+// y las palancas de RESERVA DIRECTA que más convierten (precio directo, abono 50%,
+// registro SERNATUR, respuesta instantánea). Server component: precio en vivo.
 
 const items = [
   { Icon: BadgePercent, t: "Mejor precio directo", s: "Sin comisión de intermediarios" },
@@ -73,6 +28,9 @@ export default async function ValueBand() {
             </div>
             <span className="text-[11px] font-semibold text-gray-400 mt-0.5">
               2 personas{nochesMin > 1 ? ` · para estadías de ${nochesMin} noches o más` : ""}
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-600 mt-1">
+              <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" /> 4,9 · 59 reseñas en Google
             </span>
           </div>
 

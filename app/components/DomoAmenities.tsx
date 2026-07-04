@@ -56,18 +56,18 @@ export default function DomoAmenities() {
     ];
 
     return (
-        <section className="py-12 md:py-20 border-t border-black/[0.06]" id="servicios">
+        <section className="py-16 md:py-28 border-t border-black/[0.06]" id="servicios">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col items-center text-center mb-16">
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-6">
-                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">No traigas nada, aquí lo tienes todo</span>
+                            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">No traigas nada, aquí lo tienes todo</span>
                         </div>
                         <h2 className="h2-display leading-tight text-text-main">
                             Diseñado para tu <span className="text-primary italic-display">relajo total</span>
                         </h2>
-                        <p className="text-text-sub mt-6 text-lg md:text-xl font-bold">
+                        <p className="text-text-sub mt-6 text-lg md:text-xl font-medium">
                             Donde lo único que te va a faltar es tiempo para seguir descansando.
                         </p>
                     </div>
@@ -127,6 +127,16 @@ export default function DomoAmenities() {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                {/* CTA de la sección: quien se convenció aquí no debe buscar dónde reservar */}
+                <div className="text-center mt-12 md:mt-16">
+                    <a
+                        href="/disponibilidad"
+                        className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
+                    >
+                        Quiero mi escapada al bosque
+                    </a>
                 </div>
             </div>
         </section>
