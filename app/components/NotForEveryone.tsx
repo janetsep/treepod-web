@@ -24,13 +24,13 @@ export default function NotForEveryone() {
 
                         <div className="space-y-5 md:space-y-6 text-sm sm:text-base md:text-lg leading-relaxed text-text-main">
                             <p>
-                                <strong>Olvídate del frío:</strong> Afuera puede estar helando, pero tu domo siempre estará a la temperatura perfecta para tu bienestar.
+                                <strong>Calor sin esfuerzo:</strong> afuera puede helar; adentro, la estufa a pellet mantiene tu domo tibio toda la noche, sin que cargues leña ni pienses en nada.
                             </p>
                             <p>
-                                <strong>Espacio de sobra para ti</strong>, para relajarte a tus anchas, sin chocar con nada.
+                                <strong>Espacio de verdad:</strong> un domo amplio solo para ustedes, con baño privado y cama grande. Nada de carpas apretadas ni baños compartidos.
                             </p>
                             <p>
-                                <strong>Refugio a prueba de todo:</strong> ¿Viento o tormentas en el valle? Da igual. Estás en una estructura 100% segura y diseñada para que no te preocupes por el clima.
+                                <strong>Tranquilidad con cualquier clima:</strong> ¿viento o nieve en el valle? Mejor. La estructura está hecha para eso, y desde adentro se disfruta más.
                             </p>
                         </div>
 
