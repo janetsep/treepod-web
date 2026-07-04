@@ -7,9 +7,12 @@ import { BadgePercent, CalendarClock, ShieldCheck, MessageCircle } from "lucide-
 // precio mínimo en vivo para que nunca quede desactualizado.
 // Precio "desde" de la TEMPORADA VIGENTE hoy (no el mínimo histórico de temporada
 // baja). Busca la temporada activa cuyo rango de fechas contiene la fecha de hoy y
-// toma su tarifa nocturna más baja. Si falla, usa el mínimo global como respaldo.
-async function precioDesde(): Promise<number> {
-  const RESPALDO = 130000;
+// toma su tarifa nocturna más baja PARA 2 ADULTOS (la reserva típica) — antes tomaba
+// el mínimo de toda la tabla, que resultaba ser la tarifa de 1 persona con mínimo 2
+// noches ($130.000), mostrando un precio que una pareja de 1 noche nunca podía pagar.
+// Devuelve también noches_min para poder avisar si esa tarifa exige estadía mínima.
+async function precioDesde(): Promise<{ precio: number; nochesMin: number }> {
+  const RESPALDO = { precio: 160000, nochesMin: 1 };
   try {
     const hoy = new Date().toISOString().slice(0, 10);
     const { data: temps } = await supabase
@@ -24,17 +27,23 @@ async function precioDesde(): Promise<number> {
     if (tempId) {
       const { data } = await supabase
         .from("tarifas")
-        .select("precio_noche")
+        .select("precio_noche, noches_min")
         .eq("temporada_id", tempId)
+        .eq("adultos", 2)
         .gt("precio_noche", 0)
         .order("precio_noche", { ascending: true })
         .limit(1);
-      if (data?.[0]?.precio_noche) return data[0].precio_noche;
+      if (data?.[0]?.precio_noche) {
+        return { precio: data[0].precio_noche, nochesMin: data[0].noches_min || 1 };
+      }
     }
     const { data } = await supabase
-      .from("tarifas").select("precio_noche").gt("precio_noche", 0)
+      .from("tarifas").select("precio_noche, noches_min").eq("adultos", 2).gt("precio_noche", 0)
       .order("precio_noche", { ascending: true }).limit(1);
-    return data?.[0]?.precio_noche || RESPALDO;
+    if (data?.[0]?.precio_noche) {
+      return { precio: data[0].precio_noche, nochesMin: data[0].noches_min || 1 };
+    }
+    return RESPALDO;
   } catch {
     return RESPALDO;
   }
@@ -50,16 +59,21 @@ const items = [
 ];
 
 export default async function ValueBand() {
-  const desde = await precioDesde();
+  const { precio: desde, nochesMin } = await precioDesde();
   return (
     <section className="bg-white border-b border-black/[0.06]">
       <div className="container mx-auto px-4 md:px-6 py-6 md:py-7">
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
           {/* Precio desde */}
-          <div className="flex items-baseline gap-2 shrink-0">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Domos desde</span>
-            <span className="text-3xl md:text-4xl font-black text-[#00ADEF] leading-none">{fmtCLP(desde)}</span>
-            <span className="text-sm font-semibold text-gray-500">/ noche</span>
+          <div className="flex flex-col shrink-0">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Domos desde</span>
+              <span className="text-3xl md:text-4xl font-black text-[#00ADEF] leading-none">{fmtCLP(desde)}</span>
+              <span className="text-sm font-semibold text-gray-500">/ noche</span>
+            </div>
+            <span className="text-[11px] font-semibold text-gray-400 mt-0.5">
+              2 personas{nochesMin > 1 ? ` · para estadías de ${nochesMin} noches o más` : ""}
+            </span>
           </div>
 
           {/* Separador */}
