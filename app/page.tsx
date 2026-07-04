@@ -20,6 +20,11 @@ import CinematicSection from "./components/CinematicSection";
 
 import TrackView from "./components/TrackView";
 
+// Orden de la página pensado como embudo: enganche emocional (hero + cinemática),
+// precio y confianza de inmediato, el producto (domos), prueba social ANTES de la
+// mitad de la página, beneficios, temporada, cómo reservar y cierre con FAQ/ubicación.
+// El blog (News) va al final: es contenido de apoyo, no de conversión. El botón de
+// reservar siempre visible en mobile lo aporta StickyReservar (global, con precio).
 export default function Home() {
   return (
     <main className="min-h-screen font-sans">
@@ -33,11 +38,14 @@ export default function Home() {
         eyebrow="La experiencia"
         title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> lejos del ruido del mundo</>}
         text="Domos cálidos y bien equipados, rodeados de naturaleza real. Sin ruido, sin frío, sin apuro."
+        ctaText="Ver disponibilidad"
+        ctaHref="/disponibilidad"
       />
 
       <div className="space-y-0">
-        <div id="concepto" className="reveal"><NotForEveryone /></div>
         <div id="domos" className="reveal"><TreePodDomes /></div>
+        <div id="reviews" className="reveal"><Testimonios /></div>
+        <div id="concepto" className="reveal"><NotForEveryone /></div>
         <CinematicSection
           image="/images/Galeria/domopiscinainvierno.jpg"
           alt="Domos TreePod en invierno, a pasos de la nieve"
@@ -49,12 +57,11 @@ export default function Home() {
         />
         <div id="servicios" className="reveal"><DomoAmenities /></div>
         <div id="como-reservar" className="reveal"><ComoReservar /></div>
-        <div id="reviews" className="reveal"><Testimonios /></div>
-        <div id="news" className="reveal"><News /></div>
         {/* Sección de tarifas removida - se maneja desde admin */}
         {/* <div id="galeria"><Galeria /></div> */}
         <div id="faq" className="reveal"><FAQ /></div>
         <div id="contacto" className="reveal"><Ubicacion /></div>
+        <div id="news" className="reveal"><News /></div>
       </div>
     </main>
   );

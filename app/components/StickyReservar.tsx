@@ -12,12 +12,34 @@ import { ArrowRight, Star } from "lucide-react";
 export default function StickyReservar() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
+  // Precio "desde" real (2 personas, temporada vigente) para que la barra venda con
+  // el dato concreto y no solo con un eslogan. noches_min acompaña al precio para no
+  // prometer una tarifa que exige estadía mínima. Si el fetch falla, se muestra el
+  // texto genérico de siempre.
+  const [desde, setDesde] = useState<{ precio: number; nochesMin: number } | null>(null);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 640);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/tarifas")
+      .then((r) => r.json())
+      .then((data) => {
+        const hoy = new Date().toISOString().slice(0, 10);
+        const temporada = (data.temporadas || []).find(
+          (t: any) => t.fecha_inicio <= hoy && t.fecha_fin >= hoy
+        );
+        if (!temporada) return;
+        const tarifa = (data.tarifas || [])
+          .filter((t: any) => t.temporada_id === temporada.id && t.adultos === 2 && t.precio_noche > 0)
+          .sort((a: any, b: any) => a.precio_noche - b.precio_noche)[0];
+        if (tarifa) setDesde({ precio: tarifa.precio_noche, nochesMin: tarifa.noches_min || 1 });
+      })
+      .catch(() => {});
   }, []);
 
   // No mostrar en la página de reserva, en /domos (ya tiene su propia barra de
@@ -43,7 +65,16 @@ export default function StickyReservar() {
           <div className="flex items-center gap-1 text-[11px] font-bold text-gray-700">
             <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> 4,9 · 59 reseñas
           </div>
-          <div className="text-[13px] font-semibold text-gray-900 truncate">Tu domo en el bosque nativo</div>
+          <div className="text-[13px] font-semibold text-gray-900 truncate">
+            {desde ? (
+              <>
+                Desde <span className="font-black">${desde.precio.toLocaleString("es-CL")}</span>
+                <span className="text-[11px] text-gray-500"> /noche · 2 personas{desde.nochesMin > 1 ? ` · ${desde.nochesMin}+ noches` : ""}</span>
+              </>
+            ) : (
+              "Tu domo en el bosque nativo"
+            )}
+          </div>
         </div>
         <Link
           href="/disponibilidad"

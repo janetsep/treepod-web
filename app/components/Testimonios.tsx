@@ -3,11 +3,11 @@
 // difiere el widget hasta que entra en viewport, para no penalizar la carga inicial.
 export default function Testimonios() {
   return (
-    <section className="py-14 md:py-24 bg-white border-t border-black/[0.06]" id="testimonios">
+    <section className="py-16 md:py-28 bg-white border-t border-black/[0.06]" id="testimonios">
       <div className="container mx-auto px-6 text-center max-w-7xl">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-          <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">Lo que dicen nuestros huéspedes</span>
+          <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Lo que dicen nuestros huéspedes</span>
         </div>
 
         <h2 className="h2-display mb-10 text-text-main">La experiencia habla por sí sola</h2>

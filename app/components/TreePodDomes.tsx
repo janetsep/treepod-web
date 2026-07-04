@@ -30,7 +30,7 @@ export default function TreePodDomes() {
 
 
     return (
-        <section className="py-12 md:py-20 relative overflow-hidden bg-white border-t border-black/[0.06]" id="domos">
+        <section className="py-16 md:py-28 relative overflow-hidden bg-white border-t border-black/[0.06]" id="domos">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
 
@@ -80,7 +80,7 @@ export default function TreePodDomes() {
                     <div className="lg:col-span-5 space-y-6">
                         <div className="space-y-2">
                             <div className="inline-flex items-center gap-2">
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">• TU REFUGIO</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Tu refugio</span>
                             </div>
                             <h2 className="h2-display leading-tight text-text-main">
                                 Habita la calma <br />

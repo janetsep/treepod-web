@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function NotForEveryone() {
     return (
-        <section className="py-12 md:py-20 bg-white border-t border-black/[0.06]" id="concepto">
+        <section className="py-16 md:py-28 bg-white border-t border-black/[0.06]" id="concepto">
             <div className="container mx-auto px-4 md:px-6 max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 items-start">
 
@@ -12,8 +12,8 @@ export default function NotForEveryone() {
                     <div className="space-y-6">
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2">
-                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Por qué TreePod</span>
+                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Por qué TreePod</span>
                             </div>
 
                             <h2 className="h1-display text-text-main !text-left">
