@@ -37,7 +37,7 @@ export default function NotForEveryone() {
                         <div className="pt-6 space-y-4">
                             <Link 
                                 href="/disponibilidad"
-                                className="inline-flex items-center justify-center px-12 py-5 bg-primary text-white font-black text-sm md:text-base uppercase tracking-[0.2em] rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 shadow-xl"
+                                className="inline-flex items-center justify-center px-10 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg"
                             >
                                 Reservar mi escapada
                             </Link>
@@ -59,8 +59,8 @@ export default function NotForEveryone() {
                             />
                         </div>
                         <div className="text-center">
-                            <p className="inline-block text-sm font-black tracking-[0.2em] text-primary uppercase">
-                                MAPA DE NUESTRO GLAMPING
+                            <p className="inline-block text-[11px] md:text-xs font-black tracking-[0.3em] text-primary uppercase">
+                                Mapa de nuestro glamping
                             </p>
                         </div>
                     </div>

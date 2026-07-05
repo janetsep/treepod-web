@@ -83,7 +83,7 @@ export default function DomoAmenities() {
                             `}
                         >
                             {/* Image Section */}
-                            <div className="relative h-[240px] md:h-[350px] overflow-hidden shrink-0">
+                            <div className="relative h-[280px] md:h-[420px] overflow-hidden shrink-0">
                                 {item.images ? (
                                     <div className="flex h-full w-full">
                                         {item.images.map((img, imgIdx) => (
@@ -121,7 +121,7 @@ export default function DomoAmenities() {
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     <h4 className="h4-display text-text-main">{item.title}</h4>
                                 </div>
-                                <p className="text-xs sm:text-sm md:text-base text-text-sub leading-relaxed font-bold">
+                                <p className="text-xs sm:text-sm md:text-base text-text-sub leading-relaxed font-medium">
                                     {item.description}
                                 </p>
                             </div>

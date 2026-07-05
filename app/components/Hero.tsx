@@ -96,7 +96,7 @@ export default function Hero() {
         </h1>
 
         <p className="text-white text-sm sm:text-lg md:text-xl font-medium mb-8 animate-fade-in-up delay-200 tracking-wide drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] max-w-2xl">
-          Tu domo cálido en pleno bosque, a minutos de las termas y la nieve. Llegas y todo está listo.
+          Tu domo geodésico y cálido en pleno bosque, a minutos de las termas y la nieve. Llegas y todo está listo.
         </p>
 
         {/* Buscador de reserva integrado (rediseño) */}
