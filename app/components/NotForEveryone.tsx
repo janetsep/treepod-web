@@ -24,13 +24,13 @@ export default function NotForEveryone() {
 
                         <div className="space-y-5 md:space-y-6 text-sm sm:text-base md:text-lg leading-relaxed text-text-main">
                             <p>
-                                <strong>Calor sin esfuerzo:</strong> afuera puede helar; adentro, la estufa a pellet mantiene tu domo tibio toda la noche, sin que cargues leña ni pienses en nada.
+                                <strong>A minutos de todo:</strong> despiertas rodeada de bosque nativo y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.
                             </p>
                             <p>
                                 <strong>Espacio de verdad:</strong> un domo amplio solo para ustedes, con baño privado y cama grande. Nada de carpas apretadas ni baños compartidos.
                             </p>
                             <p>
-                                <strong>Tranquilidad con cualquier clima:</strong> ¿viento o nieve en el valle? Mejor. La estructura está hecha para eso, y desde adentro se disfruta más.
+                                <strong>Llegas y no traes nada:</strong> Nespresso, WiFi Starlink y el domo completamente equipado. Dejas el bolso y ya estás de vacaciones.
                             </p>
                         </div>
 
