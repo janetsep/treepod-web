@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Escapada Romántica en Las Trancas | Domos para Dos - TreePod',
-    description: 'Escapada romántica en domos geodésicos en Valle Las Trancas. Privacidad, bosque nativo, estufa a pellet y WiFi Starlink. Aniversario, cumpleaños o simplemente para dos.',
+    title: 'Escapada Romántica en Las Trancas | Domo Privado para Dos — TreePod',
+    description: 'Domo privado en el bosque para dos. Estufa a pellet, cocina equipada, cielos estrellados y total privacidad en Valle Las Trancas, Chillán. Reserva directo.',
     keywords: [
         'escapada romantica las trancas',
         'escapada romantica chile',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/escapada-romantica-las-trancas',
     },
     openGraph: {
-        title: 'Escapada Romántica en Las Trancas | Domos TreePod',
-        description: 'Domo privado en el bosque nativo de Las Trancas. Una escapada para dos, sin nadie más alrededor.',
+        title: 'Escapada Romántica en Las Trancas | Domo Privado — TreePod',
+        description: 'Domo privado en el bosque para dos. Estufa a pellet, cielos estrellados y privacidad total en Valle Las Trancas.',
         images: ['/images/Galeria/domo-iluminado-noche.jpg'],
         type: 'website',
         locale: 'es_CL',
