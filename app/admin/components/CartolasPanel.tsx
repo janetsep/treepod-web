@@ -15,8 +15,11 @@ interface Movimiento {
   tipo: string;
   categoria: string;
   proyecto_id: string | null;
+  reserva_id: string | null;
   fuente_pago: string | null;
+  reservas?: { nombre: string; apellido: string } | null;
 }
+interface Sugerencia { reserva_id: string; cliente: string; fecha_inicio: string; total: number; }
 
 const CATEGORIAS = [
   { value: "por_revisar", label: "Por revisar", color: "bg-gray-100 text-gray-600" },
@@ -60,6 +63,8 @@ export default function CartolasPanel() {
   const [filtro, setFiltro] = useState("todos");
   const [msg, setMsg] = useState("");
   const [importando, setImportando] = useState(false);
+  const [sugerencias, setSugerencias] = useState<Record<string, Sugerencia>>({});
+  const [sugiriendo, setSugiriendo] = useState(false);
 
   // Estado de la lectura del archivo + mapeo de columnas
   const [rows, setRows] = useState<any[][]>([]);
@@ -166,9 +171,32 @@ export default function CartolasPanel() {
     setMovimientos((ms) => ms.map((x) => (x.id === m.id ? nuevo : x)));
     await adminFetch("/api/admin/cartolas", {
       method: "PATCH",
-      body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, fuente_pago: nuevo.fuente_pago }),
+      body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, reserva_id: nuevo.reserva_id, fuente_pago: nuevo.fuente_pago }),
     });
     cargar();
+  }
+
+  // Busca, para cada abono sin clasificar, la reserva que calza por nombre + fecha.
+  async function sugerir() {
+    setSugiriendo(true);
+    try {
+      const res = await adminFetch("/api/admin/cartolas/conciliar");
+      if (res.ok) {
+        const data = await res.json();
+        const map: Record<string, Sugerencia> = {};
+        for (const s of data.sugerencias || []) if (s.sugerencia) map[s.movimiento_id] = s.sugerencia;
+        setSugerencias(map);
+        const n = Object.keys(map).length;
+        setMsg(n ? `Encontré ${n} abono${n !== 1 ? "s" : ""} que calzan con una reserva. Revisa y confirma abajo.` : "No encontré abonos que calcen con reservas por nombre.");
+      }
+    } catch { }
+    setSugiriendo(false);
+  }
+
+  // Confirma la sugerencia: marca el movimiento como ingreso y lo enlaza a la reserva.
+  async function confirmarIngreso(m: Movimiento, s: Sugerencia) {
+    setSugerencias((prev) => { const n = { ...prev }; delete n[m.id]; return n; });
+    await categorizar(m, { categoria: "ingreso", reserva_id: s.reserva_id } as Partial<Movimiento>);
   }
 
   async function eliminar(id: string) {
@@ -285,6 +313,22 @@ export default function CartolasPanel() {
         {msg && <span className="block text-xs font-semibold text-gray-600">{msg}</span>}
       </div>
 
+      {/* Conciliación: botón de auto-match + resumen por categoría */}
+      {movimientos.length > 0 && (() => {
+        const suma = (cat: string) => movimientos.filter((m) => m.categoria === cat).reduce((s, m) => s + m.monto, 0);
+        return (
+          <div className="bg-white rounded-2xl border border-gray-200 p-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <button onClick={sugerir} disabled={sugiriendo} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50">
+              {sugiriendo ? "Buscando…" : "Conciliar ingresos con reservas"}
+            </button>
+            <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span className="font-semibold text-gray-600">Ingresos:</span><span className="font-black text-gray-900">{fmt(suma("ingreso"))}</span></span>
+            <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span className="font-semibold text-gray-600">Proyectos:</span><span className="font-black text-gray-900">{fmt(suma("proyecto"))}</span></span>
+            <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span className="font-semibold text-gray-600">Operación:</span><span className="font-black text-gray-900">{fmt(suma("operacion"))}</span></span>
+            {suma("por_revisar") > 0 && <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span className="font-semibold text-amber-700">Por revisar:</span><span className="font-black text-amber-700">{fmt(suma("por_revisar"))}</span></span>}
+          </div>
+        );
+      })()}
+
       {/* Resumen + filtro */}
       {movimientos.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
@@ -320,7 +364,16 @@ export default function CartolasPanel() {
                   <span className="text-xs text-gray-500 shrink-0">{m.fecha || "—"}</span>
                   <span className="text-sm font-bold text-gray-900 truncate">{m.descripcion}</span>
                 </div>
-                {m.banco && <span className="text-[10px] text-gray-400">{m.banco}</span>}
+                {m.categoria === "ingreso" && m.reservas && (
+                  <span className="text-[11px] text-emerald-700 font-semibold">Reserva de {m.reservas.nombre} {m.reservas.apellido}</span>
+                )}
+                {m.categoria === "por_revisar" && sugerencias[m.id] && (
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <span className="text-[11px] text-gray-600">¿Es la reserva de <strong>{sugerencias[m.id].cliente}</strong>{sugerencias[m.id].fecha_inicio ? ` · ${sugerencias[m.id].fecha_inicio}` : ""}?</span>
+                    <button onClick={() => confirmarIngreso(m, sugerencias[m.id])} className="px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-emerald-700">Sí, es ingreso</button>
+                  </div>
+                )}
+                {!m.categoria && m.banco && <span className="text-[10px] text-gray-400">{m.banco}</span>}
               </div>
 
               <div className={`text-sm font-black shrink-0 lg:w-32 lg:text-right ${m.tipo === "abono" ? "text-emerald-600" : "text-gray-900"}`}>
