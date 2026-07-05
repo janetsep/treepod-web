@@ -161,9 +161,10 @@ export async function POST(request: Request) {
   const { data, error } = await supabaseAdmin.from("sicra_cartola_movimientos").insert(filas).select();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // 3) Para los auto-clasificados como proyecto, crear su gasto y enlazarlo.
+  // 3) Para los auto-clasificados como proyecto Y que sean CARGO, crear su gasto.
+  //    Un abono en proyecto es financiamiento que entra, no un gasto.
   for (const mv of data || []) {
-    if (mv.categoria === "proyecto" && mv.proyecto_id) {
+    if (mv.categoria === "proyecto" && mv.proyecto_id && mv.tipo === "cargo") {
       const { data: gasto } = await supabaseAdmin
         .from("sicra_proyecto_gastos")
         .insert({
@@ -207,8 +208,9 @@ export async function PATCH(request: Request) {
 
   let nuevoGastoId: string | null = null;
 
-  // Si se asigna a un proyecto, crear el gasto correspondiente.
-  if (categoria === "proyecto" && proyecto_id) {
+  // Si se asigna a un proyecto Y es un CARGO (egreso), crear el gasto. Un ABONO en
+  // un proyecto es financiamiento que ENTRA (ej. fondo concursable), no un gasto.
+  if (categoria === "proyecto" && proyecto_id && mov.tipo === "cargo") {
     const { data: gasto } = await supabaseAdmin
       .from("sicra_proyecto_gastos")
       .insert({

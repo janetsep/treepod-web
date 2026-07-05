@@ -13,6 +13,18 @@ export async function GET(request: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Financiamiento recibido por proyecto: abonos de cartola asignados al proyecto
+  // (ej. depósitos de fondos concursables que entraron a financiarlo).
+  const { data: financiamientos } = await supabaseAdmin
+    .from("sicra_cartola_movimientos")
+    .select("proyecto_id, monto")
+    .eq("categoria", "proyecto")
+    .eq("tipo", "abono");
+  const financPorProyecto: Record<string, number> = {};
+  for (const f of financiamientos || []) {
+    if (f.proyecto_id) financPorProyecto[f.proyecto_id] = (financPorProyecto[f.proyecto_id] || 0) + f.monto;
+  }
+
   const result = (proyectos || []).map((p) => {
     const gastos = p.sicra_proyecto_gastos || [];
     const totalGastado = gastos.reduce((s: number, g: { monto: number }) => s + g.monto, 0);
@@ -38,6 +50,7 @@ export async function GET(request: Request) {
     return {
       ...p,
       totalGastado,
+      financiamiento: financPorProyecto[p.id] || 0,
       porConcepto,
       porTipo,
       porFuente,
