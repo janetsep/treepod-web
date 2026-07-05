@@ -85,7 +85,8 @@ export default function CartolasPanel() {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loading, setLoading] = useState(true);
   const [banco, setBanco] = useState("Banco de Chile");
-  const [filtro, setFiltro] = useState("todos");
+  // Por defecto se muestran solo los "por revisar"; con el chip "Todos" se ve todo.
+  const [filtro, setFiltro] = useState("por_revisar");
   const [msg, setMsg] = useState("");
   const [importando, setImportando] = useState(false);
   const [sugerencias, setSugerencias] = useState<Record<string, Sugerencia>>({});
@@ -182,7 +183,10 @@ export default function CartolasPanel() {
     });
     const data = await res.json();
     if (res.ok) {
-      setMsg(`✓ Se importaron ${data.insertados} movimientos.`);
+      const partes = [`✓ ${data.insertados} movimientos importados`];
+      if (data.auto) partes.push(`${data.auto} auto-clasificados (aprendidos)`);
+      if (data.duplicados) partes.push(`${data.duplicados} duplicados omitidos`);
+      setMsg(partes.join(" · "));
       setRows([]);
       setFileName("");
       cargar();
