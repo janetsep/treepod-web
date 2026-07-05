@@ -129,7 +129,7 @@ export default function LeadMagnet() {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-primary hover:bg-primary-dark text-white font-black py-4 md:py-5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] text-[10px] md:text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3"
+                                    className="w-full bg-primary hover:bg-primary-dark text-white font-black py-4 md:py-5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(74, 124, 46,0.3)] text-[10px] md:text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3"
                                 >
                                     Quiero mi descuento
                                     <ArrowRight className="w-4 h-4" />

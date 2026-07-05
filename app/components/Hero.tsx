@@ -90,7 +90,7 @@ export default function Hero() {
 
         <h1 className="h1-display mb-5 drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] max-w-5xl animate-fade-in-up delay-100 !text-white !text-[1.7rem] sm:!text-4xl md:!text-5xl lg:!text-7xl !leading-[1.15] font-bold px-1 sm:px-0">
           <span className="block">Glamping en Valle Las Trancas:</span>
-          <span className="text-[#00ADEF] italic-display block mt-1.5 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-[1.7rem] sm:!text-4xl md:!text-6xl lg:!text-7xl">
+          <span className="text-[#4A7C2E] italic-display block mt-1.5 drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] !text-[1.7rem] sm:!text-4xl md:!text-6xl lg:!text-7xl">
             domos en el bosque nativo.
           </span>
         </h1>

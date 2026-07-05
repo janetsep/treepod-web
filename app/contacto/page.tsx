@@ -209,7 +209,7 @@ export default function ContactoPage() {
                                     </div>
 
                                     <div className="space-y-6 pt-4">
-                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0,173,239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(74, 124, 46,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
                                             {status === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
                                             {!status || status !== 'loading' && <Send className="w-4 h-4" />}
                                         </button>
