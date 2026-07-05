@@ -26,6 +26,7 @@ interface Proyecto {
   fecha_inicio: string;
   fecha_fin: string | null;
   totalGastado: number;
+  financiamiento: number;
   gastosCount: number;
   porConcepto: Record<string, { total: number; count: number }>;
   porTipo: Record<string, { total: number; count: number }>;
@@ -346,6 +347,7 @@ export default function ProyectosPanel() {
       {proyectos.length > 0 && (() => {
         const costoTotal = proyectos.reduce((s, p) => s + (p.presupuesto > 0 ? p.presupuesto : p.totalGastado), 0);
         const gastadoTotal = proyectos.reduce((s, p) => s + p.totalGastado, 0);
+        const financiadoTotal = proyectos.reduce((s, p) => s + (p.financiamiento || 0), 0);
         const saldo = costoTotal - gastadoTotal;
         // Agregar el gasto por fuente de pago sumando todos los proyectos.
         const fuentes: Record<string, number> = {};
@@ -364,6 +366,11 @@ export default function ProyectosPanel() {
             <div className="bg-white border border-gray-200 rounded-2xl p-5">
               <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total gastado</div>
               <div className="text-2xl font-black mt-1 text-gray-900">{fmt(gastadoTotal)}</div>
+              {financiadoTotal > 0 && (
+                <div className="text-[10px] text-indigo-600 font-bold mt-1">
+                  {fmt(financiadoTotal)} financiado con fondos · {fmt(Math.max(0, gastadoTotal - financiadoTotal))} de tu bolsillo
+                </div>
+              )}
             </div>
             <div className="bg-white border border-gray-200 rounded-2xl p-5">
               <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">Saldo por invertir</div>
