@@ -91,6 +91,8 @@ export default function CartolasPanel() {
   const [importando, setImportando] = useState(false);
   const [sugerencias, setSugerencias] = useState<Record<string, Sugerencia>>({});
   const [sugiriendo, setSugiriendo] = useState(false);
+  // Lista de reservas (18 meses) para conciliar a mano cuando el automático no calza.
+  const [reservasLista, setReservasLista] = useState<Sugerencia[]>([]);
 
   // Estado de la lectura del archivo + mapeo de columnas
   const [rows, setRows] = useState<any[][]>([]);
@@ -116,6 +118,14 @@ export default function CartolasPanel() {
     setLoading(false);
   }
   useEffect(() => { cargar(); }, []);
+
+  // Cargar la lista de reservas una vez, para el selector de conciliación manual.
+  useEffect(() => {
+    adminFetch("/api/admin/cartolas/conciliar?listar=1")
+      .then((r) => (r.ok ? r.json() : { reservas: [] }))
+      .then((d) => setReservasLista((d.reservas || []).map((r: any) => ({ reserva_id: r.id, cliente: r.cliente, fecha_inicio: r.fecha_inicio, total: r.total }))))
+      .catch(() => { });
+  }, []);
 
   async function onFile(file: File) {
     setMsg("");
@@ -435,7 +445,24 @@ export default function CartolasPanel() {
                   <span className="text-sm font-bold text-gray-900 truncate">{m.descripcion}</span>
                 </div>
                 {m.categoria === "ingreso" && m.reservas && (
-                  <span className="text-[11px] text-emerald-700 font-semibold">Reserva de {m.reservas.nombre} {m.reservas.apellido}</span>
+                  <span className="text-[11px] text-emerald-700 font-semibold">✓ Conciliado con reserva de {m.reservas.nombre} {m.reservas.apellido}</span>
+                )}
+                {m.categoria === "ingreso" && !m.reserva_id && (
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wide">Sin conciliar</span>
+                    <select
+                      value=""
+                      onChange={(e) => e.target.value && categorizar(m, { reserva_id: e.target.value })}
+                      className="border border-amber-200 rounded-lg px-2 py-1 text-[11px] outline-none bg-white max-w-[280px]"
+                    >
+                      <option value="">Conciliar con reserva…</option>
+                      {reservasLista.map((r) => (
+                        <option key={r.reserva_id} value={r.reserva_id}>
+                          {r.cliente} · {r.fecha_inicio} · ${Math.round(r.total).toLocaleString("es-CL")}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 )}
                 {m.categoria === "por_revisar" && sugerencias[m.id] && (
                   <div className="mt-1 flex flex-wrap items-center gap-2">

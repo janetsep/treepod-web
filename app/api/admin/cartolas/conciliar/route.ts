@@ -29,6 +29,29 @@ export async function GET(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
+  const { searchParams } = new URL(request.url);
+
+  // ?listar=1 → lista de reservas (últimos 18 meses) para conciliar a mano un
+  // ingreso cuando el match automático no lo encontró. Solo lectura.
+  if (searchParams.get("listar") === "1") {
+    const desde = new Date(Date.now() - 548 * 86400000).toISOString().split("T")[0];
+    const { data } = await supabaseAdmin
+      .from("reservas")
+      .select("id, nombre, apellido, fecha_inicio, total")
+      .is("deleted_at", null)
+      .in("estado", ESTADOS_VALIDOS)
+      .gte("fecha_inicio", desde)
+      .order("fecha_inicio", { ascending: false });
+    return NextResponse.json({
+      reservas: (data || []).map((r) => ({
+        id: r.id,
+        cliente: `${r.nombre || ""} ${r.apellido || ""}`.trim() || "(sin nombre)",
+        fecha_inicio: r.fecha_inicio,
+        total: Number(r.total) || 0,
+      })),
+    });
+  }
+
   // Abonos aún sin clasificar
   const { data: movs } = await supabaseAdmin
     .from("sicra_cartola_movimientos")
