@@ -23,7 +23,8 @@ const SECCIONES: [Seccion, string][] = [
   ["recetas", "Recetas"],
   ["consumo", "Consumo"],
   ["rentabilidad", "Rentabilidad"],
-  ["proyectos", "Proyectos"],
+  // Proyectos NO va aquí: existe como botón propio arriba del admin (ProyectosPanel).
+  // Esta pestaña mostraba una versión inline antigua y duplicada.
   ["tendencia", "Tendencia"],
 ];
 

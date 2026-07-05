@@ -13,11 +13,12 @@ import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
 import SicraConsole from "./components/SicraConsole";
 import ProyectosPanel from "./components/ProyectosPanel";
+import CartolasPanel from "./components/CartolasPanel";
 import ClimaWidget from "./components/ClimaWidget";
 import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail, MailCheck, FolderOpen, Receipt } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra' | 'proyectos'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra' | 'proyectos' | 'cartolas'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -521,6 +522,13 @@ export default function AdminDashboard() {
                         <FolderOpen className="w-4 h-4" />
                         Proyectos
                     </button>
+                    <button
+                        onClick={() => setView('cartolas')}
+                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'cartolas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                    >
+                        <CreditCard className="w-4 h-4" />
+                        Cartolas
+                    </button>
                     <Link
                         href="/admin/dashboard"
                         className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"
@@ -532,6 +540,8 @@ export default function AdminDashboard() {
 
                 {view === 'proyectos' ? (
                     <ProyectosPanel />
+                ) : view === 'cartolas' ? (
+                    <CartolasPanel />
                 ) : view === 'sicra' ? (
                     <SicraConsole />
                 ) : view === 'tarifas' ? (
