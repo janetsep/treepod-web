@@ -6,14 +6,11 @@ import TrackView from '../../components/TrackView';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// Lista simple de artículos disponibles
+// Lista simple de artículos disponibles. Solo los que tienen contenido escrito:
+// los demás quedaban como "Artículo en Desarrollo" (404) y no deben indexarse.
 const availableArticles = [
     'que-hacer-valle-las-trancas-por-temporada',
-    'como-llegar-valle-las-trancas-desde-santiago',
-    'mejores-restaurantes-valle-las-trancas-2026',
-    'termas-nevados-chillan-precios-horarios-2026',
-    'que-llevar-glamping-valle-las-trancas-lista',
-    'clima-valle-las-trancas-por-mes-2026'
+    'como-llegar-valle-las-trancas-desde-santiago'
 ];
 
 const articleContent: Record<string, any> = {

@@ -81,22 +81,24 @@ const blogPosts = [
     }
 ];
 
+// Solo categorías con artículos publicados (los coming-soon no se muestran).
 const categories = [
     'Todas',
     'Guías',
-    'Logística',
-    'Gastronomía',
-    'Termas',
-    'Consejos',
-    'Clima'
+    'Logística'
 ];
 
 export default function BlogPage() {
     const [selectedCategory, setSelectedCategory] = useState('Todas');
 
+    // Solo se listan artículos con contenido real. Los marcados `comingSoon` aún no
+    // están escritos: mostrarlos llevaba a un "Artículo en Desarrollo" (404) y hacía
+    // ver el blog inconcluso. Sus datos quedan en el array para escribirlos más adelante.
+    const publishedPosts = blogPosts.filter(post => !post.comingSoon);
+
     const filteredPosts = selectedCategory === 'Todas'
-        ? blogPosts
-        : blogPosts.filter(post => post.category === selectedCategory);
+        ? publishedPosts
+        : publishedPosts.filter(post => post.category === selectedCategory);
 
     return (
         <div className="bg-white text-text-main min-h-screen">
