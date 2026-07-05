@@ -73,9 +73,10 @@ const FUENTES_PAGO = [
   { value: "ganancias", label: "Ganancias", color: "bg-emerald-100 text-emerald-700" },
   { value: "ahorros", label: "Ahorros", color: "bg-sky-100 text-sky-700" },
   { value: "prestamo", label: "Préstamo", color: "bg-rose-100 text-rose-700" },
+  { value: "fondo_concursable", label: "Fondo concursable", color: "bg-indigo-100 text-indigo-700" },
 ];
 const FUENTE_LABEL: Record<string, string> = {
-  ganancias: "Ganancias", ahorros: "Ahorros", prestamo: "Préstamo", sin_marcar: "Sin marcar",
+  ganancias: "Ganancias", ahorros: "Ahorros", prestamo: "Préstamo", fondo_concursable: "Fondo concursable", sin_marcar: "Sin marcar",
 };
 
 const ESTADO_COLORS: Record<string, string> = {
@@ -351,7 +352,7 @@ export default function ProyectosPanel() {
         for (const p of proyectos) {
           for (const [f, m] of Object.entries(p.porFuente || {})) fuentes[f] = (fuentes[f] || 0) + m;
         }
-        const fuentesOrden = ["ganancias", "ahorros", "prestamo", "sin_marcar"].filter((f) => fuentes[f]);
+        const fuentesOrden = ["ganancias", "ahorros", "prestamo", "fondo_concursable", "sin_marcar"].filter((f) => fuentes[f]);
         return (
           <div className="space-y-3">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -379,7 +380,7 @@ export default function ProyectosPanel() {
               <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">De lo gastado se pagó con</span>
               {fuentesOrden.map((f) => (
                 <span key={f} className="flex items-center gap-2 text-sm">
-                  <span className={`w-2.5 h-2.5 rounded-full ${f === "ganancias" ? "bg-emerald-500" : f === "ahorros" ? "bg-sky-500" : f === "prestamo" ? "bg-rose-500" : "bg-gray-300"}`}></span>
+                  <span className={`w-2.5 h-2.5 rounded-full ${f === "ganancias" ? "bg-emerald-500" : f === "ahorros" ? "bg-sky-500" : f === "prestamo" ? "bg-rose-500" : f === "fondo_concursable" ? "bg-indigo-500" : "bg-gray-300"}`}></span>
                   <span className="font-semibold text-gray-700">{FUENTE_LABEL[f]}:</span>
                   <span className="font-black text-gray-900">{fmt(fuentes[f])}</span>
                 </span>

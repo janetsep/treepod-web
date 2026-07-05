@@ -32,6 +32,7 @@ const FUENTES = [
   { value: "ganancias", label: "Ganancias" },
   { value: "ahorros", label: "Ahorros" },
   { value: "prestamo", label: "Préstamo" },
+  { value: "fondo_concursable", label: "Fondo concursable" },
 ];
 
 function fmt(n: number) {
