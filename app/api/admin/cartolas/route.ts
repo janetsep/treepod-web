@@ -135,7 +135,7 @@ export async function POST(request: Request) {
   const duplicados = candidatas.length - nuevas.length;
 
   if (!nuevas.length) {
-    return NextResponse.json({ ok: true, insertados: 0, duplicados, auto: 0 });
+    return NextResponse.json({ ok: true, insertados: 0, duplicados, auto: 0, conciliados: 0 });
   }
 
   // 2) Aprender de lo ya clasificado: aplicar reglas por "glosa base".
@@ -143,7 +143,7 @@ export async function POST(request: Request) {
   const reglaPorKey = new Map<string, any>((reglas || []).map((r: any) => [r.glosa_key, r]));
 
   let auto = 0;
-  const filas = nuevas.map((c) => {
+  const filas: any[] = nuevas.map((c) => {
     const regla = reglaPorKey.get(glosaKey(c.descripcion));
     if (regla) {
       auto++;
@@ -157,6 +157,46 @@ export async function POST(request: Request) {
     }
     return { ...c, categoria: "por_revisar", registrado_por: admin.email };
   });
+
+  // 2b) Conciliación automática de ABONOS pendientes, sin intervención manual:
+  //  - Identificadores conocidos: Airbnb (código proveedor) y Webpay/Transbank → ingreso.
+  //  - Match estricto con reserva: apellido del cliente en la glosa Y monto que calza
+  //    con el total o el 50% (abono típico) → ingreso conciliado con esa reserva.
+  const hayAbonosPend = filas.some((f) => f.categoria === "por_revisar" && f.tipo === "abono");
+  let conciliados = 0;
+  if (hayAbonosPend) {
+    const desde = new Date(Date.now() - 548 * 86400000).toISOString().split("T")[0];
+    const { data: reservas } = await supabaseAdmin
+      .from("reservas")
+      .select("id, nombre, apellido, fecha_inicio, total")
+      .is("deleted_at", null)
+      .in("estado", ["pagado", "confirmado", "confirmada", "pendiente", "pending_transfer_confirmation", "completada", "completado", "Checked Out", "checked out"])
+      .gte("fecha_inicio", desde);
+    const norm = (s: string) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+
+    for (const f of filas) {
+      if (f.categoria !== "por_revisar" || f.tipo !== "abono") continue;
+      const g = norm(f.descripcion);
+      // Identificadores conocidos (ingreso sin reserva específica).
+      if (g.includes("airbnb") || f.descripcion.includes("0769237836") || g.includes("transbank") || g.includes("webpay")) {
+        f.categoria = "ingreso";
+        auto++;
+        continue;
+      }
+      // Match estricto nombre + monto → conciliado directo.
+      const calce = (reservas || []).find((r) => {
+        const ap = norm(r.apellido || "");
+        if (ap.length < 3 || !g.includes(ap)) return false;
+        const total = Number(r.total) || 0;
+        return Math.abs(f.monto - total) < 1000 || Math.abs(f.monto - total / 2) < 1000;
+      });
+      if (calce) {
+        f.categoria = "ingreso";
+        f.reserva_id = calce.id;
+        conciliados++;
+      }
+    }
+  }
 
   const { data, error } = await supabaseAdmin.from("sicra_cartola_movimientos").insert(filas).select();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -184,7 +224,7 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, insertados: data?.length || 0, duplicados, auto });
+  return NextResponse.json({ ok: true, insertados: data?.length || 0, duplicados, auto, conciliados });
 }
 
 // ─── PATCH: categorizar un movimiento ───────────────────────────────────────────
@@ -244,6 +284,7 @@ export async function PATCH(request: Request) {
   // Aprender: recordar cómo se clasificó esta "glosa base" para futuras cartolas.
   // No se aprende de "ingreso" (eso se resuelve por nombre de reserva, no por glosa fija).
   const key = glosaKey(mov.descripcion);
+  let propagados = 0;
   if (key && categoria !== "por_revisar" && categoria !== "ingreso") {
     const { data: prev } = await supabaseAdmin
       .from("sicra_cartola_reglas").select("veces").eq("glosa_key", key).single();
@@ -255,9 +296,47 @@ export async function PATCH(request: Request) {
       veces: (prev?.veces || 0) + 1,
       updated_at: new Date().toISOString(),
     }, { onConflict: "glosa_key" });
+
+    // Propagar de inmediato: los movimientos PENDIENTES con la misma glosa base se
+    // clasifican igual, sin esperar a la próxima importación.
+    const { data: pendientes } = await supabaseAdmin
+      .from("sicra_cartola_movimientos")
+      .select("id, descripcion, fecha, monto, tipo")
+      .eq("categoria", "por_revisar")
+      .neq("id", id);
+    for (const p of pendientes || []) {
+      if (glosaKey(p.descripcion) !== key) continue;
+      let gastoPropId: string | null = null;
+      if (categoria === "proyecto" && proyecto_id && p.tipo === "cargo") {
+        const { data: g } = await supabaseAdmin
+          .from("sicra_proyecto_gastos")
+          .insert({
+            proyecto_id,
+            fecha: p.fecha || new Date().toISOString().split("T")[0],
+            concepto: p.descripcion,
+            monto: p.monto,
+            tipo: "material",
+            fuente_pago: fuente_pago || null,
+            nota: "Desde cartola (auto)",
+            registrado_por: admin.email,
+          })
+          .select("id").single();
+        gastoPropId = g?.id || null;
+      }
+      await supabaseAdmin
+        .from("sicra_cartola_movimientos")
+        .update({
+          categoria,
+          proyecto_id: categoria === "proyecto" ? proyecto_id || null : null,
+          gasto_id: gastoPropId,
+          fuente_pago: fuente_pago || null,
+        })
+        .eq("id", p.id);
+      propagados++;
+    }
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, propagados });
 }
 
 // ─── DELETE: borrar un movimiento (y su gasto enlazado) ─────────────────────────
