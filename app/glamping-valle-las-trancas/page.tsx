@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Glamping Valle Las Trancas | Domos Geodésicos — TreePod',
-    description: 'Glamping valle las trancas con domos geodésicos. Estufa a pellet, cocina equipada, WiFi Starlink y bosque nativo. A 15 min de Nevados de Chillán.',
+    title: 'Domos en Las Trancas | Glamping con Tinaja Privada — TreePod',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Tinaja caliente, estufa a pellet, cocina equipada y bosque nativo. A 15 min de Nevados de Chillán. Reserva directo.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/glamping-valle-las-trancas',
     },
     openGraph: {
-        title: 'Glamping en Valle Las Trancas | Domos Geodésicos TreePod',
-        description: 'Domos geodésicos en el bosque nativo. Estufa a pellet, cocina equipada y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        title: 'Domos en Las Trancas | Glamping con Tinaja — TreePod',
+        description: 'Domos geodésicos en Valle Las Trancas. Tinaja caliente privada, estufa a pellet y bosque nativo. A 15 min de Nevados de Chillán.',
         images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
         type: 'website',
         locale: 'es_CL',
