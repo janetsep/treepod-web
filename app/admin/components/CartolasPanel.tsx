@@ -38,14 +38,38 @@ function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString("es-CL");
 }
 
-// Parseo tolerante de fecha y monto (formato chileno: miles con punto, decimal coma).
+// Parseo tolerante de fecha y monto (formato chileno: dd-mm-aaaa, miles con punto).
+function validarFecha(y: number, mo: number, d: number): string | null {
+  if (!Number.isFinite(y) || mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
 function parseFecha(v: any): string | null {
-  if (v == null) return null;
+  if (v == null || v === "") return null;
+  // Celda de fecha real de Excel (SheetJS con cellDates) → objeto Date.
+  if (v instanceof Date && !isNaN(v.getTime())) {
+    return validarFecha(v.getFullYear(), v.getMonth() + 1, v.getDate());
+  }
   const s = String(v).trim();
+  // ISO (aaaa-mm-dd)
+  const iso = s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return validarFecha(+iso[1], +iso[2], +iso[3]);
+  // dd-mm-aaaa / dd/mm/aa (lo que usa el banco). El primer número es el DÍA.
   const m = s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
-  if (m) { let [, d, mo, y] = m; if (y.length === 2) y = "20" + y; return `${y}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`; }
-  const iso = s.match(/(\d{4})-(\d{2})-(\d{2})/);
-  return iso ? `${iso[1]}-${iso[2]}-${iso[3]}` : null;
+  if (m) {
+    let d = +m[1], mo = +m[2], y = +m[3];
+    if (m[3].length === 2) y += 2000;
+    // Si vinieron invertidos (mes > 12 pero día ≤ 12), corrige.
+    if (mo > 12 && d <= 12) { const t = d; d = mo; mo = t; }
+    return validarFecha(y, mo, d);
+  }
+  return null;
+}
+// Muestra un valor de celda legible en la vista previa (fechas como dd-mm-aaaa).
+function celda(v: any): string {
+  if (v instanceof Date && !isNaN(v.getTime())) {
+    return `${String(v.getDate()).padStart(2, "0")}-${String(v.getMonth() + 1).padStart(2, "0")}-${v.getFullYear()}`;
+  }
+  return String(v ?? "");
 }
 function parseMonto(v: any): number | null {
   if (v == null || v === "") return null;
@@ -96,10 +120,11 @@ export default function CartolasPanel() {
     setFileName(file.name);
     try {
       const buf = await file.arrayBuffer();
-      const wb = XLSX.read(buf, { cellDates: false });
+      // cellDates:true → las celdas de fecha llegan como Date (sin ambigüedad de orden).
+      const wb = XLSX.read(buf, { cellDates: true });
       const ws = wb.Sheets[wb.SheetNames[0]];
-      // header:1 → array de arrays; raw:false → valores formateados como texto (fechas legibles).
-      const data = XLSX.utils.sheet_to_json<any[]>(ws, { header: 1, raw: false, defval: "" });
+      // header:1 → array de arrays; raw:true conserva Date y números tal cual.
+      const data = XLSX.utils.sheet_to_json<any[]>(ws, { header: 1, raw: true, defval: "" });
       const noVacias = data.filter((r) => r.some((c) => String(c).trim() !== ""));
       setRows(noVacias);
       // Adivinar columnas: busca en las primeras filas cuál parece fecha / monto.
@@ -297,7 +322,7 @@ export default function CartolasPanel() {
                   {rows.slice(0, 6).map((r, ri) => (
                     <tr key={ri} className={ri + 1 < filaInicio ? "bg-gray-50 text-gray-400" : ""}>
                       <td className="px-2 py-1 text-gray-400 border-r border-gray-100">f{ri + 1}</td>
-                      {colOpts.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap border-r border-gray-50">{String(r[c] ?? "")}</td>)}
+                      {colOpts.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap border-r border-gray-50">{celda(r[c])}</td>)}
                     </tr>
                   ))}
                 </tbody>

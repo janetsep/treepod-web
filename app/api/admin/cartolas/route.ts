@@ -89,9 +89,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No se detectaron movimientos en el texto" }, { status: 400 });
   }
 
+  // Solo aceptar fechas válidas aaaa-mm-dd; cualquier otra cosa → null (evita el
+  // error "date/time field value out of range" de Postgres).
+  const fechaValida = (f: any): string | null =>
+    typeof f === "string" && /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(f) ? f : null;
+
   const filas = movs.map((m) => ({
     banco: banco || null,
-    fecha: m.fecha,
+    fecha: fechaValida(m.fecha),
     descripcion: m.descripcion,
     monto: Math.abs(Math.round(m.monto)),
     tipo: m.tipo === "abono" ? "abono" : "cargo",
