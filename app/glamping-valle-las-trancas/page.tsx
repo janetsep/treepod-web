@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Domos en Las Trancas | Glamping con Tinaja Privada — TreePod',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Tinaja caliente, estufa a pellet, cocina equipada y bosque nativo. A 15 min de Nevados de Chillán. Reserva directo.',
+    title: 'Domos en Las Trancas | Glamping en Bosque Nativo — TreePod',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, cocina equipada, WiFi Starlink y bosque nativo. A 15 min de Nevados de Chillán. Reserva directo.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/glamping-valle-las-trancas',
     },
     openGraph: {
-        title: 'Domos en Las Trancas | Glamping con Tinaja — TreePod',
-        description: 'Domos geodésicos en Valle Las Trancas. Tinaja caliente privada, estufa a pellet y bosque nativo. A 15 min de Nevados de Chillán.',
+        title: 'Domos en Las Trancas | Glamping TreePod',
+        description: 'Domos geodésicos en Valle Las Trancas. Estufa a pellet, bosque nativo y WiFi Starlink. A 15 min de Nevados de Chillán.',
         images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -45,7 +45,7 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "TreePod Glamping - Valle Las Trancas",
-    "description": "Glamping en Valle Las Trancas con domos geodésicos, tinaja privada y bosque nativo. A 15 minutos de Nevados de Chillán.",
+    "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 15 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/glamping-valle-las-trancas",
     "telephone": "+56984643307",
     "address": {
@@ -68,7 +68,7 @@ const jsonLd = {
         "reviewCount": "59"
     },
     "amenityFeature": [
-        { "@type": "LocationFeatureSpecification", "name": "Tinaja privada de ciprés", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Bosque nativo privado", "value": true },
         { "@type": "LocationFeatureSpecification", "name": "Estufa a pellet automática", "value": true },
         { "@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true },
         { "@type": "LocationFeatureSpecification", "name": "Cocina equipada", "value": true },
@@ -108,8 +108,8 @@ export default function GlampingValleLasTrancasPage() {
                     </div>
 
                     <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-4xl mx-auto animate-fade-in-up delay-100 !text-white leading-tight">
-                        Glamping en Valle Las Trancas: <br className="hidden md:block" />
-                        domos geodésicos <span className="text-primary italic-display block md:inline">en el bosque nativo</span>
+                        Domos en Las Trancas: <br className="hidden md:block" />
+                        glamping geodésico <span className="text-primary italic-display block md:inline">en bosque nativo</span>
                     </h1>
 
                     <div className="mb-8 animate-fade-in-up delay-150">
