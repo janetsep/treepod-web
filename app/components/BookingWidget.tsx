@@ -23,7 +23,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   };
 
   const baseField =
-    "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm outline-none focus:border-[#4A7C2E] focus:ring-2 focus:ring-[#4A7C2E]/20 transition";
+    "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm outline-none focus:border-[#00ADEF] focus:ring-2 focus:ring-[#00ADEF]/20 transition";
   // appearance-none + color-scheme:light quitan el borde/sombra nativo que Safari iOS
   // le agrega a <input type="date"> encima de nuestro estilo, y evitan el date picker oscuro.
   const dateField = `${baseField} appearance-none [color-scheme:light]`;
@@ -36,7 +36,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {/* Llegada */}
             <label className="block">
               <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <CalendarDays className="w-3.5 h-3.5 text-[#4A7C2E]" /> Llegada
+                <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Llegada
               </span>
               <div className="relative">
                 <input
@@ -62,7 +62,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {/* Salida */}
             <label className="block">
               <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <CalendarDays className="w-3.5 h-3.5 text-[#4A7C2E]" /> Salida
+                <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Salida
               </span>
               <div className="relative">
                 <input
@@ -83,7 +83,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {/* Huéspedes */}
             <label className="block">
               <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <Users className="w-3.5 h-3.5 text-[#4A7C2E]" /> Huéspedes
+                <Users className="w-3.5 h-3.5 text-[#00ADEF]" /> Huéspedes
               </span>
               <select
                 value={adultos}
@@ -99,7 +99,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {/* Buscar */}
             <button
               onClick={buscar}
-              className="col-span-2 md:col-span-1 inline-flex items-center justify-center gap-2 bg-[#4A7C2E] hover:bg-[#3A6122] text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md active:scale-[0.98] transition-all"
+              className="col-span-2 md:col-span-1 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md active:scale-[0.98] transition-all"
             >
               <Search className="w-4 h-4" /> Ver disponibilidad
             </button>

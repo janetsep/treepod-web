@@ -23,7 +23,7 @@ export default async function ValueBand() {
           <div className="flex flex-col shrink-0">
             <div className="flex items-baseline gap-2">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Domos desde</span>
-              <span className="text-3xl md:text-4xl font-black text-[#4A7C2E] leading-none">{fmtCLP(desde)}</span>
+              <span className="text-3xl md:text-4xl font-black text-[#00ADEF] leading-none">{fmtCLP(desde)}</span>
               <span className="text-sm font-semibold text-gray-500">/ noche</span>
             </div>
             <span className="text-[11px] font-semibold text-gray-400 mt-0.5">
@@ -41,7 +41,7 @@ export default async function ValueBand() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 sm:gap-y-4 flex-1">
             {items.map(({ Icon, t, s }) => (
               <div key={t} className="flex items-start gap-2.5">
-                <Icon className="w-5 h-5 text-[#4A7C2E] shrink-0 mt-0.5" strokeWidth={2.2} />
+                <Icon className="w-5 h-5 text-[#00ADEF] shrink-0 mt-0.5" strokeWidth={2.2} />
                 <div className="min-w-0">
                   <div className="text-sm sm:text-[13px] font-bold text-gray-900 leading-tight">{t}</div>
                   <div className="text-xs sm:text-[11px] text-gray-500 leading-tight mt-0.5">{s}</div>

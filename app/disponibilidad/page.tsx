@@ -384,11 +384,11 @@ function DisponibilidadContent() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/80" />
         <div className="relative z-10 container max-w-7xl mx-auto px-6">
-          <span className="inline-block text-[#4A7C2E] text-xs font-black tracking-[0.3em] uppercase mb-3">
+          <span className="inline-block text-[#00ADEF] text-xs font-black tracking-[0.3em] uppercase mb-3">
             Reserva directa
           </span>
           <h1 className="font-display font-black !text-white text-3xl md:text-5xl leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]">
-            Reserva tu <span className="text-[#4A7C2E] italic-display">glamping</span> en Las Trancas
+            Reserva tu <span className="text-[#00ADEF] italic-display">glamping</span> en Las Trancas
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-white/85 text-[12px] md:text-sm font-medium">
             <span className="inline-flex items-center gap-1.5">
@@ -454,7 +454,7 @@ function DisponibilidadContent() {
                     <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
                     <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(74, 124, 46,0.3)]"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0, 173, 239,0.3)]"></div>
                         <span className="text-text-main">Selección</span>
                       </div>
                       <div className="flex items-center gap-1.5">
