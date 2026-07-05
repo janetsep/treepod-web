@@ -13,6 +13,7 @@ interface Gasto {
   numero_documento: string | null;
   tipo: string;
   nota: string | null;
+  fuente_pago: string | null;
 }
 
 interface Proyecto {
@@ -21,12 +22,14 @@ interface Proyecto {
   descripcion: string | null;
   presupuesto: number;
   estado: "activo" | "pausado" | "completado";
+  categoria: string | null;
   fecha_inicio: string;
   fecha_fin: string | null;
   totalGastado: number;
   gastosCount: number;
   porConcepto: Record<string, { total: number; count: number }>;
   porTipo: Record<string, { total: number; count: number }>;
+  porFuente: Record<string, number>;
 }
 
 interface ParsedItem {
@@ -57,6 +60,24 @@ const TIPOS_GASTO = [
   { value: "otro", label: "Otro" },
 ];
 
+// Categoría del proyecto (marco de decisión): mantener = seguridad/operación,
+// renovar = proteger ingresos existentes, avanzar = crecimiento nuevo.
+const CATEGORIAS = [
+  { value: "mantener", label: "Mantener", color: "bg-blue-100 text-blue-700" },
+  { value: "renovar", label: "Renovar", color: "bg-amber-100 text-amber-700" },
+  { value: "avanzar", label: "Avanzar", color: "bg-purple-100 text-purple-700" },
+];
+
+// Fuente de pago de cada gasto: con qué plata se financió.
+const FUENTES_PAGO = [
+  { value: "ganancias", label: "Ganancias", color: "bg-emerald-100 text-emerald-700" },
+  { value: "ahorros", label: "Ahorros", color: "bg-sky-100 text-sky-700" },
+  { value: "prestamo", label: "Préstamo", color: "bg-rose-100 text-rose-700" },
+];
+const FUENTE_LABEL: Record<string, string> = {
+  ganancias: "Ganancias", ahorros: "Ahorros", prestamo: "Préstamo", sin_marcar: "Sin marcar",
+};
+
 const ESTADO_COLORS: Record<string, string> = {
   activo: "bg-green-100 text-green-700",
   pausado: "bg-yellow-100 text-yellow-700",
@@ -75,13 +96,13 @@ export default function ProyectosPanel() {
   const [gastosLoading, setGastosLoading] = useState(false);
 
   const [showNewProyecto, setShowNewProyecto] = useState(false);
-  const [newP, setNewP] = useState({ nombre: "", descripcion: "", presupuesto: "" });
+  const [newP, setNewP] = useState({ nombre: "", descripcion: "", presupuesto: "", categoria: "" });
   const [showNewGasto, setShowNewGasto] = useState(false);
-  const [newG, setNewG] = useState({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "" });
+  const [newG, setNewG] = useState({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
 
   // Edit project state
   const [editingProyecto, setEditingProyecto] = useState<string | null>(null);
-  const [editP, setEditP] = useState({ nombre: "", descripcion: "", presupuesto: "" });
+  const [editP, setEditP] = useState({ nombre: "", descripcion: "", presupuesto: "", categoria: "" });
 
   // Boleta parser state
   const [showBoleta, setShowBoleta] = useState(false);
@@ -123,10 +144,11 @@ export default function ProyectosPanel() {
         nombre: newP.nombre.trim(),
         descripcion: newP.descripcion.trim() || null,
         presupuesto: Math.round(Number(newP.presupuesto) || 0),
+        categoria: newP.categoria || null,
       }),
     });
     if (res.ok) {
-      setNewP({ nombre: "", descripcion: "", presupuesto: "" });
+      setNewP({ nombre: "", descripcion: "", presupuesto: "", categoria: "" });
       setShowNewProyecto(false);
       loadProyectos();
     }
@@ -146,10 +168,11 @@ export default function ProyectosPanel() {
         numero_documento: newG.numero_documento.trim() || null,
         tipo: newG.tipo,
         nota: newG.nota.trim() || null,
+        fuente_pago: newG.fuente_pago || null,
       }),
     });
     if (res.ok) {
-      setNewG({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "" });
+      setNewG({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
       setShowNewGasto(false);
       loadGastos(proyectoId);
       loadProyectos();
@@ -185,6 +208,7 @@ export default function ProyectosPanel() {
         nombre: editP.nombre.trim(),
         descripcion: editP.descripcion.trim() || null,
         presupuesto: Math.round(Number(editP.presupuesto) || 0),
+        categoria: editP.categoria || null,
       }),
     });
     setEditingProyecto(null);
@@ -322,7 +346,14 @@ export default function ProyectosPanel() {
         const costoTotal = proyectos.reduce((s, p) => s + (p.presupuesto > 0 ? p.presupuesto : p.totalGastado), 0);
         const gastadoTotal = proyectos.reduce((s, p) => s + p.totalGastado, 0);
         const saldo = costoTotal - gastadoTotal;
+        // Agregar el gasto por fuente de pago sumando todos los proyectos.
+        const fuentes: Record<string, number> = {};
+        for (const p of proyectos) {
+          for (const [f, m] of Object.entries(p.porFuente || {})) fuentes[f] = (fuentes[f] || 0) + m;
+        }
+        const fuentesOrden = ["ganancias", "ahorros", "prestamo", "sin_marcar"].filter((f) => fuentes[f]);
         return (
+          <div className="space-y-3">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="bg-gray-900 text-white rounded-2xl p-5">
               <div className="text-[10px] font-black uppercase tracking-widest text-white/60">Costo total estimado</div>
@@ -342,16 +373,34 @@ export default function ProyectosPanel() {
               <div className="text-2xl font-black mt-1 text-gray-900">{costoTotal > 0 ? Math.round((gastadoTotal / costoTotal) * 100) : 0}%</div>
             </div>
           </div>
+          {/* De lo gastado, con qué plata se pagó */}
+          {fuentesOrden.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">De lo gastado se pagó con</span>
+              {fuentesOrden.map((f) => (
+                <span key={f} className="flex items-center gap-2 text-sm">
+                  <span className={`w-2.5 h-2.5 rounded-full ${f === "ganancias" ? "bg-emerald-500" : f === "ahorros" ? "bg-sky-500" : f === "prestamo" ? "bg-rose-500" : "bg-gray-300"}`}></span>
+                  <span className="font-semibold text-gray-700">{FUENTE_LABEL[f]}:</span>
+                  <span className="font-black text-gray-900">{fmt(fuentes[f])}</span>
+                </span>
+              ))}
+            </div>
+          )}
+          </div>
         );
       })()}
 
       {/* New project form */}
       {showNewProyecto && (
         <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input placeholder="Nombre del proyecto *" value={newP.nombre} onChange={(e) => setNewP({ ...newP, nombre: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
             <input placeholder="Descripcion" value={newP.descripcion} onChange={(e) => setNewP({ ...newP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
             <input type="number" placeholder="Presupuesto (CLP)" value={newP.presupuesto} onChange={(e) => setNewP({ ...newP, presupuesto: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
+            <select value={newP.categoria} onChange={(e) => setNewP({ ...newP, categoria: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
+              <option value="">Categoría…</option>
+              {CATEGORIAS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
           </div>
           <div className="flex gap-3">
             <button onClick={crearProyecto} className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-all">Crear</button>
@@ -380,8 +429,9 @@ export default function ProyectosPanel() {
                   {isExpanded ? <ChevronDown className="w-5 h-5 text-gray-700 shrink-0" /> : <ChevronRight className="w-5 h-5 text-gray-700 shrink-0" />}
                   <FolderOpen className="w-5 h-5 text-primary shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="font-black text-gray-900">{p.nombre}</span>
+                      {p.categoria && (() => { const c = CATEGORIAS.find((x) => x.value === p.categoria); return c ? <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${c.color}`}>{c.label}</span> : null; })()}
                       <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${ESTADO_COLORS[p.estado]}`}>{p.estado}</span>
                     </div>
                     {p.descripcion && <p className="text-xs text-gray-700 truncate">{p.descripcion}</p>}
@@ -404,7 +454,7 @@ export default function ProyectosPanel() {
                 {/* Edit/Delete buttons */}
                 <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                   <button
-                    onClick={(e) => { e.stopPropagation(); setEditingProyecto(p.id); setEditP({ nombre: p.nombre, descripcion: p.descripcion || "", presupuesto: p.presupuesto ? String(p.presupuesto) : "" }); }}
+                    onClick={(e) => { e.stopPropagation(); setEditingProyecto(p.id); setEditP({ nombre: p.nombre, descripcion: p.descripcion || "", presupuesto: p.presupuesto ? String(p.presupuesto) : "", categoria: p.categoria || "" }); }}
                     className="p-1.5 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 hover:text-gray-700 transition-all"
                     title="Editar proyecto"
                   >
@@ -422,10 +472,14 @@ export default function ProyectosPanel() {
                 {/* Inline edit form */}
                 {editingProyecto === p.id && (
                   <div className="px-6 pb-4 border-t border-gray-100 bg-blue-50/50" onClick={(e) => e.stopPropagation()}>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 pt-4">
                       <input placeholder="Nombre *" value={editP.nombre} onChange={(e) => setEditP({ ...editP, nombre: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
                       <input placeholder="Descripcion" value={editP.descripcion} onChange={(e) => setEditP({ ...editP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
                       <input type="number" placeholder="Presupuesto (CLP)" value={editP.presupuesto} onChange={(e) => setEditP({ ...editP, presupuesto: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
+                      <select value={editP.categoria} onChange={(e) => setEditP({ ...editP, categoria: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
+                        <option value="">Categoría…</option>
+                        {CATEGORIAS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+                      </select>
                     </div>
                     <div className="flex gap-3 mt-3">
                       <button onClick={() => guardarEdicionProyecto(p.id)} className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-all">Guardar</button>
@@ -626,7 +680,11 @@ export default function ProyectosPanel() {
                             <select value={newG.tipo} onChange={(e) => setNewG({ ...newG, tipo: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20">
                               {TIPOS_GASTO.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                             </select>
-                            <input placeholder="Nota" value={newG.nota} onChange={(e) => setNewG({ ...newG, nota: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 col-span-2" />
+                            <select value={newG.fuente_pago} onChange={(e) => setNewG({ ...newG, fuente_pago: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 bg-white">
+                              <option value="">Se pagó con…</option>
+                              {FUENTES_PAGO.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
+                            </select>
+                            <input placeholder="Nota" value={newG.nota} onChange={(e) => setNewG({ ...newG, nota: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
                           </div>
                           <div className="flex gap-2">
                             <button onClick={() => crearGasto(p.id)} className="px-4 py-2 bg-primary text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-primary/90">Guardar</button>
@@ -661,9 +719,12 @@ export default function ProyectosPanel() {
                                   {g.nota && <span className="text-[10px] text-gray-700 ml-2">({g.nota})</span>}
                                 </td>
                                 <td className="py-2.5 pr-3">
-                                  <span className="text-[9px] font-bold bg-gray-100 text-gray-900 px-2 py-0.5 rounded uppercase">
-                                    {TIPOS_GASTO.find(t => t.value === g.tipo)?.label || g.tipo}
-                                  </span>
+                                  <div className="flex flex-wrap items-center gap-1">
+                                    <span className="text-[9px] font-bold bg-gray-100 text-gray-900 px-2 py-0.5 rounded uppercase">
+                                      {TIPOS_GASTO.find(t => t.value === g.tipo)?.label || g.tipo}
+                                    </span>
+                                    {g.fuente_pago && (() => { const f = FUENTES_PAGO.find(x => x.value === g.fuente_pago); return f ? <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase ${f.color}`}>{f.label}</span> : null; })()}
+                                  </div>
                                 </td>
                                 <td className="py-2.5 pr-3 text-xs text-gray-900">{g.proveedor || "—"}</td>
                                 <td className="py-2.5 pr-3 text-xs text-gray-700 font-mono">{g.numero_documento || "—"}</td>

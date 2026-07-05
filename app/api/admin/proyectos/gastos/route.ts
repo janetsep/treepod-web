@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
   const body = await request.json();
-  const { proyecto_id, fecha, concepto, monto, proveedor, numero_documento, tipo, nota } = body;
+  const { proyecto_id, fecha, concepto, monto, proveedor, numero_documento, tipo, nota, fuente_pago } = body;
 
   if (!proyecto_id || !concepto || !monto || monto <= 0) {
     return NextResponse.json({ error: "proyecto_id, concepto y monto son requeridos" }, { status: 400 });
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
       numero_documento: numero_documento || null,
       tipo: tipo || "material",
       nota: nota || null,
+      fuente_pago: fuente_pago || null,
       registrado_por: admin.email,
     })
     .select()
