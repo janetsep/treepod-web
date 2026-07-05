@@ -93,6 +93,9 @@ export default function CartolasPanel() {
   const [sugiriendo, setSugiriendo] = useState(false);
   // Lista de reservas (18 meses) para conciliar a mano cuando el automático no calza.
   const [reservasLista, setReservasLista] = useState<Sugerencia[]>([]);
+  // Movimientos tocados en esta sesión: se mantienen visibles aunque el filtro los
+  // ocultaría, para poder terminar de conciliarlos ahí mismo (ej. ingreso → reserva).
+  const [tocados, setTocados] = useState<Set<string>>(new Set());
 
   // Estado de la lectura del archivo + mapeo de columnas
   const [rows, setRows] = useState<any[][]>([]);
@@ -221,12 +224,15 @@ export default function CartolasPanel() {
     const data = await res.json();
     if (res.ok) {
       const partes = [`✓ ${data.insertados} movimientos importados`];
-      if (data.auto) partes.push(`${data.auto} auto-clasificados (aprendidos)`);
+      if (data.auto) partes.push(`${data.auto} auto-clasificados`);
+      if (data.conciliados) partes.push(`${data.conciliados} conciliados con reserva`);
       if (data.duplicados) partes.push(`${data.duplicados} duplicados omitidos`);
       setMsg(partes.join(" · "));
       setRows([]);
       setFileName("");
-      cargar();
+      await cargar();
+      // Buscar de inmediato sugerencias de reserva para los abonos que quedaron pendientes.
+      sugerir();
     } else {
       setMsg(data.error || "No se pudo importar.");
     }
@@ -235,11 +241,16 @@ export default function CartolasPanel() {
 
   async function categorizar(m: Movimiento, cambios: Partial<Movimiento>) {
     const nuevo = { ...m, ...cambios };
+    setTocados((t) => new Set(t).add(m.id));
     setMovimientos((ms) => ms.map((x) => (x.id === m.id ? nuevo : x)));
-    await adminFetch("/api/admin/cartolas", {
+    const res = await adminFetch("/api/admin/cartolas", {
       method: "PATCH",
       body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, reserva_id: nuevo.reserva_id, fuente_pago: nuevo.fuente_pago }),
     });
+    try {
+      const d = await res.json();
+      if (d.propagados > 0) setMsg(`✓ Se clasificaron también ${d.propagados} movimiento${d.propagados !== 1 ? "s" : ""} con la misma glosa.`);
+    } catch { }
     cargar();
   }
 
@@ -266,13 +277,30 @@ export default function CartolasPanel() {
     await categorizar(m, { categoria: "ingreso", reserva_id: s.reserva_id } as Partial<Movimiento>);
   }
 
+  // Acepta TODAS las sugerencias de una vez (un clic en vez de uno por movimiento).
+  async function aceptarTodas() {
+    const entradas = Object.entries(sugerencias);
+    setSugerencias({});
+    for (const [movId, s] of entradas) {
+      setTocados((t) => new Set(t).add(movId));
+      await adminFetch("/api/admin/cartolas", {
+        method: "PATCH",
+        body: JSON.stringify({ id: movId, categoria: "ingreso", reserva_id: s.reserva_id }),
+      });
+    }
+    setMsg(`✓ ${entradas.length} ingreso${entradas.length !== 1 ? "s" : ""} conciliado${entradas.length !== 1 ? "s" : ""} con su reserva.`);
+    cargar();
+  }
+
   async function eliminar(id: string) {
     if (!confirm("¿Eliminar este movimiento?")) return;
     await adminFetch("/api/admin/cartolas", { method: "DELETE", body: JSON.stringify({ id }) });
     cargar();
   }
 
-  const visibles = filtro === "todos" ? movimientos : movimientos.filter((m) => m.categoria === filtro);
+  // Los "tocados" en esta sesión se mantienen visibles aunque el filtro los ocultaría,
+  // para poder terminar de conciliarlos sin cambiar de pestaña.
+  const visibles = filtro === "todos" ? movimientos : movimientos.filter((m) => m.categoria === filtro || tocados.has(m.id));
   const porRevisar = movimientos.filter((m) => m.categoria === "por_revisar").length;
   const nCols = rows.length ? Math.max(...rows.map((r) => r.length)) : 0;
   const colOpts = Array.from({ length: nCols }, (_, i) => i);
@@ -401,6 +429,11 @@ export default function CartolasPanel() {
             <button onClick={sugerir} disabled={sugiriendo} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50">
               {sugiriendo ? "Buscando…" : "Conciliar ingresos con reservas"}
             </button>
+            {Object.keys(sugerencias).length > 0 && (
+              <button onClick={aceptarTodas} className="px-4 py-2 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-200 transition-all">
+                Aceptar todas ({Object.keys(sugerencias).length})
+              </button>
+            )}
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span className="font-semibold text-gray-600">Ingresos:</span><span className="font-black text-gray-900">{fmt(suma("ingreso"))}</span></span>
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span className="font-semibold text-gray-600">Proyectos:</span><span className="font-black text-gray-900">{fmt(suma("proyecto"))}</span></span>
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span className="font-semibold text-gray-600">Operación:</span><span className="font-black text-gray-900">{fmt(suma("operacion"))}</span></span>
