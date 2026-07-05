@@ -63,7 +63,7 @@ export async function GET(request: Request) {
 
   let q = supabaseAdmin
     .from("sicra_cartola_movimientos")
-    .select("*, sicra_proyectos(nombre)")
+    .select("*, sicra_proyectos(nombre), reservas(nombre, apellido)")
     .order("fecha", { ascending: false })
     .order("created_at", { ascending: false });
   if (categoria) q = q.eq("categoria", categoria);
@@ -111,7 +111,7 @@ export async function PATCH(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-  const { id, categoria, proyecto_id, fuente_pago, nota } = await request.json();
+  const { id, categoria, proyecto_id, fuente_pago, nota, reserva_id } = await request.json();
   if (!id || !categoria) return NextResponse.json({ error: "id y categoria requeridos" }, { status: 400 });
 
   const { data: mov } = await supabaseAdmin
@@ -149,6 +149,7 @@ export async function PATCH(request: Request) {
     .update({
       categoria,
       proyecto_id: categoria === "proyecto" ? proyecto_id || null : null,
+      reserva_id: categoria === "ingreso" ? reserva_id || null : null,
       gasto_id: nuevoGastoId,
       fuente_pago: fuente_pago || null,
       nota: nota || null,
