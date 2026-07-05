@@ -10,7 +10,7 @@ import { ChevronDown, MessageCircle } from "lucide-react";
 const faqs: { q: string; a: string }[] = [
   {
     q: "¿Cuál es el horario de check-in y check-out?",
-    a: "Check-in a partir de las 16:00 hrs y check-out hasta las 12:00 hrs. Si estimas llegar más tarde, avísanos para coordinar el acceso. El late check-out sin autorización previa tiene cobro adicional.",
+    a: "Check-in a partir de las 16:00 hrs y check-out hasta las 12:00 hrs. Si estimas llegar más tarde, avísanos para coordinar el acceso.",
   },
   {
     q: "¿Cómo reservo y cómo pago?",
@@ -26,7 +26,7 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: "¿Qué incluye el domo?",
-    a: "El domo viene totalmente equipado para que no pases frío: cama premium en lo alto del domo, calefacción (cero humo, cero frío) y todo lo necesario para un descanso real en el bosque nativo. La tinaja caliente privada al aire libre es un adicional opcional.",
+    a: "El domo viene totalmente equipado para que no pases frío: cama cómoda, calefacción (cero humo, cero frío) y todo lo necesario para un buen descanso en el bosque nativo. La tinaja caliente privada al aire libre es un adicional opcional.",
   },
   {
     q: "¿Cómo llego a TreePod?",

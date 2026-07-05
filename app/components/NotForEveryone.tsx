@@ -27,7 +27,7 @@ export default function NotForEveryone() {
                                 <strong>A minutos de todo:</strong> despiertas rodeada de bosque nativo y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.
                             </p>
                             <p>
-                                <strong>Espacio de verdad:</strong> un domo amplio solo para ustedes, con baño privado y cama grande. Nada de carpas apretadas ni baños compartidos.
+                                <strong>Espacio de verdad:</strong> un domo amplio solo para ustedes, con baño privado dentro del domo. Tu propio espacio en el bosque, sin compartir con nadie.
                             </p>
                             <p>
                                 <strong>Llegas y no traes nada:</strong> Nespresso, WiFi Starlink y el domo completamente equipado. Dejas el bolso y ya estás de vacaciones.

@@ -43,10 +43,10 @@ export default function News() {
                 <div className="flex flex-col items-center text-center mb-12 md:mb-20">
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-4">
-                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Que tu única preocupación sea qué aventura elegir hoy</span>
+                            <span className="w-2 h-2 bg-primary rounded-full"></span>
+                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Todo lo que puedes hacer cerca</span>
                         </div>
-                        <h2 className="h2-display text-text-main leading-tight mb-6">Vive el Valle al máximo: No vengas solo a encerrarte.</h2>
+                        <h2 className="h2-display text-text-main leading-tight mb-6">Más allá del domo, todo un valle por descubrir</h2>
                         <p className="text-lg md:text-xl text-text-sub font-bold leading-relaxed">
                             Descubre los secretos del bosque, la adrenalina de la montaña y los mejores planes que tenemos listos para ti esta temporada.
                         </p>
