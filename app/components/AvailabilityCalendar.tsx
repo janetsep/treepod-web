@@ -148,15 +148,15 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     const css = `
     /* react-day-picker v9 styling with cyan/primary color */
     .rdp-root {
-      --rdp-accent-color: #4A7C2E;
-      --rdp-accent-background-color: rgba(74, 124, 46, 0.1);
-      --rdp-range_start-date-background-color: #4A7C2E;
-      --rdp-range_end-date-background-color: #4A7C2E;
-      --rdp-range_middle-background-color: rgba(74, 124, 46, 0.12);
-      --rdp-range_middle-color: #4A7C2E;
+      --rdp-accent-color: #00ADEF;
+      --rdp-accent-background-color: rgba(0, 173, 239, 0.1);
+      --rdp-range_start-date-background-color: #00ADEF;
+      --rdp-range_end-date-background-color: #00ADEF;
+      --rdp-range_middle-background-color: rgba(0, 173, 239, 0.12);
+      --rdp-range_middle-color: #00ADEF;
       --rdp-range_start-color: #FFFFFF;
       --rdp-range_end-color: #FFFFFF;
-      --rdp-today-color: #4A7C2E;
+      --rdp-today-color: #00ADEF;
       --rdp-day-width: 38px;
       --rdp-day-height: 38px;
       --rdp-day_button-width: 36px;
@@ -172,23 +172,23 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
       font-weight: 500;
     }
     .rdp-day_button:hover:not(:disabled) {
-      background-color: rgba(74, 124, 46, 0.1) !important;
-      color: #4A7C2E !important;
+      background-color: rgba(0, 173, 239, 0.1) !important;
+      color: #00ADEF !important;
     }
     /* Selected day buttons (start and end of range) */
     .rdp-range_start .rdp-day_button,
     .rdp-range_end .rdp-day_button {
-      background-color: #4A7C2E !important;
+      background-color: #00ADEF !important;
       color: #FFFFFF !important;
       font-weight: 800;
-      box-shadow: 0 4px 12px rgba(74, 124, 46, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 173, 239, 0.3) !important;
     }
     /* Middle of range */
     .rdp-range_middle {
-      background-color: rgba(74, 124, 46, 0.12) !important;
+      background-color: rgba(0, 173, 239, 0.12) !important;
     }
     .rdp-range_middle .rdp-day_button {
-      color: #4A7C2E !important;
+      color: #00ADEF !important;
     }
     .rdp-month {
         width: 100%;
@@ -210,16 +210,16 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     }
     .rdp-button_previous:hover,
     .rdp-button_next:hover {
-        background: #4A7C2E !important;
+        background: #00ADEF !important;
         color: white !important;
-        border-color: #4A7C2E !important;
+        border-color: #00ADEF !important;
     }
     .rdp-weekday {
         font-size: 0.75rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: #4A7C2E !important;
+        color: #00ADEF !important;
         opacity: 1 !important;
         padding-bottom: 1.5rem;
     }

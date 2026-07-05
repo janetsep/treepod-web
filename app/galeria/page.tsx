@@ -114,7 +114,7 @@ export default function GaleriaPage() {
                     <div className="mt-20 text-center">
                         <Link
                             href="/disponibilidad"
-                            className="inline-flex items-center gap-5 bg-primary hover:bg-primary-dark px-14 py-6 rounded-2xl text-white transition-all duration-300 font-black tracking-[0.2em] uppercase text-xs shadow-[0_20px_40px_-10px_rgba(74, 124, 46,0.3)] hover:-translate-y-1 active:scale-95"
+                            className="inline-flex items-center gap-5 bg-primary hover:bg-primary-dark px-14 py-6 rounded-2xl text-white transition-all duration-300 font-black tracking-[0.2em] uppercase text-xs shadow-[0_20px_40px_-10px_rgba(0, 173, 239,0.3)] hover:-translate-y-1 active:scale-95"
                         >
                             Reservar Ahora
                         </Link>

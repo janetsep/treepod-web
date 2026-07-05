@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Fraunces, Figtree } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
 import { Suspense } from 'react';
@@ -12,13 +12,17 @@ import CanonicalURL from './components/CanonicalURL';
 import JsonLdSchemas from './components/JsonLdSchemas';
 
 
-const playfair = Playfair_Display({
+// Fraunces: serif suave y cálido para titulares (reemplaza Playfair, de alto
+// contraste). Figtree: sans humanista y legible para el cuerpo (reemplaza Inter,
+// que es una "grotesque" más fría). Se conservan los nombres de variable CSS
+// (--font-playfair / --font-inter) para no tocar globals.css.
+const playfair = Fraunces({
   variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
 });
 
-const inter = Inter({
+const inter = Figtree({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',

@@ -105,7 +105,7 @@ export default function Navbar() {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => router.push('/disponibilidad')}
-                                className="px-12 py-4.5 rounded-full font-black text-xs tracking-[0.2em] uppercase transition-all transform hover:scale-105 shadow-xl bg-primary text-white hover:bg-primary-dark shadow-primary/30"
+                                className="px-9 py-3.5 rounded-full font-semibold text-sm transition-all shadow-lg bg-primary text-white hover:bg-primary-dark"
                             >
                                 Reservar
                             </button>
@@ -125,7 +125,7 @@ export default function Navbar() {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => router.push('/disponibilidad')}
-                                className="px-8 py-3.5 rounded-full font-black text-xs tracking-widest uppercase bg-primary text-white shadow-xl shadow-primary/20"
+                                className="px-6 py-3 rounded-full font-semibold text-sm bg-primary text-white shadow-lg"
                             >
                                 Reservar
                             </button>

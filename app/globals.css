@@ -1,10 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand Colors — verde forestal de la paleta oficial TreePod (#4A7C2E), el
-     color natural para un glamping en bosque nativo. Antes: cyan #00ADEF. */
-  --primary: #4A7C2E;
-  --primary-dark: #3A6122;
+  /* Brand Colors */
+  --primary: #00ADEF;
+  --primary-dark: #008CBF;
 
   /* Light Theme Aesthetic — paleta cálida "glamping premium": crema en vez de
      gris-frío, y charcoal cálido en vez de negro azulado. Baja la sensación
@@ -309,7 +308,7 @@ html.reveal-ready .reveal.is-visible {
   /* Sombra suave y borde fino para profundidad */
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2),
     inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  border: 1.5px solid rgba(74, 124, 46, 0.15);
+  border: 1.5px solid rgba(0, 173, 239, 0.15);
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: badge-pop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -319,7 +318,7 @@ html.reveal-ready .reveal.is-visible {
 .hero-badge:hover {
   transform: translateY(-6px) scale(1.03);
   background: #ffffff;
-  box-shadow: 0 20px 40px -8px rgba(74, 124, 46, 0.35);
+  box-shadow: 0 20px 40px -8px rgba(0, 173, 239, 0.35);
   color: var(--primary-dark);
 }
 
@@ -380,7 +379,7 @@ html.reveal-ready .reveal.is-visible {
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 15px 35px -10px rgba(74, 124, 46, 0.6),
+  box-shadow: 0 15px 35px -10px rgba(0, 173, 239, 0.6),
     0 5px 15px rgba(0, 0, 0, 0.15);
   min-width: 320px;
   position: relative;
@@ -394,7 +393,7 @@ html.reveal-ready .reveal.is-visible {
 .cta-hero:hover {
   background: var(--primary-dark);
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 25px 50px -12px rgba(74, 124, 46, 0.8),
+  box-shadow: 0 25px 50px -12px rgba(0, 173, 239, 0.8),
     0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
