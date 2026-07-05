@@ -31,8 +31,8 @@ export default function DomoAmenities() {
         },
         {
             icon: "auto_awesome",
-            title: "Duerme en lo alto del domo",
-            description: "Cama grande en la parte alta del domo, con el bosque al otro lado de la ventana. Vas a dormir profundo y despertar sin apuro.",
+            title: "Un descanso de verdad",
+            description: "Una cama cómoda y el silencio del bosque. Vas a dormir profundo y despertar sin apuro.",
             tag: "Espacio",
             image: "/images/EquipamientoParaTuEstadia/interior-domo-acogedor-84-3.jpg",
             size: "small"
@@ -48,7 +48,7 @@ export default function DomoAmenities() {
         {
             icon: "sparkles",
             title: "Tú, dedícate a descansar",
-            description: "Olvídate de limpiar o barrer. Un robot se encarga de mantener todo impecable mientras tú disfrutas el bosque.",
+            description: "Tienes un robot aspirador a tu disposición: lo activas cuando quieras y él barre por ti.",
             tag: "Tecnología",
             images: robotImages,
             size: "large"

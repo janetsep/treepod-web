@@ -49,7 +49,7 @@ export default function TerminosPage() {
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">3. Horarios y Estadía</h2>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
                         <li><strong>Check-in:</strong> A partir de las 16:00 hrs. de la fecha de llegada. Por favor avisa si estimas llegar más tarde para coordinar acceso.</li>
-                        <li><strong>Check-out:</strong> Hasta las 12:00 hrs. de la fecha de salida. El recargo por "Late Check-out" sin autorización previa tendrá cobro adicional.</li>
+                        <li><strong>Check-out:</strong> Hasta las 12:00 hrs. de la fecha de salida. Si necesitas salir más tarde, escríbenos y lo coordinamos según disponibilidad.</li>
                     </ul>
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">4. Respeto por el Espacio y Convivencia</h2>
