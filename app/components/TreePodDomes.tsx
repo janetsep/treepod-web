@@ -15,9 +15,9 @@ export default function TreePodDomes() {
         },
         {
             icon: "check_circle",
-            title: "Calor Garantizado",
-            benefit: "No pasarás frío aunque afuera esté nevando.",
-            proof: "Estufa a pellet de última generación con carga programada."
+            title: "A minutos de la nieve",
+            benefit: "Despiertas en el bosque y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.",
+            proof: "A pasos del centro de ski y las Termas de Chillán."
         },
         {
             icon: "check_circle",
@@ -90,10 +90,10 @@ export default function TreePodDomes() {
 
                         <div className="space-y-6 text-text-main/80 text-base md:text-lg leading-relaxed">
                             <p>
-                                <strong>Duerme como nunca:</strong> Camas cómodas diseñadas para un descanso profundo, donde lo único que vas a percibir es la armonía y la calma de la naturaleza.
+                                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos pegados ni ruido. Desde adentro ves el bosque nativo por los grandes ventanales.
                             </p>
                             <p>
-                                <strong>Calor perfecto 24/7:</strong> Tienes una estufa a pellet inteligente y programada para que el ambiente siempre esté cálido, seco y listo para tu bienestar.
+                                <strong>Noches de estrellas:</strong> lejos de las luces de la ciudad, el cielo se llena de estrellas y lo único que escuchas es la calma del valle.
                             </p>
                         </div>
 
