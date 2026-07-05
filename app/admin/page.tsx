@@ -421,9 +421,25 @@ export default function AdminDashboard() {
             case "pagado": return "bg-green-100 text-green-800";
             case "pendiente": return "bg-yellow-100 text-yellow-800";
             case "pendiente_pago": return "bg-yellow-100 text-yellow-800";
+            case "pending_transfer_confirmation": return "bg-sky-100 text-sky-800";
             case "suspendido": return "bg-orange-100 text-orange-800";
             case "cancelada": return "bg-red-100 text-red-800";
             default: return "bg-gray-100 text-gray-800";
+        }
+    };
+
+    // Etiquetas legibles: nunca mostrar estados internos de la BD crudos al usuario.
+    const getStatusLabel = (status: string) => {
+        switch (status?.toLowerCase()) {
+            case "pagado": return "Pagado";
+            case "confirmado": case "confirmada": return "Confirmada";
+            case "pendiente": return "Pendiente";
+            case "pending_transfer_confirmation": return "Esperando transferencia";
+            case "suspendido": return "Suspendida";
+            case "cancelada": case "cancelado": return "Cancelada";
+            case "completada": case "completado": return "Completada";
+            case "checked out": return "Check-out";
+            default: return status || "—";
         }
     };
 
@@ -764,7 +780,7 @@ export default function AdminDashboard() {
                                         Por emitir ({porEmitirCount})
                                     </button>
                                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-700">
-                                        Registros: {filteredReservas.length} / {baseReservas.length} {view === 'historial' ? "(pasadas)" : soloProximas ? "(actuales y futuras)" : "(todas)"}
+                                        Registros: {filteredReservas.length} / {baseReservas.length} {view === 'historial' ? "(pasadas)" : soloProximas ? "(actuales y futuras)" : "(todas)"}{totalPages > 1 ? ` · Página ${currentPage} de ${totalPages}` : ""}
                                     </div>
                                 </div>
 
@@ -1010,7 +1026,7 @@ export default function AdminDashboard() {
                                                             <span className={`px-2 py-1 rounded text-[7px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
                                                                 {reserva.estado === 'pendiente_pago'
                                                                     ? (reserva.expires_at && new Date(reserva.expires_at) < new Date() ? 'Carrito expirado' : 'Check-out Web')
-                                                                    : reserva.estado}
+                                                                    : getStatusLabel(reserva.estado)}
                                                             </span>
                                                             {reserva.fuente && (
                                                                 <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-600 mt-1">
