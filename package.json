@@ -28,7 +28,8 @@
     "recharts": "^3.8.1",
     "remark-gfm": "^4.0.1",
     "resend": "^6.12.2",
-    "transbank-sdk": "^6.1.1"
+    "transbank-sdk": "^6.1.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
