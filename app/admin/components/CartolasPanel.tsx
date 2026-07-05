@@ -129,17 +129,44 @@ export default function CartolasPanel() {
       const data = XLSX.utils.sheet_to_json<any[]>(ws, { header: 1, raw: true, defval: "" });
       const noVacias = data.filter((r) => r.some((c) => String(c).trim() !== ""));
       setRows(noVacias);
-      // Adivinar columnas: busca en las primeras filas cuál parece fecha / monto.
+      // Auto-detección: encuentra la 1ª fila que tenga una fecha (ahí empiezan los
+      // movimientos, saltando el encabezado del banco) y de esa zona deduce las columnas.
       if (noVacias.length > 1) {
-        const muestra = noVacias.slice(1, 6);
         const nCols = Math.max(...noVacias.map((r) => r.length));
-        for (let c = 0; c < nCols; c++) {
-          const vals = muestra.map((r) => r[c]);
-          if (vals.some((v) => parseFecha(v))) { setColFecha(c); break; }
+        // Primera fila con fecha en alguna columna.
+        let primeraData = -1, colFechaDetectada = -1;
+        for (let i = 0; i < noVacias.length; i++) {
+          for (let c = 0; c < nCols; c++) {
+            if (parseFecha(noVacias[i][c])) { primeraData = i; colFechaDetectada = c; break; }
+          }
+          if (primeraData >= 0) break;
         }
-        for (let c = nCols - 1; c >= 0; c--) {
-          const vals = muestra.map((r) => r[c]);
-          if (vals.some((v) => parseMonto(v) !== null && Math.abs(parseMonto(v)!) >= 1)) { setColMonto(c); break; }
+        if (primeraData >= 0) {
+          setFilaInicio(primeraData + 1); // 1-based
+          setColFecha(colFechaDetectada);
+          // De las filas de datos, la columna con textos largos = glosa; las numéricas = montos.
+          const dataRows = noVacias.slice(primeraData, primeraData + 8);
+          let mejorGlosa = -1, largoGlosa = 0;
+          const colsMonto: number[] = [];
+          for (let c = 0; c < nCols; c++) {
+            if (c === colFechaDetectada) continue;
+            const vals = dataRows.map((r) => r[c]);
+            const largoProm = vals.reduce((s, v) => s + String(v ?? "").length, 0) / (vals.length || 1);
+            const esMonto = vals.some((v) => parseMonto(v) !== null && Math.abs(parseMonto(v)!) >= 100);
+            const esTexto = vals.some((v) => typeof v === "string" && v.replace(/[0-9.,$ -]/g, "").length > 3);
+            if (esTexto && largoProm > largoGlosa) { largoGlosa = largoProm; mejorGlosa = c; }
+            if (esMonto) colsMonto.push(c);
+          }
+          if (mejorGlosa >= 0) setColGlosa(mejorGlosa);
+          // Si hay 2+ columnas de monto → probablemente Cargo y Abono separados.
+          if (colsMonto.length >= 2) {
+            setMontoModo("cargo_abono");
+            setColCargo(colsMonto[0]);
+            setColAbono(colsMonto[1]);
+          } else if (colsMonto.length === 1) {
+            setMontoModo("single");
+            setColMonto(colsMonto[0]);
+          }
         }
       }
     } catch {
@@ -320,18 +347,31 @@ export default function CartolasPanel() {
               )}
             </div>
 
-            {/* Vista previa */}
-            <div className="overflow-x-auto border border-gray-100 rounded-xl">
-              <table className="text-[11px] w-full">
-                <tbody>
-                  {rows.slice(0, 6).map((r, ri) => (
-                    <tr key={ri} className={ri + 1 < filaInicio ? "bg-gray-50 text-gray-400" : ""}>
-                      <td className="px-2 py-1 text-gray-400 border-r border-gray-100">f{ri + 1}</td>
-                      {colOpts.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap border-r border-gray-50">{celda(r[c])}</td>)}
+            {/* Vista previa: con scroll vertical y horizontal para poder recorrer todo
+                el archivo y ver dónde empiezan los movimientos y qué columna es cuál. */}
+            <div>
+              <p className="text-[11px] text-gray-500 mb-1">Vista previa ({rows.length} filas). Desliza hacia abajo y hacia el lado para ver todo:</p>
+              <div className="max-h-80 overflow-auto border border-gray-100 rounded-xl">
+                <table className="text-[11px] w-full">
+                  <thead className="sticky top-0 bg-gray-50 z-10">
+                    <tr>
+                      <th className="px-2 py-1.5 text-gray-400 border-r border-b border-gray-200 font-bold text-left">Fila</th>
+                      {colOpts.map((c) => (
+                        <th key={c} className="px-2 py-1.5 border-r border-b border-gray-200 font-bold text-left whitespace-nowrap">Col {c + 1}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {rows.slice(0, 40).map((r, ri) => (
+                      <tr key={ri} className={ri + 1 < filaInicio ? "bg-gray-50 text-gray-400" : "hover:bg-primary/5"}>
+                        <td className="px-2 py-1 text-gray-400 border-r border-gray-100 sticky left-0 bg-inherit">{ri + 1}</td>
+                        {colOpts.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap border-r border-gray-50">{celda(r[c])}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {rows.length > 40 && <p className="text-[10px] text-gray-400 mt-1">Se muestran las primeras 40 filas; se importan todas desde la fila {filaInicio}.</p>}
             </div>
 
             <button onClick={importarArchivo} disabled={importando} className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-all disabled:opacity-50">
