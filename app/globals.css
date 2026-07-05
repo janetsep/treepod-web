@@ -6,15 +6,18 @@
   /* Cyan C */
   --primary-dark: #008CBF;
 
-  /* Light Theme Aesthetic */
+  /* Light Theme Aesthetic — paleta cálida "glamping premium": crema en vez de
+     gris-frío, y charcoal cálido en vez de negro azulado. Baja la sensación
+     "tecnológica" y sube la natural. */
   --background: #FFFFFF;
-  --surface: #F8FAFC;
-  --text-main: #020617;
-  /* Near black for maximum contrast */
-  --text-sub: #334155;
-  /* Much darker blue-grey for subtext/body */
-  --border: rgba(0, 0, 0, 0.15);
-  /* Stronger border contrast */
+  --surface: #F7F3EC;
+  /* Crema cálida (antes gris-frío #F8FAFC) */
+  --text-main: #1E1B16;
+  /* Charcoal cálido (antes negro azulado #020617) */
+  --text-sub: #5B5348;
+  /* Taupe cálido para body/subtext (antes slate frío #334155) */
+  --border: rgba(30, 27, 22, 0.14);
+  /* Borde cálido */
 
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-display: var(--font-playfair), serif;
@@ -29,10 +32,10 @@
   --color-text-sub: var(--text-sub);
 
   --color-background-white: #FFFFFF;
-  --color-background-light: #F8FAFC;
+  --color-background-light: #F7F3EC;
   --color-background-dark: #0d1a10;
-  --color-surface-light: #F8FAFC;
-  --color-surface: #F8FAFC;
+  --color-surface-light: #F7F3EC;
+  --color-surface: #F7F3EC;
 
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-display: var(--font-playfair), serif;
@@ -203,26 +206,28 @@ html.reveal-ready .reveal.is-visible {
 }
 
 /* Typography Utilities */
+/* Títulos display en peso 600 (antes 800): el Playfair más liviano lee editorial
+   y premium; el 800 se veía pesado/gritado. */
 .h1-display {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 .h2-display {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: 0;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .h3-display {
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
 }
 

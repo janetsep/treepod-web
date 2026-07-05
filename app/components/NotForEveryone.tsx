@@ -12,7 +12,7 @@ export default function NotForEveryone() {
                     <div className="space-y-6">
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                <span className="w-2 h-2 bg-primary rounded-full"></span>
                                 <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Por qué TreePod</span>
                             </div>
 
