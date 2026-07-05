@@ -12,7 +12,7 @@ export default function Testimonios() {
 
         <h2 className="h2-display mb-10 text-text-main">La experiencia habla por sí sola</h2>
 
-        <div className="w-full relative min-h-[500px]">
+        <div className="w-full relative min-h-[320px] md:min-h-[500px]">
           <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab" data-elfsight-app-lazy></div>
         </div>
       </div>
