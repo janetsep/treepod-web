@@ -19,6 +19,9 @@ export async function GET(request: Request) {
 
     const porConcepto: Record<string, { total: number; count: number }> = {};
     const porTipo: Record<string, { total: number; count: number }> = {};
+    // Desglose por fuente de pago (ganancias / ahorros / prestamo). Los gastos
+    // antiguos sin fuente marcada caen en "sin_marcar".
+    const porFuente: Record<string, number> = {};
     for (const g of gastos) {
       if (!porConcepto[g.concepto]) porConcepto[g.concepto] = { total: 0, count: 0 };
       porConcepto[g.concepto].total += g.monto;
@@ -27,6 +30,9 @@ export async function GET(request: Request) {
       if (!porTipo[g.tipo]) porTipo[g.tipo] = { total: 0, count: 0 };
       porTipo[g.tipo].total += g.monto;
       porTipo[g.tipo].count += 1;
+
+      const fuente = g.fuente_pago || "sin_marcar";
+      porFuente[fuente] = (porFuente[fuente] || 0) + g.monto;
     }
 
     return {
@@ -34,6 +40,7 @@ export async function GET(request: Request) {
       totalGastado,
       porConcepto,
       porTipo,
+      porFuente,
       gastosCount: gastos.length,
     };
   });
@@ -46,7 +53,7 @@ export async function POST(request: Request) {
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
   const body = await request.json();
-  const { nombre, descripcion, presupuesto, fecha_inicio } = body;
+  const { nombre, descripcion, presupuesto, fecha_inicio, categoria } = body;
 
   if (!nombre) return NextResponse.json({ error: "Nombre requerido" }, { status: 400 });
 
@@ -57,6 +64,7 @@ export async function POST(request: Request) {
       descripcion: descripcion || null,
       presupuesto: presupuesto ? Math.round(presupuesto) : 0,
       fecha_inicio: fecha_inicio || new Date().toISOString().split("T")[0],
+      categoria: categoria || null,
     })
     .select()
     .single();
