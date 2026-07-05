@@ -23,7 +23,7 @@ const SECCIONES: [Seccion, string][] = [
   ["recetas", "Recetas"],
   ["consumo", "Consumo"],
   ["rentabilidad", "Rentabilidad"],
-  // ["proyectos", "Proyectos"],  // Oculto por ahora — aún no trabajamos en proyectos
+  ["proyectos", "Proyectos"],
   ["tendencia", "Tendencia"],
 ];
 
