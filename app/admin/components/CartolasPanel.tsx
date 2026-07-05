@@ -351,21 +351,21 @@ export default function CartolasPanel() {
                 el archivo y ver dónde empiezan los movimientos y qué columna es cuál. */}
             <div>
               <p className="text-[11px] text-gray-500 mb-1">Vista previa ({rows.length} filas). Desliza hacia abajo y hacia el lado para ver todo:</p>
-              <div className="max-h-80 overflow-auto border border-gray-100 rounded-xl">
-                <table className="text-[11px] w-full">
+              <div className="max-h-96 overflow-auto border border-gray-100 rounded-xl" style={{ WebkitOverflowScrolling: "touch" }}>
+                <table className="text-[11px]" style={{ width: "max-content", minWidth: "100%" }}>
                   <thead className="sticky top-0 bg-gray-50 z-10">
                     <tr>
-                      <th className="px-2 py-1.5 text-gray-400 border-r border-b border-gray-200 font-bold text-left">Fila</th>
+                      <th className="px-3 py-1.5 text-gray-400 border-r border-b border-gray-200 font-bold text-left">Fila</th>
                       {colOpts.map((c) => (
-                        <th key={c} className="px-2 py-1.5 border-r border-b border-gray-200 font-bold text-left whitespace-nowrap">Col {c + 1}</th>
+                        <th key={c} className="px-3 py-1.5 border-r border-b border-gray-200 font-bold text-left whitespace-nowrap min-w-[90px]">Col {c + 1}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {rows.slice(0, 40).map((r, ri) => (
                       <tr key={ri} className={ri + 1 < filaInicio ? "bg-gray-50 text-gray-400" : "hover:bg-primary/5"}>
-                        <td className="px-2 py-1 text-gray-400 border-r border-gray-100 sticky left-0 bg-inherit">{ri + 1}</td>
-                        {colOpts.map((c) => <td key={c} className="px-2 py-1 whitespace-nowrap border-r border-gray-50">{celda(r[c])}</td>)}
+                        <td className="px-3 py-1 text-gray-400 border-r border-gray-100">{ri + 1}</td>
+                        {colOpts.map((c) => <td key={c} className="px-3 py-1 whitespace-nowrap border-r border-gray-50 min-w-[90px]">{celda(r[c])}</td>)}
                       </tr>
                     ))}
                   </tbody>
