@@ -316,6 +316,35 @@ export default function ProyectosPanel() {
         </button>
       </div>
 
+      {/* Total general de TODOS los proyectos. "Costo estimado" usa el presupuesto si
+          está cargado; si no, usa lo ya gastado — así ningún proyecto queda fuera del total. */}
+      {proyectos.length > 0 && (() => {
+        const costoTotal = proyectos.reduce((s, p) => s + (p.presupuesto > 0 ? p.presupuesto : p.totalGastado), 0);
+        const gastadoTotal = proyectos.reduce((s, p) => s + p.totalGastado, 0);
+        const saldo = costoTotal - gastadoTotal;
+        return (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-gray-900 text-white rounded-2xl p-5">
+              <div className="text-[10px] font-black uppercase tracking-widest text-white/60">Costo total estimado</div>
+              <div className="text-2xl font-black mt-1">{fmt(costoTotal)}</div>
+              <div className="text-[10px] text-white/50 mt-1">{proyectos.length} proyecto{proyectos.length !== 1 ? "s" : ""}</div>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-5">
+              <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total gastado</div>
+              <div className="text-2xl font-black mt-1 text-gray-900">{fmt(gastadoTotal)}</div>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-5">
+              <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">Saldo por invertir</div>
+              <div className={`text-2xl font-black mt-1 ${saldo < 0 ? "text-red-600" : "text-emerald-600"}`}>{fmt(saldo)}</div>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-5">
+              <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">Avance</div>
+              <div className="text-2xl font-black mt-1 text-gray-900">{costoTotal > 0 ? Math.round((gastadoTotal / costoTotal) * 100) : 0}%</div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* New project form */}
       {showNewProyecto && (
         <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
