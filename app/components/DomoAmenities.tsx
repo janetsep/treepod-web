@@ -61,7 +61,7 @@ export default function DomoAmenities() {
                 <div className="flex flex-col items-center text-center mb-16">
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-6">
-                            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                            <span className="w-2 h-2 bg-primary rounded-full"></span>
                             <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">No traigas nada, aquí lo tienes todo</span>
                         </div>
                         <h2 className="h2-display leading-tight text-text-main">
