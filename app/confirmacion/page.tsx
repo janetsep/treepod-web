@@ -5,6 +5,16 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Stepper from '../components/Stepper';
 
+// Las fechas llegan como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') las interpreta como
+// medianoche UTC, que en Chile (UTC-4) cae el día ANTERIOR: mostraba check-in y
+// check-out un día antes del real. Construimos la fecha en horario local.
+function formatFecha(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = String(dateString).split('T')[0].split('-').map(Number);
+    if (!year || !month || !day) return String(dateString);
+    return new Date(year, month - 1, day).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 function ConfirmacionContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -191,12 +201,12 @@ function ConfirmacionContent() {
 
                                 <div className="flex justify-between py-3 border-b border-black/5">
                                     <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-in</span>
-                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                    <span className="text-text-main font-bold">{formatFecha(reserva.fecha_inicio)}</span>
                                 </div>
 
                                 <div className="flex justify-between py-3 border-b border-black/5">
                                     <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-out</span>
-                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                    <span className="text-text-main font-bold">{formatFecha(reserva.fecha_fin)}</span>
                                 </div>
 
                                 <div className="flex justify-between py-3 border-b border-black/5">

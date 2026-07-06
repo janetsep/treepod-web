@@ -5,6 +5,16 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import TrackView from '../components/TrackView';
 import { useState } from 'react';
 
+// publishDate viene como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') la interpreta como
+// medianoche UTC y en Chile (UTC-4) muestra el día anterior, además de poder
+// diferir entre servidor y navegador (hydration mismatch). Fecha local explícita.
+function formatFechaPublicacion(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return dateString;
+    return new Date(year, month - 1, day).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 // Artículos del blog con contenido real
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
@@ -202,11 +212,7 @@ export default function BlogPage() {
                                         <div className="flex items-center gap-4 text-text-sub text-sm font-bold mb-4">
                                             <span className="flex items-center gap-1">
                                                 <Calendar size={16} />
-                                                {new Date(post.publishDate).toLocaleDateString('es-ES', {
-                                                    day: 'numeric',
-                                                    month: 'long',
-                                                    year: 'numeric'
-                                                })}
+                                                {formatFechaPublicacion(post.publishDate)}
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 <Clock size={16} />

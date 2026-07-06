@@ -110,12 +110,17 @@ function DisponibilidadContent() {
     fetchServicios();
   }, []);
 
-  // El retorno de Webpay redirige aquí con ?error=webpay_abort o ?error=missing_token
-  // cuando el huésped cancela/aborta el pago. Sin este aviso, volvía sin ningún mensaje.
+  // El retorno de Webpay redirige aquí con ?error= cuando el pago no llegó a confirmarse:
+  // webpay_abort / missing_token (el huésped canceló), webpay_commit (falló la confirmación
+  // con Transbank) o reserva_no_encontrada. Sin este aviso, volvía sin ningún mensaje.
   useEffect(() => {
     const errorParam = searchParams.get("error");
     if (errorParam === "webpay_abort" || errorParam === "missing_token") {
       setError("El pago no se completó en Webpay y no se realizó ningún cobro. Puedes intentar tu reserva de nuevo cuando quieras.");
+    } else if (errorParam === "webpay_commit") {
+      setError("Hubo un problema al confirmar tu pago con Webpay. Si el cobro aparece en tu tarjeta, escríbenos por WhatsApp al +56 9 8464 3307 y lo resolvemos; si no aparece, puedes intentar tu reserva de nuevo.");
+    } else if (errorParam === "reserva_no_encontrada") {
+      setError("No encontramos la reserva asociada a ese pago. Por favor intenta de nuevo o escríbenos por WhatsApp al +56 9 8464 3307 si el problema persiste.");
     }
   }, [searchParams]);
 
@@ -291,7 +296,10 @@ function DisponibilidadContent() {
           total: calcularTotalConServicios(),
           precio_original: resultado.precio_original,
           descuento_monto: resultado.descuento_aplicado?.monto || 0,
-          descuento_detalle: resultado.descuento_aplicado ? [resultado.descuento_aplicado.tipo] : [],
+          // El checkout (/reserva/[id]) espera Array<{ motivo, monto }>: enviar strings sueltos rompería su render.
+          descuento_detalle: resultado.descuento_aplicado
+            ? [{ motivo: resultado.descuento_aplicado.tipo, monto: resultado.descuento_aplicado.monto }]
+            : [],
           is_event_mundial: isMundialEvent,
           nombre: nombre.trim(),
           apellido: apellido.trim(),

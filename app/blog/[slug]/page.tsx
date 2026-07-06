@@ -6,6 +6,16 @@ import TrackView from '../../components/TrackView';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+// publishDate viene como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') la interpreta como
+// medianoche UTC: en un servidor/navegador con huso horario detrás de UTC (Chile,
+// UTC-4) muestra el día anterior. Construimos la fecha local con sus componentes.
+function formatFechaPublicacion(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return dateString;
+    return new Date(year, month - 1, day).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 // Lista simple de artículos disponibles. Solo los que tienen contenido escrito:
 // los demás quedaban como "Artículo en Desarrollo" (404) y no deben indexarse.
 const availableArticles = [
@@ -278,11 +288,7 @@ export default async function BlogPost({ params }: Props) {
                         <div className="flex items-center justify-center gap-4 mt-10 text-xs font-bold tracking-[0.2em] uppercase text-text-sub/60">
                             <span className="flex items-center gap-2">
                                 <Calendar size={14} />
-                                {new Date(article.publishDate).toLocaleDateString('es-ES', {
-                                    day: 'numeric',
-                                    month: 'long',
-                                    year: 'numeric'
-                                })}
+                                {formatFechaPublicacion(article.publishDate)}
                             </span>
                             <span className="w-1 h-1 bg-text-sub/40 rounded-full"></span>
                             <span>TreePod Editorial</span>
