@@ -24,7 +24,8 @@ function formatFechaPublicacion(dateString: string) {
 const availableArticles = [
     'que-hacer-valle-las-trancas-por-temporada',
     'como-llegar-valle-las-trancas-desde-santiago',
-    'historia-valle-las-trancas-volcan-termas-pincheira'
+    'historia-valle-las-trancas-volcan-termas-pincheira',
+    'senderos-cascadas-valle-las-trancas'
 ];
 
 const articleContent: Record<string, any> = {
@@ -121,6 +122,10 @@ Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de l
 - **Neumáticos en buen estado:** especialmente importante en invierno
 - **Cadenas:** pueden ser exigidas en invierno cuando hay nieve en la ruta hacia Nevados
 
+## En tren
+
+EFE opera trenes **Santiago–Chillán** desde Estación Central, con varias salidas al día y un viaje de alrededor de 4 horas y media. Es la opción más cómoda de transporte público: horarios y tarifas en [efe.cl](https://www.efe.cl). Desde la estación de Chillán, sigue con transfer, bus rural o auto arrendado hasta el valle.
+
 ## En bus
 
 Las líneas que cubren la ruta Santiago–Chillán incluyen **Tur Bus**, **Pullman Bus** y **Buses Bío Bío**, entre otras. Los horarios y precios varían según día y temporada — consulta en pasajebus.com o directamente en cada empresa.
@@ -214,6 +219,66 @@ Valle Las Trancas está a unos 70 km de Chillán por la Ruta N-55. Si quieres ar
 `,
         category: 'Historia',
         readTime: '6 min',
+        publishDate: '2026-07-06'
+    },
+    'senderos-cascadas-valle-las-trancas': {
+        title: 'Senderos y Cascadas del Valle Las Trancas',
+        excerpt: 'Las caminatas del valle: desde la cascada más fácil hasta los trekkings de montaña, todas a minutos de tu domo.',
+        metaDescription: 'Senderos y cascadas en Valle Las Trancas: Velo de la Novia, Shangri-La, Garganta del Diablo y Laguna del Huemul. Rutas para familias y montañistas.',
+        image: '/images/Galeria/IMG_8992.JPG',
+        content: `
+El Valle Las Trancas es un punto de partida, no solo un lugar donde dormir. Según el mapa turístico del valle hay **más de 20 rutas de trekking** entre cascadas, saltos, cuevas y miradores. Aquí van las más conocidas, ordenadas de la más fácil a la más exigente.
+
+## Cascada Velo de la Novia: para todas las edades
+
+También llamada **Cascada del Soldado**, es la ruta más corta y accesible de todo el valle. Sirve para familias con niños y para quienes prefieren caminar poco: en un rato estás frente a la caída de agua, rodeado de bosque.
+
+Es la caminata ideal para el día de llegada o para una mañana tranquila antes del check-out.
+
+## Mirador Valle Las Trancas: el valle a tus pies
+
+Un sendero corto que sube hasta una vista panorámica del valle completo. Es de los más populares en las aplicaciones de trekking. Buena luz para fotos en la tarde.
+
+## Valle de Shangri-La: bosque e historia
+
+Una caminata que llega hasta las ruinas del **refugio Shangri-La, construido en los años 20**, cuando era parada de montañistas y esquiadores. Hoy es un paseo gratuito entre bosque nativo, con el encanto de las ruinas de piedra como destino.
+
+## Garganta del Diablo: bosque de lengas
+
+Una ruta de unas **3 horas** que atraviesa un bosque de lengas, robles y ñirres hasta el sector del antiguo refugio de 1937. Exigencia media: se disfruta con calzado de trekking y agua.
+
+## Laguna del Huemul: el clásico de montaña
+
+El trekking más buscado del valle. Es una ruta de montaña de mayor exigencia, con recompensa: una laguna cordillerana rodeada de roca y nieve buena parte del año. Antes de subir, consulta el estado del sendero según la época — en invierno la nieve puede cubrir la ruta.
+
+## Más rutas para explorar
+
+- **Salto Los Pellines** — caída de agua entre bosque
+- **Cascada Las Turbinas** — otra cascada clásica del valle
+- **Gruta Los Pangues** — formación rocosa entre vegetación nativa
+- **Cueva de los Pincheira** (km 67) — historia y leyenda a minutos del valle: te la contamos en [este artículo](/blog/historia-valle-las-trancas-volcan-termas-pincheira)
+
+## Consejos antes de salir
+
+- **Temporada:** de primavera a otoño los senderos están despejados; en invierno varios quedan bajo nieve. Pregúntanos por el estado antes de salir.
+- **Agua y abrigo:** el clima de cordillera cambia rápido, incluso en verano.
+- **Avisa** a alguien tu ruta si vas a un sendero largo.
+- **Basura de vuelta:** el bosque nativo se cuida entre todos.
+
+Si quieres armar el panorama completo según la época del año, revisa nuestra [guía por temporada](/blog/que-hacer-valle-las-trancas-por-temporada). Y si aún no tienes dónde quedarte, los domos están en el km 72, en medio de este mismo bosque.
+
+[Reserva tu domo →](/disponibilidad)
+
+---
+
+### Fuentes
+
+- trancas.cl: [Rutas de trekking y senderismo](https://trancas.cl/rutas-baja-media-intensidad/), [Valle de Shangri-La](https://trancas.cl/valle-de-shangrila/), [Cascada Velo de la Novia](https://trancas.cl/la-cascada-velo-de-la-novia/)
+- PTI Turismo Valle Las Trancas: [Garganta del Diablo](https://www.turismovallelastrancas.com/atractivos/garganta-del-diablo/)
+- AllTrails: [Sendero Mirador Valle Las Trancas](https://www.alltrails.com/trail/chile/bio-bio/sendero-mirador-valle-las-trancas)
+`,
+        category: 'Guías',
+        readTime: '5 min',
         publishDate: '2026-07-06'
     }
     // Agregar más artículos según necesidad

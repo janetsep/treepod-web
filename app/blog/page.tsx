@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'senderos-cascadas-valle-las-trancas',
+        title: 'Senderos y Cascadas del Valle Las Trancas',
+        excerpt: 'Velo de la Novia para familias, Shangri-La y Garganta del Diablo entre bosque, y el clásico trekking a la Laguna del Huemul. Las caminatas del valle, a minutos de tu domo.',
+        image: '/images/Galeria/IMG_8992.JPG',
+        category: 'Guías',
+        readTime: '5 min',
+        publishDate: '2026-07-06',
+        author: 'TreePod Team',
+        tags: ['Trekking', 'Cascadas', 'Senderos', 'Valle Las Trancas']
+    },
+    {
         slug: 'historia-valle-las-trancas-volcan-termas-pincheira',
         title: 'Historia del Valle Las Trancas: Volcán, Termas y Pincheira',
         excerpt: 'Un volcán de 17 cráteres, aguas famosas desde 1869 y la cueva de los hermanos Pincheira en el km 67. Las tres historias que se cruzan en el camino a tu domo.',

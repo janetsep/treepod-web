@@ -154,6 +154,11 @@ export default function PortugueseSkiPage() {
                             locadoras no terminal. O voo Santiago–Concepción leva cerca de uma hora.
                         </p>
                     </div>
+                    <p className="mt-8">
+                        <Link href="/pt/como-chegar" className={linkLine}>
+                            Guia completo: carro, trem, ônibus e avião, passo a passo <span aria-hidden="true">→</span>
+                        </Link>
+                    </p>
                 </div>
 
                 <div className="mt-20">
