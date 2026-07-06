@@ -92,8 +92,8 @@ const experiencia = [
         desc: "Somos un establecimiento turístico registrado en SERNATUR. Eso respalda nuestros estándares de calidad, seguridad y servicio."
     },
     {
-        title: "Privacidad en el bosque",
-        desc: "Cada domo está separado del resto, rodeado de bosque nativo y silencio. Sin pasillos ni vecinos al lado: el descanso que mamá merece."
+        title: "Un domo propio en el bosque",
+        desc: "Cada domo está separado del resto y rodeado de bosque nativo. Sin pasillos de hotel: el descanso que mamá merece."
     },
     {
         title: "Cocina equipada",
@@ -160,7 +160,7 @@ export default function GlampingDiaDeLaMadrePage() {
                             </h2>
                             <p className="lead text-[#5B5348] mt-6 max-w-2xl">
                                 Lo que la mayoría de las mamás más necesita no es una cosa — es tiempo. Tiempo sin agenda,
-                                sin deberes, sin ruido de fondo. En Domos TreePod, en el Valle Las Trancas, eso es
+                                sin deberes ni pendientes. En Domos TreePod, en el Valle Las Trancas, eso es
                                 exactamente lo que entregamos.
                             </p>
                         </div>
@@ -233,8 +233,8 @@ export default function GlampingDiaDeLaMadrePage() {
                                 Despertar con la montaña <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">desde la cama</span>
                             </h2>
                             <p className="text-[15px] md:text-base text-[#5B5348] leading-relaxed">
-                                Las mamás que han estado en TreePod suelen describir lo mismo: el silencio
-                                de la montaña, el olor a madera y el calor del domo cuando la temperatura cae.
+                                Las mamás que han estado en TreePod suelen describir lo mismo: el bosque
+                                al despertar, el olor a madera y el calor del domo cuando la temperatura cae.
                                 Cosas que no caben en una foto pero que se quedan.
                             </p>
                             <ul className="flex flex-col gap-3">

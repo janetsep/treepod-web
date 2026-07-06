@@ -73,7 +73,7 @@ Días largos y temperaturas agradables para recorrer el valle a pie.
 El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
 ### Descanso junto a la estufa
-Las noches frescas son perfectas para los fogones y los libros junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
+Las noches frescas son perfectas para un asado en el quincho o un libro junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
 
 ## Resumen rápido
 
@@ -106,7 +106,7 @@ Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de l
 ## En auto (la más cómoda)
 
 ### Ruta general desde Santiago
-- **Distancia aproximada:** 425 km
+- **Distancia aproximada:** 480 km
 - **Tiempo estimado:** entre 6 y 7 horas, dependiendo del tráfico
 - **Ruta:** Santiago → Ruta 5 Sur hasta Chillán → Ruta N-55 hasta Valle Las Trancas
 
@@ -135,7 +135,7 @@ Una vez en Chillán, las opciones para llegar a Valle Las Trancas son:
 
 Si vienes desde el norte y quieres ahorrar horas de manejo:
 
-- **Vuelo a Concepción:** operado por Sky, JetSmart y LATAM. Duración ~1h30 desde Santiago. Precios y disponibilidad varían — consulta directo en cada aerolínea.
+- **Vuelo a Concepción:** operado por Sky, JetSmart y LATAM. Alrededor de 1 hora de vuelo desde Santiago. Precios y disponibilidad varían — consulta directo en cada aerolínea.
 - **Desde Concepción a Valle Las Trancas:** ~3 horas en auto vía Chillán
 
 Hay servicios de arriendo de auto en el aeropuerto de Concepción.

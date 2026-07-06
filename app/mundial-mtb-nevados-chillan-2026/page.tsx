@@ -40,7 +40,7 @@ const beneficios = [
     },
     {
         title: "Guarda tus bicicletas a la vista",
-        desc: "Deja tu equipo dentro o justo al lado del domo, seguro y a mano."
+        desc: "Deja tu equipo dentro del domo o en tu terraza, siempre a mano."
     },
     {
         title: "Estacionamiento en tu puerta",
@@ -188,7 +188,7 @@ export default function MundialMtbPage() {
                     <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
                         <div className="col-span-12 lg:col-span-8">
                             <h2 className="display-lg !text-[#F7F3EC]">
-                                Solo nos quedan <span className="italic text-[#00ADEF]">4 domos</span> para todo el Mundial
+                                Tenemos solo <span className="italic text-[#00ADEF]">4 domos</span> para todo el Mundial
                             </h2>
                             <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl">
                                 En el Mundial MTB 2026 el alojamiento en el valle se llena rápido. Tenemos pocos domos disponibles, con espacio para equipos en Valle Las Trancas.

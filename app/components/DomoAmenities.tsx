@@ -23,7 +23,7 @@ const amenities: {
   {
     title: "Tinaja caliente privada al aire libre",
     description:
-      "Tu propia tinaja con agua mineralizada y vista al bosque, sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
+      "Tu propia tinaja de ciprés temperada a leña, con vista al bosque y sin compartir. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
     seasonal: true,
     image: "/images/wellness/Tinaja5.jpg",
     objectPosition: "object-center",
@@ -37,7 +37,7 @@ const amenities: {
   {
     title: "Un descanso de verdad",
     description:
-      "Una cama cómoda y el silencio del bosque. Vas a dormir profundo y despertar sin apuro.",
+      "Una cama cómoda en medio del bosque. Vas a dormir profundo y despertar sin apuro.",
     image: "/images/EquipamientoParaTuEstadia/interior-domo-acogedor-84-3.jpg",
   },
   {

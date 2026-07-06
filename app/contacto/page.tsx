@@ -55,7 +55,7 @@ export default function ContactoPage() {
                                         info@domostreepod.cl
                                     </a>
                                 </div>
-                                <p className="caption-editorial mt-1.5 pl-[22px]">Respuesta en menos de 24h</p>
+                                <p className="caption-editorial mt-1.5 pl-[22px]">Respondemos generalmente dentro del día</p>
                             </div>
 
                             <div className="py-4 border-b border-[#1E1B16]/10">
@@ -99,7 +99,7 @@ export default function ContactoPage() {
                                 Consejo de tus anfitriones
                             </p>
                             <p className="text-sm text-[#5B5348] leading-relaxed">
-                                Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a 12 minutos de la nieve real.
+                                Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a unos 12 minutos de Nevados de Chillán.
                             </p>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ export default function ContactoPage() {
                                 {status === 'success' && (
                                     <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-[2px] flex items-start gap-3 animate-fade-in-up">
                                         <TriBullet className="w-2.5 h-2 text-emerald-600 shrink-0 mt-1.5" />
-                                        <p className="text-sm font-medium">¡Listo! Recibimos tu mensaje. Te contactaremos dentro de las próximas horas.</p>
+                                        <p className="text-sm font-medium">¡Listo! Recibimos tu mensaje. Te contactaremos a la brevedad.</p>
                                     </div>
                                 )}
 

@@ -16,12 +16,12 @@ export default function ServicesPage() {
     const mainServices = [
         {
             title: "Tinaja privada bajo las estrellas",
-            subtitle: "Privacidad total · Servicio de temporada",
-            description: "Tu propia tinaja al aire libre, con agua mineralizada y vista al bosque. Sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
+            subtitle: "Uso exclusivo · Servicio de temporada",
+            description: "Tu propia tinaja de ciprés al aire libre, temperada a leña y con vista al bosque. Sin compartir. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             image: "/images/wellness/Tinaja1.jpg",
             alt: "Tinaja privada de ciprés al aire libre en TreePod",
             caption: "Tinaja de temporada, al aire libre",
-            features: ["Disponible desde primavera (no opera en invierno)", "Uso exclusivo, sin compartir", "Agua mineralizada al aire libre"],
+            features: ["Disponible desde primavera (no opera en invierno)", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
             buttonText: "Ver disponibilidad",
             href: "/disponibilidad"
         },
@@ -45,7 +45,7 @@ export default function ServicesPage() {
 
             <CinematicSection
                 image="/images/wellness/Tinaja1.jpg"
-                alt="Tinaja privada de agua mineralizada bajo las estrellas en TreePod"
+                alt="Tinaja privada de ciprés bajo las estrellas en TreePod"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
                 text="Desayunos a la cama, quincho equipado para asados y tinaja privada en temporada."

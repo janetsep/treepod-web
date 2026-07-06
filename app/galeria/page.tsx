@@ -23,7 +23,8 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", aspect: "landscape" },
     { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", aspect: "portrait" },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo TreePod entre árboles nativos", aspect: "portrait", objectPosition: "center 30%" },
+    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo a ras de bosque bajo el cielo estrellado", aspect: "portrait", objectPosition: "center 30%" },
+    { src: "/images/Galeria/domoinvierno.jpeg", alt: "Domo a ras de suelo con su terraza, nevado en invierno", aspect: "landscape" },
     { src: "/images/Galeria/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
 
     // --- EXPERIENCIA & WELLNESS ---
@@ -31,7 +32,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada al aire libre (servicio de temporada)", aspect: "landscape" },
     { src: "/images/wellness/Tinaja5.jpg", alt: "Tinaja en el bosque nativo de Las Trancas", aspect: "portrait" },
     { src: "/images/wellness/Tinaja1.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
-    { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Atmósfera invernal junto a la piscina", aspect: "landscape" },
+    { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Domo a ras de suelo y piscina, en pleno invierno", aspect: "landscape" },
 
     // --- INTERIORES REALES ---
     { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
@@ -63,7 +64,7 @@ export default function GaleriaPage() {
                 alt="Vista aérea de los domos TreePod en el bosque nativo de Las Trancas"
                 eyebrow="La vida en el bosque"
                 title={<>Imágenes reales de<br className="hidden md:block" /> tu próximo refugio</>}
-                text="Sin modelos ni montajes. El bosque, la cama y la calma tal como los vas a vivir."
+                text="Sin modelos ni montajes. El bosque, la cama y el domo tal como los vas a vivir."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority

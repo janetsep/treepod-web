@@ -14,21 +14,21 @@ export default function GuestGuidePage() {
     const sections = [
         {
             title: "Llegada y Acceso",
-            content: "El check-in es a partir de las 16:00 hrs. Tu domo tiene cerradura digital. Recibirás tu código personal por WhatsApp el día de tu llegada.",
+            content: "El check-in es a partir de las 16:00 hrs. Coordinamos tu llegada por WhatsApp y te recibimos para entregarte el domo.",
             items: [
                 "Llegada (check-in): 16:00 hrs",
                 "Salida (check-out): 12:00 hrs",
-                "Código de acceso único por estadía"
+                "Avísanos por WhatsApp si llegas más tarde"
             ]
         },
         {
             title: "Conexión en el Bosque",
             content: "Estar en la montaña no significa quedar incomunicado. Tenemos Starlink para que compartas tu estadía o trabajes si lo necesitas.",
             // La clave del WiFi no se publica aquí: esta página es pública e indexable.
-            // Se entrega por WhatsApp junto al código de acceso, el día de la llegada.
+            // Se entrega por WhatsApp el día de la llegada.
             items: [
                 "Red: TreePod_Refugio",
-                "Clave: te la enviamos por WhatsApp junto a tu código de acceso",
+                "Clave: te la enviamos por WhatsApp el día de tu llegada",
                 "Cobertura en el domo y la terraza"
             ]
         },
@@ -37,7 +37,7 @@ export default function GuestGuidePage() {
             content: "Nuestras tinajas de ciprés son de uso simple. El agua se calienta con una caldera de leña. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             items: [
                 "Tiempo de calentamiento: 3 a 4 horas",
-                "Sales minerales de cortesía incluidas",
+                "Uso privado, solo para tu domo",
                 "Disponible solo en temporada (consúltanos)"
             ]
         },
@@ -45,9 +45,9 @@ export default function GuestGuidePage() {
             title: "Sabores del Valle",
             content: "La gastronomía de Las Trancas es parte del viaje. Aquí nuestras recomendaciones locales favoritas:",
             items: [
-                "Oliva Kitchen: Cocina de autor y productos locales.",
-                "Fogón de las Trancas: Carnes y ambiente cordillerano.",
-                "Pizzería de la Montaña: Masa madre y ambiente relajado."
+                "Oliva's Restaurant: cocina de montaña, pastas y opciones veganas.",
+                "Fogón y Carnes: parrilla clásica del valle.",
+                "Chil'in Restaurante & Pizzería: pizzas y ambiente relajado."
             ]
         }
     ];
@@ -58,7 +58,7 @@ export default function GuestGuidePage() {
 
             {/* Portada editorial: foto a sangre, leyenda abajo-izquierda */}
             <CinematicSection
-                image="/images/interiors/interior-domo-acogedor-78-2.jpg"
+                image="/images/interiors/interior-vista-bosque.jpg"
                 alt="Interior Domo TreePod"
                 eyebrow="Valle Las Trancas · Nevados de Chillán"
                 title={<>Guía <span className="italic">del Huésped</span></>}

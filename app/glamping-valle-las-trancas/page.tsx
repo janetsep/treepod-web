@@ -89,7 +89,7 @@ const queIncluye = [
     },
     {
         title: "Bosque nativo real, no un jardín decorado",
-        desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres. No hay cabañas pegadas ni vecinos a pocos metros. Privacidad de verdad."
+        desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres, cada uno con su propio espacio entre los árboles."
     },
     {
         title: "A 12 minutos de Nevados de Chillán",
@@ -140,7 +140,7 @@ export default function GlampingValleLasTrancasPage() {
                 alt="Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo"
                 eyebrow="Valle Las Trancas · Nevados de Chillán"
                 title={<>Domos en Las Trancas: glamping geodésico <span className="italic">en bosque nativo</span></>}
-                text="Tu propio refugio en la cordillera. Sin vecinos ruidosos, sin pasillos de hotel. Solo tú, el bosque nativo y la montaña a un paso del domo."
+                text="Tu propio refugio en la cordillera, sin pasillos de hotel: un domo entre árboles, con el bosque nativo y la montaña a un paso."
                 priority
                 titleAs="h1"
                 stat="12"
@@ -302,11 +302,11 @@ export default function GlampingValleLasTrancasPage() {
                             <ul className="space-y-3.5">
                                 {[
                                     "Vista panorámica del bosque nativo",
-                                    "Privacidad real, sin vecinos cercanos",
-                                    "Check-in autónomo con clave digital",
+                                    "Domo y baño de uso exclusivo",
+                                    "Check-in coordinado por WhatsApp",
                                     "Guía de experiencias locales",
                                     "A 12 min de Nevados de Chillán",
-                                    "Senderos de trekking desde el glamping",
+                                    "Senderos de trekking a minutos",
                                     "Registro Sernatur verificado",
                                     "Atención directa por WhatsApp",
                                 ].map((item, idx) => (
@@ -387,7 +387,7 @@ export default function GlampingValleLasTrancasPage() {
                             </div>
 
                             <p className="text-[15px] text-[#5B5348] leading-relaxed mt-10">
-                                TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
+                                TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, cerca de senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
                             </p>
                         </div>
                     </div>

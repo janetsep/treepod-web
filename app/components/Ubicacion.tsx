@@ -8,7 +8,7 @@ const leyenda = [
   {
     t: "Escondido en el bosque, fácil de encontrar",
     dato: "Km 72",
-    d: "Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará y no tendrás que sufrir caminos imposibles para llegar.",
+    d: "Estás en el centro del valle, pero escondido en la profundidad del bosque nativo, con acceso fácil por la ruta principal.",
   },
   {
     t: "A solo 12 minutos de la nieve y las termas",
@@ -36,7 +36,7 @@ export default function Ubicacion() {
         <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12 items-start">
           <div className="col-span-12 lg:col-span-4">
             <h2 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">
-              En medio de la nada, pero a un{" "}
+              En medio del bosque, pero a un{" "}
               <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
                 paso de todo
               </span>{" "}

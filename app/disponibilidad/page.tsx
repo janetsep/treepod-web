@@ -563,7 +563,7 @@ function DisponibilidadContent() {
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
                       displayImage = "/images/wellness/Tinaja1.jpg";
                   } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("pack")) {
-                      displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+                      displayImage = "/images/Galeria/domo-treepod-camara-19-2.jpg";
                   } else if (s.nombre.toLowerCase().includes("salida") || s.nombre.toLowerCase().includes("15:00") || s.nombre.toLowerCase().includes("checkout")) {
                       displayImage = "/images/Galeria/IMG_8987.JPG";
                   } else if (s.nombre.toLowerCase().includes("almuerzo") || s.nombre.toLowerCase().includes("relajado") || s.nombre.toLowerCase().includes("aperitivo")) {

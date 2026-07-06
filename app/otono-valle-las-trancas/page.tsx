@@ -3,7 +3,7 @@ import SeasonalLanding from '../components/SeasonalLanding';
 
 export const metadata: Metadata = {
     title: 'Otoño en Valle Las Trancas | Glamping TreePod - Colores del Bosque',
-    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod.',
+    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y precios de temporada baja. Abril a junio en Domos TreePod.',
     keywords: [
         'otoño valle las trancas',
         'otoño las trancas',
@@ -43,7 +43,7 @@ export default function OtonoValleLasTrancasPage() {
                 alt: "Bosque nativo de Valle Las Trancas en otoño con colores dorados y naranjas",
                 eyebrow: "Otoño · Abril a junio",
                 title: <>Otoño en Las Trancas: el bosque se tiñe de rojos y dorados <span className="italic">y el valle está en calma</span></>,
-                text: "El otoño tiñe el Valle Las Trancas de rojos y dorados. Los robles cambian de color, los senderos quedan tranquilos y el bosque nativo se disfruta con el frío justo. Sin filas, sin ruido, sin apuro.",
+                text: "El otoño tiñe el Valle Las Trancas de rojos y dorados. Los robles cambian de color, los senderos quedan tranquilos y el bosque nativo se disfruta con el frío justo. Sin filas y sin apuro.",
                 priceLine: "Precios de temporada baja",
                 priceSub: "Menos gente y el bosque en su mejor momento. Revisa la tarifa de tu fecha en el calendario.",
                 photoCaption: "Bosque nativo en otoño, Valle Las Trancas",
@@ -69,8 +69,8 @@ export default function OtonoValleLasTrancasPage() {
                         desc: "Robles, coigües y ñirres se tiñen de naranja, dorado y rojo. El paisaje cambia cada semana entre abril y junio."
                     },
                     {
-                        title: "Menos gente, más privacidad",
-                        desc: "Otoño es temporada baja. Los senderos están tranquilos y hay más domos disponibles. Sin las aglomeraciones de invierno o verano."
+                        title: "Menos gente, más calma",
+                        desc: "Otoño es temporada baja. Los senderos están más tranquilos y hay más domos disponibles que en invierno o verano."
                     },
                     {
                         title: "Días frescos, noches frías",
@@ -85,8 +85,8 @@ export default function OtonoValleLasTrancasPage() {
                         desc: "Luz dorada entre las hojas, neblina matutina en el valle, hongos en los troncos. Si te gusta la fotografía, el otoño en Las Trancas tiene mucho que mostrar."
                     },
                     {
-                        title: "Trekking sin calor y sin nieve",
-                        desc: "Los senderos están secos pero sin calor. Trekking a la Laguna del Huemul, cascadas y rutas por el bosque con buena temperatura para caminar."
+                        title: "Trekking con clima fresco",
+                        desc: "Temperaturas agradables para caminar. Trekking a la Laguna del Huemul, cascadas y rutas por el bosque a tu ritmo."
                     },
                 ],
             }}
@@ -112,7 +112,7 @@ export default function OtonoValleLasTrancasPage() {
                     {
                         src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg",
                         alt: "Domo TreePod rodeado de bosque nativo",
-                        caption: "Tu domo en el bosque · privacidad entre el bosque nativo",
+                        caption: "Tu domo en el bosque · entre el bosque nativo",
                     },
                 ],
                 cta: {
@@ -141,7 +141,7 @@ export default function OtonoValleLasTrancasPage() {
                     secondParams: { event: "otono_las_trancas_2026" },
                     label: "Reserva tu otoño en el bosque",
                 },
-                trust: ["Mejor Precio Directo", "Temporada Baja", "Cero Multitudes"],
+                trust: ["Mejor Precio Directo", "Temporada Baja", "Bosque Nativo"],
             }}
         />
     );

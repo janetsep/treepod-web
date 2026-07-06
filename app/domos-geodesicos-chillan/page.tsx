@@ -72,7 +72,7 @@ const jsonLd = {
 const especificaciones = [
     {
         title: "38 m² de interior, vista panorámica",
-        desc: "La estructura geodésica permite ventanales que cubren gran parte del domo. Desde tu cama ves el bosque nativo y la cordillera de Ñuble."
+        desc: "La estructura geodésica permite panorámicas que cubren gran parte del domo. Desde tu cama ves el bosque nativo y la cordillera de Ñuble."
     },
     {
         title: "Estructura preparada para nieve y viento",
@@ -105,7 +105,7 @@ const galeria = [
     {
         src: "/images/interiors/interior-vista-bosque.jpg",
         alt: "Vista panorámica del bosque desde el interior del domo",
-        caption: "Vista panorámica · ventanales al bosque nativo",
+        caption: "Vista panorámica al bosque nativo",
     },
     {
         src: "/images/wellness/Tinaja5.jpg",

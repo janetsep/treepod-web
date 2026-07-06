@@ -42,7 +42,7 @@ export default function FindeLargoPage() {
                 alt: "Finde largo mayo Las Trancas TreePod",
                 eyebrow: "Finde Largo Mayo · Valle Las Trancas",
                 title: <>Tu finde largo del día del trabajo en el bosque nativo <span className="italic">de Valle Las Trancas</span></>,
-                text: "Tres días en la montaña, con el silencio del bosque y otoño en la cordillera. Con opción de tinaja privada (servicio de temporada, vuelve en primavera).",
+                text: "Tres días en la montaña, con el bosque nativo y el otoño en la cordillera. Con opción de tinaja privada (servicio de temporada, vuelve en primavera).",
                 priceLine: "Tarifas según temporada",
                 priceSub: "Revisa el precio de tus fechas en el calendario de reservas",
                 stat: "01–04",
@@ -130,8 +130,8 @@ export default function FindeLargoPage() {
             }}
             cierre={{
                 label: "Finde Largo Mayo 2026",
-                title: <>Solo 2 domos disponibles <span className="italic text-[#00ADEF]">para el finde largo</span></>,
-                text: "El día del trabajo es uno de los findes largos más buscados del año. Mayo en Valle Las Trancas tiene buen clima y colores de otoño. Reserva con tiempo tu escapada 1 mayo en Ñuble.",
+                title: <>Tenemos solo 4 domos <span className="italic text-[#00ADEF]">para el finde largo</span></>,
+                text: "El día del trabajo es uno de los findes largos más buscados del año. Mayo en Valle Las Trancas trae los colores del otoño. Reserva con tiempo tu escapada 1 mayo en Ñuble.",
                 note: "Estadía mínima 3 noches: 01 al 04 de mayo 2026",
                 cta: {
                     href: reservaHref,

@@ -43,8 +43,8 @@ export default function Home() {
         image="/images/Galeria/Domo3noche.jpeg"
         alt="Domo TreePod iluminado de noche en el bosque nativo"
         eyebrow="La experiencia"
-        title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> lejos del ruido</>}
-        text="Domos cálidos y bien equipados en medio del bosque. Sin ruido, sin frío, sin apuro."
+        title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> en el bosque nativo</>}
+        text="Domos cálidos y bien equipados en medio del bosque. Sin frío y sin apuro."
         ctaText="Ver disponibilidad"
         ctaHref="/disponibilidad"
         photoCaption="Domo de noche, Valle Las Trancas"

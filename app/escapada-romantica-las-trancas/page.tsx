@@ -44,11 +44,11 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const razones = [
     {
         title: "Un domo solo para ustedes",
-        desc: "Cada domo está separado del resto e inmerso en bosque nativo, con su propia pasarela. Sin pasillos ni vecinos al lado. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
+        desc: "Cada domo está separado del resto e inmerso en bosque nativo, con su propio acceso. Sin pasillos de hotel. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
     },
     {
         title: "Noches bajo las estrellas sin salir del domo",
-        desc: "El domo geodésico tiene ventanales amplios. Desde la cama ves las estrellas y el bosque nativo. Sin cortinas si no quieres, sin vecinos al lado."
+        desc: "El domo geodésico tiene panorámicas amplias. Desde la cama ves las estrellas y el bosque nativo, sin salir de las cobijas."
     },
     {
         title: "Calor automático toda la noche",
@@ -59,8 +59,8 @@ const razones = [
         desc: "Cocina completamente equipada para preparar una cena para dos. Trae tu vino favorito y tu receta especial, o preparen algo simple y cenen sin prisa."
     },
     {
-        title: "Privacidad en el bosque",
-        desc: "Los domos están separados entre sí e inmersos en bosque nativo. No hay pasillos de hotel ni recepción con gente. Solo naturaleza y privacidad."
+        title: "Un espacio propio en el bosque",
+        desc: "Los domos están separados entre sí e inmersos en bosque nativo. No hay pasillos de hotel ni recepción con gente."
     },
     {
         title: "Perfecto para celebrar",
@@ -102,11 +102,11 @@ export default function EscapadaRomanticaPage() {
                 alt="Domo TreePod iluminado de noche para una escapada romántica"
                 eyebrow="Escapada para Dos · Todo el Año"
                 title={<>Tu escapada romántica: un domo en el bosque <span className="italic">solo para ustedes dos</span></>}
-                text="Una escapada para dos: bosque nativo, el cielo estrellado de Las Trancas y privacidad, sin nadie más alrededor."
+                text="Una escapada para dos: bosque nativo, el cielo estrellado de Las Trancas y un domo solo para ustedes."
                 priority
                 titleAs="h1"
                 stat="2"
-                statCaption="personas, nadie más alrededor"
+                statCaption="personas, un domo para ustedes"
                 photoCaption="Valle Las Trancas, de noche"
                 ctaSlot={
                     <div className="flex flex-col sm:flex-row sm:items-center gap-6">
@@ -273,7 +273,7 @@ export default function EscapadaRomanticaPage() {
                     </div>
 
                     <div className="mt-14 pt-6 border-t border-white/15 flex flex-wrap gap-x-8 gap-y-3">
-                        {["Mejor Precio Directo", "Bosque Nativo", "Privacidad Real"].map((t) => (
+                        {["Mejor Precio Directo", "Bosque Nativo", "Domo Exclusivo"].map((t) => (
                             <span key={t} className="inline-flex items-center gap-2 dato text-[#F7F3EC]/70">
                                 <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
                                 {t}

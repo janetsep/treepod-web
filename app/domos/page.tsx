@@ -21,7 +21,7 @@ const fichaTecnica = [
     },
     {
         titulo: "Internet (Starlink)",
-        detalle: "Alta velocidad. Perfecto si necesitas teletrabajar o ver una película sin cortes.",
+        detalle: "Alta velocidad. Perfecto si necesitas teletrabajar o ver una película en la noche.",
     },
     {
         titulo: "Seguridad y Acceso",
@@ -33,7 +33,7 @@ const fichaTecnica = [
     },
     {
         titulo: "Calor 24/7",
-        detalle: "Estufa a pellet automática: cero humo, cero frío. Tu domo siempre cálido aunque afuera nieve.",
+        detalle: "Estufa a pellet automática, sin humo y sin cargar leña. Tu domo cálido aunque afuera nieve.",
     },
 ];
 
@@ -127,8 +127,8 @@ export default function DomosPage() {
                             <div className="grid grid-cols-2 grid-rows-2 gap-2 h-[420px] md:h-[500px]">
                                 <div className="col-span-2 row-span-1 relative group overflow-hidden rounded-[2px]">
                                     <Image
-                                        src="/images/interiors/interior-domo-acogedor-78-2.jpg"
-                                        alt="Refugio TreePod con cama de alta densidad y vistas al bosque"
+                                        src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg"
+                                        alt="Interior del domo TreePod, cama con vista panorámica al bosque"
                                         fill
                                         sizes="(max-width: 768px) 100vw, 50vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"

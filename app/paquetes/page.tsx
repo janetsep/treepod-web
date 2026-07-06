@@ -41,7 +41,7 @@ export default function PaquetesPage() {
                         let displayImage = s.image_url;
                         if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/Desayuno.jpg";
                         if (s.nombre.toLowerCase().includes('tinaja')) displayImage = "/images/wellness/Tinaja1.jpg";
-                        if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+                        if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/domo-treepod-camara-19-2.jpg";
 
                         return {
                             ...s,
@@ -68,7 +68,7 @@ export default function PaquetesPage() {
         <div className="bg-white font-sans text-[#1E1B16] min-h-screen flex flex-col">
 
             <CinematicSection
-                image="/images/Galeria/comidadomoafuerapizza.jpg"
+                image="/images/Galeria/domo-treepod-camara-20-2.jpg"
                 alt="Cena y experiencias especiales en TreePod, Valle Las Trancas"
                 eyebrow="Experiencias TreePod"
                 title={<>Suma detalles<br className="hidden md:block" /> a tu estadía</>}

@@ -21,7 +21,7 @@ export default async function GloriasNavalesPage() {
                 position: "center 30%",
                 eyebrow: "Finde Largo 21–24 Mayo · Valle Las Trancas",
                 title: <>Tu finde largo de Glorias Navales en el bosque nativo <span className="italic">de Valle Las Trancas</span></>,
-                text: "4 días en la cordillera, con el silencio del bosque nativo y opción de tinaja privada (servicio de temporada, vuelve en primavera).",
+                text: "4 días en la cordillera, con el bosque nativo y opción de tinaja privada (servicio de temporada, vuelve en primavera).",
                 priceLine: priceText,
                 priceSub: "Glorias Navales · 21 al 24 Mayo 2026",
                 stat: "21–24",
@@ -109,8 +109,8 @@ export default async function GloriasNavalesPage() {
             }}
             cierre={{
                 label: "Glorias Navales · 21–24 Mayo 2026",
-                title: <>Solo 2 domos disponibles <span className="italic text-[#00ADEF]">para Glorias Navales</span></>,
-                text: "Las Glorias Navales son uno de los findes largos más buscados del año. Mayo en Valle Las Trancas tiene buen clima y colores de otoño. Reserva con tiempo tu escapada del 21 de mayo en Ñuble.",
+                title: <>Tenemos solo 4 domos <span className="italic text-[#00ADEF]">para Glorias Navales</span></>,
+                text: "Las Glorias Navales son uno de los findes largos más buscados del año. Mayo en Valle Las Trancas trae los colores del otoño. Reserva con tiempo tu escapada del 21 de mayo en Ñuble.",
                 note: "Estadía mínima 3 noches: 21 al 24 de mayo 2026",
                 cta: {
                     href: reservaHref,

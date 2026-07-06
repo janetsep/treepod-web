@@ -32,8 +32,8 @@ export default function SemanaSantaPage() {
                 image: "/images/Semana Santa en el bosque.png",
                 alt: "Semana Santa en TreePod",
                 eyebrow: "Semana Santa 2026 · Valle Las Trancas",
-                title: <>Pasa Semana Santa lejos del bullicio en un domo entre el bosque <span className="italic">de Valle Las Trancas</span></>,
-                text: "Mientras los destinos de siempre se llenan, aquí tienes bosque nativo, aire puro y un domo cálido en plena cordillera de Ñuble. Sin filas, sin ruido, sin apuro.",
+                title: <>Pasa Semana Santa en un domo entre el bosque <span className="italic">de Valle Las Trancas</span></>,
+                text: "Mientras los destinos de siempre se llenan, aquí tienes bosque nativo, aire puro y un domo cálido en plena cordillera de Ñuble. Sin filas y sin apuro.",
                 priceLine: "Tarifas según temporada",
                 priceSub: "Revisa el precio de tus fechas en el calendario de reservas",
                 stat: "02–05",
@@ -57,12 +57,12 @@ export default function SemanaSantaPage() {
                 title: <>Olvida la rutina. Tu único trabajo aquí será <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">descansar</span></>,
                 items: [
                     {
-                        title: "El sonido del viento y poco más",
-                        desc: "Estás lo bastante lejos del bullicio para descansar de verdad. Duerme hasta la hora que quieras y despierta rodeado de bosque nativo."
+                        title: "Descanso sin agenda",
+                        desc: "Duerme hasta la hora que quieras y despierta rodeado de bosque nativo, sin horarios que cumplir."
                     },
                     {
                         title: "Bosque nativo y cielo estrellado",
-                        desc: "Domos separados entre sí e inmersos en bosque nativo, cada uno con su pasarela. De noche, el cielo despejado de Las Trancas. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
+                        desc: "Domos separados entre sí e inmersos en bosque nativo. En las noches despejadas, el cielo de Las Trancas se llena de estrellas. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
                     },
                     {
                         title: "Afuera hace frío, adentro estás en polera",
@@ -74,7 +74,7 @@ export default function SemanaSantaPage() {
                     },
                     {
                         title: "Aislado de todo, pero conectado (si quieres)",
-                        desc: "Internet satelital Starlink de alta velocidad. Perfecto por si quieres subir fotos o ver una película por la noche sin cortes."
+                        desc: "Internet satelital Starlink de alta velocidad. Perfecto por si quieres subir fotos o ver una película por la noche."
                     }
                 ],
             }}

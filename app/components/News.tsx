@@ -38,7 +38,7 @@ export default function News() {
       image: "/images/wellness/Tinaja5.jpg",
       title: "Escapada Romántica",
       description:
-        "Una escapada para dos: cena íntima, bosque nativo y el cielo estrellado de Las Trancas, sin nadie más alrededor.",
+        "Una escapada para dos: cena íntima, bosque nativo, el cielo estrellado de Las Trancas y un domo solo para ustedes.",
       tag: "Solo para dos",
       details: "Ver escapada romántica",
       href: "/escapada-romantica-las-trancas",

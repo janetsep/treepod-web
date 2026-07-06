@@ -49,12 +49,12 @@ export default function TreePodDomes() {
 
             <div className="mt-8 space-y-6 text-[#1E1B16]/85 text-base md:text-[17px] leading-relaxed lg:px-4">
               <p>
-                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos al lado
-                ni ruido. Desde adentro ves el bosque por los ventanales.
+                <strong>Tu espacio propio:</strong> un domo geodésico privado entre los árboles.
+                Desde adentro ves el bosque por las panorámicas.
               </p>
               <p>
                 <strong>Noches de estrellas:</strong> lejos de las luces de la ciudad, el cielo se
-                llena de estrellas y lo único que escuchas es la calma del valle.
+                llena de estrellas sobre el valle.
               </p>
             </div>
 
