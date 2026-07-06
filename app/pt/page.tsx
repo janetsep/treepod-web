@@ -57,7 +57,7 @@ export default function PortugueseSkiPage() {
                 priority
                 titleAs="h1"
                 stat="4,9"
-                statCaption="59 avaliações verificadas no Google"
+                statCaption="209 avaliações em todas as plataformas"
                 photoCaption="Inverno no TreePod, Valle Las Trancas"
             />
 

@@ -66,7 +66,7 @@ const jsonLd = {
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "reviewCount": "59"
+        "reviewCount": "209"
     },
     "amenityFeature": [
         { "@type": "LocationFeatureSpecification", "name": "Bosque nativo privado", "value": true },
@@ -326,7 +326,7 @@ export default function GlampingValleLasTrancasPage() {
             {/* N° 04 — RESEÑAS */}
             <section className="py-16 md:py-24 bg-white">
                 <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-                    <SectionFolio num="N° 04" label="Reseñas verificadas" note="4,9 en Google · 59 reseñas" />
+                    <SectionFolio num="N° 04" label="Reseñas reales" note="4,9 · 209 reseñas" />
 
                     <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
                         <div className="col-span-12 lg:col-span-8">
@@ -335,7 +335,7 @@ export default function GlampingValleLasTrancasPage() {
                             </h2>
                             <p className="mt-5 flex items-center gap-2 dato text-[#5B5348]">
                                 <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                                4,9 estrellas en Google con 59 reseñas verificadas
+                                4,9 estrellas con 209 reseñas en todas las plataformas
                             </p>
                         </div>
                     </div>

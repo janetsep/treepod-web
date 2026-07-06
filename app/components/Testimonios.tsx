@@ -22,7 +22,7 @@ export default function Testimonios() {
                   4,9
                 </span>
               </div>
-              <p className="caption-editorial mt-3">59 reseñas verificadas en Google</p>
+              <p className="caption-editorial mt-3">209 reseñas en todas las plataformas</p>
             </div>
           </div>
 

@@ -27,7 +27,7 @@ const LODGING_SCHEMA = {
   "priceRange": "$$",
   // Sin starRating: en schema.org es la clasificación oficial del establecimiento
   // (estrellas de hotel), no el promedio de reseñas; eso va en aggregateRating.
-  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "59", "bestRating": "5" },
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "209", "bestRating": "5" },
   "amenityFeature": [
     { "@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true },
     { "@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada (servicio de temporada)", "value": true },

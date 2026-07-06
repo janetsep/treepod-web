@@ -230,7 +230,7 @@ export default function SeasonalLanding({
                     {/* N° 03 — RESEÑAS */}
                     <section className="py-16 md:py-24 bg-[#F7F3EC]">
                         <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-                            <SectionFolio num="N° 03" label="Reseñas verificadas" note="4,9 en Google · 59 reseñas" />
+                            <SectionFolio num="N° 03" label="Reseñas reales" note="4,9 · 209 reseñas" />
 
                             <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
                                 <div className="col-span-12 lg:col-span-8">

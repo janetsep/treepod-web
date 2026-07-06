@@ -123,7 +123,7 @@ export default function OtonoValleLasTrancasPage() {
             }}
             resenas={{
                 title: <>Lo que dicen <span className="italic">nuestros huéspedes</span></>,
-                lead: "4,9 estrellas en Google con 59 reseñas verificadas",
+                lead: "4,9 estrellas con 209 reseñas en todas las plataformas",
                 cta: {
                     href: reservaHref,
                     eventName: "click_reservar_otono",

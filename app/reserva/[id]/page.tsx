@@ -507,7 +507,7 @@ function ReservaContent({ id }: { id: string }) {
                       {/* Confianza en el punto de máxima ansiedad */}
                       <p className="mt-5 flex items-center justify-center gap-2 dato text-[#5B5348] text-center">
                         <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                        Registro SERNATUR N° 36806 · 4,9 en Google (59 reseñas)
+                        Registro SERNATUR N° 36806 · 4,9 · 209 reseñas
                       </p>
                     </div>
                   </div>

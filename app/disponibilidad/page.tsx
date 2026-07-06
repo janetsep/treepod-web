@@ -431,7 +431,7 @@ function DisponibilidadContent() {
           {/* Fila de confianza tipo masthead: el "50% hoy" es el reductor de
               fricción n° 1 y se ve también en mobile. */}
           <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
-            <span>4,9 · 59 reseñas</span>
+            <span>4,9 · 209 reseñas</span>
             <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
             <span>Mejor precio directo, sin comisiones</span>
             <span className="text-[#5B5348]/40" aria-hidden="true">·</span>

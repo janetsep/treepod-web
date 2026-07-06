@@ -44,9 +44,9 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <p className="dato text-[#5B5348]">Reseñas verificadas</p>
+              <p className="dato text-[#5B5348]">Reseñas reales</p>
               <p className="mt-2 font-medium text-[#1E1B16]">
-                59 reseñas en Google
+                209 reseñas en todas las plataformas
               </p>
             </div>
           </div>

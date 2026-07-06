@@ -48,7 +48,7 @@ export default function Hero() {
           <span>Valle Las Trancas — Ñuble, Chile</span>
           <span className="hidden sm:inline">Ruta N-55 · Km 72</span>
           <a href="#reviews" className="hover:text-[#00ADEF] transition-colors">
-            4,9 · 59 reseñas
+            4,9 · 209 reseñas
           </a>
         </div>
 

@@ -58,7 +58,7 @@ export default function EnglishSkiPage() {
                 priority
                 titleAs="h1"
                 stat="4,9"
-                statCaption="59 verified Google reviews"
+                statCaption="209 reviews across all platforms"
                 photoCaption="Winter at TreePod, Valle Las Trancas"
             />
 
