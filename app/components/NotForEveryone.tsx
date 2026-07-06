@@ -27,10 +27,10 @@ export default function NotForEveryone() {
                                 <strong>A minutos de todo:</strong> despiertas en medio del bosque nativo y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.
                             </p>
                             <p>
-                                <strong>Espacio de verdad:</strong> un domo amplio solo para ustedes, con baño privado dentro del domo. Un espacio propio en el bosque, sin compartir con nadie.
+                                <strong>Espacio de sobra:</strong> un domo amplio solo para ustedes, con baño privado incluido. Sin compartir con nadie.
                             </p>
                             <p>
-                                <strong>Llegas y no traes nada:</strong> Nespresso, WiFi Starlink y el domo completamente equipado. Dejas el bolso y ya estás de vacaciones.
+                                <strong>No necesitas traer nada:</strong> Nespresso, WiFi Starlink y el domo completamente equipado. Dejas el bolso y ya estás de vacaciones.
                             </p>
                         </div>
 

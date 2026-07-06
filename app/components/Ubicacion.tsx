@@ -26,7 +26,7 @@ export default function Ubicacion() {
                   <Trees className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Tu refugio secreto (pero fácil de llegar)</h3>
+                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Escondido en el bosque, fácil de encontrar</h3>
                   <p className="text-sm md:text-base text-text-sub font-bold">Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará y no tendrás que sufrir caminos imposibles para llegar.</p>
                 </div>
               </div>
@@ -37,7 +37,7 @@ export default function Ubicacion() {
                 </div>
                 <div>
                   <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">A solo 12 minutos de la nieve y las termas</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Despierta, tómate un café y en lo que duran tus canciones favoritas en el auto ya estás esquiando o relajándote en el agua termal.</p>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Tómate un café con calma: a 12 minutos en auto están las pistas de ski y las termas.</p>
                 </div>
               </div>
 
@@ -46,8 +46,8 @@ export default function Ubicacion() {
                   <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Come increíble (sin tener que cocinar)</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">¿Cero ganas de ensuciar ollas? Perfecto. Estás a un paso de los mejores restaurantes típicos del valle para ir a comer a lo grande.</p>
+                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Come rico sin cocinar</h3>
+                  <p className="text-sm md:text-base text-text-sub font-bold">¿Sin ganas de cocinar? A pocos minutos tienes los restaurantes típicos del valle.</p>
                 </div>
               </div>
 
@@ -56,8 +56,8 @@ export default function Ubicacion() {
                   <Wine className="text-primary w-6 h-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">¿Olvidaste algo? Cero estrés</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Tienes minimarkets justo al lado. Si se acaba el hielo, el vino o necesitas cualquier cosa básica, lo resuelves en un par de minutos.</p>
+                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">¿Olvidaste algo? No pasa nada</h3>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Hay minimarkets muy cerca: si se acaba el hielo o el vino, lo compras en minutos.</p>
                 </div>
               </div>
             </div>

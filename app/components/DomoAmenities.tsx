@@ -24,7 +24,7 @@ export default function DomoAmenities() {
         {
             icon: "fireplace",
             title: "Cero humo, cero frío",
-            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido las 24 horas.",
+            description: "Olvídate de cargar leña: la estufa automática mantiene tu domo cálido las 24 horas.",
             tag: "Confort",
             image: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
             size: "small"
@@ -40,14 +40,14 @@ export default function DomoAmenities() {
         {
             icon: "coffee",
             title: "Tu café perfecto al despertar",
-            description: "Tienes tu propia Nespresso lista para ti. Imagínate tomarte un café bien caliente por la mañana escuchando solo los pájaros y el viento.",
+            description: "Café Nespresso en tu domo. Un café caliente por la mañana, con los pájaros y el viento de fondo.",
             tag: "Confort",
             image: "/images/interiors/CafeteraNespresso.jpg",
             size: "small"
         },
         {
             icon: "sparkles",
-            title: "Tú, dedícate a descansar",
+            title: "Tú solo dedícate a descansar",
             description: "Tienes un robot aspirador a tu disposición: lo activas cuando quieras y él barre por ti.",
             tag: "Tecnología",
             images: robotImages,
@@ -72,7 +72,7 @@ export default function DomoAmenities() {
                             Diseñado para tu <span className="text-primary italic-display">relajo total</span>
                         </h2>
                         <p className="text-text-sub mt-6 text-lg md:text-xl font-medium">
-                            Donde lo único que te va a faltar es tiempo para seguir descansando.
+                            Todo pensado para que solo llegues a descansar.
                         </p>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ export default function TreePodDomes() {
         {
             icon: "check_circle",
             title: "Independencia Total",
-            benefit: "Siéntete en un refugio autónomo en medio del bosque nativo.",
+            benefit: "Un domo independiente, solo para ustedes, en medio del bosque nativo.",
             proof: "Baño completo privado integrado dentro del domo."
         },
         {
@@ -22,8 +22,8 @@ export default function TreePodDomes() {
         {
             icon: "check_circle",
             title: "Descanso Real",
-            benefit: "Despierta con energía tras un sueño profundo rodeado de naturaleza.",
-            proof: "Cama matrimonial con sábanas de alta densidad."
+            benefit: "Vas a dormir profundo y despertar con energía, rodeado de bosque.",
+            proof: "Cama matrimonial con buena ropa de cama."
         }
     ];
 
@@ -43,7 +43,7 @@ export default function TreePodDomes() {
                             {/* Main Top Image: Refugio/Vista */}
                             <div className="col-span-2 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-xl aspect-[16/9] group">
                                 <Image
-                                    alt="Tu santuario privado en el bosque"
+                                    alt="Domo TreePod entre los árboles"
                                     className="object-cover object-center transition-transform duration-[5s] group-hover:scale-110"
                                     src="/images/Santuario1.jpeg"
                                     fill
@@ -55,7 +55,7 @@ export default function TreePodDomes() {
                             {/* Bottom Left: Bed Detail (Descanso) */}
                             <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
                                 <Image
-                                    alt="Camas confortables para un descanso real"
+                                    alt="Cama matrimonial del domo"
                                     className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                                     src="/images/Santuario2.jpg"
                                     fill
@@ -66,7 +66,7 @@ export default function TreePodDomes() {
                             {/* Bottom Right: Stove Detail (Calor) */}
                             <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
                                 <Image
-                                    alt="Estufa a pellet para calor garantizado"
+                                    alt="Estufa a pellet del domo"
                                     className="object-cover object-[50%_55%] scale-150 transition-transform duration-700 group-hover:scale-[1.6]"
                                     src="/images/Santuario3.jpg"
                                     fill
@@ -83,14 +83,14 @@ export default function TreePodDomes() {
                                 <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Tu refugio</span>
                             </div>
                             <h2 className="h2-display leading-tight text-text-main">
-                                Habita la calma <br />
-                                <span className="text-primary italic-display">en tu propio refugio</span>
+                                Un refugio propio <br />
+                                <span className="text-primary italic-display">en medio del bosque</span>
                             </h2>
                         </div>
 
                         <div className="space-y-6 text-text-main/80 text-base md:text-lg leading-relaxed">
                             <p>
-                                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos pegados ni ruido. Desde adentro ves el bosque nativo por los grandes ventanales.
+                                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos al lado ni ruido. Desde adentro ves el bosque por los ventanales.
                             </p>
                             <p>
                                 <strong>Noches de estrellas:</strong> lejos de las luces de la ciudad, el cielo se llena de estrellas y lo único que escuchas es la calma del valle.
