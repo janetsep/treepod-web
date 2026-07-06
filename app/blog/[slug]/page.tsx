@@ -25,7 +25,9 @@ const availableArticles = [
     'que-hacer-valle-las-trancas-por-temporada',
     'como-llegar-valle-las-trancas-desde-santiago',
     'historia-valle-las-trancas-volcan-termas-pincheira',
-    'senderos-cascadas-valle-las-trancas'
+    'senderos-cascadas-valle-las-trancas',
+    'termas-chillan-por-el-dia-desde-las-trancas',
+    'cueva-de-los-pincheira-visita'
 ];
 
 const articleContent: Record<string, any> = {
@@ -279,6 +281,102 @@ Si quieres armar el panorama completo según la época del año, revisa nuestra 
 `,
         category: 'Guías',
         readTime: '5 min',
+        publishDate: '2026-07-06'
+    },
+    'termas-chillan-por-el-dia-desde-las-trancas': {
+        title: 'Termas de Chillán por el Día desde Valle Las Trancas',
+        excerpt: 'Cómo ir a las termas por el día desde el valle: cuándo conviene, qué llevar y dónde ver las entradas vigentes.',
+        metaDescription: 'Termas de Chillán por el día desde Valle Las Trancas: a minutos en auto, qué llevar, cuándo ir y dónde revisar precios y horarios actualizados.',
+        image: '/images/wellness/Tinaja1.jpg',
+        content: `
+Ir a las termas es el panorama clásico del valle, y desde Las Trancas se hace fácil por el día: las piscinas termales están a unos **12 minutos en auto**, subiendo por la misma Ruta N-55.
+
+## Por qué hay termas aquí
+
+El agua caliente no es casualidad: las termas son la cara visible del sistema geotermal del complejo volcánico Nevados de Chillán. Pozos de exploración midieron hasta 220 °C bajo la cordillera. Si te interesa esa historia —y la de los libros médicos que hicieron famosas estas aguas desde 1869—, la contamos completa en [este artículo](/blog/historia-valle-las-trancas-volcan-termas-pincheira).
+
+## Cómo funciona ir por el día
+
+- **Desde el valle:** subes en auto por la Ruta N-55 hasta el sector de las termas. En invierno revisa el estado de la ruta y lleva cadenas.
+- **Cuándo conviene:** en invierno, la combinación clásica es mañana de nieve y tarde de termas. En primavera y verano, las piscinas al aire libre se disfrutan con la cordillera a la vista y menos gente.
+- **Cuánto tiempo:** medio día alcanza para las piscinas; el día completo da para sumar almuerzo en la montaña.
+
+## Precios y horarios: dónde verlos
+
+Los valores de entrada y los horarios **cambian según temporada** (alta de invierno, fines de semana, verano). Para no darte un dato vencido, revísalos siempre en el canal oficial:
+
+- [Sitio oficial de Nevados de Chillán](https://www.nevadosdechillan.com) — entradas y horarios de las piscinas termales
+- [Guía del valle en trancas.cl](https://trancas.cl) — panoramas termales del sector
+
+Si estás alojando con nosotros, pregúntanos por WhatsApp y te orientamos según la fecha de tu visita.
+
+## Qué llevar
+
+- Traje de baño y toalla
+- Sandalias o hawaianas (el suelo puede estar caliente o mojado)
+- Agua para hidratarte: el agua termal y la altura deshidratan
+- Bloqueador y gorro en días de sol; gorro de lana en invierno (la cabeza afuera, el cuerpo en el agua caliente)
+- Bolsa para el traje mojado
+
+## Termas con niños
+
+Las piscinas termales del sector reciben familias. Los niños suelen aguantar menos tiempo en el agua caliente: planifica pausas y considera ir más temprano, cuando hay menos público.
+
+## El plan completo
+
+Termas + una caminata corta como la [Cascada Velo de la Novia](/blog/senderos-cascadas-valle-las-trancas) + cena en los restaurantes del valle: ese es un día redondo en Las Trancas. Y a la vuelta, tu domo cálido en el bosque.
+
+[Reserva tu domo →](/disponibilidad)
+`,
+        category: 'Termas',
+        readTime: '4 min',
+        publishDate: '2026-07-06'
+    },
+    'cueva-de-los-pincheira-visita': {
+        title: 'Cueva de los Pincheira: Cómo Llegar y Qué Ver',
+        excerpt: 'La visita a la cueva del km 67: cómo llegar, qué hay en el recorrido y dónde confirmar la entrada.',
+        metaDescription: 'Cueva de los Pincheira en Pinto, Ñuble: cómo llegar desde Chillán y Valle Las Trancas, qué ver en el recorrido, la leyenda de la mula blanca y dónde ver la entrada.',
+        image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
+        content: `
+En el **km 67 del camino Chillán–Termas** (Ruta N-55, comuna de Pinto) está uno de los paseos con más historia de Ñuble: la Cueva de los Pincheira, un alero rocoso de origen volcánico junto a una cascada y un estero, que la tradición local señala como refugio de los hermanos Pincheira en la década de 1820.
+
+## Cómo llegar
+
+- **Desde Chillán:** por la Ruta N-55 hacia las termas, aproximadamente una hora de viaje. La cueva está señalizada en el km 67, con estacionamiento.
+- **Desde Valle Las Trancas:** está a solo 5 km bajando el valle — unos minutos en auto desde los domos.
+
+## Qué hay en la visita
+
+- El **alero rocoso** (la "cueva") junto a la cascada y el estero
+- **Senderos con flora nativa señalizada**, para recorrer con calma
+- Un **antiguo molino de agua**
+- En **temporada alta**, recreaciones teatrales de la vida de la banda: montoneros a caballo incluidos
+
+Es un paseo familiar, de baja exigencia, que se hace en un par de horas.
+
+## Entrada y horarios
+
+El recinto cobra una entrada que se paga en el lugar. Los valores y horarios **cambian por temporada**, así que confírmalos antes de ir:
+
+- [Ficha de la cueva en trancas.cl](https://trancas.cl/cueva-de-los-pincheira/)
+- [Guía Ñuble](https://guianuble.cl/sitios/cueva-de-los-pincheira/)
+
+Consejo: lleva **efectivo**, como en muchos atractivos rurales de la zona.
+
+## La historia y la leyenda
+
+Los hermanos Pincheira fueron el último foco realista de Sudamérica: resistieron entre 1819 y 1832 en esta cordillera. La historia completa —con el volcán y las termas incluidos— la contamos en [Historia del Valle Las Trancas](/blog/historia-valle-las-trancas-volcan-termas-pincheira).
+
+Y según la leyenda local, junto a la cascada aparece de noche una **mula blanca** que indica dónde quedaron enterrados los tesoros de la banda. Nadie los ha encontrado. Todavía.
+
+## El plan redondo
+
+Cueva por la mañana, almuerzo en el valle y termas por la tarde: un día completo de historia, bosque y agua caliente, durmiendo a minutos de todo.
+
+[Reserva tu domo →](/disponibilidad)
+`,
+        category: 'Guías',
+        readTime: '4 min',
         publishDate: '2026-07-06'
     }
     // Agregar más artículos según necesidad

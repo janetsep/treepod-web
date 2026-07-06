@@ -79,16 +79,26 @@ const blogPosts = [
         comingSoon: true
     },
     {
-        slug: 'termas-nevados-chillan-precios-horarios-2026',
-        title: 'Termas Nevados Chillán: Precios y Horarios 2026',
-        excerpt: 'Todo sobre las Termas de Nevados de Chillán: precios actualizados, horarios, cómo llegar y qué esperar de tu visita a las termas.',
+        slug: 'termas-chillan-por-el-dia-desde-las-trancas',
+        title: 'Termas de Chillán por el Día desde Valle Las Trancas',
+        excerpt: 'Cómo ir a las termas por el día desde el valle: cuándo conviene, qué llevar y dónde revisar las entradas vigentes sin datos vencidos.',
         image: '/images/wellness/Tinaja1.jpg',
         category: 'Termas',
         readTime: '4 min',
-        publishDate: '2026-04-05',
+        publishDate: '2026-07-06',
         author: 'TreePod Team',
-        tags: ['Termas', 'Nevados Chillán', 'Precios', 'Relajación'],
-        comingSoon: true
+        tags: ['Termas', 'Nevados Chillán', 'Panoramas', 'Relajación']
+    },
+    {
+        slug: 'cueva-de-los-pincheira-visita',
+        title: 'Cueva de los Pincheira: Cómo Llegar y Qué Ver',
+        excerpt: 'La visita a la cueva del km 67: cómo llegar desde Chillán y el valle, qué hay en el recorrido, la leyenda de la mula blanca y dónde confirmar la entrada.',
+        image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
+        category: 'Guías',
+        readTime: '4 min',
+        publishDate: '2026-07-06',
+        author: 'TreePod Team',
+        tags: ['Cueva de los Pincheira', 'Historia', 'Panoramas', 'Pinto']
     },
     {
         slug: 'que-llevar-glamping-valle-las-trancas-lista',
@@ -121,7 +131,8 @@ const categories = [
     'Todas',
     'Guías',
     'Logística',
-    'Historia'
+    'Historia',
+    'Termas'
 ];
 
 export default function BlogPage() {
