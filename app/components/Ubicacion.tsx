@@ -1,88 +1,81 @@
-import GoogleMapsSection from './GoogleMapsSection';
-import { Mountain, Utensils, Fuel, Trees, Wine } from "lucide-react";
+import GoogleMapsSection from "./GoogleMapsSection";
+import SectionFolio from "./SectionFolio";
+import TriBullet from "./deco/TriBullet";
+
+// Artículo 07 — página de mapa con leyenda: la información como tabla de leyenda
+// con líneas punteadas y datos cortos tabulares; el mapa en marco de imprenta.
+const leyenda = [
+  {
+    t: "Escondido en el bosque, fácil de encontrar",
+    dato: "Km 72",
+    d: "Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará y no tendrás que sufrir caminos imposibles para llegar.",
+  },
+  {
+    t: "A solo 12 minutos de la nieve y las termas",
+    dato: "12 min",
+    d: "Tómate un café con calma: a 12 minutos en auto están las pistas de ski y las termas.",
+  },
+  {
+    t: "Come rico sin cocinar",
+    dato: "a minutos",
+    d: "¿Sin ganas de cocinar? A pocos minutos tienes los restaurantes típicos del valle.",
+  },
+  {
+    t: "¿Olvidaste algo? No pasa nada",
+    dato: "a minutos",
+    d: "Hay minimarkets muy cerca: si se acaba el hielo o el vino, lo compras en minutos.",
+  },
+];
 
 export default function Ubicacion() {
   return (
-    <section className="py-12 md:py-20 relative overflow-hidden bg-white border-t border-black/[0.06]" id="ubicacion">
+    <section className="bg-white py-20 md:py-28" id="ubicacion">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 07" label="Cómo llegar" note="Ruta N-55 · Km 72" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12 items-start">
+          <div className="col-span-12 lg:col-span-4">
+            <h2 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">
+              En medio de la nada, pero a un{" "}
+              <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                paso de todo
+              </span>{" "}
+              lo que importa
+            </h2>
 
-          {/* Info Side - Pluma Style */}
-          <div className="lg:w-1/3 space-y-10">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <span className="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
-                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Estratégico</span>
-              </div>
-              <h2 className="h2-display leading-tight text-text-main">
-                En medio de la nada, pero a un <span className="text-primary italic-display">paso de todo</span> lo que importa
-              </h2>
-            </div>
-
-            <div className="space-y-8 pt-4">
-              <div className="flex gap-5">
-                <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
-                  <Trees className="text-primary w-6 h-6" strokeWidth={2.5} />
+            {/* Tabla de leyenda: título + línea punteada + dato tabular */}
+            <div className="mt-8">
+              {leyenda.map(({ t, dato, d }) => (
+                <div key={t} className="py-3.5 border-b border-[#1E1B16]/10 last:border-b-0">
+                  <div className="flex items-baseline gap-3">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                    <span className="text-[14px] font-semibold text-[#1E1B16] leading-snug">{t}</span>
+                    <span
+                      className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-6"
+                      aria-hidden="true"
+                    />
+                    <span className="dato text-[#1E1B16] whitespace-nowrap">{dato}</span>
+                  </div>
+                  <p className="text-sm text-[#5B5348] leading-relaxed mt-1.5 pl-[22px]">{d}</p>
                 </div>
-                <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Escondido en el bosque, fácil de encontrar</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará y no tendrás que sufrir caminos imposibles para llegar.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-5">
-                <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
-                  <Mountain className="text-primary w-6 h-6" strokeWidth={2.5} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">A solo 12 minutos de la nieve y las termas</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Tómate un café con calma: a 12 minutos en auto están las pistas de ski y las termas.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-5">
-                <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
-                  <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Come rico sin cocinar</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">¿Sin ganas de cocinar? A pocos minutos tienes los restaurantes típicos del valle.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-5">
-                <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 shadow-sm">
-                  <Wine className="text-primary w-6 h-6" strokeWidth={2.5} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">¿Olvidaste algo? No pasa nada</h3>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Hay minimarkets muy cerca: si se acaba el hielo o el vino, lo compras en minutos.</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Map Side - Professional Embed */}
-          <div className="lg:w-2/3 w-full">
-            <div className="relative group">
-
-              {/* The Map Frame */}
-              <div className="w-full h-[500px] md:h-[600px] rounded-[3rem] shadow-2xl overflow-hidden border-8 border-white/5 relative">
-                <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''} />
-              </div>
-
-              {/* Decorative elements to simulate location tracking */}
-              <div className="absolute -bottom-4 right-10 text-primary text-[11px] font-black uppercase tracking-[0.3em] drop-shadow-md z-20">
-                A 12 min del centro de ski
-              </div>
+              ))}
             </div>
           </div>
 
+          {/* Mapa en marco de imprenta */}
+          <div className="col-span-12 lg:col-span-8">
+            <figure>
+              <div className="relative w-full h-[460px] md:h-[560px] rounded-[2px] border border-[#1E1B16]/20 overflow-hidden">
+                <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""} />
+              </div>
+              <figcaption className="mt-2 flex items-center gap-2">
+                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                <span className="caption-editorial">A 12 min del centro de ski</span>
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-

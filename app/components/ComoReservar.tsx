@@ -1,23 +1,24 @@
 import Link from "next/link";
-import { CalendarCheck, CreditCard, MapPin, ArrowRight } from "lucide-react";
+import SectionFolio from "./SectionFolio";
+import { btnPrimaryDark } from "./deco/cta";
 
-// "Cómo reservar en 3 pasos": muestra que reservar es simple y seguro, reduciendo la
-// incertidumbre del proceso (principal motivo de abandono hacia las OTA). Datos reales.
+// Artículo 05 — la única banda oscura del cuerpo: numerales gigantes en Fraunces
+// itálica cyan sobre charcoal, pasos como filas de índice. Datos reales.
+// [CRO P10 — PENDIENTE DE APROBACIÓN DE JANET]: el paso 2 promete "Webpay o
+// transferencia" pero el checkout solo ofrece Webpay. Propuesta: quitar
+// "o transferencia". Es cambio de copy: NO se toca sin su OK.
 const pasos = [
   {
-    Icon: CalendarCheck,
     n: "1",
     t: "Elige tus fechas",
     d: "Revisa la disponibilidad y el precio al instante, sin compromiso.",
   },
   {
-    Icon: CreditCard,
     n: "2",
     t: "Reserva con el 50%",
     d: "Pago seguro con Webpay o transferencia. El saldo se paga en el check-in.",
   },
   {
-    Icon: MapPin,
     n: "3",
     t: "Llega y disfruta",
     d: "Te enviamos la ubicación exacta y dejamos todo listo para tu llegada.",
@@ -26,39 +27,49 @@ const pasos = [
 
 export default function ComoReservar() {
   return (
-    <section className="bg-white py-16 md:py-24" id="como-reservar">
-      <div className="container mx-auto px-6 max-w-5xl">
-        <div className="text-center mb-12 md:mb-16">
-          <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase mb-4 block">Reservar es simple</span>
-          <h2 className="h2-display text-text-main">Tu escapada, en tres pasos</h2>
-        </div>
+    <section className="bg-[#1E1B16] text-[#F7F3EC] py-20 md:py-28">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 05" label="Reservar es simple" dark />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
-          {pasos.map(({ Icon, n, t, d }) => (
-            <div key={n} className="relative text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                <div className="relative shrink-0">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                    <Icon className="w-7 h-7 text-[#00ADEF]" strokeWidth={2} />
-                  </div>
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#00ADEF] text-white text-xs font-black flex items-center justify-center shadow">
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12">
+          <div className="col-span-12 lg:col-span-4">
+            <h2 className="display-lg !text-[#F7F3EC]">
+              Tu escapada, en <span className="italic text-[#00ADEF]">tres pasos</span>
+            </h2>
+            <div className="mt-10 hidden lg:block">
+              <Link href="/disponibilidad" className={btnPrimaryDark}>
+                Ver disponibilidad y reservar
+              </Link>
+            </div>
+          </div>
+
+          <div className="col-span-12 lg:col-span-8">
+            <div className="border-b border-white/15">
+              {pasos.map(({ n, t, d }) => (
+                <div
+                  key={n}
+                  className="border-t border-white/15 py-6 grid grid-cols-[auto_1fr] gap-6 items-baseline"
+                >
+                  <span
+                    className="font-display italic text-[clamp(3.5rem,6vw,5.5rem)] text-[#00ADEF] leading-none tabular-nums w-14 md:w-20"
+                    aria-hidden="true"
+                  >
                     {n}
                   </span>
+                  <div>
+                    <h3 className="!font-sans text-lg font-semibold !text-[#F7F3EC]">{t}</h3>
+                    <p className="text-white/70 mt-1.5 text-[15px] leading-relaxed">{d}</p>
+                  </div>
                 </div>
-              </div>
-              <h3 className="text-lg font-bold text-text-main mb-2">{t}</h3>
-              <p className="text-text-sub leading-relaxed text-[15px]">{d}</p>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="text-center mt-12">
-          <Link
-            href="/disponibilidad"
-            className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
-          >
-            Ver disponibilidad y reservar <ArrowRight className="w-5 h-5" />
-          </Link>
+            <div className="mt-10 lg:hidden">
+              <Link href="/disponibilidad" className={btnPrimaryDark}>
+                Ver disponibilidad y reservar
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>

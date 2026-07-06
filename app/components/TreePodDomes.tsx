@@ -1,117 +1,91 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import SectionFolio from "./SectionFolio";
+import { btnPrimary } from "./deco/cta";
 
-
-
-
+// Artículo 01 — spread de revista: foto vertical sangrando al borde izquierdo,
+// titular que muerde la foto sobre bloque blanco y una segunda foto pequeña
+// desalineada a propósito. Los párrafos son el copy vigente, intacto.
 export default function TreePodDomes() {
-    const highlights = [
-        {
-            icon: "check_circle",
-            title: "Independencia Total",
-            benefit: "Un domo independiente, solo para ustedes, en medio del bosque nativo.",
-            proof: "Baño completo privado integrado dentro del domo."
-        },
-        {
-            icon: "check_circle",
-            title: "A minutos de la nieve",
-            benefit: "Despiertas en el bosque y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.",
-            proof: "A 12 minutos del centro de ski y las Termas de Chillán."
-        },
-        {
-            icon: "check_circle",
-            title: "Descanso Real",
-            benefit: "Vas a dormir profundo y despertar con energía, rodeado de bosque.",
-            proof: "Cama matrimonial con buena ropa de cama."
-        }
-    ];
+  return (
+    <section className="bg-white py-20 md:py-32 overflow-hidden">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 01" label="Tu refugio" />
 
-
-
-    return (
-        <section className="py-16 md:py-28 relative overflow-hidden bg-white border-t border-black/[0.06]" id="domos">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/2 transform translate-x-1/2 pointer-events-none"></div>
-
-            <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-
-                    {/* Visual Section: Montage (Centered and Balanced) */}
-                    <div className="lg:col-span-7">
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Main Top Image: Refugio/Vista */}
-                            <div className="col-span-2 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-xl aspect-[16/9] group">
-                                <Image
-                                    alt="Domo TreePod entre los árboles"
-                                    className="object-cover object-center transition-transform duration-[5s] group-hover:scale-110"
-                                    src="/images/Santuario1.jpeg"
-                                    fill
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                            </div>
-
-                            {/* Bottom Left: Bed Detail (Descanso) */}
-                            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
-                                <Image
-                                    alt="Cama matrimonial del domo"
-                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                                    src="/images/Santuario2.jpg"
-                                    fill
-                                    sizes="(max-width: 1024px) 50vw, 25vw"
-                                />
-                            </div>
-
-                            {/* Bottom Right: Stove Detail (Calor) */}
-                            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-lg aspect-square group">
-                                <Image
-                                    alt="Estufa a pellet del domo"
-                                    className="object-cover object-[50%_55%] scale-150 transition-transform duration-700 group-hover:scale-[1.6]"
-                                    src="/images/Santuario3.jpg"
-                                    fill
-                                    sizes="(max-width: 1024px) 50vw, 25vw"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Text Section (Balanced & Equalized) */}
-                    <div className="lg:col-span-5 space-y-6">
-                        <div className="space-y-2">
-                            <div className="inline-flex items-center gap-2">
-                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Tu refugio</span>
-                            </div>
-                            <h2 className="h2-display leading-tight text-text-main">
-                                Un refugio propio <br />
-                                <span className="text-primary italic-display">en medio del bosque</span>
-                            </h2>
-                        </div>
-
-                        <div className="space-y-6 text-text-main/80 text-base md:text-lg leading-relaxed">
-                            <p>
-                                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos al lado ni ruido. Desde adentro ves el bosque por los ventanales.
-                            </p>
-                            <p>
-                                <strong>Noches de estrellas:</strong> lejos de las luces de la ciudad, el cielo se llena de estrellas y lo único que escuchas es la calma del valle.
-                            </p>
-                        </div>
-
-                        <div className="pt-6 space-y-4">
-                            <Link 
-                                href="/disponibilidad"
-                                className="inline-flex items-center justify-center px-10 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg"
-                            >
-                                Reservar mi domo
-                            </Link>
-                            <p className="text-[10px] md:text-xs text-text-sub font-bold pl-2">
-                                Ves la disponibilidad y el precio al instante, sin compromiso.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-start">
+          {/* Foto principal sangrada al borde izquierdo (solo desde lg) */}
+          <figure className="col-span-12 lg:col-span-7">
+            <div className="relative aspect-[4/5] lg:aspect-auto lg:h-[78vh] overflow-hidden lg:ml-[calc(50%-50vw)]">
+              <Image
+                alt="Domo TreePod entre los árboles"
+                className="object-cover object-center"
+                src="/images/Santuario1.jpeg"
+                fill
+                sizes="(max-width: 1024px) 100vw, 55vw"
+              />
             </div>
-        </section>
-    );
-}
+            <figcaption className="mt-2 flex items-center gap-2">
+              <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+              <span className="caption-editorial">Domo TreePod entre los árboles</span>
+            </figcaption>
+          </figure>
 
+          {/* Columna de texto: el titular muerde la foto */}
+          <div className="col-span-12 lg:col-span-5 lg:col-start-8 relative lg:pt-14">
+            {/* Numeral fantasma */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none select-none absolute -top-8 -left-2 font-display italic text-[clamp(6rem,16vw,13rem)] leading-none text-[#1E1B16]/[0.05]"
+            >
+              01
+            </span>
+
+            <h2 className="display-lg text-[#1E1B16] relative z-10 lg:-ml-28 lg:bg-white lg:px-4 lg:py-3 lg:inline-block">
+              Un refugio propio{" "}
+              <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                en medio del bosque
+              </span>
+            </h2>
+
+            <div className="mt-8 space-y-6 text-[#1E1B16]/85 text-base md:text-[17px] leading-relaxed lg:px-4">
+              <p>
+                <strong>Solo tú y el bosque:</strong> un domo geodésico privado, sin vecinos al lado
+                ni ruido. Desde adentro ves el bosque por los ventanales.
+              </p>
+              <p>
+                <strong>Noches de estrellas:</strong> lejos de las luces de la ciudad, el cielo se
+                llena de estrellas y lo único que escuchas es la calma del valle.
+              </p>
+            </div>
+
+            {/* Foto secundaria desalineada a propósito */}
+            <figure className="w-3/5 ml-auto mt-10">
+              <div className="relative aspect-square overflow-hidden">
+                <Image
+                  alt="Cama matrimonial del domo"
+                  className="object-cover object-center"
+                  src="/images/Santuario2.jpg"
+                  fill
+                  sizes="(max-width: 1024px) 60vw, 22vw"
+                />
+              </div>
+              <figcaption className="mt-2 flex items-center gap-2">
+                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                <span className="caption-editorial">Cama matrimonial del domo</span>
+              </figcaption>
+            </figure>
+
+            <div className="mt-10 lg:px-4">
+              <Link href="/disponibilidad" className={btnPrimary}>
+                Reservar mi domo
+              </Link>
+              <p className="caption-editorial mt-4">
+                Ves la disponibilidad y el precio al instante, sin compromiso.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

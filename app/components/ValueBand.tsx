@@ -1,54 +1,48 @@
-import { BadgePercent, CalendarClock, ShieldCheck, MessageCircle, Star } from "lucide-react";
 import { precioDesde, fmtCLP } from "@/lib/precio-desde";
+import TriBullet from "./deco/TriBullet";
 
-// Banda de valor + confianza bajo el hero. Visible de inmediato, comunica el precio
-// "desde" real (2 adultos, temporada vigente — ver lib/precio-desde) junto al rating
-// y las palancas de RESERVA DIRECTA que más convierten (precio directo, abono 50%,
-// registro SERNATUR, respuesta instantánea). Server component: precio en vivo.
+// Franja "ficha técnica" bajo la portada: tipografía pura entre filetes, sin
+// iconos ni tarjetas. Comunica el precio "desde" real (2 adultos, temporada
+// vigente — ver lib/precio-desde) y las palancas de reserva directa.
+// Server component: precio en vivo.
 
 const items = [
-  { Icon: BadgePercent, t: "Mejor precio directo", s: "Sin comisión de intermediarios" },
-  { Icon: CalendarClock, t: "Reserva con el 50%", s: "El saldo se paga en el check-in" },
-  { Icon: ShieldCheck, t: "Registro SERNATUR", s: "N° 36806 · operación formal" },
-  { Icon: MessageCircle, t: "Respuesta rápida", s: "Te asesoramos por WhatsApp" },
+  { t: "Mejor precio directo", s: "Sin comisión de intermediarios" },
+  { t: "Reserva con el 50%", s: "El saldo se paga en el check-in" },
+  { t: "Registro SERNATUR", s: "N° 36806 · operación formal" },
+  { t: "Respuesta rápida", s: "Te asesoramos por WhatsApp" },
 ];
 
 export default async function ValueBand() {
   const { precio: desde, nochesMin } = await precioDesde();
   return (
-    <section className="bg-white border-b border-black/[0.06]">
-      <div className="container mx-auto px-4 md:px-6 py-6 md:py-7">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
-          {/* Precio desde */}
-          <div className="flex flex-col shrink-0">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Domos desde</span>
-              <span className="text-3xl md:text-4xl font-black text-[#00ADEF] leading-none">{fmtCLP(desde)}</span>
-              <span className="text-sm font-semibold text-gray-500">/ noche</span>
-            </div>
-            <span className="text-[11px] font-semibold text-gray-400 mt-0.5">
-              2 personas{nochesMin > 1 ? ` · para estadías de ${nochesMin} noches o más` : ""}
+    <section className="bg-white border-b border-[#1E1B16]/15 py-6">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-6 items-center">
+        {/* Precio desde */}
+        <div className="col-span-12 md:col-span-4">
+          <div className="dato text-[#5B5348]">Domos desde</div>
+          <div className="flex items-baseline gap-3 flex-wrap mt-1">
+            <span className="font-display font-medium text-[clamp(2.4rem,4vw,3.4rem)] leading-none tabular-nums text-[#1E1B16]">
+              {fmtCLP(desde)}
             </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-600 mt-1">
-              <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" /> 4,9 · 59 reseñas en Google
+            <span className="caption-editorial">
+              / noche · 2 personas
+              {nochesMin > 1 ? ` · para estadías de ${nochesMin} noches o más` : ""}
             </span>
           </div>
+        </div>
 
-          {/* Separador */}
-          <div className="hidden lg:block w-px h-12 bg-black/10" />
-
-          {/* Palancas de reserva directa */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 sm:gap-y-4 flex-1">
-            {items.map(({ Icon, t, s }) => (
-              <div key={t} className="flex items-start gap-2.5">
-                <Icon className="w-5 h-5 text-[#00ADEF] shrink-0 mt-0.5" strokeWidth={2.2} />
-                <div className="min-w-0">
-                  <div className="text-sm sm:text-[13px] font-bold text-gray-900 leading-tight">{t}</div>
-                  <div className="text-xs sm:text-[11px] text-gray-500 leading-tight mt-0.5">{s}</div>
-                </div>
+        {/* Palancas de reserva directa */}
+        <div className="col-span-12 md:col-span-8 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 lg:gap-x-0 lg:divide-x lg:divide-[#1E1B16]/10">
+          {items.map(({ t, s }) => (
+            <div key={t} className="lg:px-5 lg:first:pl-0 lg:last:pr-0">
+              <div className="flex items-center gap-2">
+                <TriBullet />
+                <span className="text-[13px] font-semibold text-[#1E1B16] leading-tight">{t}</span>
               </div>
-            ))}
-          </div>
+              <div className="text-[11px] text-gray-600 leading-tight mt-1 pl-[18px]">{s}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

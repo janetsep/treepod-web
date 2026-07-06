@@ -16,6 +16,7 @@ import ValueBand from "./components/ValueBand";
 import ComoReservar from "./components/ComoReservar";
 import FAQ from "./components/FAQ";
 import CinematicSection from "./components/CinematicSection";
+import GeoDivider from "./components/deco/GeoDivider";
 import { FaqJsonLd } from "./components/JsonLdSchemas";
 
 import TrackView from "./components/TrackView";
@@ -25,6 +26,9 @@ import TrackView from "./components/TrackView";
 // mitad de la página, beneficios, temporada, cómo reservar y cierre con FAQ/ubicación.
 // El blog (News) va al final: es contenido de apoyo, no de conversión. El botón de
 // reservar siempre visible en mobile lo aporta StickyReservar (global, con precio).
+//
+// La marca de kilómetro del GeoDivider AVANZA de 8% a 92% (footer) a medida que se
+// baja: la página es el camino al Km 72.
 export default function Home() {
   return (
     <main className="min-h-screen font-sans">
@@ -32,6 +36,7 @@ export default function Home() {
       {/* FAQPage JSON-LD solo en el home: refleja las preguntas visibles de <FAQ /> */}
       <FaqJsonLd />
       <Hero />
+      <GeoDivider left="8%" />
       <ValueBand />
 
       <CinematicSection
@@ -42,12 +47,16 @@ export default function Home() {
         text="Domos cálidos y bien equipados en medio del bosque. Sin ruido, sin frío, sin apuro."
         ctaText="Ver disponibilidad"
         ctaHref="/disponibilidad"
+        photoCaption="Domo de noche, Valle Las Trancas"
       />
 
       <div className="space-y-0">
         <div id="domos" className="reveal"><TreePodDomes /></div>
+        <GeoDivider left="20%" />
         <div id="reviews" className="reveal"><Testimonios /></div>
+        <GeoDivider left="32%" />
         <div id="concepto" className="reveal"><NotForEveryone /></div>
+        <GeoDivider left="44%" />
         <CinematicSection
           image="/images/Galeria/domopiscinainvierno.jpg"
           alt="Domos TreePod en invierno, a 12 minutos de la nieve"
@@ -56,13 +65,21 @@ export default function Home() {
           text="Pasas el día en la nieve o en las termas y vuelves a tu propio refugio en el bosque, con todo listo."
           ctaText="Ver disponibilidad"
           ctaHref="/disponibilidad"
+          stat="12"
+          statCaption="minutos a Nevados de Chillán"
+          photoCaption="Invierno en el valle, Las Trancas"
         />
+        <GeoDivider left="55%" />
         <div id="servicios" className="reveal"><DomoAmenities /></div>
+        <GeoDivider left="66%" />
         <div id="como-reservar" className="reveal"><ComoReservar /></div>
         {/* Sección de tarifas removida - se maneja desde admin */}
         {/* <div id="galeria"><Galeria /></div> */}
+        <GeoDivider left="76%" />
         <div id="faq" className="reveal"><FAQ /></div>
+        <GeoDivider left="84%" />
         <div id="contacto" className="reveal"><Ubicacion /></div>
+        <GeoDivider left="88%" />
         <div id="news" className="reveal"><News /></div>
       </div>
     </main>

@@ -59,8 +59,9 @@ body {
   background-color: var(--background);
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-weight: 500;
-  /* Increased base weight from 400 */
+  font-weight: 400;
+  /* Peso 400: el 500 en todo el cuerpo era una de las huellas "plantilla IA"
+     más fuertes del sitio. La jerarquía se logra con tamaño y composición. */
   line-height: 1.6;
   margin: 0;
   padding: 0;
@@ -207,7 +208,74 @@ html.reveal-ready .reveal.is-visible {
   animation: float 4s ease-in-out infinite;
 }
 
-/* Typography Utilities */
+/* ============================================================
+   Sistema tipográfico "KM 72 — la revista del bosque" (home).
+   Fraunces liviana y gigante lee "revista"; la jerarquía nace del
+   tamaño, la itálica y la composición, no del peso.
+   ============================================================ */
+
+/* H1 de portada */
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 9.5vw, 7.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+/* H2 de sección (artículos 01-08) */
+.display-lg {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 5.5vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+/* H3 / titulares de fila */
+.display-md {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  line-height: 1.15;
+}
+
+/* Entradilla bajo el titular */
+.lead {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.625;
+}
+
+/* Folio: numeración editorial (N° 01…08) */
+.folio {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.125rem;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pie de foto */
+.caption-editorial {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* Ficha técnica / rótulos de dato. Tracking máximo del sitio: 0.14em. */
+.dato {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Typography Utilities (páginas interiores; la home usa la escala nueva) */
 /* Títulos display en peso 600 (antes 800): el Playfair más liviano lee editorial
    y premium; el 800 se veía pesado/gritado. */
 .h1-display {

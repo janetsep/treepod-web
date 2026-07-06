@@ -19,6 +19,9 @@ const playfair = Fraunces({
   variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
+  // La itálica de Fraunces es "la voz" del sistema editorial (folios, pies de foto,
+  // palabras clave). Sin declararla, el navegador sintetiza una cursiva falsa.
+  style: ['normal', 'italic'],
 });
 
 const inter = Figtree({
