@@ -50,7 +50,7 @@ const jsonLd = {
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
+        "streetAddress": "Ruta N-55, Km 72, hacia Nevados de Chillán",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
@@ -168,7 +168,7 @@ export default function GlampingValleLasTrancasPage() {
                             },
                             {
                                 icon: Thermometer,
-                                title: "Estufa a pellet automática: 22°C siempre",
+                                title: "Estufa a pellet automática: calor constante",
                                 desc: "Olvídate de pasar frío. La estufa programable mantiene tu domo cálido toda la noche. Afuera puede estar bajo cero, adentro estarás en polera."
                             },
                             {
@@ -179,7 +179,7 @@ export default function GlampingValleLasTrancasPage() {
                             {
                                 icon: Mountain,
                                 title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan."
+                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
                                 icon: Wifi,
@@ -326,7 +326,7 @@ export default function GlampingValleLasTrancasPage() {
                                 {[
                                     "Vista panorámica del bosque nativo",
                                     "Privacidad real, sin vecinos cercanos",
-                                    "Check-in flexible y autónomo",
+                                    "Check-in autónomo con clave digital",
                                     "Guía de experiencias locales",
                                     "A 15 min de Nevados de Chillán",
                                     "Senderos de trekking desde el glamping",
@@ -396,7 +396,7 @@ export default function GlampingValleLasTrancasPage() {
 
                     <div className="mt-16 max-w-4xl mx-auto text-center">
                         <p className="text-lg text-text-sub font-bold leading-relaxed mb-8">
-                            TreePod está en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
+                            TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
                         </p>
                     </div>
                 </div>
@@ -412,7 +412,7 @@ export default function GlampingValleLasTrancasPage() {
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el precio más bajo garantizado y atención personalizada por WhatsApp.
+                            Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el mejor precio y atención personalizada por WhatsApp.
                         </p>
 
                         <TrackedLink
@@ -427,7 +427,7 @@ export default function GlampingValleLasTrancasPage() {
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Registro Sernatur</span>
                         </div>
                     </div>

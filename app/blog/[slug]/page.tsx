@@ -19,7 +19,7 @@ const articleContent: Record<string, any> = {
         excerpt: 'Guía general de actividades en Valle Las Trancas según la época del año.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         content: `
-Valle Las Trancas, en plena cordillera de la Región del Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
+Valle Las Trancas, en plena cordillera de la Región de Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
 
 ## Invierno (junio a septiembre)
 
@@ -58,8 +58,8 @@ Días largos y temperaturas agradables para recorrer el valle a pie.
 ### Espectáculo de colores
 El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
-### Tinaja y descanso
-Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y libros junto a la estufa.
+### Descanso junto a la estufa
+Las noches frescas son perfectas para los fogones y los libros junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
 
 ## Resumen rápido
 
@@ -75,7 +75,7 @@ Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y 
 
 ---
 
-¿Listo para venir? Reserva tu domo en TreePod con confirmación inmediata.
+¿Listo para venir? Reserva tu domo en TreePod: pagas el 50% de abono y el saldo en el check-in.
 `,
         category: 'Guías',
         readTime: '4 min',
@@ -86,7 +86,7 @@ Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y 
         excerpt: 'Las opciones más comunes para llegar a Valle Las Trancas desde Santiago y otras ciudades.',
         image: '/images/Galeria/Las Trancas Bosque Nativo 2.jpeg',
         content: `
-Valle Las Trancas se ubica en la Región del Ñuble, a unos 80 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
+Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
 
 ## En auto (la más cómoda)
 
@@ -331,7 +331,7 @@ export default async function BlogPost({ params }: Props) {
                             Domos geodésicos en bosque nativo
                         </h2>
                         <p className="text-lg text-text-sub font-medium italic font-display leading-relaxed mb-10 max-w-xl mx-auto">
-                            Calefacción a pellet 24/7, WiFi Starlink y opción de tinaja exclusiva. Reserva directa con confirmación inmediata.
+                            Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada en temporada. Reserva directa con abono del 50%.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
                             <Link

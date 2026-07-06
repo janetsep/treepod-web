@@ -26,7 +26,7 @@ export default function NotFound() {
                 href="/"
                 className="bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-full transition-all transform hover:-translate-y-1 shadow-lg"
             >
-                Volver al Inicio
+                Volver al inicio
             </Link>
         </div>
     );

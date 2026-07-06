@@ -27,7 +27,7 @@ export default function Ubicacion() {
                 </div>
                 <div>
                   <h4 className="font-bold text-base md:text-lg uppercase tracking-tight text-text-main">Tu refugio secreto (pero fácil de llegar)</h4>
-                  <p className="text-sm md:text-base text-text-sub font-bold">Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará, y no tendrás que sufrir por caminos imposibles para llegar.</p>
+                  <p className="text-sm md:text-base text-text-sub font-bold">Estás en el centro del valle, pero escondido en la profundidad del bosque nativo. Nadie te molestará y no tendrás que sufrir caminos imposibles para llegar.</p>
                 </div>
               </div>
 
@@ -75,7 +75,7 @@ export default function Ubicacion() {
 
               {/* Decorative elements to simulate location tracking */}
               <div className="absolute -bottom-4 right-10 text-primary text-[11px] font-black uppercase tracking-[0.3em] drop-shadow-md z-20">
-                A 10 min del Centro de Ski
+                A 12 min del centro de ski
               </div>
             </div>
           </div>

@@ -21,7 +21,7 @@ export default function ContactoPage() {
                                 <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
                             </div>
                             <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15]">
-                                Hablemos de <span className="text-primary italic-display">Tu Escapada</span>
+                                Hablemos de <span className="text-primary italic-display">tu escapada</span>
                             </h1>
                         </div>
                     </div>
@@ -57,7 +57,7 @@ export default function ContactoPage() {
                                         <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación Norte</h3>
+                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación</h3>
                                         <p className="text-xl font-black text-text-main">Ruta N-55, Km 72</p>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Valle Las Trancas, Ñuble</p>
                                     </div>
@@ -93,7 +93,7 @@ export default function ContactoPage() {
                             {/* Authority/Trust Tip */}
                             <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-3">
                                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-                                    <Send className="w-3.5 h-3.5" /> Consejo del Host
+                                    <Send className="w-3.5 h-3.5" /> Consejo de tus anfitriones
                                 </p>
                                 <p className="text-sm font-bold text-text-sub leading-relaxed">
                                     Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a 12 minutos de la nieve real.
@@ -151,13 +151,13 @@ export default function ContactoPage() {
                                             <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shrink-0 mt-0.5">
                                                 <Check className="w-4 h-4 text-white" strokeWidth={3} />
                                             </div>
-                                            <p className="text-sm font-bold">¡Confirmado! Recibimos tu mensaje. El host te contactará dentro de las próximas horas.</p>
+                                            <p className="text-sm font-bold">¡Listo! Recibimos tu mensaje. Te contactaremos dentro de las próximas horas.</p>
                                         </div>
                                     )}
 
                                     {status === 'error' && (
                                         <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center gap-4 animate-shake">
-                                            <p className="text-sm font-bold">Hubo un error de conexión. Por favor contáctanos vía WhatsApp para una respuesta inmediata.</p>
+                                            <p className="text-sm font-bold">Hubo un error de conexión. Escríbenos por WhatsApp y te respondemos a la brevedad.</p>
                                         </div>
                                     )}
 
@@ -216,7 +216,7 @@ export default function ContactoPage() {
 
                                         <div className="relative py-4 flex items-center justify-center">
                                             <div className="absolute w-full border-t border-black/5"></div>
-                                            <span className="relative bg-white px-6 text-[10px] font-black text-text-sub/40 uppercase tracking-[0.2em]">Respuesta Inmediata</span>
+                                            <span className="relative bg-white px-6 text-[10px] font-black text-text-sub/40 uppercase tracking-[0.2em]">¿Prefieres una respuesta más rápida?</span>
                                         </div>
 
                                         <a

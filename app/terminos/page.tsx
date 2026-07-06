@@ -33,7 +33,7 @@ export default function TerminosPage() {
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">1. Política de Reserva y Pago</h2>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
-                        <li><strong>Confirmación de Reserva:</strong> Una reserva solo se considera <strong>confirmada una vez procesado y verificado el 100% del pago</strong> asociado. El envío de formularios, correos de intención, solicitudes vía WhatsApp o inicios de pago fallidos NO garantizan ni bloquean fechas en nuestro calendario.</li>
+                        <li><strong>Confirmación de Reserva:</strong> Una reserva solo se considera <strong>confirmada una vez procesado y verificado el pago del abono correspondiente (50% del total de la estadía)</strong>. El saldo restante se paga al momento del check-in. El envío de formularios, correos de intención, solicitudes vía WhatsApp o inicios de pago fallidos NO garantizan ni bloquean fechas en nuestro calendario.</li>
                         <li><strong>Medios de Pago:</strong> Aceptamos pagos mediante Transbank/Webpay y Transferencia Electrónica. </li>
                         <li><strong>Tarifas:</strong> Los valores indicados en la web están sujetos a modificación sin previo aviso. Sin embargo, para reservas confirmadas, se respetará íntegramente el valor acordado al momento del pago exitoso correspondiente a esa estadía.</li>
                     </ul>

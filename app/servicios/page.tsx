@@ -10,7 +10,7 @@ import CinematicSection from '../components/CinematicSection';
 export default function ServicesPage() {
     const mainServices = [
         {
-            title: "Baño Privado Bajo las Estrellas",
+            title: "Tinaja privada bajo las estrellas",
             subtitle: "Privacidad total · Servicio de temporada",
             description: "Tu propia tinaja al aire libre, con agua mineralizada y vista al bosque. Sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             image: "/images/wellness/Tinaja1.jpg",
@@ -21,12 +21,12 @@ export default function ServicesPage() {
         },
         {
             title: "Desayunos y asados en el bosque",
-            subtitle: "Sabor Cordillerano",
+            subtitle: "Sabor cordillerano",
             description: "Despierta con un desayuno cordillerano servido a la habitación, o usa el quincho equipado para preparar un asado al aire libre. Comes bien sin moverte del bosque.",
             image: "/images/real/comidatreepod.jpg",
             secondaryImage: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
-            features: ["Desayuno a la habitación", "Quincho Full Equipado", "Productos del Valle (Costo adicional)"],
+            features: ["Desayuno a la habitación", "Quincho equipado para asados", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
         }

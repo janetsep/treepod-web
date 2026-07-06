@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Otoño en Valle Las Trancas 2026 | Glamping TreePod - Colores del Bosque',
-    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod. Desde $110.000/noche.',
+    title: 'Otoño en Valle Las Trancas | Glamping TreePod - Colores del Bosque',
+    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod.',
     keywords: [
         'otoño valle las trancas',
         'otoño las trancas',
@@ -58,7 +58,7 @@ export default function OtonoValleLasTrancasPage() {
                 <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
                     <div className="inline-block mb-8 bg-amber-700/30 backdrop-blur-md border border-amber-500/30 px-6 py-2 rounded-full animate-fade-in-up">
                         <span className="text-white text-xs font-black tracking-[0.2em] uppercase">
-                            <Leaf className="inline w-3 h-3 mr-1" /> Otoño 2026 · Abril a Junio
+                            <Leaf className="inline w-3 h-3 mr-1" /> Otoño · Abril a junio
                         </span>
                     </div>
 
@@ -70,10 +70,10 @@ export default function OtonoValleLasTrancasPage() {
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <div className="inline-block bg-amber-700/80 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
                             <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
+                                Precios de temporada baja
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Temporada baja: precios más bajos y menos gente
+                                Menos gente y el bosque en su mejor momento. Revisa la tarifa de tu fecha en el calendario.
                             </span>
                         </div>
                     </div>
@@ -90,8 +90,8 @@ export default function OtonoValleLasTrancasPage() {
                             secondParams={{ event: "otono_las_trancas_2026" }}
                             className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
                         >
-                            <span className="text-xl md:text-2xl">RESERVA TU ESCAPADA DE OTOÑO</span>
-                            <span className="text-sm font-normal opacity-90">(Abril - Junio 2026)</span>
+                            <span className="text-xl md:text-2xl">Reserva tu escapada de otoño</span>
+                            <span className="text-sm font-normal opacity-90">(abril a junio)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">

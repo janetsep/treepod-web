@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Reservar Glamping en Las Trancas | TreePod',
-        description: 'Consulta disponibilidad y reserva tu domo geodésico en Valle Las Trancas. Tarifas desde $145.000/noche.',
+        description: 'Consulta disponibilidad y reserva tu domo geodésico en Valle Las Trancas. Tarifas según temporada para 2 personas.',
         images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     },
 };

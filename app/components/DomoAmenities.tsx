@@ -24,7 +24,7 @@ export default function DomoAmenities() {
         {
             icon: "fireplace",
             title: "Cero humo, cero frío",
-            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido y perfecto 24/7.",
+            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido las 24 horas.",
             tag: "Confort",
             image: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
             size: "small"

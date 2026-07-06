@@ -303,7 +303,7 @@ export default async function GloriasNavalesPage() {
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Pago Seguro</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Bosque Nativo</span>
                         </div>
                     </div>

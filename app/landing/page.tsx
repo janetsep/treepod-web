@@ -28,9 +28,9 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Reseñas en</p>
+              <p className="text-sm text-gray-600">Reseñas verificadas</p>
               <p className="mt-1 text-gray-900 font-medium">
-                Google · Airbnb · Booking
+                59 reseñas en Google
               </p>
             </div>
           </div>
@@ -52,9 +52,9 @@ export default function LandingPage() {
         <h2 className="text-xl font-semibold mb-4">¿Cómo funciona la reserva?</h2>
 
         <ol className="list-decimal list-inside space-y-2 text-gray-700">
-          <li>Elige fechas</li>
-          <li>Paga 50%</li>
-          <li>Saldo al llegar</li>
+          <li>Elige tus fechas</li>
+          <li>Reserva con el 50% de abono</li>
+          <li>El saldo lo pagas en el check-in</li>
         </ol>
       </section>
 

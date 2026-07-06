@@ -43,7 +43,7 @@ const jsonLd = {
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
+        "streetAddress": "Ruta N-55, Km 72, hacia Nevados de Chillán",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
@@ -156,7 +156,7 @@ export default function DomosGeodesicosChillanPage() {
                             {
                                 icon: Thermometer,
                                 title: "Climatización inteligente con pellet",
-                                desc: "Estufa a pellet programable que mantiene 22°C toda la noche. No necesitas levantarte a alimentar fuego. El domo amanece caliente incluso cuando afuera está nevando."
+                                desc: "Estufa a pellet programable que mantiene el domo cálido toda la noche. No necesitas levantarte a alimentar el fuego: el domo amanece tibio incluso cuando afuera está nevando."
                             },
                             {
                                 icon: Waves,
@@ -166,7 +166,7 @@ export default function DomosGeodesicosChillanPage() {
                             {
                                 icon: Mountain,
                                 title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 71 de la ruta N-55 hacia Nevados de Chillan."
+                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
                                 icon: Wifi,
@@ -301,7 +301,7 @@ export default function DomosGeodesicosChillanPage() {
                             Reserva tu domo geodésico al mejor precio
                         </h2>
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Reserva directa en domostreepod.cl, sin comisiones de intermediarios. Precio más bajo garantizado y atención personalizada.
+                            Reserva directa en domostreepod.cl, sin comisiones de intermediarios. Mejor precio directo y atención personalizada por WhatsApp.
                         </p>
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=domos-chillan"
@@ -312,7 +312,7 @@ export default function DomosGeodesicosChillanPage() {
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Registro Sernatur</span>
                         </div>
                     </div>

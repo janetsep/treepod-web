@@ -154,7 +154,7 @@ export default function PaquetesPage() {
                             Podemos ayudarte a organizar cumpleaños, aniversarios o sorpresas personalizadas. Escríbenos y nuestro equipo lo hará realidad.
                         </p>
                         <Link href="/contacto" className="bg-primary text-white px-16 py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:bg-primary-dark transition-all transform hover:scale-105 shadow-2xl shadow-primary/40 inline-block">
-                            Hablar con el Equipo
+                            Hablar con el equipo
                         </Link>
                     </div>
                 </div>

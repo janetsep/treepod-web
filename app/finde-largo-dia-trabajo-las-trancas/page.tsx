@@ -67,10 +67,10 @@ export default function FindeLargoPage() {
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
                             <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $145.000 por noche
+                                Tarifas según temporada
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Día del Trabajo Mayo 2026
+                                Revisa el precio de tus fechas en el calendario de reservas
                             </span>
                         </div>
                     </div>
@@ -323,7 +323,7 @@ export default function FindeLargoPage() {
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Pago Seguro</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Bosque Nativo</span>
                         </div>
                     </div>

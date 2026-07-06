@@ -47,7 +47,7 @@ export default function DomosPage() {
                 alt="Domo geodésico TreePod en Valle Las Trancas"
                 eyebrow="Los domos"
                 title={<>Domos geodésicos equipados,<br className="hidden md:block" /> inmersos en el bosque nativo</>}
-                text="Duerme rodeado de bosque nativo, con todas las comodidades de la ciudad."
+                text="Duerme en medio del bosque nativo, sin renunciar a ninguna comodidad."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority
@@ -200,7 +200,7 @@ export default function DomosPage() {
 
                 {/* 4. Technical Specs (The Whitepod Grid) */}
                 <div className="mt-24 md:mt-32">
-                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha Técnica</h3>
+                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha técnica</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
                         <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">

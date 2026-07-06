@@ -26,7 +26,7 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: "¿Qué incluye el domo?",
-    a: "El domo viene totalmente equipado para que no pases frío: cama cómoda, calefacción (cero humo, cero frío) y todo lo necesario para un buen descanso en el bosque nativo. La tinaja caliente privada al aire libre es un adicional opcional.",
+    a: "El domo viene totalmente equipado: cama cómoda, calefacción automática (cero humo, cero frío), baño privado, cocina equipada con cafetera Nespresso y WiFi Starlink. La tinaja caliente privada al aire libre es un adicional opcional de temporada: no opera en invierno y vuelve en primavera.",
   },
   {
     q: "¿Cómo llego a TreePod?",

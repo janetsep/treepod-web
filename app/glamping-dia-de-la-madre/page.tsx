@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Glamping Día de la Madre en Ñuble | Domos en Las Trancas — TreePod',
-    description: 'Regala glamping para el Día de la Madre en Chillán: domos geodésicos en Valle Las Trancas, a minutos de Nevados de Chillán. Una escapada para mamá. Desde $110.000/noche.',
+    description: 'Regala glamping para el Día de la Madre en Chillán: domos geodésicos en Valle Las Trancas, a minutos de Nevados de Chillán. Una escapada para mamá.',
     keywords: [
         'glamping día de la madre',
         'glamping día de la madre chillán',
@@ -55,7 +55,7 @@ const jsonLd = {
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
     },
-    "priceRange": "Desde $110.000 CLP por noche",
+    "priceRange": "$$",
     "starRating": { "@type": "Rating", "ratingValue": "4.9" },
     "aggregateRating": {
         "@type": "AggregateRating",
@@ -174,8 +174,8 @@ export default function GlampingDiaDeLaMadrePage() {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900">Domo geodésico equipado</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Cama doble o twin, ropa de cama de calidad, calefacción, baño privado y vistas
-                                al bosque nativo de Ñuble.
+                                Cama doble o dos camas individuales, ropa de cama de calidad, calefacción, baño privado
+                                y vistas al bosque nativo de Ñuble.
                             </p>
                         </div>
 
@@ -253,7 +253,7 @@ export default function GlampingDiaDeLaMadrePage() {
                                 {[
                                     'Check-in desde las 16:00, check-out a las 12:00',
                                     'Ropa de cama y toallas incluidas',
-                                    'WiFi Starlink — conexión garantizada',
+                                    'WiFi Starlink de alta velocidad',
                                     'Estacionamiento privado sin costo',
                                     'Acceso a áreas comunes del glamping',
                                 ].map((item) => (
@@ -285,7 +285,7 @@ export default function GlampingDiaDeLaMadrePage() {
                                 Llegan el sábado 9 en la tarde, cenan tranquilos en el domo y se despiertan
                                 el domingo 10 — el Día de la Madre — con el paisaje de los Andes desde la cama.
                             </p>
-                            <p className="text-rose-600 font-bold text-lg mt-auto">Desde $110.000 CLP/noche</p>
+                            <p className="text-rose-600 font-bold text-lg mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
                         </div>
 
                         <div className="bg-rose-600 rounded-2xl p-8 border-2 border-rose-600 flex flex-col gap-4 text-white shadow-xl">
@@ -295,7 +295,7 @@ export default function GlampingDiaDeLaMadrePage() {
                                 Viernes 8 + sábado 9. Con dos noches hay tiempo para explorar Las Trancas con
                                 calma, visitar las termas y disfrutar la experiencia completa sin apuro.
                             </p>
-                            <p className="text-white font-bold text-lg mt-auto">Desde $110.000 CLP/noche</p>
+                            <p className="text-white font-bold text-lg mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
                         </div>
                     </div>
 
@@ -312,7 +312,7 @@ export default function GlampingDiaDeLaMadrePage() {
                         Un regalo que mamá va a recordar
                     </h2>
                     <p className="text-rose-200 text-lg mb-10 leading-relaxed">
-                        Reserva directamente en domostreepod.cl — sin intermediarios, con confirmación inmediata.
+                        Reserva directamente en domostreepod.cl — sin intermediarios, con abono del 50% y saldo en el check-in.
                         O escríbenos por WhatsApp si tienes preguntas.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -131,7 +131,7 @@ export default function EscapadaRomanticaPage() {
                             {
                                 icon: Wine,
                                 title: "Cocina para preparar algo especial",
-                                desc: "Cocina completamente equipada para preparar una cena para dos. Trae tu vino favorito, tu receta especial o simplemente pide algo y cocina sin prisa."
+                                desc: "Cocina completamente equipada para preparar una cena para dos. Trae tu vino favorito y tu receta especial, o preparen algo simple y cenen sin prisa."
                             },
                             {
                                 icon: Star,
@@ -271,7 +271,7 @@ export default function EscapadaRomanticaPage() {
                             La mejor sorpresa es tiempo juntos en el lugar correcto
                         </h2>
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Reserva directa, mejor precio garantizado. Si es una sorpresa, escríbenos por WhatsApp y te ayudamos a coordinar los detalles.
+                            Reserva directa, con el mejor precio y sin comisiones de intermediarios. Si es una sorpresa, escríbenos por WhatsApp y te ayudamos a coordinar los detalles.
                         </p>
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=escapada-romantica"
