@@ -16,9 +16,9 @@ export default function DistribucionEstrategica() {
                         <Image
                             src="/images/concept/croquis-aereo-nuevo.png"
                             alt="Mapa de croquis glamping TreePod"
-                            layout="fill"
-                            objectFit="cover"
-                            className="transition-transform duration-[10s] group-hover:scale-110"
+                            fill
+                            sizes="(max-width: 1152px) 100vw, 1152px"
+                            className="object-cover transition-transform duration-[10s] group-hover:scale-110"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { CheckCircle2, Download } from "lucide-react";
 
@@ -48,9 +49,9 @@ export default function GuiaPage() {
                                         <Image
                                             alt="Digital tablet displaying the cover of the glamping guide"
                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnSR28nfqcqP2Sjw9q3NtxobJy1Bdl6HV4oGMA-F9YOQnO9ZXvR6Zbv1n-7ufzrP6J-XFweULHe3r1BFoerrAcPSSGE772T5ykgFwePpdXEBUUzxDy4utbJVVn99Q7pFEntfsn56G4phKWhZb-ypegQf54-Tn30vJ0iLChOFGiABmjB_Mt1Tg0YPZNig5RkFZlL8m4bJRV7_dBW7f18Og7TN5JUb25J2-TlbYXhqV-8DtbkvBBuuB0RhoXBB-mEIEVpO3dxUQoU70"
-                                            layout="fill"
-                                            objectFit="cover"
-                                            className="transition-transform duration-500 group-hover:scale-105"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 400px"
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
                                             <p className="text-white text-sm font-medium tracking-widest uppercase opacity-90">TreePod</p>
@@ -76,12 +77,12 @@ export default function GuiaPage() {
                                 </p>
                             </div>
                             <div className="flex flex-wrap justify-center gap-4 w-full">
-                                <button className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+                                <Link href="/domos" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal hover:brightness-110 transition-all shadow-lg shadow-primary/20">
                                     Ver Nuestros Alojamientos
-                                </button>
-                                <button className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-transparent border border-white/20 text-white text-base font-bold leading-normal hover:bg-white/5 transition-all">
+                                </Link>
+                                <a href="https://instagram.com/domostreepod" target="_blank" rel="noopener noreferrer" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-transparent border border-white/20 text-white text-base font-bold leading-normal hover:bg-white/5 transition-all">
                                     Seguir en Instagram
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

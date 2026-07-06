@@ -1,14 +1,13 @@
 "use client";
 
 import { Suspense, useEffect, useState, use, useRef } from "react";
-import { notFound, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PagarButton from "../../components/PagarButton";
 import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
-import Image from "next/image";
 import { TrackingService } from "@/services/TrackingService";
 import { trackEvent } from "../../lib/analytics";
-import { ArrowLeft, CheckCircle2, ChevronRight, Lock, MapPin, Sparkles, User, Info, Hourglass, AlertCircle, TimerOff, Timer } from "lucide-react";
+import { CheckCircle2, Lock, Sparkles, Info, Hourglass, AlertCircle, TimerOff, Timer } from "lucide-react";
 import Stepper from "../../components/Stepper";
 
 function diffMinutes(from: Date, to: Date) {
@@ -61,38 +60,51 @@ function ReservaContent({ id }: { id: string }) {
   const [minutesLeft, setMinutesLeft] = useState(15);
 
   useEffect(() => {
-    async function fetchReserva() {
-      const res = await fetch(`/api/reservas/obtener?id=${id}`);
-      const data = res.ok ? await res.json() : null;
+    // El intervalo se guarda fuera de la función async para poder limpiarlo
+    // en el cleanup real del efecto (un return dentro de una función async no limpia nada).
+    let timer: ReturnType<typeof setInterval> | undefined;
 
-      if (!data) {
+    async function fetchReserva() {
+      try {
+        const res = await fetch(`/api/reservas/obtener?id=${id}`);
+        const data = res.ok ? await res.json() : null;
+
+        if (!data) {
+          setReserva(null);
+          setLoading(false);
+        } else {
+          setReserva(data as any);
+          setLoading(false);
+
+          trackEvent("view_reserva", {
+            reserva_id: id,
+            estado: data.estado,
+            total: data.total,
+            noches: Math.ceil(Math.abs(new Date(data.fecha_fin).getTime() - new Date(data.fecha_inicio).getTime()) / (1000 * 60 * 60 * 24))
+          });
+
+          // Calculate minutes left
+          const createdAt = new Date(data.created_at);
+          const expiresAt = new Date(createdAt.getTime() + 15 * 60000);
+          const updateTimer = () => {
+            const now = new Date();
+            setMinutesLeft(diffMinutes(now, expiresAt));
+          };
+          updateTimer();
+          timer = setInterval(updateTimer, 60000);
+        }
+      } catch (err) {
+        // Sin esto, un error de red dejaba el spinner de carga para siempre.
+        console.error("Error cargando la reserva:", err);
         setReserva(null);
         setLoading(false);
-      } else {
-        setReserva(data as any);
-        setLoading(false);
-
-        trackEvent("view_reserva", {
-          reserva_id: id,
-          estado: data.estado,
-          total: data.total,
-          noches: Math.ceil(Math.abs(new Date(data.fecha_fin).getTime() - new Date(data.fecha_inicio).getTime()) / (1000 * 60 * 60 * 24))
-        });
-
-        // Calculate minutes left
-        const createdAt = new Date(data.created_at);
-        const expiresAt = new Date(createdAt.getTime() + 15 * 60000);
-        const updateTimer = () => {
-          const now = new Date();
-          setMinutesLeft(diffMinutes(now, expiresAt));
-        };
-        updateTimer();
-        const timer = setInterval(updateTimer, 60000);
-        return () => clearInterval(timer);
       }
     }
 
     fetchReserva();
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [id]);
 
   const purchaseEventSent = useRef(false);

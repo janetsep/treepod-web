@@ -80,7 +80,7 @@ export default function ContactoPage() {
                                         </div>
                                     </div>
                                     <a
-                                        href="https://maps.app.goo.gl/..."
+                                        href="https://maps.app.goo.gl/WXUyDLhcVnJfA3Lm6"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="h-10 px-6 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"

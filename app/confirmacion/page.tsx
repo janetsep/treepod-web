@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown, CheckCircle2, ChevronRight, Home, MapPin, MessageSquare, Info } from 'lucide-react';
+import { CheckCircle2, Info } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Stepper from '../components/Stepper';

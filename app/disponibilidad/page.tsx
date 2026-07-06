@@ -6,9 +6,8 @@ import Image from "next/image";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
-import { TrackingService } from '@/services/TrackingService';
 import { getStoredUTMs } from '../components/UTMCapture';
-import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info, Star } from "lucide-react";
+import { Settings, ChevronDown, Tag, Sparkles, Check, Calendar, RefreshCw, Info, Star } from "lucide-react";
 import Stepper from '../components/Stepper';
 
 type ResultadoPrecio = {
