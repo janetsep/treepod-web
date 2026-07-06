@@ -74,7 +74,6 @@ export default function Home() {
         <GeoDivider left="66%" />
         <div id="como-reservar" className="reveal"><ComoReservar /></div>
         {/* Sección de tarifas removida - se maneja desde admin */}
-        {/* <div id="galeria"><Galeria /></div> */}
         <GeoDivider left="76%" />
         <div id="faq" className="reveal"><FAQ /></div>
         <GeoDivider left="84%" />
