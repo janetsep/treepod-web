@@ -152,17 +152,17 @@ function ReservaContent({ id }: { id: string }) {
   const isExpired = minutesLeft === 0 && reserva.estado === "pendiente_pago";
   if (statusParam === "SUCCESS_TRANSFER") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main-light dark:text-text-main-dark transition-colors">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark transition-colors">
         <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
           <div className="w-20 h-20 bg-gold/10 dark:bg-gold/20 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <Hourglass className="text-gold w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight">Transferencia <span className="text-gold italic-display">Informada</span></h1>
-            <p className="text-text-sub-light dark:text-text-sub-dark font-light leading-relaxed">
+            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
               Hemos recibido tu aviso de transferencia. Tu reserva quedará confirmada una vez que verifiquemos el pago (24-48hrs).
               <br /><br />
-              Te enviaremos la confirmación definitiva a <span className="font-bold text-text-main-light dark:text-text-main-dark">{reserva.email}</span>.
+              Te enviaremos la confirmación definitiva a <span className="font-bold text-text-main dark:text-text-main-dark">{reserva.email}</span>.
             </p>
           </div>
           <div className="pt-4">
@@ -182,16 +182,16 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isPaid || statusParam === "SUCCESS") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main-light dark:text-text-main-dark transition-colors">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark transition-colors">
         <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
           <div className="w-20 h-20 bg-green-500/10 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="text-green-500 w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-display font-bold tracking-tight">¡Reserva <span className="text-gold italic-display">Confirmada</span>!</h1>
-            <p className="text-sm font-black text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-2026-{reserva.id.split('-')[0].toUpperCase()}</p>
-            <p className="text-text-sub-light dark:text-text-sub-dark font-light leading-relaxed">
-              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main-light dark:text-text-main-dark">{reserva.email}</span>.
+            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-2026-{reserva.id.split('-')[0].toUpperCase()}</p>
+            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
+              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main dark:text-text-main-dark">{reserva.email}</span>.
             </p>
           </div>
           <div className="pt-4">
@@ -209,14 +209,14 @@ function ReservaContent({ id }: { id: string }) {
 
   if (statusParam === "FAILURE") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main-light dark:text-text-main-dark">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark">
         <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-red-100 dark:border-red-900/20 space-y-8 animate-fade-in">
           <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="text-red-500 w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight">No pudimos procesar el pago</h1>
-            <p className="text-text-sub-light dark:text-text-sub-dark font-light leading-relaxed">
+            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
               Hubo un inconveniente con la transacción. No te preocupes, tu reserva sigue disponible por unos minutos.
             </p>
           </div>
@@ -227,7 +227,7 @@ function ReservaContent({ id }: { id: string }) {
             >
               Reintentar Pago Seguro
             </Link>
-            <Link href="/contacto" className="block text-xs font-bold text-text-sub-light uppercase tracking-widest hover:text-gold transition-colors">Necesito Ayuda</Link>
+            <Link href="/contacto" className="block text-xs font-bold text-text-sub uppercase tracking-widest hover:text-gold transition-colors">Necesito Ayuda</Link>
           </div>
         </div>
       </div>
@@ -236,14 +236,14 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isExpired) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main-light dark:text-text-main-dark">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark">
         <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gray-100 dark:border-gray-800 space-y-8 animate-fade-in">
           <div className="w-20 h-20 bg-gray-100 dark:bg-black/10 rounded-full flex items-center justify-center mx-auto opacity-40">
             <TimerOff className="w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight opacity-60">Tiempo Excedido</h1>
-            <p className="text-text-sub-light dark:text-text-sub-dark font-light leading-relaxed">
+            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
               Lo sentimos, la reserva ha expirado para liberar el espacio a otros huéspedes.
             </p>
           </div>
@@ -266,7 +266,7 @@ function ReservaContent({ id }: { id: string }) {
   const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email);
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-background-light dark:bg-background-dark text-text-main dark:text-text-main-dark font-sans transition-colors duration-300">
       <div className="h-16 md:h-20"></div>
 
       <div className="container mx-auto px-4 md:px-6 py-4 lg:py-6 max-w-5xl">
@@ -282,9 +282,9 @@ function ReservaContent({ id }: { id: string }) {
               <span className="text-gold text-[9px] font-bold tracking-[0.3em] uppercase">Checkout Seguro</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
-              Finaliza <span className="text-gold italic-display font-light">Tu Reserva</span>
+              Finaliza <span className="text-gold italic-display font-normal">Tu Reserva</span>
             </h1>
-            <p className="text-sm md:text-base text-text-sub-light dark:text-text-sub-dark max-w-xl mx-auto font-light leading-relaxed">
+            <p className="text-sm md:text-base text-text-sub dark:text-text-sub-dark max-w-xl mx-auto font-normal leading-relaxed">
               Revisa los detalles finales y asegura tu refugio en la cordillera.
             </p>
           </header>
@@ -293,7 +293,7 @@ function ReservaContent({ id }: { id: string }) {
             {/* Columna 1: Resumen y Detalle Financiero */}
             <div className="space-y-6">
               <section className="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-800 relative py-10 md:py-12">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-primary/10 rounded-tr-[2rem] rounded-bl-2xl text-[9px] font-black text-primary uppercase tracking-widest">
+                <div className="absolute top-0 right-0 px-4 py-2 bg-primary/10 rounded-tr-[2rem] rounded-bl-2xl text-[9px] font-semibold text-primary uppercase tracking-widest">
                   Detalle de Reserva
                 </div>
 
@@ -306,19 +306,19 @@ function ReservaContent({ id }: { id: string }) {
 
                 <div className="grid grid-cols-2 gap-6 mb-8">
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub-light/60">Llegada</span>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Llegada</span>
                     <p className="text-sm font-medium">{formatDate(reserva.fecha_inicio)}</p>
                   </div>
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub-light/60">Salida</span>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Salida</span>
                     <p className="text-sm font-medium">{formatDate(reserva.fecha_fin)}</p>
                   </div>
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub-light/60">Huéspedes</span>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Huéspedes</span>
                     <p className="text-sm font-medium">{reserva.adultos} Personas</p>
                   </div>
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub-light/60">Duración</span>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Duración</span>
                     <p className="text-sm font-medium">{diffDays} {diffDays === 1 ? 'Noche' : 'Noches'}</p>
                   </div>
                 </div>
@@ -333,17 +333,17 @@ function ReservaContent({ id }: { id: string }) {
 
                     return (
                       <>
-                        <div className="flex justify-between text-xs text-text-sub-light">
+                        <div className="flex justify-between text-xs text-text-sub">
                           <span>Domo ({diffDays} {diffDays === 1 ? 'noche' : 'noches'})</span>
                           <div className="text-right">
                             {reserva.precio_original && reserva.precio_original > subtotalDomoConDescuento && (
-                              <span className="block text-[10px] text-text-sub-light/60 line-through">${reserva.precio_original.toLocaleString("es-CL")}</span>
+                              <span className="block text-[10px] text-text-sub/60 line-through">${reserva.precio_original.toLocaleString("es-CL")}</span>
                             )}
                             <span className="font-bold">${subtotalDomoConDescuento.toLocaleString("es-CL")}</span>
                           </div>
                         </div>
 
-                        <div className="flex justify-between text-[10px] text-text-sub-light/60 pl-4 border-l-2 border-primary/20">
+                        <div className="flex justify-between text-[10px] text-text-sub/60 pl-4 border-l-2 border-primary/20">
                           <span>Tarifa base por noche</span>
                           <span>${tarifaPorNoche.toLocaleString("es-CL")}</span>
                         </div>
@@ -361,14 +361,14 @@ function ReservaContent({ id }: { id: string }) {
 
                         {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
                           <div className="pt-2 space-y-2">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Extras Seleccionados</span>
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">Extras Seleccionados</span>
                             {reserva.reserva_servicios.map((s) => (
-                              <div key={s.id} className="flex justify-between items-start gap-4 text-xs text-text-sub-light py-1">
+                              <div key={s.id} className="flex justify-between items-start gap-4 text-xs text-text-sub py-1">
                                 <span className="flex items-start gap-2 flex-1 leading-snug">
                                   <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                                   {s.servicios?.nombre || "Servicio adicional"}
                                 </span>
-                                <span className="font-black whitespace-nowrap">${s.total.toLocaleString("es-CL")}</span>
+                                <span className="font-semibold whitespace-nowrap">${s.total.toLocaleString("es-CL")}</span>
                               </div>
                             ))}
                           </div>
@@ -380,7 +380,7 @@ function ReservaContent({ id }: { id: string }) {
                         </div>
 
                         <div className="pt-4 space-y-4 border-t border-dashed border-gray-200 mt-2">
-                          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-text-sub-light px-1">
+                          <div className="flex justify-between items-center text-[10px] font-semibold uppercase tracking-widest text-text-sub px-1">
                             <span>Total Estadía</span>
                             <span>${total.toLocaleString("es-CL")}</span>
                           </div>
@@ -391,22 +391,22 @@ function ReservaContent({ id }: { id: string }) {
                             </div>
                             <div className="flex justify-between items-end relative z-10">
                               <div className="flex flex-col">
-                                <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
-                                <span className="text-[9px] text-text-sub-light/70 font-medium leading-tight">Para confirmar y garantizar<br />tu reserva inmediata</span>
+                                <span className="block text-[11px] font-semibold text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
+                                <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar y garantizar<br />tu reserva inmediata</span>
                               </div>
-                              <div className="text-3xl sm:text-4xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
+                              <div className="text-3xl sm:text-4xl font-display font-semibold text-primary leading-none flex items-baseline whitespace-nowrap">
                                 <span className="text-lg sm:text-2xl mr-1.5 text-primary/70 font-sans">$</span>
                                 {Math.round(total * 0.5).toLocaleString("es-CL")}
                               </div>
                             </div>
                           </div>
 
-                          <div className="flex justify-between items-center text-[10px] text-text-sub-light/80 px-2">
+                          <div className="flex justify-between items-center text-[10px] text-text-sub/80 px-2">
                             <span className="flex items-center gap-2 font-medium">
                               <Info className="w-3.5 h-3.5 text-primary/60" />
                               Saldo a pagar en check-in (50%)
                             </span>
-                            <span className="font-black text-text-main-light">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
+                            <span className="font-semibold text-text-main">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
                           </div>
 
                           <div className="text-[10px] text-primary/90 bg-primary/5 px-4 py-3 rounded-xl text-center font-bold leading-relaxed border border-primary/5">
@@ -418,22 +418,6 @@ function ReservaContent({ id }: { id: string }) {
                   })()}
                 </div>
               </section>
-
-              {/* Decorative Image Card */}
-              <div className="relative h-48 rounded-[2rem] overflow-hidden shadow-lg hidden lg:block">
-                <Image
-                  alt="Domo TreePod interior"
-                  src="/images/interiors/interior-domo-acogedor-89-2.jpg"
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="bottom"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.3em] opacity-80">Experiencia Única</p>
-                  <h3 className="text-lg font-display font-bold">Reserva Garantizada</h3>
-                </div>
-              </div>
             </div>
 
             {/* Columna 2: Datos y Pago */}
@@ -469,12 +453,12 @@ function ReservaContent({ id }: { id: string }) {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub-light">Nombre Completo</span>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub">Nombre Completo</span>
                       <p className="text-lg font-medium">{reserva.nombre} {reserva.apellido}</p>
                     </div>
 
                     <div className="space-y-1 sm:col-span-2">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub-light">Email de Notificación</span>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub">Email de Notificación</span>
                       <p className="text-lg font-medium">{reserva.email}</p>
                     </div>
                   </div>
@@ -500,7 +484,7 @@ function ReservaContent({ id }: { id: string }) {
                         </div>
                       </div>
 
-                      <p className="text-sm text-text-sub-light dark:text-text-sub-dark mb-8 leading-relaxed font-light italic">
+                      <p className="text-sm text-text-sub dark:text-text-sub-dark mb-8 leading-relaxed font-normal italic">
                         Serás redirigido al servidor seguro de Transbank. TreePod no almacena los datos de tu tarjeta.
                       </p>
 
@@ -512,7 +496,7 @@ function ReservaContent({ id }: { id: string }) {
                     </div>
 
                     {minutesLeft > 0 && (
-                      <div className="mt-8 flex items-center justify-center gap-3 text-primary dark:text-gold font-black animate-pulse text-[10px] uppercase tracking-[0.4em]">
+                      <div className="mt-8 flex items-center justify-center gap-3 text-primary dark:text-gold font-semibold animate-pulse text-[10px] uppercase tracking-[0.4em]">
                         <Timer className="w-4 h-4" />
                         <span>Reserva garantizada por {minutesLeft} min</span>
                       </div>
