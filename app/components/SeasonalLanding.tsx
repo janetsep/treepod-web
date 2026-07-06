@@ -90,6 +90,7 @@ export default function SeasonalLanding({
                 alt={hero.alt}
                 position={hero.position}
                 eyebrow={hero.eyebrow}
+                eyebrowKicker
                 title={hero.title}
                 text={hero.text}
                 priority

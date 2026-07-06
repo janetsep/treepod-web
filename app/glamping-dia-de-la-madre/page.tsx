@@ -116,7 +116,8 @@ export default function GlampingDiaDeLaMadrePage() {
                 image="/images/wellness/Tinaja1.jpg"
                 alt="Tinaja de ciprés en Domos TreePod Valle Las Trancas — Día de la Madre"
                 eyebrow="10 de Mayo 2026 · Día de la Madre"
-                title={<>Un regalo que mamá va a <span className="italic">recordar siempre</span></>}
+                eyebrowKicker
+                title={<>Un regalo que mamá va a recordar siempre</>}
                 text="Glamping en domos geodésicos en Valle Las Trancas, entre bosque nativo y la montaña de Ñuble. Un regalo distinto: tiempo para mamá."
                 priority
                 titleAs="h1"

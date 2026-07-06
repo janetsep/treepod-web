@@ -134,7 +134,7 @@ export default function DomosGeodesicosChillanPage() {
                 image="/images/Galeria/noche-domo-iluminado-2-2.jpg"
                 alt="Domo geodésico iluminado de noche en Valle Las Trancas, Chillán"
                 eyebrow="Domos Geodésicos · Valle Las Trancas · Chillán"
-                title={<>Domos geodésicos en Chillán: duerme bajo las estrellas <span className="italic">sin pasar frío</span></>}
+                title={<>Domos geodésicos en Chillán: duerme bajo las estrellas <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[8px]">sin pasar frío</span></>}
                 text="Estructura geodésica con 38 m² de interior y vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera."
                 priority
                 titleAs="h1"

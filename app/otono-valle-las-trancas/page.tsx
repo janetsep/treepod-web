@@ -42,7 +42,7 @@ export default function OtonoValleLasTrancasPage() {
                 image: "/images/real/VegetacionOtono.jpg",
                 alt: "Bosque nativo de Valle Las Trancas en otoño con colores dorados y naranjas",
                 eyebrow: "Otoño · Abril a junio",
-                title: <>Otoño en Las Trancas: el bosque se tiñe de rojos y dorados <span className="italic">y el valle está en calma</span></>,
+                title: <>Otoño en Las Trancas: el bosque se tiñe de rojos y dorados</>,
                 text: "El otoño tiñe el Valle Las Trancas de rojos y dorados. Los robles cambian de color, los senderos quedan tranquilos y el bosque nativo se disfruta con el frío justo. Sin filas y sin apuro.",
                 priceLine: "Precios de temporada baja",
                 priceSub: "Menos gente y el bosque en su mejor momento. Revisa la tarifa de tu fecha en el calendario.",

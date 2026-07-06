@@ -71,7 +71,7 @@ export default function PaquetesPage() {
                 image="/images/Galeria/domo-treepod-camara-20-2.jpg"
                 alt="Cena y experiencias especiales en TreePod, Valle Las Trancas"
                 eyebrow="Experiencias TreePod"
-                title={<>Suma detalles<br className="hidden md:block" /> a tu estadía</>}
+                title={<>Suma <span className="bg-[#00ADEF] text-[#1E1B16] px-2 box-decoration-clone">detalles</span><br className="hidden md:block" /> a tu estadía</>}
                 text="Desayunos, cenas y sorpresas para armar tu escapada a tu medida. La tinaja es servicio de temporada."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"

@@ -60,6 +60,7 @@ export default function GuestGuidePage() {
             <CinematicSection
                 image="/images/interiors/interior-vista-bosque.jpg"
                 alt="Interior Domo TreePod"
+                folio="01"
                 eyebrow="Valle Las Trancas · Nevados de Chillán"
                 title={<>Guía <span className="italic">del Huésped</span></>}
                 text="Lo que necesitas saber para tu estadía."

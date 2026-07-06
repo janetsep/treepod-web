@@ -41,7 +41,7 @@ export default function FindeLargoPage() {
                 image: "/images/hero/Las Trancas Bosque Nativo 4.jpeg",
                 alt: "Finde largo mayo Las Trancas TreePod",
                 eyebrow: "Finde Largo Mayo · Valle Las Trancas",
-                title: <>Tu finde largo del día del trabajo en el bosque nativo <span className="italic">de Valle Las Trancas</span></>,
+                title: <>Tu finde largo del día del trabajo en el bosque nativo de Valle Las Trancas</>,
                 text: "Tres días en la montaña, con el bosque nativo y el otoño en la cordillera. Con opción de tinaja privada (servicio de temporada, vuelve en primavera).",
                 priceLine: "Tarifas según temporada",
                 priceSub: "Revisa el precio de tus fechas en el calendario de reservas",

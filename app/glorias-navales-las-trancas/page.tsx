@@ -20,7 +20,7 @@ export default async function GloriasNavalesPage() {
                 alt: "Otoño en Valle Las Trancas — Glorias Navales TreePod",
                 position: "center 30%",
                 eyebrow: "Finde Largo 21–24 Mayo · Valle Las Trancas",
-                title: <>Tu finde largo de Glorias Navales en el bosque nativo <span className="italic">de Valle Las Trancas</span></>,
+                title: <>Tu finde largo de Glorias Navales en el bosque nativo de Valle Las Trancas</>,
                 text: "4 días en la cordillera, con el bosque nativo y opción de tinaja privada (servicio de temporada, vuelve en primavera).",
                 priceLine: priceText,
                 priceSub: "Glorias Navales · 21 al 24 Mayo 2026",

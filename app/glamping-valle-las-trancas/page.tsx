@@ -139,7 +139,7 @@ export default function GlampingValleLasTrancasPage() {
                 image="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
                 alt="Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo"
                 eyebrow="Valle Las Trancas · Nevados de Chillán"
-                title={<>Domos en Las Trancas: glamping geodésico <span className="italic">en bosque nativo</span></>}
+                title={<>Domos en Las Trancas: glamping geodésico <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[8px]">en bosque nativo</span></>}
                 text="Tu propio refugio en la cordillera, sin pasillos de hotel: un domo entre árboles, con el bosque nativo y la montaña a un paso."
                 priority
                 titleAs="h1"

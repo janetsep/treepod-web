@@ -63,6 +63,7 @@ export default function Home() {
           eyebrow="Invierno en Las Trancas"
           title={<>A 12 minutos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
           text="Pasas el día en la nieve o en las termas y vuelves a tu propio refugio en el bosque, con todo listo."
+          dato="Nevados de Chillán no es un solo volcán: son 17 centros eruptivos con unos 650.000 años de actividad."
           ctaText="Ver disponibilidad"
           ctaHref="/disponibilidad"
           stat="12"

@@ -10,7 +10,7 @@ export default function Testimonios() {
   return (
     <section className="bg-[#F7F3EC] py-14 md:py-20" id="testimonios">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-        <SectionFolio num="N° 02" label="Huéspedes" />
+        <SectionFolio num="N° 02" label="Huéspedes" note="Estas aguas tienen fama desde 1869" />
 
         <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
           <div className="col-span-12 lg:col-span-4">

@@ -25,6 +25,11 @@ const leyenda = [
     dato: "a minutos",
     d: "Hay minimarkets muy cerca: si se acaba el hielo o el vino, lo compras en minutos.",
   },
+  {
+    t: "La Cueva de los Pincheira, camino al domo",
+    dato: "Km 67",
+    d: "En este mismo camino está la cueva que la tradición local señala como refugio de los hermanos Pincheira en la década de 1820. Se puede visitar.",
+  },
 ];
 
 export default function Ubicacion() {

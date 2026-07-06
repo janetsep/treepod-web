@@ -101,7 +101,7 @@ export default function EscapadaRomanticaPage() {
                 image="/images/Galeria/domo-iluminado-noche.jpg"
                 alt="Domo TreePod iluminado de noche para una escapada romántica"
                 eyebrow="Escapada para Dos · Todo el Año"
-                title={<>Tu escapada romántica: un domo en el bosque <span className="italic">solo para ustedes dos</span></>}
+                title={<>Tu escapada romántica: un domo en el bosque <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[8px]">solo para ustedes dos</span></>}
                 text="Una escapada para dos: bosque nativo, el cielo estrellado de Las Trancas y un domo solo para ustedes."
                 priority
                 titleAs="h1"

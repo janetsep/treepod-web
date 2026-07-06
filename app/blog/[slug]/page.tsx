@@ -23,7 +23,8 @@ function formatFechaPublicacion(dateString: string) {
 // los demás quedaban como "Artículo en Desarrollo" (404) y no deben indexarse.
 const availableArticles = [
     'que-hacer-valle-las-trancas-por-temporada',
-    'como-llegar-valle-las-trancas-desde-santiago'
+    'como-llegar-valle-las-trancas-desde-santiago',
+    'historia-valle-las-trancas-volcan-termas-pincheira'
 ];
 
 const articleContent: Record<string, any> = {
@@ -153,6 +154,67 @@ Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez c
         category: 'Logística',
         readTime: '4 min',
         publishDate: '2026-04-12'
+    },
+    'historia-valle-las-trancas-volcan-termas-pincheira': {
+        title: 'Historia del Valle Las Trancas: Volcán, Termas y Pincheira',
+        excerpt: 'El volcán, las termas y los hermanos Pincheira: tres historias que se cruzan en el camino a tu domo.',
+        metaDescription: 'Historia del Valle Las Trancas: el complejo volcánico Nevados de Chillán, la fama de sus termas desde 1869 y la Cueva de los Pincheira en el km 67.',
+        image: '/images/real/NOdomoaereo5.jpeg',
+        content: `
+El Valle Las Trancas no es solo bosque y nieve. Está construido sobre tres capas de historia: un volcán que lleva cientos de miles de años activo, aguas calientes famosas desde hace más de 150 años, y una banda de hermanos que resistió aquí el final de un imperio. Esta es la historia del camino que recorres para llegar a tu domo.
+
+## Un volcán que no es un volcán
+
+Los Nevados de Chillán que ves desde el valle no son un solo volcán: son un **complejo volcánico con 17 centros de emisión** alineados, agrupados en dos zonas (Cerro Blanco al noroeste y Las Termas al sureste). Llevan unos 650.000 años de actividad y su punto más alto marca 3.212 metros.
+
+El volcán ha escrito su propia historia. Entre 1861 y 1865 una erupción formó el cono Santa Gertrudis y generó grandes lahares —flujos de barro por deshielo— hacia el norte. En 1906 comenzó el ciclo que formó el llamado Volcán Nuevo, y entre 1973 y 1986 nació el Volcán Arrau. El ciclo más reciente fue entre 2016 y 2018.
+
+Hoy SERNAGEOMIN lo monitorea todos los días. Puedes revisar el estado actual del complejo en [sernageomin.cl](https://rnvv.sernageomin.cl/complejo-volcanico-nevados-de-chillan/).
+
+## Las aguas que hicieron famoso al Chillán
+
+El mismo calor del volcán calienta agua bajo la cordillera: pozos de exploración geotérmica midieron 198 °C a solo 240 metros de profundidad, y unos 220 °C a un kilómetro. Las termas que hoy visitas son la cara visible de ese sistema.
+
+La fama de estas aguas es antigua. Crónicas coloniales del siglo XVII ya las mencionaban, y las fuentes históricas señalan que los pueblos originarios fueron los primeros en usarlas. En 1869 ya circulaba la tercera edición de un libro médico dedicado por completo a ellas: *Baños de la cordillera: estudios médicos sobre las aguas termales del Chillán*, del doctor Pelegrín Martín. Con los hoteles termales de fines del siglo XIX y la promoción de Ferrocarriles del Estado en los años 30, las termas se convirtieron en un clásico del turismo chileno.
+
+## Los Pincheira: la última resistencia
+
+Entre 1819 y 1832, en plena Guerra a Muerte, los hermanos Juan Antonio, Santos, Pablo y José Antonio Pincheira —originarios de la zona de Parral— lideraron una montonera leal a la Corona española. Operaron entre Chillán, la cordillera de Ñuble y el otro lado de los Andes, y saquearon ciudades como Chillán, Linares, San Carlos y Parral en la década de 1820.
+
+Fueron el último foco realista de Sudamérica. Su historia terminó la madrugada del 14 de enero de 1832, cuando el general Manuel Bulnes los derrotó en las lagunas de Epulafquen, en el actual Neuquén. José Antonio, el último líder, se rindió en Chillán dos meses después, fue indultado y murió anciano, décadas más tarde, trabajando en su hacienda.
+
+## La cueva que puedes visitar hoy
+
+En el km 67 del camino Chillán–Termas —el mismo que te trae a TreePod, en el km 72— está la **Cueva de los Pincheira**: un alero rocoso de origen volcánico junto a una cascada y un estero. La tradición local la señala como refugio de la banda en la década de 1820.
+
+Hoy es un paseo familiar: senderos con flora nativa señalizada, un antiguo molino de agua, la cascada y, en temporada alta, recreaciones teatrales de la vida de los Pincheira. Según la leyenda local, junto a la cascada aparece de noche una mula blanca que indica dónde quedaron enterrados los tesoros de la banda.
+
+## Cómo conocer todo esto desde TreePod
+
+Un itinerario simple de un día:
+
+1. **Mañana:** Cueva de los Pincheira (km 67, a minutos del domo)
+2. **Mediodía:** almuerzo en los restaurantes del valle
+3. **Tarde:** termas o, en invierno, nieve en Nevados de Chillán
+4. **Noche:** de vuelta al domo, bajo el cielo estrellado del valle
+
+Valle Las Trancas está a unos 70 km de Chillán por la Ruta N-55. Si quieres armar tu visita según la época del año, revisa nuestra [guía por temporada](/blog/que-hacer-valle-las-trancas-por-temporada).
+
+[Reserva tu domo →](/disponibilidad)
+
+---
+
+### Fuentes
+
+- SERNAGEOMIN, Red Nacional de Vigilancia Volcánica: [Complejo Volcánico Nevados de Chillán](https://rnvv.sernageomin.cl/complejo-volcanico-nevados-de-chillan/)
+- Memoria Chilena: [Pelegrín Martín, "Baños de la cordillera" (1869)](https://www.memoriachilena.gob.cl/602/w3-printer-349923.html)
+- Memoria Chilena: [Las termas en Chile](https://www.memoriachilena.gob.cl/602/w3-article-543971.html)
+- Wikipedia: [Batalla de las lagunas de Epulafquen](https://es.wikipedia.org/wiki/Batalla_de_las_lagunas_de_Epulafquen)
+- trancas.cl: [Cueva de los Pincheira](https://trancas.cl/cueva-de-los-pincheira/)
+`,
+        category: 'Historia',
+        readTime: '6 min',
+        publishDate: '2026-07-06'
     }
     // Agregar más artículos según necesidad
 };

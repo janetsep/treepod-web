@@ -19,6 +19,12 @@ interface Props {
   stat?: string; // dato protagonista abajo-derecha (ej: "12")
   statCaption?: string; // pie del dato (ej: "minutos a Nevados de Chillán")
   photoCaption?: string; // pie de foto vertical en el borde derecho
+  /** Tratamiento G: eyebrow como kicker mayúsculas cyan con triángulo (landings de temporada) */
+  eyebrowKicker?: boolean;
+  /** Tratamiento F: numeral gigante translúcido detrás del título (páginas-documento) */
+  folio?: string;
+  /** Nota "dato" del valle bajo el texto (historia, geografía) */
+  dato?: string;
 }
 
 // Pausa fotográfica a sangre completa: la foto manda, el texto se compone
@@ -40,6 +46,9 @@ export default function CinematicSection({
   stat,
   statCaption,
   photoCaption,
+  eyebrowKicker = false,
+  folio,
+  dato,
 }: Props) {
   const TitleTag = titleAs;
   return (
@@ -65,6 +74,15 @@ export default function CinematicSection({
         aria-hidden="true"
       />
 
+      {folio && (
+        <span
+          aria-hidden="true"
+          className="absolute right-4 md:right-14 bottom-10 md:bottom-14 z-[5] font-display italic leading-none text-white/20 text-[clamp(5rem,13vw,10rem)] pointer-events-none select-none"
+        >
+          {folio}
+        </span>
+      )}
+
       {photoCaption && (
         <span
           className="absolute right-3 bottom-20 z-10 hidden md:block [writing-mode:vertical-rl] text-[10px] tracking-[0.12em] uppercase text-white/70"
@@ -77,10 +95,19 @@ export default function CinematicSection({
       <div className="cine-enter relative z-10 w-full mx-auto max-w-[1280px] px-5 md:px-10 pb-14 md:pb-20 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-8 items-end">
         <div className={`col-span-12 ${stat ? "lg:col-span-8" : "lg:col-span-9"}`}>
           {eyebrow && (
-            <div className="flex items-baseline gap-3 mb-4">
-              <TriBullet />
-              <span className="font-display italic text-lg md:text-xl text-white/90">{eyebrow}</span>
-            </div>
+            eyebrowKicker ? (
+              <div className="flex items-center gap-2.5 mb-4">
+                <TriBullet className="w-3 h-2.5 text-[#00ADEF] shrink-0" />
+                <span className="font-sans font-semibold text-[12px] uppercase tracking-[0.16em] text-[#00ADEF]">
+                  {eyebrow}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-baseline gap-3 mb-4">
+                <TriBullet />
+                <span className="font-display italic text-lg md:text-xl text-white/90">{eyebrow}</span>
+              </div>
+            )
           )}
           <TitleTag className="display-lg !text-white drop-shadow-[0_2px_18px_rgba(30,27,22,0.6)]">
             {title}
@@ -88,6 +115,12 @@ export default function CinematicSection({
           {text && (
             <p className="text-white/85 text-base md:text-xl mt-4 leading-relaxed max-w-2xl drop-shadow-[0_2px_12px_rgba(30,27,22,0.6)]">
               {text}
+            </p>
+          )}
+          {dato && (
+            <p className="mt-4 flex items-baseline gap-2 max-w-2xl">
+              <span className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#00ADEF] shrink-0">Dato</span>
+              <span className="text-white/70 text-[13px] leading-relaxed italic font-display">{dato}</span>
             </p>
           )}
           {ctaSlot ? (

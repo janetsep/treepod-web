@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'historia-valle-las-trancas-volcan-termas-pincheira',
+        title: 'Historia del Valle Las Trancas: Volcán, Termas y Pincheira',
+        excerpt: 'Un volcán de 17 cráteres, aguas famosas desde 1869 y la cueva de los hermanos Pincheira en el km 67. Las tres historias que se cruzan en el camino a tu domo.',
+        image: '/images/real/NOdomoaereo5.jpeg',
+        category: 'Historia',
+        readTime: '6 min',
+        publishDate: '2026-07-06',
+        author: 'TreePod Team',
+        tags: ['Historia', 'Pincheira', 'Termas', 'Volcán']
+    },
+    {
         slug: 'que-hacer-valle-las-trancas-por-temporada',
         title: 'Qué Hacer en Valle Las Trancas por Temporada',
         excerpt: 'Guía completa de actividades en Valle Las Trancas según la época del año. Desde ski en invierno hasta trekking en verano, descubre cuándo venir según tus intereses.',
@@ -98,7 +109,8 @@ const blogPosts = [
 const categories = [
     'Todas',
     'Guías',
-    'Logística'
+    'Logística',
+    'Historia'
 ];
 
 export default function BlogPage() {

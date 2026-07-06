@@ -32,7 +32,7 @@ export default function SemanaSantaPage() {
                 image: "/images/Semana Santa en el bosque.png",
                 alt: "Semana Santa en TreePod",
                 eyebrow: "Semana Santa 2026 · Valle Las Trancas",
-                title: <>Pasa Semana Santa en un domo entre el bosque <span className="italic">de Valle Las Trancas</span></>,
+                title: <>Pasa Semana Santa en un domo entre el bosque de Valle Las Trancas</>,
                 text: "Mientras los destinos de siempre se llenan, aquí tienes bosque nativo, aire puro y un domo cálido en plena cordillera de Ñuble. Sin filas y sin apuro.",
                 priceLine: "Tarifas según temporada",
                 priceSub: "Revisa el precio de tus fechas en el calendario de reservas",

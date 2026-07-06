@@ -64,6 +64,7 @@ export default function NosotrosPage() {
       <CinematicSection
         image="/images/real/NOdomoaereo4.jpeg"
         alt="Domos geodésicos TreePod integrados en el Valle Las Trancas"
+        folio="72"
         eyebrow="Quiénes somos"
         title={<>Glamping con propósito<br className="hidden md:block" /> en el Valle Las Trancas</>}
         text="Cuatro domos rodeados de montaña, con la calidez de lo local y el compromiso de operar en armonía con la naturaleza."
