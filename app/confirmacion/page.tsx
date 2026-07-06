@@ -1,9 +1,19 @@
 'use client';
 
-import { ArrowDown, CheckCircle2, ChevronRight, Home, MapPin, MessageSquare, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Info } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Stepper from '../components/Stepper';
+
+// Las fechas llegan como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') las interpreta como
+// medianoche UTC, que en Chile (UTC-4) cae el día ANTERIOR: mostraba check-in y
+// check-out un día antes del real. Construimos la fecha en horario local.
+function formatFecha(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = String(dateString).split('T')[0].split('-').map(Number);
+    if (!year || !month || !day) return String(dateString);
+    return new Date(year, month - 1, day).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 
 function ConfirmacionContent() {
     const searchParams = useSearchParams();
@@ -112,12 +122,12 @@ function ConfirmacionContent() {
         return (
             <div className="min-h-screen flex items-center justify-center px-4 bg-background-dark">
                 <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 text-center border border-black/10">
-                    <div className="text-red-500 text-5xl mb-6">⚠️</div>
+                    <AlertTriangle className="w-14 h-14 text-red-500 mx-auto mb-6" />
                     <h1 className="text-2xl font-display font-bold mb-4 text-gray-900">Reserva no encontrada</h1>
                     <p className="text-gray-600 mb-8 leading-relaxed">No pudimos encontrar los detalles de tu reserva o ha ocurrido un error al procesar el pago.</p>
                     <button
                         onClick={() => router.push('/disponibilidad')}
-                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-bold uppercase tracking-widest text-xs"
+                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all active:scale-95 font-semibold text-base"
                     >
                         Volver a disponibilidad
                     </button>
@@ -140,7 +150,7 @@ function ConfirmacionContent() {
                     <p className="text-gray-500 text-sm mb-8">No se realizó ningún cobro. Puedes intentar de nuevo o escribirnos si necesitas ayuda.</p>
                     <button
                         onClick={() => router.push('/disponibilidad')}
-                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-xs mb-3"
+                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all font-semibold text-base mb-3"
                     >
                         Intentar de nuevo
                     </button>
@@ -191,12 +201,12 @@ function ConfirmacionContent() {
 
                                 <div className="flex justify-between py-3 border-b border-black/5">
                                     <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-in</span>
-                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_inicio).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                    <span className="text-text-main font-bold">{formatFecha(reserva.fecha_inicio)}</span>
                                 </div>
 
                                 <div className="flex justify-between py-3 border-b border-black/5">
                                     <span className="text-[10px] font-black text-text-sub uppercase tracking-widest">Check-out</span>
-                                    <span className="text-text-main font-bold">{new Date(reserva.fecha_fin).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                    <span className="text-text-main font-bold">{formatFecha(reserva.fecha_fin)}</span>
                                 </div>
 
                                 <div className="flex justify-between py-3 border-b border-black/5">
@@ -271,7 +281,7 @@ function ConfirmacionContent() {
 
                         {/* Próximos pasos */}
                         <div className="bg-primary/5 border-l-4 border-primary p-6 mb-10 rounded-r-2xl">
-                            <h3 className="font-display font-black text-primary mb-4 uppercase tracking-widest text-xs">📧 Próximos Pasos</h3>
+                            <h3 className="font-display font-black text-primary mb-4 uppercase tracking-widest text-xs">Próximos pasos</h3>
                             <ul className="text-sm text-text-sub space-y-3 font-medium">
                                 <li className="flex items-center gap-3">
                                     <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
@@ -292,9 +302,9 @@ function ConfirmacionContent() {
                         <div className="flex justify-center mb-10">
                             <button
                                 onClick={() => router.push('/')}
-                                className="w-full bg-primary text-white px-10 py-5 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/30 flex items-center justify-center gap-3"
+                                className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all active:scale-95 font-semibold text-base shadow-lg shadow-primary/30 flex items-center justify-center gap-3"
                             >
-                                Volver al Inicio →
+                                Volver al inicio →
                             </button>
                         </div>
 

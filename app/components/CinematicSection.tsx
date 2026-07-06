@@ -76,7 +76,7 @@ export default function CinematicSection({
           <div className={`mt-9 ${align === "center" ? "flex justify-center" : ""}`}>
             <Link
               href={ctaHref}
-              className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold text-base px-8 py-4 rounded-full shadow-xl active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold text-base px-8 py-4 rounded-full shadow-xl active:scale-95 transition-all"
             >
               {ctaText} <ArrowRight className="w-5 h-5" />
             </Link>

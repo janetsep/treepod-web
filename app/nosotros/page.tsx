@@ -100,14 +100,14 @@ export default function NosotrosPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
-                  Nuestro Compromiso
+                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
+                  Nuestro compromiso
                 </span>
               </div>
               <h2 className="h2-display text-text-main mb-6">
                 Objetivos Sociales y Ambientales
               </h2>
-              <p className="text-xl text-text-sub font-bold max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-text-sub font-medium max-w-2xl mx-auto">
                 La sustentabilidad no es un certificado: es la forma en que
                 tomamos cada decisión del negocio.
               </p>
@@ -143,7 +143,7 @@ export default function NosotrosPage() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-primary/5 rounded-[2.5rem] p-12 text-center border border-primary/10">
               <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
+                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
                   Certificaciones
                 </span>
               </div>
@@ -167,8 +167,8 @@ export default function NosotrosPage() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-[2.5rem] p-10 md:p-14 border border-black/5 shadow-sm">
               <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-sm font-black tracking-[0.2em] uppercase">
-                  Información Legal
+                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
+                  Información legal
                 </span>
               </div>
               <h2 className="h2-display text-text-main mb-6">

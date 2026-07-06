@@ -11,6 +11,11 @@ export default function RevealOnScroll() {
 
   useEffect(() => {
     if (pathname?.startsWith("/admin") || pathname?.startsWith("/login")) return;
+    // /disponibilidad hidrata tarde (Suspense + useSearchParams): mutar sus clases
+    // antes de la hidratación provoca hydration mismatch en consola (React 19) y el
+    // riesgo de secciones ocultas hasta el failsafe. La página ya tiene sus propias
+    // animaciones (animate-fade-in), así que se excluye del auto-reveal.
+    if (pathname?.startsWith("/disponibilidad")) return;
 
     let safety: number | undefined;
     const id = window.setTimeout(() => {

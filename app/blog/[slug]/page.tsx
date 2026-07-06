@@ -6,6 +6,16 @@ import TrackView from '../../components/TrackView';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+// publishDate viene como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') la interpreta como
+// medianoche UTC: en un servidor/navegador con huso horario detrás de UTC (Chile,
+// UTC-4) muestra el día anterior. Construimos la fecha local con sus componentes.
+function formatFechaPublicacion(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return dateString;
+    return new Date(year, month - 1, day).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 // Lista simple de artículos disponibles. Solo los que tienen contenido escrito:
 // los demás quedaban como "Artículo en Desarrollo" (404) y no deben indexarse.
 const availableArticles = [
@@ -17,9 +27,10 @@ const articleContent: Record<string, any> = {
     'que-hacer-valle-las-trancas-por-temporada': {
         title: 'Qué Hacer en Valle Las Trancas por Temporada',
         excerpt: 'Guía general de actividades en Valle Las Trancas según la época del año.',
+        metaDescription: 'Qué hacer en Valle Las Trancas en cada temporada: ski en Nevados de Chillán, termas, trekking y colores de otoño. Planifica tu visita y reserva tu domo.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         content: `
-Valle Las Trancas, en plena cordillera de la Región del Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
+Valle Las Trancas, en plena cordillera de la Región de Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
 
 ## Invierno (junio a septiembre)
 
@@ -58,8 +69,8 @@ Días largos y temperaturas agradables para recorrer el valle a pie.
 ### Espectáculo de colores
 El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
-### Tinaja y descanso
-Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y libros junto a la estufa.
+### Descanso junto a la estufa
+Las noches frescas son perfectas para los fogones y los libros junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
 
 ## Resumen rápido
 
@@ -75,7 +86,7 @@ Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y 
 
 ---
 
-¿Listo para venir? Reserva tu domo en TreePod con confirmación inmediata.
+¿Listo para venir? Conoce nuestros [domos en Las Trancas](/glamping-valle-las-trancas) y reserva directo: pagas el 50% de abono y el saldo en el check-in.
 `,
         category: 'Guías',
         readTime: '4 min',
@@ -84,9 +95,10 @@ Las noches frescas son perfectas para disfrutar tinaja al aire libre, fogones y 
     'como-llegar-valle-las-trancas-desde-santiago': {
         title: 'Cómo Llegar a Valle Las Trancas desde Santiago',
         excerpt: 'Las opciones más comunes para llegar a Valle Las Trancas desde Santiago y otras ciudades.',
+        metaDescription: 'Cómo llegar a Valle Las Trancas desde Santiago: en auto, bus o avión, con tiempos, rutas y consejos. Planifica tu viaje y reserva tu domo en TreePod.',
         image: '/images/Galeria/Las Trancas Bosque Nativo 2.jpeg',
         content: `
-Valle Las Trancas se ubica en la Región del Ñuble, a unos 80 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
+Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
 
 ## En auto (la más cómoda)
 
@@ -127,7 +139,7 @@ Hay servicios de arriendo de auto en el aeropuerto de Concepción.
 
 ## Una vez en TreePod
 
-Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez confirmes tu reserva. Tienes acceso a estacionamiento privado dentro del recinto.
+Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez confirmes tu reserva. Tienes acceso a estacionamiento privado dentro del recinto. Si aún no eliges dónde alojar, mira nuestros [domos en Las Trancas](/glamping-valle-las-trancas).
 
 ---
 
@@ -159,10 +171,27 @@ export async function generateMetadata({ params }: Props) {
     const article = articleContent[slug];
     if (!article) return {};
     return {
-        title: `${article.title} | Blog TreePod`,
-        description: article.excerpt,
+        // Sufijo corto "| TreePod": con "| Blog TreePod" el title de
+        // como-llegar-... superaba los 60 caracteres y Google lo truncaba.
+        title: `${article.title} | TreePod`,
+        description: article.metaDescription ?? article.excerpt,
         alternates: {
             canonical: `/blog/${slug}`,
+        },
+        openGraph: {
+            title: article.title,
+            description: article.metaDescription ?? article.excerpt,
+            images: [article.image],
+            type: 'article',
+            locale: 'es_CL',
+        },
+        // Sin este bloque, el artículo hereda el twitter:* del layout de /blog
+        // (título e imagen del listado) y al compartir en X se ve la card equivocada.
+        twitter: {
+            card: 'summary_large_image',
+            title: article.title,
+            description: article.metaDescription ?? article.excerpt,
+            images: [article.image],
         },
     };
 }
@@ -189,23 +218,23 @@ export default async function BlogPost({ params }: Props) {
                                 <h1 className="h2-display mb-6 text-text-main">
                                     Artículo en Desarrollo
                                 </h1>
-                                <p className="text-xl text-text-sub font-bold mb-8">
+                                <p className="text-xl text-text-sub font-medium mb-8">
                                     Este artículo está siendo escrito por nuestro equipo.
                                     Vuelve pronto para leer el contenido completo.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                     <Link
                                         href="/blog"
-                                        className="inline-flex items-center gap-2 bg-primary text-white font-black py-3 px-6 rounded-full transition-all hover:bg-primary-dark"
+                                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-primary-dark active:scale-95"
                                     >
                                         <ArrowLeft size={20} />
-                                        Volver al Blog
+                                        Volver al blog
                                     </Link>
                                     <Link
                                         href="/disponibilidad"
-                                        className="inline-flex items-center gap-2 bg-background-dark text-white font-black py-3 px-6 rounded-full transition-all hover:bg-black"
+                                        className="inline-flex items-center gap-2 bg-background-dark text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-black active:scale-95"
                                     >
-                                        Reservar Estadía
+                                        Reservar estadía
                                     </Link>
                                 </div>
                             </div>
@@ -216,9 +245,33 @@ export default async function BlogPost({ params }: Props) {
         );
     }
 
+    // JSON-LD BlogPosting con datos ya presentes en articleContent: describe el
+    // artículo (titular, fecha, imagen) que el LodgingBusiness global no cubre.
+    const blogPostingJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": article.title,
+        "description": article.metaDescription ?? article.excerpt,
+        "image": `https://domostreepod.cl${encodeURI(article.image)}`,
+        "datePublished": article.publishDate,
+        "inLanguage": "es-CL",
+        "mainEntityOfPage": `https://domostreepod.cl/blog/${slug}`,
+        "author": { "@type": "Organization", "name": "TreePod Glamping", "url": "https://domostreepod.cl" },
+        "publisher": {
+            "@type": "Organization",
+            "name": "TreePod Glamping",
+            "logo": { "@type": "ImageObject", "url": "https://domostreepod.cl/icon-192.png" },
+        },
+    };
+
     return (
         <div className="bg-white text-text-main min-h-screen">
             <TrackView eventName="view_blog_post" params={{ slug }} />
+
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+            />
 
             {/* CATEGORÍA + BREADCRUMB (estilo editorial Awasi) */}
             <section className="pt-32 pb-12 bg-white">
@@ -243,11 +296,7 @@ export default async function BlogPost({ params }: Props) {
                         <div className="flex items-center justify-center gap-4 mt-10 text-xs font-bold tracking-[0.2em] uppercase text-text-sub/60">
                             <span className="flex items-center gap-2">
                                 <Calendar size={14} />
-                                {new Date(article.publishDate).toLocaleDateString('es-ES', {
-                                    day: 'numeric',
-                                    month: 'long',
-                                    year: 'numeric'
-                                })}
+                                {formatFechaPublicacion(article.publishDate)}
                             </span>
                             <span className="w-1 h-1 bg-text-sub/40 rounded-full"></span>
                             <span>TreePod Editorial</span>
@@ -297,7 +346,18 @@ export default async function BlogPost({ params }: Props) {
                             prose-td:border-b prose-td:border-black/5 prose-td:p-4 prose-td:text-text-main
                             prose-hr:my-16 prose-hr:border-0 prose-hr:h-px prose-hr:bg-gradient-to-r prose-hr:from-transparent prose-hr:via-text-sub/30 prose-hr:to-transparent
                         ">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    // Las tablas del markdown se envuelven en un contenedor con
+                                    // scroll horizontal propio: sin esto desbordan la página en móvil.
+                                    table: ({ node, ...props }) => (
+                                        <div className="overflow-x-auto">
+                                            <table {...props} />
+                                        </div>
+                                    ),
+                                }}
+                            >
                                 {article.content}
                             </ReactMarkdown>
                         </div>
@@ -324,26 +384,26 @@ export default async function BlogPost({ params }: Props) {
             <section className="py-20 md:py-28 bg-background-light border-t border-black/5">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="max-w-2xl mx-auto text-center">
-                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-6 block">
+                        <span className="text-[11px] md:text-xs font-black tracking-[0.3em] uppercase text-primary mb-6 block">
                             Tu refugio en Valle Las Trancas
                         </span>
                         <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-text-main leading-tight mb-8">
                             Domos geodésicos en bosque nativo
                         </h2>
                         <p className="text-lg text-text-sub font-medium italic font-display leading-relaxed mb-10 max-w-xl mx-auto">
-                            Calefacción a pellet 24/7, WiFi Starlink y opción de tinaja exclusiva. Reserva directa con confirmación inmediata.
+                            Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada en temporada. Reserva directa con abono del 50%.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
                             <Link
                                 href="/disponibilidad"
-                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-full transition-all items-center gap-3 tracking-widest uppercase text-sm"
+                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all active:scale-95 items-center gap-2 text-base"
                             >
                                 Ver disponibilidad
                                 <ArrowRight size={18} />
                             </Link>
                             <Link
                                 href="/blog"
-                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-bold transition-colors text-sm tracking-widest uppercase"
+                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-semibold transition-colors text-sm"
                             >
                                 <ArrowLeft size={16} />
                                 Volver al blog

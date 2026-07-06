@@ -183,7 +183,7 @@ export default function ClimaWidget({ fechasReserva = [] }: Props) {
           <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 transition-colors">Open-Meteo</a>
           {" · "}
           <a href="https://www.meteochile.gob.cl" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 transition-colors">Meteochile</a>
-          {" · datos por hora · -36.9116, -71.5069 · 1.199 msnm"}
+          {" · datos por hora · -36.9116, -71.5069 · 1.200 msnm"}
         </p>
       )}
     </div>

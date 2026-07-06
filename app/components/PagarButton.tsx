@@ -2,7 +2,6 @@
 
 import { useState, useEffect, type ReactNode } from 'react';
 import { trackEvent } from "../lib/analytics";
-import { TrackingService } from '@/services/TrackingService';
 
 export default function PagarButton({
   reservaId,

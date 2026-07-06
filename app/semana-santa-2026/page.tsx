@@ -60,10 +60,10 @@ export default function SemanaSantaPage() {
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <div className="inline-block bg-primary/90 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
                             <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
+                                Tarifas según temporada
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Abril 2026
+                                Revisa el precio de tus fechas en el calendario de reservas
                             </span>
                         </div>
                     </div>
@@ -79,18 +79,18 @@ export default function SemanaSantaPage() {
                             eventName="click_reservar_semana_santa"
                             secondEventName="begin_checkout_semana_santa"
                             secondParams={{ event: "semana_santa_2026" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-xl md:text-2xl">BLOQUEA TU REFUGIO AHORA</span>
+                            <span className="text-xl md:text-2xl">Reserva tu refugio ahora</span>
                             <span className="text-sm font-normal opacity-90">(02–05 Abril)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Dudas rápidas?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Dudas rápidas?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_semana_santa"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Consultar disponibilidad por WhatsApp
                             </TrackedLink>
@@ -226,7 +226,7 @@ export default function SemanaSantaPage() {
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
                             eventName="click_reservar_semana_santa"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad para estas fechas
                             <ArrowRight size={20} />
@@ -268,7 +268,7 @@ export default function SemanaSantaPage() {
                         <TrackedLink
                             href="/disponibilidad?entrada=2026-04-02&salida=2026-04-05&adultos=2&event=semana-santa"
                             eventName="click_reservar_semana_santa"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Únete a nuestros huéspedes satisfechos
                             <ArrowRight size={20} />
@@ -306,14 +306,14 @@ export default function SemanaSantaPage() {
                             eventName="click_reservar_semana_santa_final"
                             secondEventName="begin_checkout_semana_santa"
                             secondParams={{ event: "semana_santa_2026" }}
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">ASEGURA TU ESCAPE ANTES DE QUE SE AGOTEN</span>
+                            <span className="text-lg md:text-xl">Reserva antes de que se agoten las fechas</span>
                         </TrackedLink>
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Pago Verificado</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Entorno Natural</span>
                         </div>
                     </div>

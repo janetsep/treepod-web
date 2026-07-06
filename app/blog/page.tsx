@@ -5,6 +5,16 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import TrackView from '../components/TrackView';
 import { useState } from 'react';
 
+// publishDate viene como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') la interpreta como
+// medianoche UTC y en Chile (UTC-4) muestra el día anterior, además de poder
+// diferir entre servidor y navegador (hydration mismatch). Fecha local explícita.
+function formatFechaPublicacion(dateString: string) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return dateString;
+    return new Date(year, month - 1, day).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 // Artículos del blog con contenido real
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
@@ -14,7 +24,7 @@ const blogPosts = [
         excerpt: 'Guía completa de actividades en Valle Las Trancas según la época del año. Desde ski en invierno hasta trekking en verano, descubre cuándo venir según tus intereses.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         category: 'Guías',
-        readTime: '6 min',
+        readTime: '4 min',
         publishDate: '2026-04-15',
         author: 'TreePod Team',
         tags: ['Valle Las Trancas', 'Actividades', 'Temporadas', 'Guía'],
@@ -108,7 +118,7 @@ export default function BlogPage() {
             <section className="pt-32 pb-16 md:pb-20 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="max-w-3xl mx-auto text-center">
-                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-8 block">
+                        <span className="text-[11px] md:text-xs font-black tracking-[0.3em] uppercase text-primary mb-8 block">
                             Editorial TreePod
                         </span>
 
@@ -202,11 +212,7 @@ export default function BlogPage() {
                                         <div className="flex items-center gap-4 text-text-sub text-sm font-bold mb-4">
                                             <span className="flex items-center gap-1">
                                                 <Calendar size={16} />
-                                                {new Date(post.publishDate).toLocaleDateString('es-ES', {
-                                                    day: 'numeric',
-                                                    month: 'long',
-                                                    year: 'numeric'
-                                                })}
+                                                {formatFechaPublicacion(post.publishDate)}
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 <Clock size={16} />
@@ -275,15 +281,15 @@ export default function BlogPage() {
                         <h2 className="h2-display mb-6 text-white">
                             ¿Listo para tu aventura en Valle Las Trancas?
                         </h2>
-                        <p className="text-xl text-white/80 font-bold mb-8 leading-relaxed">
+                        <p className="text-lg md:text-xl text-white/80 font-medium mb-8 leading-relaxed">
                             Ahora que conoces todos los secretos del valle, reserva tu domo
                             y vive la experiencia TreePod.
                         </p>
                         <Link
                             href="/disponibilidad"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
-                            Ver Disponibilidad
+                            Ver disponibilidad
                             <ArrowRight size={20} />
                         </Link>
                     </div>

@@ -37,18 +37,22 @@ export async function proxy(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     // PROTECCIÓN DE RUTAS /admin
-    if (request.nextUrl.pathname.startsWith('/admin')) {
-        // Si no hay usuario logueado, redirigir al login
-        /* MODO DEVELOPER: BYPASS TEMPORAL PARA DEMO
+    // Se excluyen /admin/login (evita loop de redirección) y /admin/reset-password
+    // (el enlace de recuperación llega por email sin sesión previa).
+    const pathname = request.nextUrl.pathname
+    const isAdminPublic = pathname === '/admin/login' || pathname === '/admin/reset-password'
+    if (pathname.startsWith('/admin') && !isAdminPublic) {
+        // Sin sesión no se sirve el shell del panel: al login.
+        // La sesión del navegador se guarda en cookies (createBrowserClient en lib/supabase.ts),
+        // por lo que este chequeo server-side sí ve al admin logueado.
         if (!user) {
             const url = request.nextUrl.clone()
-            url.pathname = '/login' // Asumimos que existirá ruta /login
+            url.pathname = '/admin/login'
             return NextResponse.redirect(url)
         }
-        */
 
-        // (Opcional) Aquí podrías agregar lógica extra para verificar roles, ej:
-        // if (user.role !== 'admin') { return NextResponse.redirect(new URL('/', request.url)) }
+        // La autorización fina (email en authorized_admins) se valida en el layout de /admin
+        // y en cada API /api/admin/* vía getVerifiedAdmin.
     }
 
     return response

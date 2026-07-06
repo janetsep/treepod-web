@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Domos en Las Trancas | Glamping en Bosque Nativo — TreePod',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, cocina equipada, WiFi Starlink y bosque nativo. A 15 min de Nevados de Chillán. Reserva directo.',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, WiFi Starlink y bosque nativo, a 12 min de Nevados de Chillán. Reserva directo.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',
@@ -25,15 +25,10 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Domos en Las Trancas | Glamping TreePod',
-        description: 'Domos geodésicos en Valle Las Trancas. Estufa a pellet, bosque nativo y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        description: 'Domos geodésicos en Valle Las Trancas. Estufa a pellet, bosque nativo y WiFi Starlink. A 12 min de Nevados de Chillán.',
         images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
         type: 'website',
         locale: 'es_CL',
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Glamping en Valle Las Trancas | Domos TreePod',
-        description: 'Domos geodésicos en bosque nativo, con estufa a pellet y WiFi Starlink.',
     },
 };
 
@@ -44,24 +39,26 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
-    "name": "TreePod Glamping - Valle Las Trancas",
-    "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 15 minutos de Nevados de Chillán.",
+    // Mismo @id que el LodgingBusiness global (JsonLdSchemas.tsx): Google
+    // fusiona ambos bloques como una sola entidad en vez de ver dos negocios.
+    "@id": "https://domostreepod.cl/#lodging",
+    "name": "TreePod Glamping",
+    "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/glamping-valle-las-trancas",
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
+        "streetAddress": "Ruta N-55, Km 72, hacia Nevados de Chillán",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": -36.8972,
-        "longitude": -71.4741
+        "latitude": -36.9116,
+        "longitude": -71.5069
     },
     "priceRange": "$$",
-    "starRating": { "@type": "Rating", "ratingValue": "4.9" },
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
@@ -128,18 +125,18 @@ export default function GlampingValleLasTrancasPage() {
                             eventName="click_reservar_glamping_trancas"
                             secondEventName="begin_checkout_glamping_trancas"
                             secondParams={{ event: "glamping_valle_las_trancas" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-lg md:text-xl">VER DISPONIBILIDAD Y TARIFAS</span>
+                            <span className="text-lg md:text-xl">Ver disponibilidad y tarifas</span>
                             <span className="text-sm font-normal opacity-90">(Reserva directa, mejor precio)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Preguntas?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Preguntas?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_glamping_trancas"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Consultar por WhatsApp
                             </TrackedLink>
@@ -155,7 +152,7 @@ export default function GlampingValleLasTrancasPage() {
                         <h2 className="h2-display text-text-main mb-6">Todo lo que necesitas para una estadía perfecta <span className="italic-display text-primary">en Las Trancas</span></h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            No es una cabaña tradicional. Es un domo geodésico de 6 metros con todo incluido.
+                            No es una cabaña tradicional. Es un domo geodésico de 38 m² con todo incluido.
                         </p>
                     </div>
 
@@ -168,7 +165,7 @@ export default function GlampingValleLasTrancasPage() {
                             },
                             {
                                 icon: Thermometer,
-                                title: "Estufa a pellet automática: 22°C siempre",
+                                title: "Estufa a pellet automática: calor constante",
                                 desc: "Olvídate de pasar frío. La estufa programable mantiene tu domo cálido toda la noche. Afuera puede estar bajo cero, adentro estarás en polera."
                             },
                             {
@@ -178,8 +175,8 @@ export default function GlampingValleLasTrancasPage() {
                             },
                             {
                                 icon: Mountain,
-                                title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan."
+                                title: "A 12 minutos de Nevados de Chillán",
+                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
                                 icon: Wifi,
@@ -231,7 +228,7 @@ export default function GlampingValleLasTrancasPage() {
                         <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
-                                alt="Interior cálido del domo con cama king y estufa a pellet"
+                                alt="Interior cálido del domo con cama matrimonial y estufa a pellet"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -239,7 +236,7 @@ export default function GlampingValleLasTrancasPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Interior equipado</p>
-                                <p className="text-xs opacity-80">Cama king + estufa a pellet</p>
+                                <p className="text-xs opacity-80">Cama matrimonial + estufa a pellet</p>
                             </div>
                         </div>
 
@@ -278,7 +275,7 @@ export default function GlampingValleLasTrancasPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=glamping-las-trancas"
                             eventName="click_reservar_glamping_trancas"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad y precios
                             <ArrowRight size={20} />
@@ -305,7 +302,7 @@ export default function GlampingValleLasTrancasPage() {
                                 {[
                                     "Tinaja privada de ciprés (servicio de temporada)",
                                     "Estufa a pellet automática y programable",
-                                    "Cama king con ropa de cama de calidad",
+                                    "Cama matrimonial y dos individuales, ropa de cama de calidad",
                                     "Cocina equipada con Nespresso",
                                     "Baño completo con agua caliente",
                                     "WiFi Starlink de alta velocidad",
@@ -326,9 +323,9 @@ export default function GlampingValleLasTrancasPage() {
                                 {[
                                     "Vista panorámica del bosque nativo",
                                     "Privacidad real, sin vecinos cercanos",
-                                    "Check-in flexible y autónomo",
+                                    "Check-in autónomo con clave digital",
                                     "Guía de experiencias locales",
-                                    "A 15 min de Nevados de Chillán",
+                                    "A 12 min de Nevados de Chillán",
                                     "Senderos de trekking desde el glamping",
                                     "Registro Sernatur verificado",
                                     "Atención directa por WhatsApp",
@@ -351,7 +348,7 @@ export default function GlampingValleLasTrancasPage() {
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen quienes ya se quedaron en TreePod</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            4.9 estrellas en Google con 59 reseñas verificadas
+                            4,9 estrellas en Google con 59 reseñas verificadas
                         </p>
                     </div>
 
@@ -383,8 +380,8 @@ export default function GlampingValleLasTrancasPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {[
-                            { title: "15 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
-                            { title: "5.5 hrs", desc: "desde Santiago por ruta 5 Sur" },
+                            { title: "12 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
+                            { title: "6 a 7 hrs", desc: "desde Santiago por Ruta 5 Sur" },
                             { title: "1 hr", desc: "desde Chillán ciudad" },
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-5 md:p-8 rounded-xl md:rounded-[2rem] shadow-lg border border-black/5 text-center">
@@ -396,7 +393,7 @@ export default function GlampingValleLasTrancasPage() {
 
                     <div className="mt-16 max-w-4xl mx-auto text-center">
                         <p className="text-lg text-text-sub font-bold leading-relaxed mb-8">
-                            TreePod está en el kilómetro 71 de la ruta N-55 hacia Nevados de Chillan, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
+                            TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
                         </p>
                     </div>
                 </div>
@@ -412,7 +409,7 @@ export default function GlampingValleLasTrancasPage() {
                         </h2>
 
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el precio más bajo garantizado y atención personalizada por WhatsApp.
+                            Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el mejor precio y atención personalizada por WhatsApp.
                         </p>
 
                         <TrackedLink
@@ -420,14 +417,14 @@ export default function GlampingValleLasTrancasPage() {
                             eventName="click_reservar_glamping_trancas_final"
                             secondEventName="begin_checkout_glamping_trancas"
                             secondParams={{ event: "glamping_valle_las_trancas" }}
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">VER DISPONIBILIDAD AHORA</span>
+                            <span className="text-lg md:text-xl">Ver disponibilidad ahora</span>
                         </TrackedLink>
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Registro Sernatur</span>
                         </div>
                     </div>

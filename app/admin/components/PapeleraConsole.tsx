@@ -8,6 +8,26 @@ interface Props {
     adminEmail: string | null;
 }
 
+// Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible.
+function fmtFecha(iso: string | null | undefined) {
+    if (!iso) return "—";
+    const [y, m, d] = String(iso).slice(0, 10).split("-");
+    return y && m && d ? `${d}-${m}-${y}` : String(iso);
+}
+
+// Etiquetas legibles para la fuente/canal (mismos valores que el select del ReservaModal).
+const FUENTE_LABELS: Record<string, string> = {
+    web: "Web",
+    whatsapp: "WhatsApp",
+    airbnb: "Airbnb",
+    booking: "Booking",
+    instagram: "Instagram",
+    presencial: "Presencial",
+    manual_admin: "Manual Admin",
+};
+const fuenteLabel = (fuente?: string | null) =>
+    fuente ? (FUENTE_LABELS[fuente.toLowerCase()] || fuente) : "—";
+
 export default function PapeleraConsole({ adminEmail }: Props) {
     const [reservas, setReservas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -46,7 +66,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                 alert(action === "restore" ? "Reserva restaurada correctamente." : "Reserva eliminada permanentemente.");
             } else {
                 const data = await res.json();
-                alert("Error: " + data.error);
+                alert("No se pudo completar la acción:\n" + data.error);
             }
         } catch {
             alert("Error de conexión.");
@@ -107,10 +127,11 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                         <AlertTriangle className="w-4 h-4" />
                         Las reservas en papelera se pueden restaurar. La eliminación permanente es irreversible.
                     </div>
+                    <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-gray-100">
-                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Huésped</th>
+                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700 min-w-[180px]">Huésped</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fechas</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Domo</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fuente</th>
@@ -124,14 +145,14 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                                     <td className="px-6 py-3 font-bold text-gray-800">
                                         {r.nombre} {r.apellido}
                                     </td>
-                                    <td className="px-4 py-3 text-gray-600">
-                                        {r.fecha_inicio} → {r.fecha_fin}
+                                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                                        {fmtFecha(r.fecha_inicio)} → {fmtFecha(r.fecha_fin)}
                                     </td>
                                     <td className="px-4 py-3 text-gray-600">
                                         {r.domos?.nombre || "—"}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-900">{r.fuente}</span>
+                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-900">{fuenteLabel(r.fuente)}</span>
                                     </td>
                                     <td className="px-4 py-3 text-gray-700 text-xs">
                                         {r.deleted_at ? new Date(r.deleted_at).toLocaleString("es-CL") : "—"}
@@ -160,6 +181,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             )}
         </div>

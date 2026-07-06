@@ -18,14 +18,16 @@ export default function Logo({ className = "h-12 w-auto", variant = "white" }: {
                 }}
             />
 
-            {/* White Version (Standard Image) */}
+            {/* White Version (Standard Image). Sin priority ni loading="eager": ambos
+                emiten un <link rel="preload"> del logo en CADA página, que compite con
+                la imagen hero (el LCP real). Al estar en el viewport inicial, el logo
+                igual se carga de inmediato, pero ya sin preload. */}
             <Image
                 src="/images/branding/logo-white.png"
                 alt="TreePod Logo White"
                 fill
                 sizes="200px"
                 className={`object-contain transition-opacity duration-500 absolute inset-0 ${variant === 'white' ? 'opacity-100 ease-in' : 'opacity-0 ease-out'}`}
-                priority
             />
         </div>
     );

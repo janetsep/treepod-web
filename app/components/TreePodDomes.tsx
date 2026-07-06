@@ -17,7 +17,7 @@ export default function TreePodDomes() {
             icon: "check_circle",
             title: "A minutos de la nieve",
             benefit: "Despiertas en el bosque y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.",
-            proof: "A pasos del centro de ski y las Termas de Chillán."
+            proof: "A 12 minutos del centro de ski y las Termas de Chillán."
         },
         {
             icon: "check_circle",
@@ -102,7 +102,7 @@ export default function TreePodDomes() {
                                 href="/disponibilidad"
                                 className="inline-flex items-center justify-center px-10 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg"
                             >
-                                Reservar mi Domo
+                                Reservar mi domo
                             </Link>
                             <p className="text-[10px] md:text-xs text-text-sub font-bold pl-2">
                                 Ves la disponibilidad y el precio al instante, sin compromiso.

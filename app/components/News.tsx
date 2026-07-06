@@ -5,11 +5,11 @@ export default function News() {
     const activities = [
         {
             image: "/images/real/VegetacionOtono.jpg",
-            title: "Otoño Valle Las Trancas",
-            description: "El otoño tiñe el Valle Las Trancas de rojos y dorados. Bosque nativo, aire puro y la calma de la temporada baja.",
-            tag: "Temporada baja",
-            details: "Ver otoño en Las Trancas",
-            href: "/otono-valle-las-trancas"
+            title: "Qué Hacer en Valle Las Trancas",
+            description: "Ski y termas en invierno, trekking en verano, colores de bosque en otoño. Una guía del valle para elegir cuándo venir.",
+            tag: "Guía por temporada",
+            details: "Ver la guía del valle",
+            href: "/blog/que-hacer-valle-las-trancas-por-temporada"
         },
         {
             image: "/images/hero/domonieve2.jpeg",
@@ -24,7 +24,7 @@ export default function News() {
             title: "Glamping Valle Las Trancas",
             description: "Bosque nativo, montaña y aventura a un paso de tu domo. Naturaleza y comodidad en un mismo lugar del Valle Las Trancas.",
             tag: "Valle Las Trancas",
-            details: "Conocer el valle",
+            details: "Ver domos en Las Trancas",
             href: "/glamping-valle-las-trancas"
         },
         {

@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Otoño en Valle Las Trancas 2026 | Glamping TreePod - Colores del Bosque',
-    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod. Desde $110.000/noche.',
+    title: 'Otoño en Valle Las Trancas | Glamping TreePod - Colores del Bosque',
+    description: 'Vive el otoño en Valle Las Trancas. Bosque nativo con colores rojos y dorados, estufa a pellet y temporada baja sin multitudes. Abril a junio en Domos TreePod.',
     keywords: [
         'otoño valle las trancas',
         'otoño las trancas',
@@ -58,7 +58,7 @@ export default function OtonoValleLasTrancasPage() {
                 <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
                     <div className="inline-block mb-8 bg-amber-700/30 backdrop-blur-md border border-amber-500/30 px-6 py-2 rounded-full animate-fade-in-up">
                         <span className="text-white text-xs font-black tracking-[0.2em] uppercase">
-                            <Leaf className="inline w-3 h-3 mr-1" /> Otoño 2026 · Abril a Junio
+                            <Leaf className="inline w-3 h-3 mr-1" /> Otoño · Abril a junio
                         </span>
                     </div>
 
@@ -70,10 +70,10 @@ export default function OtonoValleLasTrancasPage() {
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <div className="inline-block bg-amber-700/80 backdrop-blur-md px-8 py-4 rounded-2xl shadow-2xl">
                             <span className="text-white text-2xl md:text-3xl font-black tracking-wide">
-                                Desde $110.000 por noche
+                                Precios de temporada baja
                             </span>
                             <span className="block text-white/80 text-sm font-bold mt-1">
-                                Temporada baja: precios más bajos y menos gente
+                                Menos gente y el bosque en su mejor momento. Revisa la tarifa de tu fecha en el calendario.
                             </span>
                         </div>
                     </div>
@@ -88,18 +88,18 @@ export default function OtonoValleLasTrancasPage() {
                             eventName="click_reservar_otono"
                             secondEventName="begin_checkout_otono"
                             secondParams={{ event: "otono_las_trancas_2026" }}
-                            className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-xl md:text-2xl">RESERVA TU ESCAPADA DE OTOÑO</span>
-                            <span className="text-sm font-normal opacity-90">(Abril - Junio 2026)</span>
+                            <span className="text-xl md:text-2xl">Reserva tu escapada de otoño</span>
+                            <span className="text-sm font-normal opacity-90">(abril a junio)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Preguntas?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Preguntas?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_otono"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Consultar por WhatsApp
                             </TrackedLink>
@@ -240,7 +240,7 @@ export default function OtonoValleLasTrancasPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=otono-las-trancas"
                             eventName="click_reservar_otono"
-                            className="inline-flex bg-amber-600 hover:bg-amber-700 text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad de otoño
                             <ArrowRight size={20} />
@@ -255,7 +255,7 @@ export default function OtonoValleLasTrancasPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen nuestros huéspedes</h2>
                         <div className="h-1.5 w-24 bg-amber-500 mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4,9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
@@ -286,9 +286,9 @@ export default function OtonoValleLasTrancasPage() {
                             eventName="click_reservar_otono_final"
                             secondEventName="begin_checkout_otono"
                             secondParams={{ event: "otono_las_trancas_2026" }}
-                            className="inline-flex bg-amber-600 hover:bg-amber-700 text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">RESERVA TU OTOÑO EN EL BOSQUE</span>
+                            <span className="text-lg md:text-xl">Reserva tu otoño en el bosque</span>
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>

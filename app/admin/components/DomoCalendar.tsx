@@ -27,6 +27,20 @@ const MONTH_NAMES = [
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
+// Etiqueta legible del estado interno de la reserva (para el tooltip de cada celda).
+const ESTADO_LABELS: Record<string, string> = {
+    pagado: "Pagada",
+    confirmado: "Confirmada",
+    confirmada: "Confirmada",
+    pendiente: "Pendiente",
+    pendiente_pago: "Pago pendiente",
+    pending_transfer_confirmation: "Esperando transferencia",
+    suspendido: "Suspendida",
+    cancelada: "Cancelada",
+    cancelado: "Cancelada",
+    bloqueado: "Bloqueado",
+};
+
 export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
 
     // viewDate is the anchor for the displayed month. Defaults to today.
@@ -179,7 +193,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                                                 <td key={i} className="p-1 relative h-10 border-r border-dashed border-gray-100">
                                                     <div
                                                         className={`w-full h-8 flex items-center justify-center text-[9px] font-bold shadow-sm cursor-pointer transition-all hover:brightness-110 ${cellClass}`}
-                                                        title={`${res.nombre} ${res.apellido} (${res.estado}) - COD: ${res.id.slice(-5).toUpperCase()}`}
+                                                        title={`${res.nombre} ${res.apellido} (${ESTADO_LABELS[res.estado?.toLowerCase()] || res.estado}) - COD: ${res.id.slice(-5).toUpperCase()}`}
                                                     >
                                                         {content}
                                                     </div>

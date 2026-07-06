@@ -10,7 +10,7 @@ import CinematicSection from '../components/CinematicSection';
 export default function ServicesPage() {
     const mainServices = [
         {
-            title: "Baño Privado Bajo las Estrellas",
+            title: "Tinaja privada bajo las estrellas",
             subtitle: "Privacidad total · Servicio de temporada",
             description: "Tu propia tinaja al aire libre, con agua mineralizada y vista al bosque. Sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             image: "/images/wellness/Tinaja1.jpg",
@@ -21,12 +21,12 @@ export default function ServicesPage() {
         },
         {
             title: "Desayunos y asados en el bosque",
-            subtitle: "Sabor Cordillerano",
+            subtitle: "Sabor cordillerano",
             description: "Despierta con un desayuno cordillerano servido a la habitación, o usa el quincho equipado para preparar un asado al aire libre. Comes bien sin moverte del bosque.",
             image: "/images/real/comidatreepod.jpg",
             secondaryImage: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
-            features: ["Desayuno a la habitación", "Quincho Full Equipado", "Productos del Valle (Costo adicional)"],
+            features: ["Desayuno a la habitación", "Quincho equipado para asados", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
         }
@@ -55,13 +55,13 @@ export default function ServicesPage() {
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-4">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Tu refugio en la cordillera</span>
+                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Tu refugio en la cordillera</span>
                         </div>
                         <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
                             Afuera el bosque, <br className="hidden md:block" />
                             <span className="italic-display text-primary font-light">adentro el descanso</span>
                         </h2>
-                        <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed">
+                        <p className="text-text-sub text-lg md:text-xl font-medium leading-relaxed">
                             Cada experiencia está pensada para que solo te preocupes de disfrutar. <br className="hidden md:block" />
                             Tu única decisión del día será si te tomas el café en la cama o en la terraza.
                         </p>
@@ -93,12 +93,12 @@ export default function ServicesPage() {
                                     <div className="w-full max-w-3xl mx-auto text-center space-y-8">
                                         <div className="inline-flex items-center gap-2 mb-4">
                                             <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">{service.subtitle}</span>
+                                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">{service.subtitle}</span>
                                         </div>
                                         <h2 className="h2-display leading-tight text-text-main !text-3xl md:!text-5xl">
                                             {service.title}
                                         </h2>
-                                        <p className="text-base md:text-lg text-text-sub leading-relaxed font-bold max-w-2xl mx-auto">
+                                        <p className="text-base md:text-lg text-text-sub leading-relaxed font-medium max-w-2xl mx-auto">
                                             {service.description}
                                         </p>
                                         <div className="inline-flex flex-col gap-4 pt-4 text-left">
@@ -115,11 +115,11 @@ export default function ServicesPage() {
                                             <Link
                                                 href={service.href}
                                                 onClick={() => trackEvent('click_reservar', { service_title: service.title, page: 'servicios' })}
-                                                className="inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-primary-dark transition-all transform hover:scale-105 shadow-xl shadow-primary/20"
+                                                className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg active:scale-95"
                                             >
                                                 {service.buttonText}
                                             </Link>
-                                            <p className="mt-4 text-[9px] text-text-sub/50 font-black uppercase tracking-widest">
+                                            <p className="mt-4 text-xs text-text-sub/70">
                                                 * Algunos servicios pueden tener costo adicional
                                             </p>
                                         </div>
@@ -174,12 +174,12 @@ export default function ServicesPage() {
                                 <div className="w-full lg:w-1/2 space-y-8">
                                     <div className="inline-flex items-center gap-2 mb-4">
                                         <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                        <span className="text-primary text-base font-black tracking-[0.2em] uppercase">{service.subtitle}</span>
+                                        <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">{service.subtitle}</span>
                                     </div>
                                     <h2 className="h2-display leading-tight text-text-main !text-3xl md:!text-5xl">
                                         {service.title}
                                     </h2>
-                                    <p className="text-base md:text-lg text-text-sub leading-relaxed font-bold">
+                                    <p className="text-base md:text-lg text-text-sub leading-relaxed font-medium">
                                         {service.description}
                                     </p>
                                     <div className="space-y-4 pt-4">
@@ -196,11 +196,11 @@ export default function ServicesPage() {
                                         <Link
                                             href={service.href}
                                             onClick={() => trackEvent('click_reservar', { service_title: service.title, page: 'servicios' })}
-                                            className="inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-primary-dark transition-all transform hover:scale-105 shadow-xl shadow-primary/20 w-full md:w-auto"
+                                            className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg active:scale-95 w-full md:w-auto"
                                         >
                                             {service.buttonText}
                                         </Link>
-                                        <p className="mt-4 text-[9px] text-text-sub/50 font-black uppercase tracking-widest pl-2">
+                                        <p className="mt-4 text-xs text-text-sub/70 pl-2">
                                             * Algunos servicios pueden tener costo adicional
                                         </p>
                                     </div>
@@ -218,7 +218,7 @@ export default function ServicesPage() {
                         ¿Vienes a celebrar algo importante? <br />
                         <span className="text-primary italic-display">Déjalo en nuestras manos</span>
                     </h2>
-                    <p className="text-lg md:text-xl text-text-sub font-bold mb-14 leading-relaxed max-w-3xl mx-auto">
+                    <p className="text-lg md:text-xl text-text-sub font-medium mb-14 leading-relaxed max-w-3xl mx-auto">
                         ¿Quieres sorprender a tu pareja por un aniversario o pedir matrimonio sin estrés? Cuéntanos tu idea. Nosotros armamos el plan perfecto en el bosque y tú te llevas todo el crédito.
                     </p>
                     <a
@@ -226,7 +226,7 @@ export default function ServicesPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => trackEvent('click_whatsapp_servicios', { page: 'servicios' })}
-                        className="bg-[#25D366] text-white font-black py-6 px-16 rounded-2xl hover:bg-[#20ba5a] transition-all transform hover:scale-105 shadow-2xl tracking-widest text-xs uppercase inline-flex items-center gap-4"
+                        className="bg-[#25D366] text-white font-semibold text-base py-4 px-8 rounded-full hover:bg-[#20ba5a] transition-all shadow-lg active:scale-95 inline-flex items-center justify-center gap-3 max-w-full"
                     >
                         Hablar por WhatsApp para una sorpresa
                     </a>

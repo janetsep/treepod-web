@@ -47,7 +47,7 @@ export default function DomosPage() {
                 alt="Domo geodésico TreePod en Valle Las Trancas"
                 eyebrow="Los domos"
                 title={<>Domos geodésicos equipados,<br className="hidden md:block" /> inmersos en el bosque nativo</>}
-                text="Duerme rodeado de bosque nativo, con todas las comodidades de la ciudad."
+                text="Duerme en medio del bosque nativo, sin renunciar a ninguna comodidad."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority
@@ -62,13 +62,13 @@ export default function DomosPage() {
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-4">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">La idea detrás</span>
+                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">La idea detrás</span>
                         </div>
                         <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
                             Bosque nativo afuera, <br className="hidden md:block" />
                             <span className="text-primary italic-display font-light">comodidad real adentro</span>
                         </h2>
-                        <p className="text-lg md:text-xl leading-relaxed text-text-main font-bold">
+                        <p className="text-lg md:text-xl leading-relaxed text-text-main font-medium">
                             Diseñamos este domo para que estés inmerso en el bosque nativo, durmiendo en una buena cama y con todas las comodidades de la ciudad. <br className="hidden md:block" />
                             <span className="text-primary italic-display">Cuidamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
                         </p>
@@ -129,13 +129,13 @@ export default function DomosPage() {
                         <div className="space-y-8 order-2 md:order-2">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Afuera nevando, tú en polera</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Afuera nevando, tú en polera</span>
                             </div>
                             <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Cama con vista <span className="italic-display">panorámica</span></h3>
-                            <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
+                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
                                 Despierta con energía viendo y escuchando el bosque directamente desde tu cama.
                             </p>
-                            <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
+                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
                                 <strong>Calor las 24 horas:</strong> Tu domo cuenta con estufa a pellet automática y programable. Afuera puede estar bajo cero, pero adentro mantienes una temperatura agradable de día y de noche.
                             </p>
                         </div>
@@ -146,10 +146,10 @@ export default function DomosPage() {
                         <div className="space-y-8 order-2 md:order-1">
                             <div className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Todo a mano, sin salir del domo</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Todo a mano, sin salir del domo</span>
                             </div>
                             <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Tienes <span className="italic-display">todo lo que necesitas</span></h3>
-                            <p className="text-text-sub leading-relaxed font-bold text-lg md:text-xl">
+                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
                                 Si quieres, no sales en todo el fin de semana: tienes lo necesario para pasarla bien sin depender de nadie.
                             </p>
                             <ul className="space-y-4 pt-4">
@@ -200,7 +200,7 @@ export default function DomosPage() {
 
                 {/* 4. Technical Specs (The Whitepod Grid) */}
                 <div className="mt-24 md:mt-32">
-                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha Técnica</h3>
+                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha técnica</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
                         <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
@@ -268,10 +268,10 @@ export default function DomosPage() {
 
                     <Link
                         href="/disponibilidad"
-                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-black py-4 px-4 sm:px-8 md:px-12 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 md:gap-4"
+                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-5 sm:px-8 md:px-10 rounded-full text-sm md:text-base shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
                     >
-                        <span>Reservar Ahora</span>
-                        <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                        <span>Reservar ahora</span>
+                        <ArrowRight className="w-4 h-4 shrink-0" />
                     </Link>
                 </div>
             </div >

@@ -28,7 +28,7 @@ const Stepper: React.FC<StepperProps> = ({ activeStep }) => {
                                 w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500
                                 ${isCompleted ? 'bg-primary text-white shadow-lg scale-110' :
                                   isActive ? 'bg-primary text-white ring-8 ring-primary/10 shadow-xl scale-110' :
-                                  'bg-white text-gray-400 border-2 border-gray-100 dark:bg-surface-dark dark:border-gray-800'}
+                                  'bg-white text-gray-400 border-2 border-gray-100'}
                             `}>
                                 {isCompleted ? (
                                     <Check className="w-6 h-6 stroke-[3px] animate-fade-in" />
@@ -50,7 +50,7 @@ const Stepper: React.FC<StepperProps> = ({ activeStep }) => {
 
                         {/* Line Segment */}
                         {index < steps.length - 1 && (
-                            <div className="flex-1 h-1 mx-2 -mt-7 sm:-mt-8 relative overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-full">
+                            <div className="flex-1 h-1 mx-2 -mt-7 sm:-mt-8 relative overflow-hidden bg-gray-100 rounded-full">
                                 <div
                                     className="absolute inset-y-0 left-0 bg-primary transition-all duration-1000 ease-in-out"
                                     style={{

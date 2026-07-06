@@ -39,6 +39,13 @@ function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString("es-CL");
 }
 
+// Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible.
+function fmtFecha(iso: string | null | undefined) {
+  if (!iso) return "—";
+  const [y, m, d] = String(iso).slice(0, 10).split("-");
+  return y && m && d ? `${d}-${m}-${y}` : String(iso);
+}
+
 // Parseo tolerante de fecha y monto (formato chileno: dd-mm-aaaa, miles con punto).
 function validarFecha(y: number, mo: number, d: number): string | null {
   if (!Number.isFinite(y) || mo < 1 || mo > 12 || d < 1 || d > 31) return null;
@@ -327,7 +334,7 @@ export default function CartolasPanel() {
           {fileName && (
             <span className="flex items-center gap-1.5 text-xs text-gray-600 font-semibold">
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> {fileName}
-              <button onClick={() => { setRows([]); setFileName(""); }} className="text-gray-400 hover:text-gray-600"><X className="w-3.5 h-3.5" /></button>
+              <button onClick={() => { setRows([]); setFileName(""); }} title="Quitar archivo" aria-label="Quitar archivo" className="text-gray-400 hover:text-gray-600"><X className="w-3.5 h-3.5" /></button>
             </span>
           )}
         </div>
@@ -474,7 +481,7 @@ export default function CartolasPanel() {
             <div key={m.id} className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 shrink-0">{m.fecha || "—"}</span>
+                  <span className="text-xs text-gray-500 shrink-0">{fmtFecha(m.fecha)}</span>
                   <span className="text-sm font-bold text-gray-900 truncate">{m.descripcion}</span>
                 </div>
                 {m.categoria === "ingreso" && m.reservas && (
@@ -491,7 +498,7 @@ export default function CartolasPanel() {
                       <option value="">Conciliar con reserva…</option>
                       {reservasLista.map((r) => (
                         <option key={r.reserva_id} value={r.reserva_id}>
-                          {r.cliente} · {r.fecha_inicio} · ${Math.round(r.total).toLocaleString("es-CL")}
+                          {r.cliente} · {fmtFecha(r.fecha_inicio)} · {fmt(r.total)}
                         </option>
                       ))}
                     </select>
@@ -499,7 +506,7 @@ export default function CartolasPanel() {
                 )}
                 {m.categoria === "por_revisar" && sugerencias[m.id] && (
                   <div className="mt-1 flex flex-wrap items-center gap-2">
-                    <span className="text-[11px] text-gray-600">¿Es la reserva de <strong>{sugerencias[m.id].cliente}</strong>{sugerencias[m.id].fecha_inicio ? ` · ${sugerencias[m.id].fecha_inicio}` : ""}?</span>
+                    <span className="text-[11px] text-gray-600">¿Es la reserva de <strong>{sugerencias[m.id].cliente}</strong>{sugerencias[m.id].fecha_inicio ? ` · ${fmtFecha(sugerencias[m.id].fecha_inicio)}` : ""}?</span>
                     <button onClick={() => confirmarIngreso(m, sugerencias[m.id])} className="px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-emerald-700">Sí, es ingreso</button>
                   </div>
                 )}
@@ -532,7 +539,7 @@ export default function CartolasPanel() {
                   </>
                 )}
 
-                <button onClick={() => eliminar(m.id)} className="text-red-500 hover:text-red-600 p-1.5"><Trash2 className="w-4 h-4" /></button>
+                <button onClick={() => eliminar(m.id)} title="Eliminar movimiento" className="text-red-500 hover:text-red-600 p-1.5"><Trash2 className="w-4 h-4" /></button>
               </div>
             </div>
           ))}

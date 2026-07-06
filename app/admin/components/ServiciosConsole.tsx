@@ -133,7 +133,7 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
                     <p className="text-sm text-gray-900">Gestiona precios de desayuno, cena, tinaja, aseo, lavandería, almuerzo y más</p>
                 </div>
                 <div className="flex gap-2">
-                    <button onClick={loadServicios} className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all">
+                    <button onClick={loadServicios} title="Recargar servicios" aria-label="Recargar servicios" className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all">
                         <RefreshCw className="w-4 h-4" />
                     </button>
                     {!isViewer && (
@@ -241,6 +241,8 @@ export default function ServiciosConsole({ adminRole }: { adminRole: string | nu
                                     <button
                                         onClick={() => deleteServicio(s.id, s.nombre)}
                                         disabled={saving === s.id}
+                                        title="Eliminar servicio"
+                                        aria-label="Eliminar servicio"
                                         className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
                                     >
                                         <Trash2 className="w-4 h-4" />

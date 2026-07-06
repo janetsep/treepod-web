@@ -19,6 +19,32 @@ interface AccessLog {
     created_at: string;
 }
 
+// Etiquetas legibles: no mostrar valores crudos de la BD al usuario.
+const ROL_LABELS: Record<string, string> = {
+    superadmin: "Superadmin",
+    admin: "Administrador",
+    editor: "Editor",
+    viewer: "Lector",
+};
+
+const ACTION_LABELS: Record<string, string> = {
+    access_granted: "Acceso concedido",
+    access_denied: "Acceso denegado",
+    user_created: "Usuario creado",
+    password_reset: "Contraseña cambiada",
+    payment_registered: "Pago registrado",
+    reservation_created: "Reserva creada",
+    reservation_updated: "Reserva actualizada",
+    reservation_cancelled: "Reserva anulada",
+    reservation_trashed: "Reserva a papelera",
+    reservation_restored: "Reserva restaurada",
+    reservation_permanently_deleted: "Reserva eliminada",
+    temporada_created: "Temporada creada",
+    temporada_updated: "Temporada actualizada",
+    temporada_deleted: "Temporada eliminada",
+    tarifa_updated: "Tarifa actualizada",
+};
+
 export default function UsersConsole() {
     const [activeTab, setActiveTab] = useState<'users' | 'logs'>('users');
     const [users, setUsers] = useState<AuthorizedAdmin[]>([]);
@@ -148,7 +174,7 @@ export default function UsersConsole() {
             setPasswordResetUser(null);
             setNewPassword("");
         } catch (error: any) {
-            alert("Error: " + error.message);
+            alert("No se pudo cambiar la contraseña:\n" + error.message);
         }
         setActionLoading(null);
     }
@@ -313,10 +339,10 @@ export default function UsersConsole() {
                                                         onChange={(e) => setEditData({...editData, rol: e.target.value})}
                                                         className="p-2 border rounded-lg text-sm font-black uppercase"
                                                     >
-                                                        <option value="admin">ADMIN</option>
-                                                        <option value="editor">EDITOR</option>
-                                                        <option value="viewer">VIEWER</option>
-                                                        <option value="superadmin">SUPERADMIN</option>
+                                                        <option value="admin">Administrador</option>
+                                                        <option value="editor">Editor</option>
+                                                        <option value="viewer">Lector</option>
+                                                        <option value="superadmin">Superadmin</option>
                                                     </select>
                                                 ) : (
                                                     <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 w-fit ${
@@ -325,7 +351,7 @@ export default function UsersConsole() {
                                                         'bg-gray-100 text-gray-600'
                                                     }`}>
                                                         <Shield className="w-3 h-3" />
-                                                        {user.rol}
+                                                        {ROL_LABELS[user.rol] || user.rol}
                                                     </span>
                                                 )}
                                             </td>
@@ -342,10 +368,10 @@ export default function UsersConsole() {
                                                 <div className="flex justify-end items-center gap-2">
                                                     {editingUser === user.id ? (
                                                         <>
-                                                            <button onClick={() => handleUpdateUser(user.id)} className="p-2 text-green-600 bg-green-50 rounded-xl hover:bg-green-100">
+                                                            <button onClick={() => handleUpdateUser(user.id)} title="Guardar cambios" aria-label="Guardar cambios" className="p-2 text-green-600 bg-green-50 rounded-xl hover:bg-green-100">
                                                                 <Check className="w-4 h-4" />
                                                             </button>
-                                                            <button onClick={() => setEditingUser(null)} className="p-2 text-red-600 bg-red-50 rounded-xl hover:bg-red-100">
+                                                            <button onClick={() => setEditingUser(null)} title="Cancelar edición" aria-label="Cancelar edición" className="p-2 text-red-600 bg-red-50 rounded-xl hover:bg-red-100">
                                                                 <X className="w-4 h-4" />
                                                             </button>
                                                         </>
@@ -421,7 +447,7 @@ export default function UsersConsole() {
                                                 log.action.includes('denied') || log.action.includes('failure') ? 'bg-red-100 text-red-700' :
                                                 'bg-blue-100 text-blue-700'
                                             }`}>
-                                                {log.action}
+                                                {ACTION_LABELS[log.action] || log.action}
                                             </span>
                                         </td>
                                         <td className="px-8 py-4 text-gray-700 italic">{log.details}</td>

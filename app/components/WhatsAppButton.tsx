@@ -1,11 +1,17 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { TrackingService } from "@/services/TrackingService";
 
 export default function WhatsAppButton() {
     const phoneNumber = "56984643307"; // Número actualizado por usuario
     const message = "Hola TreePod, me gustaría consultar disponibilidad.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    // En /disponibilidad móvil aparece la barra fija de pago (bottom-6, ~96px de alto):
+    // con bottom-24 el botón quedaba tapado y parcialmente no clickeable bajo esa barra.
+    const pathname = usePathname();
+    const mobileBottom = pathname?.startsWith("/disponibilidad") ? "bottom-36" : "bottom-24";
 
     const handleClick = () => {
         TrackingService.sendEvent('whatsapp_click', {
@@ -21,7 +27,7 @@ export default function WhatsAppButton() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleClick}
-            className="fixed bottom-24 right-4 lg:bottom-8 lg:right-8 z-[80] w-14 h-14 lg:w-16 lg:h-16 bg-[#25D366] text-white rounded-full shadow-[0_10px_25px_rgba(37,211,102,0.3)] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_15px_30px_rgba(37,211,102,0.4)] active:scale-95 group"
+            className={`fixed ${mobileBottom} right-4 lg:bottom-8 lg:right-8 z-[80] w-14 h-14 lg:w-16 lg:h-16 bg-[#25D366] text-white rounded-full shadow-[0_10px_25px_rgba(37,211,102,0.3)] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-[0_15px_30px_rgba(37,211,102,0.4)] active:scale-95 group`}
             aria-label="Contactar por WhatsApp"
         >
             <svg className="w-8 h-8 fill-current transition-transform group-hover:rotate-12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

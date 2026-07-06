@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Contacto | Glamping TreePod',
         description: 'Contáctanos para consultas y reservas en Valle Las Trancas.',
+        url: '/contacto',
+        // El openGraph del hijo reemplaza completo al del root: sin images aquí,
+        // WhatsApp/Facebook no muestran vista previa al compartir esta página.
+        images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     },
 };
 

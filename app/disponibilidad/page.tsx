@@ -6,9 +6,8 @@ import Image from "next/image";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
-import { TrackingService } from '@/services/TrackingService';
 import { getStoredUTMs } from '../components/UTMCapture';
-import { Settings, ChevronDown, Tag, ArrowRight, Sparkles, Utensils, Check, Plus, Calendar, RefreshCw, Info, Star } from "lucide-react";
+import { Settings, ChevronDown, Tag, Sparkles, Check, Calendar, RefreshCw, Info, Star } from "lucide-react";
 import Stepper from '../components/Stepper';
 
 type ResultadoPrecio = {
@@ -43,7 +42,10 @@ function DisponibilidadContent() {
   const searchParams = useSearchParams();
   const [entrada, setEntrada] = useState(searchParams.get("entrada") || "");
   const [salida, setSalida] = useState(searchParams.get("salida") || "");
-  const [adultos, setAdultos] = useState(Number(searchParams.get("adultos")) || 2);
+  // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
+  // rango (?adultos=6) dejaba el select en un valor sin opción visible y pedía
+  // precios para una capacidad que no existe.
+  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(searchParams.get("adultos")) || 2)));
   const [resultado, setResultado] = useState<ResultadoPrecio | null>(null);
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
@@ -107,6 +109,20 @@ function DisponibilidadContent() {
     trackEvent("view_disponibilidad");
     fetchServicios();
   }, []);
+
+  // El retorno de Webpay redirige aquí con ?error= cuando el pago no llegó a confirmarse:
+  // webpay_abort / missing_token (el huésped canceló), webpay_commit (falló la confirmación
+  // con Transbank) o reserva_no_encontrada. Sin este aviso, volvía sin ningún mensaje.
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam === "webpay_abort" || errorParam === "missing_token") {
+      setError("El pago no se completó en Webpay y no se realizó ningún cobro. Puedes intentar tu reserva de nuevo cuando quieras.");
+    } else if (errorParam === "webpay_commit") {
+      setError("Hubo un problema al confirmar tu pago con Webpay. Si el cobro aparece en tu tarjeta, escríbenos por WhatsApp al +56 9 8464 3307 y lo resolvemos; si no aparece, puedes intentar tu reserva de nuevo.");
+    } else if (errorParam === "reserva_no_encontrada") {
+      setError("No encontramos la reserva asociada a ese pago. Por favor intenta de nuevo o escríbenos por WhatsApp al +56 9 8464 3307 si el problema persiste.");
+    }
+  }, [searchParams]);
 
   const fetchServicios = async () => {
     try {
@@ -280,7 +296,10 @@ function DisponibilidadContent() {
           total: calcularTotalConServicios(),
           precio_original: resultado.precio_original,
           descuento_monto: resultado.descuento_aplicado?.monto || 0,
-          descuento_detalle: resultado.descuento_aplicado ? [resultado.descuento_aplicado.tipo] : [],
+          // El checkout (/reserva/[id]) espera Array<{ motivo, monto }>: enviar strings sueltos rompería su render.
+          descuento_detalle: resultado.descuento_aplicado
+            ? [{ motivo: resultado.descuento_aplicado.tipo, monto: resultado.descuento_aplicado.monto }]
+            : [],
           is_event_mundial: isMundialEvent,
           nombre: nombre.trim(),
           apellido: apellido.trim(),
@@ -424,7 +443,7 @@ function DisponibilidadContent() {
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Calendar className="text-primary w-4 h-4" />
                   </div>
-                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h3>
+                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h2>
                 </div>
                 <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
               </header>
@@ -454,7 +473,7 @@ function DisponibilidadContent() {
                     <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
                     <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0, 173, 239,0.3)]"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
                         <span className="text-text-main">Selección</span>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -465,7 +484,7 @@ function DisponibilidadContent() {
                         <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
                           <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
                         </div>
-                        <span>Usado</span>
+                        <span>Ocupado</span>
                       </div>
                     </div>
                   </div>
@@ -508,7 +527,7 @@ function DisponibilidadContent() {
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Sparkles className="text-primary w-4 h-4" />
                   </div>
-                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h3>
+                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h2>
                   {!(entrada && salida) && (
                     <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-primary/10 animate-pulse">
                       Elige fechas primero
@@ -676,9 +695,9 @@ function DisponibilidadContent() {
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                   <Settings className="text-primary w-4 h-4" />
                 </div>
-                <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
+                <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
                   {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
-                </h3>
+                </h2>
               </div>
               <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Tu reserva en un vistazo</p>
             </header>
@@ -742,7 +761,7 @@ function DisponibilidadContent() {
                     {/* Explicit Nights and Base Rate */}
                     <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
                       <div className="flex justify-between items-end mb-1">
-                        <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadia Total</span>
+                        <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadía Total</span>
                         <span className="text-2xl font-display font-bold text-text-main">{resultado.noches} {resultado.noches === 1 ? 'Noche' : 'Noches'}</span>
                       </div>
                       <div className="space-y-3 mt-4">
@@ -785,7 +804,7 @@ function DisponibilidadContent() {
                                 <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
                                   <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{data.name}</span>
                                   <span className="font-medium">
-                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price} = $${data.total}`}
+                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
                                   </span>
                                 </div>
                               ));
@@ -857,7 +876,7 @@ function DisponibilidadContent() {
                       <div className="flex flex-wrap justify-between items-center gap-y-4">
                         <div className="flex flex-col">
                           <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest leading-none mb-1">Total Estadía</span>
-                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">Iva Incluido</span>
+                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">IVA incluido</span>
                         </div>
                         <div key={calcularTotalConServicios()} className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap animate-fade-in">
                           <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
@@ -872,7 +891,7 @@ function DisponibilidadContent() {
                         <div className="flex justify-between items-end relative z-10">
                           <div className="flex flex-col">
                             <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
-                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estancia</span>
+                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estadía</span>
                           </div>
                           <div className="text-3xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
                             <span className="text-lg mr-1 text-primary/70 font-sans">$</span>
@@ -953,24 +972,23 @@ function DisponibilidadContent() {
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
                       disabled={reserving || disponibilidad.disponible === false}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                      className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-5 rounded-full text-base shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
                     >
                       {reserving ? (
                         <>
                           <RefreshCw className="w-5 h-5 animate-spin" />
                           <span>Procesando...</span>
                         </>
-                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar Ahora"}
+                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar ahora"}
                     </button>
 
                     <div className="flex flex-col items-center justify-center pt-6 opacity-70">
                       <p className="text-[10px] font-bold text-text-sub uppercase tracking-wider mb-2 flex items-center gap-1">
                         Pago 100% Seguro <Check className="w-3 h-3 text-emerald-500" />
                       </p>
+                      {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
                       <div className="flex items-center gap-4">
                         <span className="text-[10px] font-bold font-sans tracking-wide">Webpay Plus</span>
-                        <span className="w-1 h-1 rounded-full bg-black/20"></span>
-                        <span className="text-[10px] font-bold font-sans tracking-wide">Transferencia</span>
                       </div>
                     </div>
                   </div>
@@ -994,9 +1012,9 @@ function DisponibilidadContent() {
               <button
                 onClick={() => { trackEvent("click_reservar_sticky"); reservar(); }}
                 disabled={reserving || disponibilidad.disponible === false}
-                className="flex-1 bg-primary text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex-1 bg-primary text-white font-semibold py-4 rounded-full text-base shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar Ahora"}
+                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar ahora"}
               </button>
             </div>
           </div>

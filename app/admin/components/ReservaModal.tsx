@@ -181,7 +181,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                 setBaseAlojamiento(Math.max(0, (Number(reservaToEdit.total) || 0) - extrasPersistidos));
             } else {
                 setFormData({
-                    fecha_inicio: new Date().toISOString().split('T')[0],
+                    fecha_inicio: new Date().toLocaleDateString('en-CA'),
                     fecha_fin: "",
                     domo_id: domos[0]?.id || "",
                     nombre: "",
@@ -437,7 +437,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     onClose();
                 }
             } else {
-                alert("Error: " + data.error);
+                alert("No se pudo guardar la reserva:\n" + data.error);
             }
         } catch (error) {
             alert("Error de conexión");
@@ -482,7 +482,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
                         )}
                     </div>
-                    <button onClick={onClose} className="p-2 bg-white text-gray-700 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
+                    <button onClick={onClose} title="Cerrar" aria-label="Cerrar" className="p-2 bg-white text-gray-700 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -693,6 +693,26 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     placeholder="0"
                                 />
                                 <p className="text-[9px] text-gray-500 font-bold pl-1">Solo el valor del domo. Los servicios se suman abajo.</p>
+                                {buscandoTarifa && !isViewer && (
+                                    <p className="text-[9px] text-gray-500 font-bold pl-1 animate-pulse">Buscando tarifa vigente…</p>
+                                )}
+                                {!buscandoTarifa && tarifaSugerida && !isViewer && (
+                                    <div className="flex items-center justify-between gap-2 px-3 py-2 bg-primary/5 border border-primary/20 rounded-xl">
+                                        <span className="text-[10px] font-bold text-gray-700 leading-tight">
+                                            Tarifa "{tarifaSugerida.temporada}": ${tarifaSugerida.total_hospedaje.toLocaleString('es-CL')}
+                                            <span className="text-gray-500 font-medium"> (${tarifaSugerida.precio_noche.toLocaleString('es-CL')}/noche)</span>
+                                            {tarifaSugerida.es_fallback && <span className="text-amber-600"> · aprox. por noches</span>}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={aplicarTarifa}
+                                            disabled={baseAlojamiento === tarifaSugerida.total_hospedaje}
+                                            className="flex-shrink-0 px-3 py-1 bg-primary text-white rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-primary-dark transition-all disabled:opacity-40 disabled:cursor-default"
+                                        >
+                                            {baseAlojamiento === tarifaSugerida.total_hospedaje ? 'Aplicada' : 'Aplicar'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-green-600 uppercase tracking-widest pl-1">Monto Pagado ($)</label>
@@ -817,17 +837,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                                             {esCortesia ? (
                                                                 <>
-                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString()}</span>
+                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString('es-CL')}</span>
                                                                     <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md">CORTESÍA</span>
                                                                 </>
                                                             ) : (
                                                                 <>
                                                                     <span className={`text-[10px] font-black ${selected ? "text-primary" : "text-gray-700"}`}>
-                                                                        ${precioEfectivo.toLocaleString()} × {etiqueta}
+                                                                        ${precioEfectivo.toLocaleString('es-CL')} × {etiqueta}
                                                                     </span>
                                                                     {selected && cantidad > 1 && (
                                                                         <span className="text-[10px] font-black text-green-700 bg-green-50 px-1.5 py-0.5 rounded-md">
-                                                                            = ${subtotal.toLocaleString()}
+                                                                            = ${subtotal.toLocaleString('es-CL')}
                                                                         </span>
                                                                     )}
                                                                     {selected && preciosPorServicio[servicio.id] !== undefined && preciosPorServicio[servicio.id] !== servicio.precio && (
@@ -886,7 +906,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-600"
                                                             }`}
                                                         >
-                                                            {esCortesia ? "Cortesia (quitar)" : "Marcar como cortesia"}
+                                                            {esCortesia ? "Cortesía (quitar)" : "Marcar como cortesía"}
                                                         </button>
                                                     )}
                                                 </div>
@@ -1112,7 +1132,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     }}
                                     className="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg shadow-green-600/20 transition-all flex items-center justify-center gap-2"
                                 >
-                                    📅 Descargar para Calendario
+                                    Descargar para Calendario
                                 </button>
                                 <button
                                     type="button"

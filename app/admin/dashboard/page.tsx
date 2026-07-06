@@ -203,7 +203,7 @@ export default function DashboardAdmin() {
                             {docs.length === 0 ? (
                                 <p className="px-5 py-6 text-sm text-gray-500 font-medium">{esPend ? 'No hay documentos pendientes. Todo al día.' : 'Aún no hay documentos cargados este año.'}</p>
                             ) : (
-                                <div className="max-h-[420px] overflow-y-auto overscroll-contain">
+                                <div className="max-h-[420px] overflow-auto overscroll-contain">
                                     <p className="px-5 pt-2 text-[10px] text-gray-400 font-bold">{docs.length} documento{docs.length !== 1 ? 's' : ''} — desliza para ver todos</p>
                                     <table className="w-full text-sm">
                                         <thead className="sticky top-0 bg-white border-b border-gray-100 text-[10px] uppercase tracking-widest text-gray-500">
@@ -382,26 +382,28 @@ export default function DashboardAdmin() {
                                     </div>
                                 </div>
                                 {(metaAds.porCampania || []).length > 0 && (
-                                    <table className="w-full text-xs border-collapse">
-                                        <thead>
-                                            <tr className="border-b border-gray-200 uppercase text-gray-500">
-                                                <th className="text-left font-bold py-2 px-2">Campaña</th>
-                                                <th className="text-right font-bold py-2 px-2">Gasto 12m</th>
-                                                <th className="text-right font-bold py-2 px-2">Impresiones</th>
-                                                <th className="text-right font-bold py-2 px-2">Clics</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {(metaAds.porCampania || []).slice(0, 8).map((c, i) => (
-                                                <tr key={i} className="border-b border-gray-50">
-                                                    <td className="py-2 px-2 font-bold text-gray-700">{c.campania}</td>
-                                                    <td className="py-2 px-2 text-right tabular-nums">{fmt(c.gasto)}</td>
-                                                    <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.impresiones.toLocaleString('es-CL')}</td>
-                                                    <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.clics.toLocaleString('es-CL')}</td>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-xs border-collapse">
+                                            <thead>
+                                                <tr className="border-b border-gray-200 uppercase text-gray-500">
+                                                    <th className="text-left font-bold py-2 px-2">Campaña</th>
+                                                    <th className="text-right font-bold py-2 px-2">Gasto 12m</th>
+                                                    <th className="text-right font-bold py-2 px-2">Impresiones</th>
+                                                    <th className="text-right font-bold py-2 px-2">Clics</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {(metaAds.porCampania || []).slice(0, 8).map((c, i) => (
+                                                    <tr key={i} className="border-b border-gray-50">
+                                                        <td className="py-2 px-2 font-bold text-gray-700">{c.campania}</td>
+                                                        <td className="py-2 px-2 text-right tabular-nums">{fmt(c.gasto)}</td>
+                                                        <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.impresiones.toLocaleString('es-CL')}</td>
+                                                        <td className="py-2 px-2 text-right tabular-nums text-gray-500">{c.clics.toLocaleString('es-CL')}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 )}
                                 {(metaAds.porCampania || []).length > 8 && (
                                     <p className="text-[10px] text-amber-600 font-bold mt-2">Mostrando las 8 campañas con más gasto de {(metaAds.porCampania || []).length} en total.</p>

@@ -24,7 +24,7 @@ export default function DomoAmenities() {
         {
             icon: "fireplace",
             title: "Cero humo, cero frío",
-            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido y perfecto 24/7.",
+            description: "Olvídate de estar cargando leña o ahumándote. Tienes una estufa automática que mantiene tu refugio cálido las 24 horas.",
             tag: "Confort",
             image: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
             size: "small"
@@ -51,6 +51,10 @@ export default function DomoAmenities() {
             description: "Tienes un robot aspirador a tu disposición: lo activas cuando quieras y él barre por ti.",
             tag: "Tecnología",
             images: robotImages,
+            imageAlts: [
+                "Robot aspirador disponible en el domo TreePod",
+                "Interior del domo TreePod con robot aspirador"
+            ],
             size: "large"
         },
     ];
@@ -79,7 +83,7 @@ export default function DomoAmenities() {
                         <div
                             key={index}
                             className={`group flex flex-col rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 bg-surface border border-black/5
-                                ${index === 0 || index === 4 ? 'md:col-span-2' : 'md:col-span-1'}
+                                ${index === 0 ? 'md:col-span-2' : index === 4 ? 'md:col-span-3' : 'md:col-span-1'}
                             `}
                         >
                             {/* Image Section */}
@@ -90,9 +94,9 @@ export default function DomoAmenities() {
                                             <div key={imgIdx} className="relative flex-1 h-full overflow-hidden first:border-r border-white/20">
                                                 <Image
                                                     src={img}
-                                                    alt={`${item.title} ${imgIdx}`}
+                                                    alt={item.imageAlts?.[imgIdx] || `${item.title} — foto ${imgIdx + 1}`}
                                                     fill
-                                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                                    sizes="(max-width: 768px) 50vw, 38vw"
                                                     className={`object-cover object-center transition-transform duration-[2s] group-hover:scale-110`}
                                                 />
                                             </div>
@@ -119,7 +123,8 @@ export default function DomoAmenities() {
                                     {item.icon === "paw" && <PawPrint className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "outdoor_grill" || item.title === "Cena Privada") && <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
-                                    <h4 className="h4-display text-text-main">{item.title}</h4>
+                                    {/* h3 (no h4): la sección abre con h2, así no hay salto de jerarquía */}
+                                    <h3 className="h4-display text-text-main">{item.title}</h3>
                                 </div>
                                 <p className="text-xs sm:text-sm md:text-base text-text-sub leading-relaxed font-medium">
                                     {item.description}
@@ -133,7 +138,7 @@ export default function DomoAmenities() {
                 <div className="text-center mt-12 md:mt-16">
                     <a
                         href="/disponibilidad"
-                        className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
+                        className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
                     >
                         Quiero mi escapada al bosque
                     </a>

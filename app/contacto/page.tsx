@@ -18,10 +18,10 @@ export default function ContactoPage() {
                         <div className="max-w-4xl w-full">
                             <div className="inline-flex items-center gap-2 mb-4">
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Contacto</span>
                             </div>
                             <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15]">
-                                Hablemos de <span className="text-primary italic-display">Tu Escapada</span>
+                                Hablemos de <span className="text-primary italic-display">tu escapada</span>
                             </h1>
                         </div>
                     </div>
@@ -35,7 +35,9 @@ export default function ContactoPage() {
                                         <Phone className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</h3>
+                                        {/* p en vez de h3: son rótulos de tarjetas, no encabezados;
+                                            con h3 la página saltaba de h1 a h3 antes del primer h2 */}
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</p>
                                         <a href="tel:+56984643307" className="text-xl font-black text-text-main hover:text-primary transition-colors">+56 9 8464 3307</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Atención todos los días</p>
                                     </div>
@@ -46,7 +48,7 @@ export default function ContactoPage() {
                                         <Mail className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</h3>
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</p>
                                         <a href="mailto:info@domostreepod.cl" className="text-xl font-black text-text-main hover:text-primary transition-colors">info@domostreepod.cl</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Respuesta en menos de 24h</p>
                                     </div>
@@ -57,7 +59,7 @@ export default function ContactoPage() {
                                         <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación Norte</h3>
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación</p>
                                         <p className="text-xl font-black text-text-main">Ruta N-55, Km 72</p>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Valle Las Trancas, Ñuble</p>
                                     </div>
@@ -80,10 +82,10 @@ export default function ContactoPage() {
                                         </div>
                                     </div>
                                     <a
-                                        href="https://maps.app.goo.gl/..."
+                                        href="https://maps.app.goo.gl/WXUyDLhcVnJfA3Lm6"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="h-10 px-6 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
+                                        className="h-10 px-6 bg-primary text-white text-xs font-semibold rounded-full flex items-center justify-center hover:bg-primary-dark active:scale-95 transition-all shadow-lg shadow-primary/20"
                                     >
                                         Ir
                                     </a>
@@ -93,9 +95,9 @@ export default function ContactoPage() {
                             {/* Authority/Trust Tip */}
                             <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-3">
                                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-                                    <Send className="w-3.5 h-3.5" /> Consejo del Host
+                                    <Send className="w-3.5 h-3.5" /> Consejo de tus anfitriones
                                 </p>
-                                <p className="text-sm font-bold text-text-sub leading-relaxed">
+                                <p className="text-sm font-medium text-text-sub leading-relaxed">
                                     Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a 12 minutos de la nieve real.
                                 </p>
                             </div>
@@ -112,7 +114,7 @@ export default function ContactoPage() {
                                     <h2 className="h2-display text-text-main mb-3 !leading-tight">
                                         Envíanos un <span className="text-primary italic-display">Mensaje</span>
                                     </h2>
-                                    <p className="text-text-sub font-bold text-lg md:text-xl">
+                                    <p className="text-text-sub font-medium text-lg md:text-xl">
                                         ¿Dudas sobre el clima, servicios o reservas especiales?
                                     </p>
                                 </div>
@@ -151,13 +153,13 @@ export default function ContactoPage() {
                                             <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shrink-0 mt-0.5">
                                                 <Check className="w-4 h-4 text-white" strokeWidth={3} />
                                             </div>
-                                            <p className="text-sm font-bold">¡Confirmado! Recibimos tu mensaje. El host te contactará dentro de las próximas horas.</p>
+                                            <p className="text-sm font-bold">¡Listo! Recibimos tu mensaje. Te contactaremos dentro de las próximas horas.</p>
                                         </div>
                                     )}
 
                                     {status === 'error' && (
                                         <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center gap-4 animate-shake">
-                                            <p className="text-sm font-bold">Hubo un error de conexión. Por favor contáctanos vía WhatsApp para una respuesta inmediata.</p>
+                                            <p className="text-sm font-bold">Hubo un error de conexión. Escríbenos por WhatsApp y te respondemos a la brevedad.</p>
                                         </div>
                                     )}
 
@@ -186,7 +188,7 @@ export default function ContactoPage() {
                                     <div className="space-y-2.5">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">¿Qué necesitas consultar?</label>
                                         <div className="relative">
-                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer">
+                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 pl-6 pr-14 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer truncate">
                                                 <option>Información de Disponibilidad</option>
                                                 <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
                                                 <option>Convenios Corporativos</option>
@@ -209,14 +211,14 @@ export default function ContactoPage() {
                                     </div>
 
                                     <div className="space-y-6 pt-4">
-                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0, 173, 239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
-                                            {status === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
+                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                                            {status === 'loading' ? 'Enviando...' : 'Enviar mensaje'}
                                             {!status || status !== 'loading' && <Send className="w-4 h-4" />}
                                         </button>
 
                                         <div className="relative py-4 flex items-center justify-center">
                                             <div className="absolute w-full border-t border-black/5"></div>
-                                            <span className="relative bg-white px-6 text-[10px] font-black text-text-sub/40 uppercase tracking-[0.2em]">Respuesta Inmediata</span>
+                                            <span className="relative bg-white px-6 text-[10px] font-black text-text-sub/40 uppercase tracking-[0.2em]">¿Prefieres una respuesta más rápida?</span>
                                         </div>
 
                                         <a
@@ -224,7 +226,7 @@ export default function ContactoPage() {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={() => trackEvent('click_whatsapp_contacto', { page: 'contacto' })}
-                                            className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(37,211,102,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
+                                            className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3"
                                         >
                                             Hablar por WhatsApp
                                             <MessageCircle className="w-5 h-5 fill-white" />

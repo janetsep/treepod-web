@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Servicios y Experiencias | Glamping TreePod Las Trancas',
-    description: 'Desayuno orgánico, cena privada, tinaja de ciprés caliente, tour por el bosque nativo. Conoce todos los servicios incluidos y extras en TreePod.',
+    description: 'Desayunos a la habitación, quincho equipado para asados y tinaja privada de temporada. Conoce los servicios y extras de TreePod en Valle Las Trancas.',
     alternates: {
         canonical: '/servicios',
     },
     openGraph: {
         title: 'Servicios y Experiencias | Glamping TreePod',
-        description: 'Desayuno orgánico, cena privada, tinaja de ciprés y más en Valle Las Trancas.',
+        description: 'Desayunos a la habitación, quincho para asados y tinaja de temporada en Valle Las Trancas.',
         images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     },
 };

@@ -74,35 +74,35 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub-light">Nombre</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Nombre</label>
                     <input
                         type="text"
                         required
                         value={formData.nombre}
                         onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                        className="w-full bg-background-light dark:bg-black/10 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
                         placeholder="Juan"
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub-light">Apellido</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Apellido</label>
                     <input
                         type="text"
                         required
                         value={formData.apellido}
                         onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
-                        className="w-full bg-background-light dark:bg-black/10 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
                         placeholder="Pérez"
                     />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub-light">Email</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Email</label>
                     <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-background-light dark:bg-black/10 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
                         placeholder="juan@ejemplo.com"
                     />
                 </div>
@@ -117,9 +117,9 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-full text-sm uppercase tracking-[0.2em] shadow-lg transition-all disabled:opacity-50"
+                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-lg transition-all disabled:opacity-50"
             >
-                {loading ? "Guardando..." : "Guardar y Continuar al Pago"}
+                {loading ? "Guardando..." : "Guardar y continuar al pago"}
             </button>
         </form>
     );

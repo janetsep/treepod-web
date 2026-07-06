@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Escapada Romántica en Las Trancas | TreePod',
-    description: 'Domo privado en el bosque para dos: estufa a pellet, cielos estrellados y total privacidad en Valle Las Trancas, Chillán. Reserva directo.',
+    title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
+    description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado. Reserva directo, sin comisiones.',
     keywords: [
         'escapada romantica las trancas',
         'escapada romantica chile',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/escapada-romantica-las-trancas',
     },
     openGraph: {
-        title: 'Escapada Romántica en Las Trancas | Domo Privado — TreePod',
-        description: 'Domo privado en el bosque para dos. Estufa a pellet, cielos estrellados y privacidad total en Valle Las Trancas.',
+        title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
+        description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado.',
         images: ['/images/Galeria/domo-iluminado-noche.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -69,7 +69,7 @@ export default function EscapadaRomanticaPage() {
 
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
-                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
+                            Estufa a pellet · cocina equipada · WiFi Starlink · tinaja de ciprés en temporada
                         </p>
                     </div>
 
@@ -83,18 +83,18 @@ export default function EscapadaRomanticaPage() {
                             eventName="click_reservar_romantica"
                             secondEventName="begin_checkout_romantica"
                             secondParams={{ event: "escapada_romantica" }}
-                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-lg md:text-xl">RESERVA TU ESCAPADA</span>
+                            <span className="text-lg md:text-xl">Reserva tu escapada</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Sorpresa?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Sorpresa?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_romantica"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Coordina por WhatsApp
                             </TrackedLink>
@@ -131,7 +131,7 @@ export default function EscapadaRomanticaPage() {
                             {
                                 icon: Wine,
                                 title: "Cocina para preparar algo especial",
-                                desc: "Cocina completamente equipada para preparar una cena para dos. Trae tu vino favorito, tu receta especial o simplemente pide algo y cocina sin prisa."
+                                desc: "Cocina completamente equipada para preparar una cena para dos. Trae tu vino favorito y tu receta especial, o preparen algo simple y cenen sin prisa."
                             },
                             {
                                 icon: Star,
@@ -208,7 +208,7 @@ export default function EscapadaRomanticaPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Ambiente íntimo</p>
-                                <p className="text-xs opacity-80">Cama king + vista al bosque</p>
+                                <p className="text-xs opacity-80">Cama matrimonial + vista al bosque</p>
                             </div>
                         </div>
 
@@ -232,7 +232,7 @@ export default function EscapadaRomanticaPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=escapada-romantica"
                             eventName="click_reservar_romantica"
-                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad
                             <ArrowRight size={20} />
@@ -247,7 +247,7 @@ export default function EscapadaRomanticaPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Parejas que ya vinieron a TreePod</h2>
                         <div className="h-1.5 w-24 bg-rose-500 mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4,9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
@@ -271,14 +271,14 @@ export default function EscapadaRomanticaPage() {
                             La mejor sorpresa es tiempo juntos en el lugar correcto
                         </h2>
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Reserva directa, mejor precio garantizado. Si es una sorpresa, escríbenos por WhatsApp y te ayudamos a coordinar los detalles.
+                            Reserva directa, con el mejor precio y sin comisiones de intermediarios. Si es una sorpresa, escríbenos por WhatsApp y te ayudamos a coordinar los detalles.
                         </p>
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=escapada-romantica"
                             eventName="click_reservar_romantica_final"
-                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">RESERVA TU ESCAPADA</span>
+                            <span className="text-lg md:text-xl">Reserva tu escapada</span>
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>

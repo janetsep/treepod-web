@@ -12,11 +12,11 @@ import DomoAmenities from "./components/DomoAmenities";
 import News from "./components/News";
 import Testimonios from "./components/Testimonios";
 import Ubicacion from "./components/Ubicacion";
-import Galeria from "./components/Galeria";
 import ValueBand from "./components/ValueBand";
 import ComoReservar from "./components/ComoReservar";
 import FAQ from "./components/FAQ";
 import CinematicSection from "./components/CinematicSection";
+import { FaqJsonLd } from "./components/JsonLdSchemas";
 
 import TrackView from "./components/TrackView";
 
@@ -29,6 +29,8 @@ export default function Home() {
   return (
     <main className="min-h-screen font-sans">
       <TrackView eventName="view_home" />
+      {/* FAQPage JSON-LD solo en el home: refleja las preguntas visibles de <FAQ /> */}
+      <FaqJsonLd />
       <Hero />
       <ValueBand />
 
@@ -48,9 +50,9 @@ export default function Home() {
         <div id="concepto" className="reveal"><NotForEveryone /></div>
         <CinematicSection
           image="/images/Galeria/domopiscinainvierno.jpg"
-          alt="Domos TreePod en invierno, a pasos de la nieve"
+          alt="Domos TreePod en invierno, a 12 minutos de la nieve"
           eyebrow="Invierno en Las Trancas"
-          title={<>A pasos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
+          title={<>A 12 minutos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
           text="Esquías o vas a las termas, y vuelves a tu propio refugio en el bosque — sin gente alrededor y con todo listo para ti."
           ctaText="Ver disponibilidad"
           ctaHref="/disponibilidad"

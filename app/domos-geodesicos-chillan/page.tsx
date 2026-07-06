@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Domos Geodésicos en Chillán | TreePod Las Trancas',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estructura de 6m, estufa a pellet, cocina equipada y WiFi Starlink, a 15 min de Nevados de Chillán.',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. 38 m² de interior, estufa a pellet, cocina equipada y WiFi Starlink, a 12 min de Nevados de Chillán.',
     keywords: [
         'domos chillan',
         'domos en chillan',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Domos Geodésicos en Chillán | Glamping TreePod',
-        description: 'Domos geodésicos de 6m en bosque nativo, con estufa a pellet y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        description: 'Domos geodésicos de 38 m² en bosque nativo, con estufa a pellet y WiFi Starlink. A 12 min de Nevados de Chillán.',
         images: ['/images/Galeria/noche-domo-iluminado-2-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -37,21 +37,24 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
-    "name": "TreePod - Domos Geodésicos en Chillán",
-    "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 15 minutos de Nevados de Chillán.",
+    // Mismo @id que el LodgingBusiness global (JsonLdSchemas.tsx): Google
+    // fusiona ambos bloques como una sola entidad en vez de ver dos negocios.
+    "@id": "https://domostreepod.cl/#lodging",
+    "name": "TreePod Glamping",
+    "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/domos-geodesicos-chillan",
     "telephone": "+56984643307",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Ruta N-55 km 71 hacia Nevados de Chillan",
+        "streetAddress": "Ruta N-55, Km 72, hacia Nevados de Chillán",
         "addressLocality": "Valle Las Trancas",
         "addressRegion": "Ñuble",
         "addressCountry": "CL"
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": -36.8972,
-        "longitude": -71.4741
+        "latitude": -36.9116,
+        "longitude": -71.5069
     },
     "priceRange": "$$",
     "aggregateRating": {
@@ -104,7 +107,7 @@ export default function DomosGeodesicosChillanPage() {
                     </div>
 
                     <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Estructura geodésica de 6 metros de diámetro con vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera.
+                        Estructura geodésica con 38 m² de interior y vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -113,18 +116,18 @@ export default function DomosGeodesicosChillanPage() {
                             eventName="click_reservar_domos_chillan"
                             secondEventName="begin_checkout_domos_chillan"
                             secondParams={{ event: "domos_geodesicos_chillan" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-lg md:text-xl">RESERVAR UN DOMO</span>
+                            <span className="text-lg md:text-xl">Reservar un domo</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Preguntas?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Preguntas?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_domos_chillan"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Consultar por WhatsApp
                             </TrackedLink>
@@ -145,7 +148,7 @@ export default function DomosGeodesicosChillanPage() {
                         {[
                             {
                                 icon: Ruler,
-                                title: "6 metros de diámetro, vista panorámica",
+                                title: "38 m² de interior, vista panorámica",
                                 desc: "La estructura geodésica permite ventanales que cubren gran parte del domo. Desde tu cama ves el bosque nativo y la cordillera de Ñuble."
                             },
                             {
@@ -156,7 +159,7 @@ export default function DomosGeodesicosChillanPage() {
                             {
                                 icon: Thermometer,
                                 title: "Climatización inteligente con pellet",
-                                desc: "Estufa a pellet programable que mantiene 22°C toda la noche. No necesitas levantarte a alimentar fuego. El domo amanece caliente incluso cuando afuera está nevando."
+                                desc: "Estufa a pellet programable que mantiene el domo cálido toda la noche. No necesitas levantarte a alimentar el fuego: el domo amanece tibio incluso cuando afuera está nevando."
                             },
                             {
                                 icon: Waves,
@@ -165,8 +168,8 @@ export default function DomosGeodesicosChillanPage() {
                             },
                             {
                                 icon: Mountain,
-                                title: "A 15 minutos de Nevados de Chillán",
-                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 71 de la ruta N-55 hacia Nevados de Chillan."
+                                title: "A 12 minutos de Nevados de Chillán",
+                                desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
                                 icon: Wifi,
@@ -208,7 +211,7 @@ export default function DomosGeodesicosChillanPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Estructura geodésica</p>
-                                <p className="text-xs opacity-80">6 metros de diámetro</p>
+                                <p className="text-xs opacity-80">38 m² + terraza privada</p>
                             </div>
                         </div>
 
@@ -262,7 +265,7 @@ export default function DomosGeodesicosChillanPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=domos-chillan"
                             eventName="click_reservar_domos_chillan"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad de domos
                             <ArrowRight size={20} />
@@ -277,7 +280,7 @@ export default function DomosGeodesicosChillanPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Reseñas reales de huéspedes</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4,9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
@@ -301,18 +304,18 @@ export default function DomosGeodesicosChillanPage() {
                             Reserva tu domo geodésico al mejor precio
                         </h2>
                         <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Reserva directa en domostreepod.cl, sin comisiones de intermediarios. Precio más bajo garantizado y atención personalizada.
+                            Reserva directa en domostreepod.cl, sin comisiones de intermediarios. Mejor precio directo y atención personalizada por WhatsApp.
                         </p>
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=domos-chillan"
                             eventName="click_reservar_domos_chillan_final"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">VER DISPONIBILIDAD AHORA</span>
+                            <span className="text-lg md:text-xl">Ver disponibilidad ahora</span>
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Confirmación Inmediata</span>
+                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
                             <span className="flex items-center gap-2"><Check size={12} /> Registro Sernatur</span>
                         </div>
                     </div>

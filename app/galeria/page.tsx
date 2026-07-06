@@ -73,12 +73,12 @@ export default function GaleriaPage() {
                     <div className="max-w-4xl w-full">
                         <div className="inline-flex items-center gap-2 mb-4">
                             <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Galería TreePod</span>
+                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Galería TreePod</span>
                         </div>
                         <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-6">
                             La belleza de <span className="italic-display text-primary">lo auténtico</span>
                         </h2>
-                        <p className="text-text-sub text-lg md:text-xl font-bold leading-relaxed">
+                        <p className="text-text-sub text-lg md:text-xl font-medium leading-relaxed">
                             Domos, bosque y los detalles de tu estadía, en fotos reales tomadas en TreePod.
                         </p>
                     </div>
@@ -114,9 +114,9 @@ export default function GaleriaPage() {
                     <div className="mt-20 text-center">
                         <Link
                             href="/disponibilidad"
-                            className="inline-flex items-center gap-5 bg-primary hover:bg-primary-dark px-14 py-6 rounded-2xl text-white transition-all duration-300 font-black tracking-[0.2em] uppercase text-xs shadow-[0_20px_40px_-10px_rgba(0, 173, 239,0.3)] hover:-translate-y-1 active:scale-95"
+                            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark px-8 py-4 rounded-full text-white transition-all font-semibold text-base shadow-lg active:scale-95"
                         >
-                            Reservar Ahora
+                            Reservar ahora
                         </Link>
                     </div>
                 </section>
@@ -127,13 +127,13 @@ export default function GaleriaPage() {
                         <div className="lg:col-span-5 space-y-8">
                             <div className="inline-flex items-center gap-2 mb-4">
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Refugio Genuino</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Refugio genuino</span>
                             </div>
                             <h2 className="h2-display text-text-main !text-3xl md:!text-5xl lg:!text-6xl leading-tight">
-                                Espacios para <br /><span className="text-primary italic-display">Permanecer</span>
+                                Espacios para <br /><span className="text-primary italic-display">permanecer</span>
                             </h2>
-                            <p className="text-lg md:text-xl text-text-sub leading-relaxed font-bold">
-                                Nada de stock ni renders: lo que ves en estas fotos es exactamente lo que tocará tu piel cuando despiertes en el bosque.
+                            <p className="text-lg md:text-xl text-text-sub leading-relaxed font-medium">
+                                Nada de fotos de stock ni renders: lo que ves en estas fotos es exactamente lo que te espera cuando despiertes en el bosque.
                             </p>
                         </div>
                         <div className="lg:col-span-7">
@@ -142,10 +142,10 @@ export default function GaleriaPage() {
                                 <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center mb-10 mx-auto shadow-xl transform group-hover:rotate-12 transition-transform duration-500">
                                     <Sparkles className="text-primary w-10 h-10" strokeWidth={2.5} />
                                 </div>
-                                <h4 className="h3-display mb-6 text-text-main">Tu Escapada <br /> Comienza Aquí</h4>
-                                <p className="text-text-sub text-base md:text-lg mb-10 font-bold leading-relaxed max-w-md mx-auto">Elige tu fecha y reserva tu domo en el Valle Las Trancas.</p>
-                                <Link href="/disponibilidad" className="bg-primary text-white px-12 py-5 rounded-2xl font-black tracking-widest uppercase text-xs hover:bg-primary-dark transition-all inline-block shadow-2xl">
-                                    Ver Disponibilidad
+                                <h3 className="h3-display mb-6 text-text-main">Tu escapada <br /> comienza aquí</h3>
+                                <p className="text-text-sub text-base md:text-lg mb-10 font-medium leading-relaxed max-w-md mx-auto">Elige tu fecha y reserva tu domo en el Valle Las Trancas.</p>
+                                <Link href="/disponibilidad" className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-primary-dark transition-all inline-block shadow-lg active:scale-95">
+                                    Ver disponibilidad
                                 </Link>
                             </div>
                         </div>

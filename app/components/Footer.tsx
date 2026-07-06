@@ -39,10 +39,16 @@ export default function Footer() {
                     </div>
 
                     <div className="flex flex-col gap-8">
-                        <h4 className="h4-display text-white"><span className="italic-display">Navegación</span></h4>
+                        {/* p en vez de h4: son rótulos de columnas del footer, no encabezados
+                            de contenido; con h4 se producía un salto h2->h4 en todas las páginas */}
+                        <p className="h4-display text-white"><span className="italic-display">Navegación</span></p>
                         <ul className="flex flex-col gap-5 text-lg md:text-xl text-white/90 font-bold">
                             <li><Link href="/domos" className="hover:text-primary transition-colors">Nuestros Domos</Link></li>
+                            <li><Link href="/glamping-valle-las-trancas" className="hover:text-primary transition-colors">Domos en Las Trancas</Link></li>
+                            <li><Link href="/escapada-romantica-las-trancas" className="hover:text-primary transition-colors">Escapada Romántica</Link></li>
                             <li><Link href="/servicios" className="hover:text-primary transition-colors">Servicios</Link></li>
+                            <li><Link href="/paquetes" className="hover:text-primary transition-colors">Paquetes y Experiencias</Link></li>
+                            <li><Link href="/guia-huesped" className="hover:text-primary transition-colors">Guía del Huésped</Link></li>
                             <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-primary transition-colors">Ubicación & Contacto</Link></li>
@@ -51,7 +57,7 @@ export default function Footer() {
 
                     {/* Contact Info */}
                     <div className="flex flex-col gap-8">
-                        <h4 className="h4-display text-white"><span className="italic-display">Contacto</span></h4>
+                        <p className="h4-display text-white"><span className="italic-display">Contacto</span></p>
                         <ul className="flex flex-col gap-6 text-lg md:text-xl text-white/90 font-bold">
                             <li className="flex items-start gap-4">
                                 <MapPin className="text-primary w-6 h-6 shrink-0 mt-1" strokeWidth={2.5} />
