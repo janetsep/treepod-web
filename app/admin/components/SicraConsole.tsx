@@ -863,7 +863,7 @@ function Boletas() {
             </div>
 
             {expandida === b.id && (
-              <div className="border-t border-gray-200">
+              <div className="border-t border-gray-200 overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-gray-100">
@@ -1434,6 +1434,7 @@ function Inventario() {
           <h3 className="text-sm font-medium text-amber-400 mb-2 flex items-center gap-2">
             <ShoppingCart size={14} /> Lista de compra ({hnProximas} HN próximas)
           </h3>
+          <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-white">
@@ -1466,6 +1467,7 @@ function Inventario() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>
@@ -1947,6 +1949,9 @@ function ConsumoSection() {
 
 const TIPO_GASTO_OPTS = ["material", "mano_de_obra", "servicio", "herramienta", "otro"];
 const ESTADO_OPTS = ["activo", "completado", "pausado", "cancelado"];
+const ESTADO_PROY_LABELS: Record<string, string> = {
+  activo: "Activo", completado: "Completado", pausado: "Pausado", cancelado: "Cancelado",
+};
 
 function Proyectos() {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
@@ -2143,7 +2148,7 @@ function Proyectos() {
                         p.estado === "completado" ? "bg-blue-50 text-blue-600" :
                         "bg-gray-100 text-zinc-700"
                       }`}>
-                        {p.estado}
+                        {ESTADO_PROY_LABELS[p.estado] || p.estado}
                       </span>
                     </div>
                     {p.descripcion && (
@@ -2218,7 +2223,7 @@ function Proyectos() {
                             onChange={(e) => setEditProj((ep) => ep ? { ...ep, estado: e.target.value } : ep)}
                             className="w-full bg-gray-100 text-gray-900 text-sm rounded px-2 py-1.5 mt-1"
                           >
-                            {ESTADO_OPTS.map((o) => <option key={o} value={o}>{o}</option>)}
+                            {ESTADO_OPTS.map((o) => <option key={o} value={o}>{ESTADO_PROY_LABELS[o] || o}</option>)}
                           </select>
                         </div>
                       </div>
@@ -2323,6 +2328,7 @@ function Proyectos() {
                     {p.gastos.length === 0 ? (
                       <p className="text-zinc-600 text-xs">Sin gastos</p>
                     ) : (
+                      <div className="overflow-x-auto">
                       <table className="w-full text-xs">
                         <thead>
                           <tr className="text-zinc-900">
@@ -2400,6 +2406,7 @@ function Proyectos() {
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -2631,6 +2638,7 @@ function Recetas() {
                   </select>
                 </div>
 
+                <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-gray-600 text-left">
@@ -2679,6 +2687,7 @@ function Recetas() {
                     {r.items.length === 0 && <tr><td colSpan={4} className="py-2 text-gray-500">Sin ingredientes aún</td></tr>}
                   </tbody>
                 </table>
+                </div>
 
                 <div className="pt-1 border-t border-gray-100 space-y-1.5">
                   <div className="flex items-center gap-2">
@@ -2979,6 +2988,7 @@ function Tendencia() {
       </div>
 
       {/* Tabla */}
+      <div className="overflow-x-auto">
       <table className="w-full text-xs">
         <thead>
           <tr className="bg-white">
@@ -3008,6 +3018,7 @@ function Tendencia() {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -3314,6 +3325,7 @@ function Pedidos() {
                   <p className="text-sm font-semibold text-emerald-600">{fmt(subtotalPedido)}</p>
                 </div>
 
+                <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-gray-50">
@@ -3486,6 +3498,7 @@ function Pedidos() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             );
           })}

@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                 alert("Reserva cancelada correctamente");
                 fetchReservas(); // Refresh
             } else {
-                alert(`❌ ERROR AL ANULAR:\n${data.error}`);
+                alert(`No se pudo anular la reserva:\n${data.error}`);
             }
         } catch (e) {
             alert("Error de conexión al intentar anular.");
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
     async function deleteReserva(id: string, estado: string, montoPagado: number) {
         const isConfirmed = estado === 'pagado' && montoPagado > 0;
         const msg = isConfirmed
-            ? `Esta reserva tiene pago confirmado de $${montoPagado.toLocaleString()}. ¿Estás SEGURA que deseas eliminarla permanentemente? Esta acción es IRREVERSIBLE.`
+            ? `Esta reserva tiene pago confirmado de $${montoPagado.toLocaleString('es-CL')}. ¿Estás SEGURA que deseas eliminarla permanentemente? Esta acción es IRREVERSIBLE.`
             : `¿Eliminar permanentemente este registro? Esta acción es irreversible.`;
 
         if (!confirm(msg)) return;
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                 setSelectedIds(prev => prev.filter(sid => sid !== id));
                 alert("Registro eliminado permanentemente.");
             } else {
-                alert(`❌ ERROR AL ELIMINAR:\n${data.error}\n\nDetalles: ${data.details || 'N/A'}`);
+                alert(`No se pudo eliminar el registro:\n${data.error}\n\nDetalles: ${data.details || 'Sin detalles'}`);
             }
         } catch (e) {
             alert("Error de conexión al intentar eliminar.");
@@ -304,7 +304,7 @@ export default function AdminDashboard() {
                 setPagoReserva(null);
                 fetchReservas();
             } else {
-                alert(`❌ ${data.error}`);
+                alert(`No se pudo registrar el pago: ${data.error}`);
             }
         } catch {
             alert("Error de conexión al registrar el pago.");
@@ -419,13 +419,21 @@ export default function AdminDashboard() {
     const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
             case "pagado": return "bg-green-100 text-green-800";
+            case "confirmado": case "confirmada": return "bg-blue-100 text-blue-800";
             case "pendiente": return "bg-yellow-100 text-yellow-800";
             case "pendiente_pago": return "bg-yellow-100 text-yellow-800";
             case "pending_transfer_confirmation": return "bg-sky-100 text-sky-800";
             case "suspendido": return "bg-orange-100 text-orange-800";
-            case "cancelada": return "bg-red-100 text-red-800";
+            case "cancelada": case "cancelado": return "bg-red-100 text-red-800";
             default: return "bg-gray-100 text-gray-800";
         }
+    };
+
+    // Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible, sin desfases de zona horaria.
+    const formatFecha = (iso: string | null | undefined) => {
+        if (!iso) return "—";
+        const [y, m, d] = String(iso).slice(0, 10).split("-");
+        return y && m && d ? `${d}-${m}-${y}` : String(iso);
     };
 
     // Etiquetas legibles: nunca mostrar estados internos de la BD crudos al usuario.
@@ -434,10 +442,14 @@ export default function AdminDashboard() {
             case "pagado": return "Pagado";
             case "confirmado": case "confirmada": return "Confirmada";
             case "pendiente": return "Pendiente";
+            case "pendiente_pago": return "Pago pendiente";
             case "pending_transfer_confirmation": return "Esperando transferencia";
             case "suspendido": return "Suspendida";
             case "cancelada": case "cancelado": return "Cancelada";
             case "completada": case "completado": return "Completada";
+            case "bloqueado": case "bloqueada": return "Bloqueado";
+            case "expirada": case "expirado": return "Expirada";
+            case "no show": case "no-show": return "No show";
             case "checked out": return "Check-out";
             default: return status || "—";
         }
@@ -577,7 +589,7 @@ export default function AdminDashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Llegadas de hoy */}
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-green-500">
-                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">🟢 Llegan hoy ({llegadasHoy.length}) · 16:00</p>
+                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Llegan hoy ({llegadasHoy.length}) · 16:00</p>
                                 {llegadasHoy.length === 0 ? (
                                     <p className="text-xs text-gray-600 italic">Sin llegadas hoy</p>
                                 ) : llegadasHoy.map((r: any) => {
@@ -609,7 +621,7 @@ export default function AdminDashboard() {
                             </div>
                             {/* Salidas de hoy */}
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-amber-400">
-                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">🟡 Salen hoy ({salidasHoy.length}) · 12:00</p>
+                                <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Salen hoy ({salidasHoy.length}) · 12:00</p>
                                 {salidasHoy.length === 0 ? (
                                     <p className="text-xs text-gray-600 italic">Sin salidas hoy</p>
                                 ) : salidasHoy.map((r: any) => {
@@ -622,7 +634,7 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-gray-900">
                                                 <span>Aseo después de las 12:00</span>
-                                                {domosRecambio.has(r.domo_id) && <span className="text-red-600 font-black bg-red-50 px-2 py-0.5 rounded">⚡ Recambio: llega otro hoy</span>}
+                                                {domosRecambio.has(r.domo_id) && <span className="text-red-600 font-black bg-red-50 px-2 py-0.5 rounded">Recambio: llega otro hoy</span>}
                                                 {saldo > 0 && <span className="text-amber-700 font-black">Saldo pendiente ${saldo.toLocaleString('es-CL')}</span>}
                                             </div>
                                         </div>
@@ -766,7 +778,7 @@ export default function AdminDashboard() {
                                                 ? 'bg-primary/5 text-primary border-primary/20 hover:bg-primary/10'
                                                 : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
                                         >
-                                            {soloProximas ? "📅 Solo próximas" : "🗂 Viendo todas (pasadas incluidas)"}
+                                            {soloProximas ? "Solo próximas" : "Viendo todas (pasadas incluidas)"}
                                         </button>
                                     )}
                                     <button
@@ -802,7 +814,7 @@ export default function AdminDashboard() {
                                                         }}
                                                     />
                                                 </th>
-                                                <th className="px-5 py-3 font-black whitespace-nowrap">Huésped / Referencia</th>
+                                                <th className="px-5 py-3 font-black whitespace-nowrap min-w-[240px]">Huésped / Referencia</th>
                                                 <th className="px-4 py-3 font-black whitespace-nowrap">
                                                     <div className="flex items-center gap-2">
                                                         Estancia
@@ -852,9 +864,9 @@ export default function AdminDashboard() {
                                         </thead>
                                         <tbody className="divide-y divide-gray-100">
                                             {loading ? (
-                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-700 font-bold italic">Sincronizando con base de datos...</td></tr>
+                                                <tr><td colSpan={8} className="px-8 py-20 text-center text-gray-700 font-bold italic">Sincronizando con base de datos...</td></tr>
                                             ) : paginatedReservas.length === 0 ? (
-                                                <tr><td colSpan={7} className="px-8 py-20 text-center text-gray-700 font-bold italic">No se encontraron registros.</td></tr>
+                                                <tr><td colSpan={8} className="px-8 py-20 text-center text-gray-700 font-bold italic">No se encontraron registros.</td></tr>
                                             ) : paginatedReservas.map((reserva) => {
                                                 const clientName = reserva.estado === "bloqueado"
                                                     ? `Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
@@ -878,16 +890,16 @@ export default function AdminDashboard() {
                                                                 }}
                                                             />
                                                         </td>
-                                                        <td className="px-4 py-4">
+                                                        <td className="px-4 py-4 min-w-[240px] max-w-[320px]">
                                                             <div className="flex items-center gap-2 mb-0.5">
-                                                                <div className="font-extrabold text-gray-900 text-xs leading-none">{clientName}</div>
+                                                                <div className="font-extrabold text-gray-900 text-xs leading-none truncate" title={clientName.trim()}>{clientName}</div>
                                                                 <span className="bg-gray-100/80 text-gray-900 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{reserva.adultos || 2}p</span>
                                                                 {isVip && (
                                                                     <span className="bg-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-[0.1em] shadow-sm">VIP</span>
                                                                 )}
                                                             </div>
                                                             <div className="flex flex-col gap-0 mb-1.5">
-                                                                <div className="text-[10px] text-gray-700 font-medium leading-tight">{clientEmail}</div>
+                                                                <div className="text-[10px] text-gray-700 font-medium leading-tight truncate" title={clientEmail}>{clientEmail}</div>
                                                                 {(reserva.telefono || reserva.clientes?.telefono) && (
                                                                     <div className="text-[9px] text-primary font-black flex items-center gap-1 uppercase tracking-tight">
                                                                         {reserva.telefono || reserva.clientes?.telefono}
@@ -1053,6 +1065,7 @@ export default function AdminDashboard() {
                                                                         onClick={() => confirmReserva(reserva.id)}
                                                                         disabled={actionLoading === reserva.id}
                                                                         className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
+                                                                        title="Confirmar pago manual de la reserva"
                                                                     >
                                                                         {actionLoading === reserva.id ? "..." : "Confirmar"}
                                                                     </button>
@@ -1175,7 +1188,7 @@ export default function AdminDashboard() {
                                 <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
                                     <h3 className="text-xl font-display font-black text-gray-900 mb-1">Registrar pago</h3>
                                     <p className="text-sm text-gray-900 mb-5">
-                                        {`${pagoReserva.nombre || ''} ${pagoReserva.apellido || ''}`.trim()} · {pagoReserva.domos?.nombre || 'Domo'} · {pagoReserva.fecha_inicio} → {pagoReserva.fecha_fin}
+                                        {`${pagoReserva.nombre || ''} ${pagoReserva.apellido || ''}`.trim()} · {pagoReserva.domos?.nombre || 'Domo'} · {formatFecha(pagoReserva.fecha_inicio)} → {formatFecha(pagoReserva.fecha_fin)}
                                     </p>
                                     <div className="bg-gray-50 rounded-xl p-4 mb-5 grid grid-cols-3 gap-2 text-center">
                                         <div><p className="text-[9px] font-black text-gray-700 uppercase">Total</p><p className="font-bold text-sm">${(Number(pagoReserva.total) || 0).toLocaleString('es-CL')}</p></div>
@@ -1193,7 +1206,7 @@ export default function AdminDashboard() {
                                     />
                                     <label className="block text-[10px] font-black text-gray-700 uppercase tracking-widest mb-2">Método de pago</label>
                                     <div className="grid grid-cols-2 gap-2 mb-6">
-                                        {[['efectivo', '💵 Efectivo'], ['transferencia', '🏦 Transferencia'], ['webpay', '💳 Webpay/Tarjeta'], ['otro', '✳️ Otro']].map(([val, label]) => (
+                                        {[['efectivo', 'Efectivo'], ['transferencia', 'Transferencia'], ['webpay', 'Webpay/Tarjeta'], ['otro', 'Otro']].map(([val, label]) => (
                                             <button
                                                 key={val}
                                                 onClick={() => setPagoMetodo(val)}

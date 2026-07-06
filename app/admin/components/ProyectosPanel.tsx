@@ -85,9 +85,21 @@ const ESTADO_COLORS: Record<string, string> = {
   pausado: "bg-yellow-100 text-yellow-700",
   completado: "bg-gray-100 text-gray-900",
 };
+const ESTADO_LABELS: Record<string, string> = {
+  activo: "Activo",
+  pausado: "Pausado",
+  completado: "Completado",
+};
 
 function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString("es-CL");
+}
+
+// Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible.
+function fmtFecha(iso: string | null | undefined) {
+  if (!iso) return "—";
+  const [y, m, d] = String(iso).slice(0, 10).split("-");
+  return y && m && d ? `${d}-${m}-${y}` : String(iso);
 }
 
 export default function ProyectosPanel() {
@@ -182,7 +194,7 @@ export default function ProyectosPanel() {
   }
 
   async function eliminarGasto(gastoId: string, proyectoId: string) {
-    if (!confirm("Eliminar este gasto?")) return;
+    if (!confirm("¿Eliminar este gasto?")) return;
     await adminFetch("/api/admin/proyectos/gastos", {
       method: "DELETE",
       body: JSON.stringify({ id: gastoId }),
@@ -192,7 +204,7 @@ export default function ProyectosPanel() {
   }
 
   async function eliminarProyecto(proyectoId: string) {
-    if (!confirm("Eliminar este proyecto y todos sus gastos?")) return;
+    if (!confirm("¿Eliminar este proyecto y todos sus gastos?")) return;
     await adminFetch("/api/admin/proyectos", {
       method: "DELETE",
       body: JSON.stringify({ id: proyectoId }),
@@ -254,7 +266,7 @@ export default function ProyectosPanel() {
       setParsedBoleta(data);
       setParsedItems(data.items.map((it: ParsedItem) => ({ ...it, selected: true, cantidadUsar: it.cantidad })));
     } catch {
-      setParseError("Error de conexion");
+      setParseError("Error de conexión");
     } finally {
       setParsing(false);
     }
@@ -331,7 +343,7 @@ export default function ProyectosPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-display font-black text-gray-900">Proyectos de Inversion</h2>
+          <h2 className="text-2xl font-display font-black text-gray-900">Proyectos de Inversión</h2>
           <p className="text-xs text-gray-700 mt-1">Seguimiento de gastos por proyecto y concepto</p>
         </div>
         <button
@@ -403,7 +415,7 @@ export default function ProyectosPanel() {
         <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input placeholder="Nombre del proyecto *" value={newP.nombre} onChange={(e) => setNewP({ ...newP, nombre: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
-            <input placeholder="Descripcion" value={newP.descripcion} onChange={(e) => setNewP({ ...newP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
+            <input placeholder="Descripción" value={newP.descripcion} onChange={(e) => setNewP({ ...newP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
             <input type="number" placeholder="Presupuesto (CLP)" value={newP.presupuesto} onChange={(e) => setNewP({ ...newP, presupuesto: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" />
             <select value={newP.categoria} onChange={(e) => setNewP({ ...newP, categoria: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
               <option value="">Categoría…</option>
@@ -440,7 +452,7 @@ export default function ProyectosPanel() {
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="font-black text-gray-900">{p.nombre}</span>
                       {p.categoria && (() => { const c = CATEGORIAS.find((x) => x.value === p.categoria); return c ? <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${c.color}`}>{c.label}</span> : null; })()}
-                      <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${ESTADO_COLORS[p.estado]}`}>{p.estado}</span>
+                      <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${ESTADO_COLORS[p.estado]}`}>{ESTADO_LABELS[p.estado] || p.estado}</span>
                     </div>
                     {p.descripcion && <p className="text-xs text-gray-700 truncate">{p.descripcion}</p>}
                   </div>
@@ -482,7 +494,7 @@ export default function ProyectosPanel() {
                   <div className="px-6 pb-4 border-t border-gray-100 bg-blue-50/50" onClick={(e) => e.stopPropagation()}>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3 pt-4">
                       <input placeholder="Nombre *" value={editP.nombre} onChange={(e) => setEditP({ ...editP, nombre: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
-                      <input placeholder="Descripcion" value={editP.descripcion} onChange={(e) => setEditP({ ...editP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
+                      <input placeholder="Descripción" value={editP.descripcion} onChange={(e) => setEditP({ ...editP, descripcion: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
                       <input type="number" placeholder="Presupuesto (CLP)" value={editP.presupuesto} onChange={(e) => setEditP({ ...editP, presupuesto: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white" />
                       <select value={editP.categoria} onChange={(e) => setEditP({ ...editP, categoria: e.target.value })} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white">
                         <option value="">Categoría…</option>
@@ -536,7 +548,7 @@ export default function ProyectosPanel() {
                       {(["activo", "pausado", "completado"] as const).map((e) => (
                         <button key={e} onClick={() => cambiarEstado(p.id, e)}
                           className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${p.estado === e ? ESTADO_COLORS[e] + " ring-2 ring-offset-1 ring-gray-300" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
-                          {e}
+                          {ESTADO_LABELS[e]}
                         </button>
                       ))}
                     </div>
@@ -571,7 +583,7 @@ export default function ProyectosPanel() {
                                 value={boletaText}
                                 onChange={(e) => setBoletaText(e.target.value)}
                                 rows={8}
-                                placeholder="Pega aqui el texto de la boleta de Jumbo, Lider, ferreteria, etc..."
+                                placeholder="Pega aquí el texto de la boleta de Jumbo, Líder, ferretería, etc."
                                 className="w-full border border-amber-200 rounded-lg px-3 py-2 text-xs font-mono bg-white focus:ring-2 focus:ring-amber-300 outline-none resize-y"
                               />
                               {parseError && <p className="text-xs text-red-600 font-bold">{parseError}</p>}
@@ -684,7 +696,7 @@ export default function ProyectosPanel() {
                             <input placeholder="Proveedor" value={newG.proveedor} onChange={(e) => setNewG({ ...newG, proveedor: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <input placeholder="N documento" value={newG.numero_documento} onChange={(e) => setNewG({ ...newG, numero_documento: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
+                            <input placeholder="N° documento" value={newG.numero_documento} onChange={(e) => setNewG({ ...newG, numero_documento: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
                             <select value={newG.tipo} onChange={(e) => setNewG({ ...newG, tipo: e.target.value })} className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20">
                               {TIPOS_GASTO.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                             </select>
@@ -706,14 +718,15 @@ export default function ProyectosPanel() {
                       ) : gastos.length === 0 ? (
                         <p className="text-gray-600 text-sm italic py-4">Sin gastos registrados. Usa "Cargar boleta" o "Gasto manual" para agregar.</p>
                       ) : (
+                        <div className="overflow-x-auto">
                         <table className="w-full text-left">
                           <thead className="text-[9px] font-black text-gray-700 uppercase tracking-widest">
                             <tr>
-                              <th className="py-2 pr-3">Fecha</th>
-                              <th className="py-2 pr-3">Concepto</th>
+                              <th className="py-2 pr-3 whitespace-nowrap">Fecha</th>
+                              <th className="py-2 pr-3 min-w-[160px]">Concepto</th>
                               <th className="py-2 pr-3">Tipo</th>
                               <th className="py-2 pr-3">Proveedor</th>
-                              <th className="py-2 pr-3">N Doc</th>
+                              <th className="py-2 pr-3 whitespace-nowrap">N° Doc</th>
                               <th className="py-2 pr-3 text-right">Monto</th>
                               <th className="py-2 w-8"></th>
                             </tr>
@@ -721,7 +734,7 @@ export default function ProyectosPanel() {
                           <tbody className="divide-y divide-gray-50">
                             {gastos.map((g) => (
                               <tr key={g.id} className="hover:bg-gray-50/50 group">
-                                <td className="py-2.5 pr-3 text-xs text-gray-600">{g.fecha}</td>
+                                <td className="py-2.5 pr-3 text-xs text-gray-600 whitespace-nowrap">{fmtFecha(g.fecha)}</td>
                                 <td className="py-2.5 pr-3 text-xs font-bold text-gray-900">
                                   {g.concepto}
                                   {g.nota && <span className="text-[10px] text-gray-700 ml-2">({g.nota})</span>}
@@ -739,6 +752,7 @@ export default function ProyectosPanel() {
                                 <td className="py-2.5 pr-3 text-xs font-black text-gray-900 text-right">{fmt(g.monto)}</td>
                                 <td className="py-2.5">
                                   <button onClick={() => eliminarGasto(g.id, p.id)}
+                                    title="Eliminar gasto"
                                     className="opacity-0 group-hover:opacity-100 p-1 text-red-400 hover:text-red-600 transition-all">
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
@@ -754,6 +768,7 @@ export default function ProyectosPanel() {
                             </tr>
                           </tfoot>
                         </table>
+                        </div>
                       )}
                     </div>
                   </div>

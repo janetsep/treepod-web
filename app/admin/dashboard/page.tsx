@@ -203,7 +203,7 @@ export default function DashboardAdmin() {
                             {docs.length === 0 ? (
                                 <p className="px-5 py-6 text-sm text-gray-500 font-medium">{esPend ? 'No hay documentos pendientes. Todo al día.' : 'Aún no hay documentos cargados este año.'}</p>
                             ) : (
-                                <div className="max-h-[420px] overflow-y-auto overscroll-contain">
+                                <div className="max-h-[420px] overflow-auto overscroll-contain">
                                     <p className="px-5 pt-2 text-[10px] text-gray-400 font-bold">{docs.length} documento{docs.length !== 1 ? 's' : ''} — desliza para ver todos</p>
                                     <table className="w-full text-sm">
                                         <thead className="sticky top-0 bg-white border-b border-gray-100 text-[10px] uppercase tracking-widest text-gray-500">

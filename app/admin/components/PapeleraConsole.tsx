@@ -8,6 +8,13 @@ interface Props {
     adminEmail: string | null;
 }
 
+// Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible.
+function fmtFecha(iso: string | null | undefined) {
+    if (!iso) return "—";
+    const [y, m, d] = String(iso).slice(0, 10).split("-");
+    return y && m && d ? `${d}-${m}-${y}` : String(iso);
+}
+
 export default function PapeleraConsole({ adminEmail }: Props) {
     const [reservas, setReservas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -107,10 +114,11 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                         <AlertTriangle className="w-4 h-4" />
                         Las reservas en papelera se pueden restaurar. La eliminación permanente es irreversible.
                     </div>
+                    <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-gray-100">
-                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Huésped</th>
+                                <th className="px-6 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700 min-w-[180px]">Huésped</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fechas</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Domo</th>
                                 <th className="px-4 py-4 text-left font-black text-xs uppercase tracking-widest text-gray-700">Fuente</th>
@@ -124,8 +132,8 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                                     <td className="px-6 py-3 font-bold text-gray-800">
                                         {r.nombre} {r.apellido}
                                     </td>
-                                    <td className="px-4 py-3 text-gray-600">
-                                        {r.fecha_inicio} → {r.fecha_fin}
+                                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                                        {fmtFecha(r.fecha_inicio)} → {fmtFecha(r.fecha_fin)}
                                     </td>
                                     <td className="px-4 py-3 text-gray-600">
                                         {r.domos?.nombre || "—"}
@@ -160,6 +168,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             )}
         </div>

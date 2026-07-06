@@ -116,7 +116,7 @@ export default function ClientesConsole() {
                                             </div>
                                             <div>
                                                 <div className="font-extrabold text-gray-900 text-sm">{c.nombre} {c.apellido}</div>
-                                                <div className="text-[10px] text-gray-700 font-medium">Desde {new Date(c.created_at).toLocaleDateString()}</div>
+                                                <div className="text-[10px] text-gray-700 font-medium">Desde {new Date(c.created_at).toLocaleDateString('es-CL')}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -151,7 +151,7 @@ export default function ClientesConsole() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-5 text-right font-black text-primary text-base">
-                                        ${c.stats.total.toLocaleString()}
+                                        ${c.stats.total.toLocaleString('es-CL')}
                                     </td>
                                     <td className="px-8 py-5 text-right">
                                         <div className="flex items-center justify-end gap-2">

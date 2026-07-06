@@ -20,6 +20,13 @@ function getPrioColor(val: number) {
     return "bg-gray-100 text-gray-900";
 }
 
+// Fecha ISO (aaaa-mm-dd) → dd-mm-aaaa legible, sin desfases de zona horaria.
+function fmtFecha(iso: string | null | undefined) {
+    if (!iso) return "—";
+    const [y, m, d] = String(iso).slice(0, 10).split("-");
+    return y && m && d ? `${d}-${m}-${y}` : String(iso);
+}
+
 interface Tarifa {
     id: string;
     temporada_id: string;
@@ -234,16 +241,15 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     <td className="px-8 py-5">
                                         <div className="font-black text-gray-900 group-hover:text-primary transition-all">{temp.nombre}</div>
                                         <div className="text-[10px] text-gray-700 font-bold mt-1 flex items-center gap-2">
-                                            {new Date(temp.fecha_inicio).toLocaleDateString()} <ArrowRight size={8} /> {new Date(temp.fecha_fin).toLocaleDateString()}
+                                            {fmtFecha(temp.fecha_inicio)} <ArrowRight size={8} /> {fmtFecha(temp.fecha_fin)}
                                         </div>
                                     </td>
                                     <td className="px-8 py-5 text-[10px] font-bold">
                                         {(() => {
-                                            const today = new Date();
-                                            const inicio = new Date(temp.fecha_inicio);
-                                            const fin = new Date(temp.fecha_fin);
-                                            if (today < inicio) return <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full">Próxima</span>;
-                                            if (today > fin) return <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">Vencida</span>;
+                                            // Comparación por texto ISO (aaaa-mm-dd): evita el desfase de un día por zona horaria.
+                                            const hoy = new Date().toISOString().split("T")[0];
+                                            if (hoy < temp.fecha_inicio) return <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full">Próxima</span>;
+                                            if (hoy > temp.fecha_fin) return <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">Vencida</span>;
                                             return <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>;
                                         })()}
                                     </td>
@@ -251,6 +257,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                         {!isViewer && isAdmin && (
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); handleDeleteTemporada(temp.id); }}
+                                                title="Eliminar temporada y sus tarifas"
                                                 className="p-3 text-red-300 hover:text-red-500 hover:bg-white rounded-xl transition-all"
                                             >
                                                 <Trash2 size={16} />
@@ -395,7 +402,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-2xl font-black text-gray-900">{tarifa.adultos}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Ad.</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Adultos</span>
                                                 </div>
                                             </div>
                                             <span className="text-[8px] font-mono text-gray-600">#{tarifa.id.slice(-6)}</span>

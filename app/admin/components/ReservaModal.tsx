@@ -817,17 +817,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                                             {esCortesia ? (
                                                                 <>
-                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString()}</span>
+                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString('es-CL')}</span>
                                                                     <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md">CORTESÍA</span>
                                                                 </>
                                                             ) : (
                                                                 <>
                                                                     <span className={`text-[10px] font-black ${selected ? "text-primary" : "text-gray-700"}`}>
-                                                                        ${precioEfectivo.toLocaleString()} × {etiqueta}
+                                                                        ${precioEfectivo.toLocaleString('es-CL')} × {etiqueta}
                                                                     </span>
                                                                     {selected && cantidad > 1 && (
                                                                         <span className="text-[10px] font-black text-green-700 bg-green-50 px-1.5 py-0.5 rounded-md">
-                                                                            = ${subtotal.toLocaleString()}
+                                                                            = ${subtotal.toLocaleString('es-CL')}
                                                                         </span>
                                                                     )}
                                                                     {selected && preciosPorServicio[servicio.id] !== undefined && preciosPorServicio[servicio.id] !== servicio.precio && (
@@ -1112,7 +1112,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     }}
                                     className="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg shadow-green-600/20 transition-all flex items-center justify-center gap-2"
                                 >
-                                    📅 Descargar para Calendario
+                                    Descargar para Calendario
                                 </button>
                                 <button
                                     type="button"
