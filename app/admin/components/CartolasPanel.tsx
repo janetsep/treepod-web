@@ -305,6 +305,24 @@ export default function CartolasPanel() {
     cargar();
   }
 
+  // Deshace la última importación completa (todos los movimientos de esa carga y los
+  // gastos de proyecto que haya creado). Presionar de nuevo deshace la carga anterior.
+  async function deshacerUltimaImportacion() {
+    if (!confirm("¿Deshacer la ÚLTIMA importación completa? Se eliminarán todos los movimientos de esa carga (y los gastos de proyecto que haya creado). Las cargas anteriores no se tocan.")) return;
+    const res = await adminFetch("/api/admin/cartolas", {
+      method: "DELETE",
+      body: JSON.stringify({ accion: "deshacer_ultima" }),
+    });
+    const d = await res.json();
+    if (res.ok) {
+      setMsg(`✓ Importación deshecha: ${d.eliminados} movimiento${d.eliminados !== 1 ? "s" : ""} eliminado${d.eliminados !== 1 ? "s" : ""}${d.banco ? ` (${d.banco})` : ""}${d.gastosEliminados ? ` · ${d.gastosEliminados} gasto${d.gastosEliminados !== 1 ? "s" : ""} de proyecto revertido${d.gastosEliminados !== 1 ? "s" : ""}` : ""}.`);
+      setSugerencias({});
+      cargar();
+    } else {
+      setMsg(d.error || "No se pudo deshacer.");
+    }
+  }
+
   // Los "tocados" en esta sesión se mantienen visibles aunque el filtro los ocultaría,
   // para poder terminar de conciliarlos sin cambiar de pestaña.
   const visibles = filtro === "todos" ? movimientos : movimientos.filter((m) => m.categoria === filtro || tocados.has(m.id));
@@ -336,6 +354,15 @@ export default function CartolasPanel() {
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> {fileName}
               <button onClick={() => { setRows([]); setFileName(""); }} title="Quitar archivo" aria-label="Quitar archivo" className="text-gray-400 hover:text-gray-600"><X className="w-3.5 h-3.5" /></button>
             </span>
+          )}
+          {movimientos.length > 0 && (
+            <button
+              onClick={deshacerUltimaImportacion}
+              title="Elimina todos los movimientos de la última carga (y los gastos que creó). No toca cargas anteriores."
+              className="ml-auto flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 border border-red-200 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-all"
+            >
+              <Trash2 className="w-4 h-4" /> Deshacer última importación
+            </button>
           )}
         </div>
 

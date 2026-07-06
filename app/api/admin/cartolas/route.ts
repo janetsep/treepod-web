@@ -339,12 +339,48 @@ export async function PATCH(request: Request) {
   return NextResponse.json({ ok: true, propagados });
 }
 
-// ─── DELETE: borrar un movimiento (y su gasto enlazado) ─────────────────────────
+// ─── DELETE: borrar un movimiento, o deshacer la última importación completa ─────
 export async function DELETE(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-  const { id } = await request.json();
+  const { id, accion } = await request.json();
+
+  // Deshacer la ÚLTIMA importación completa. Todas las filas de un mismo import
+  // comparten exactamente el mismo created_at (now() es por transacción en Postgres),
+  // así que el último lote = filas con created_at máximo. Se borran también los
+  // gastos de proyecto que ese lote haya creado. Se puede presionar varias veces
+  // para deshacer cargas anteriores, una por una.
+  if (accion === "deshacer_ultima") {
+    const { data: ult } = await supabaseAdmin
+      .from("sicra_cartola_movimientos")
+      .select("created_at")
+      .order("created_at", { ascending: false })
+      .limit(1);
+    const maxTs = ult?.[0]?.created_at;
+    if (!maxTs) return NextResponse.json({ error: "No hay importaciones que deshacer" }, { status: 400 });
+
+    const { data: lote } = await supabaseAdmin
+      .from("sicra_cartola_movimientos")
+      .select("id, gasto_id, banco")
+      .eq("created_at", maxTs);
+
+    const gastoIds = (lote || []).map((m) => m.gasto_id).filter(Boolean);
+    if (gastoIds.length) {
+      await supabaseAdmin.from("sicra_proyecto_gastos").delete().in("id", gastoIds);
+    }
+    const { error } = await supabaseAdmin
+      .from("sicra_cartola_movimientos").delete().eq("created_at", maxTs);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+    return NextResponse.json({
+      ok: true,
+      eliminados: lote?.length || 0,
+      banco: lote?.[0]?.banco || null,
+      gastosEliminados: gastoIds.length,
+    });
+  }
+
   if (!id) return NextResponse.json({ error: "id requerido" }, { status: 400 });
 
   const { data: mov } = await supabaseAdmin
