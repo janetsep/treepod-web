@@ -17,6 +17,7 @@ const articleContent: Record<string, any> = {
     'que-hacer-valle-las-trancas-por-temporada': {
         title: 'Qué Hacer en Valle Las Trancas por Temporada',
         excerpt: 'Guía general de actividades en Valle Las Trancas según la época del año.',
+        metaDescription: 'Qué hacer en Valle Las Trancas en cada temporada: ski en Nevados de Chillán, termas, trekking y colores de otoño. Planifica tu visita y reserva tu domo.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         content: `
 Valle Las Trancas, en plena cordillera de la Región de Ñuble, ofrece experiencias muy distintas según la temporada. Esta guía te ayuda a elegir cuándo venir según lo que buscas vivir.
@@ -75,7 +76,7 @@ Las noches frescas son perfectas para los fogones y los libros junto a la estufa
 
 ---
 
-¿Listo para venir? Reserva tu domo en TreePod: pagas el 50% de abono y el saldo en el check-in.
+¿Listo para venir? Conoce nuestros [domos en Las Trancas](/glamping-valle-las-trancas) y reserva directo: pagas el 50% de abono y el saldo en el check-in.
 `,
         category: 'Guías',
         readTime: '4 min',
@@ -84,6 +85,7 @@ Las noches frescas son perfectas para los fogones y los libros junto a la estufa
     'como-llegar-valle-las-trancas-desde-santiago': {
         title: 'Cómo Llegar a Valle Las Trancas desde Santiago',
         excerpt: 'Las opciones más comunes para llegar a Valle Las Trancas desde Santiago y otras ciudades.',
+        metaDescription: 'Cómo llegar a Valle Las Trancas desde Santiago: en auto, bus o avión, con tiempos, rutas y consejos. Planifica tu viaje y reserva tu domo en TreePod.',
         image: '/images/Galeria/Las Trancas Bosque Nativo 2.jpeg',
         content: `
 Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
@@ -127,7 +129,7 @@ Hay servicios de arriendo de auto en el aeropuerto de Concepción.
 
 ## Una vez en TreePod
 
-Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez confirmes tu reserva. Tienes acceso a estacionamiento privado dentro del recinto.
+Te enviaremos las **instrucciones detalladas de cómo llegar al domo** una vez confirmes tu reserva. Tienes acceso a estacionamiento privado dentro del recinto. Si aún no eliges dónde alojar, mira nuestros [domos en Las Trancas](/glamping-valle-las-trancas).
 
 ---
 
@@ -160,9 +162,16 @@ export async function generateMetadata({ params }: Props) {
     if (!article) return {};
     return {
         title: `${article.title} | Blog TreePod`,
-        description: article.excerpt,
+        description: article.metaDescription ?? article.excerpt,
         alternates: {
             canonical: `/blog/${slug}`,
+        },
+        openGraph: {
+            title: article.title,
+            description: article.metaDescription ?? article.excerpt,
+            images: [article.image],
+            type: 'article',
+            locale: 'es_CL',
         },
     };
 }

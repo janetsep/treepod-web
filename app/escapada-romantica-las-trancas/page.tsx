@@ -6,8 +6,8 @@ import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
-    title: 'Escapada Romántica en Las Trancas | TreePod',
-    description: 'Domo privado en el bosque para dos: estufa a pellet, cielos estrellados y total privacidad en Valle Las Trancas, Chillán. Reserva directo.',
+    title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
+    description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado. Reserva directo, sin comisiones.',
     keywords: [
         'escapada romantica las trancas',
         'escapada romantica chile',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
         canonical: '/escapada-romantica-las-trancas',
     },
     openGraph: {
-        title: 'Escapada Romántica en Las Trancas | Domo Privado — TreePod',
-        description: 'Domo privado en el bosque para dos. Estufa a pellet, cielos estrellados y privacidad total en Valle Las Trancas.',
+        title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
+        description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado.',
         images: ['/images/Galeria/domo-iluminado-noche.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -69,7 +69,7 @@ export default function EscapadaRomanticaPage() {
 
                     <div className="mb-8 animate-fade-in-up delay-150">
                         <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
-                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
+                            Estufa a pellet · cocina equipada · WiFi Starlink · tinaja de ciprés en temporada
                         </p>
                     </div>
 

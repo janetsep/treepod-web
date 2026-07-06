@@ -43,6 +43,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Glamping en Valle Las Trancas | Domos TreePod',
     description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán.',
+    url: 'https://domostreepod.cl',
+    siteName: 'TreePod Glamping',
     images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
     locale: 'es_CL',
     type: 'website',

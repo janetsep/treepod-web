@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Domos en Las Trancas | Glamping en Bosque Nativo — TreePod',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, cocina equipada, WiFi Starlink y bosque nativo. A 15 min de Nevados de Chillán. Reserva directo.',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, WiFi Starlink y bosque nativo, a 15 min de Nevados de Chillán. Reserva directo.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',

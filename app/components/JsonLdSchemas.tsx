@@ -24,7 +24,7 @@ const LODGING_SCHEMA = {
   "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "59", "bestRating": "5" },
   "amenityFeature": [
     { "@type": "LocationFeatureSpecification", "name": "WiFi Starlink", "value": true },
-    { "@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Tinaja de ciprés privada (servicio de temporada)", "value": true },
     { "@type": "LocationFeatureSpecification", "name": "Estufa a pellet automática", "value": true },
     { "@type": "LocationFeatureSpecification", "name": "Cafetera Nespresso", "value": true },
     { "@type": "LocationFeatureSpecification", "name": "Cocina equipada", "value": true },

@@ -42,6 +42,8 @@ export default function Footer() {
                         <h4 className="h4-display text-white"><span className="italic-display">Navegación</span></h4>
                         <ul className="flex flex-col gap-5 text-lg md:text-xl text-white/90 font-bold">
                             <li><Link href="/domos" className="hover:text-primary transition-colors">Nuestros Domos</Link></li>
+                            <li><Link href="/glamping-valle-las-trancas" className="hover:text-primary transition-colors">Domos en Las Trancas</Link></li>
+                            <li><Link href="/escapada-romantica-las-trancas" className="hover:text-primary transition-colors">Escapada Romántica</Link></li>
                             <li><Link href="/servicios" className="hover:text-primary transition-colors">Servicios</Link></li>
                             <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
