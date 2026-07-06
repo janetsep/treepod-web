@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { getStoredUTMs, getStoredLandingPage } from "./UTMCapture";
+import { btnPrimary } from "./deco/cta";
+
+/* Inputs de ficha: rectangulares, foco cyan sin anillos (lenguaje "KM 72") */
+const inputFicha =
+    "w-full bg-white border border-[#1E1B16]/20 rounded-[2px] px-4 py-3 outline-none focus:border-[#00ADEF] focus:ring-0 transition-colors text-[15px] text-[#1E1B16] placeholder:text-[#5B5348]/50";
 
 interface GuestData {
     nombre: string;
@@ -72,44 +77,44 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Nombre</label>
+                    <label className="dato text-[#5B5348] block">Nombre</label>
                     <input
                         type="text"
                         required
                         value={formData.nombre}
                         onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className={inputFicha}
                         placeholder="Juan"
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Apellido</label>
+                    <label className="dato text-[#5B5348] block">Apellido</label>
                     <input
                         type="text"
                         required
                         value={formData.apellido}
                         onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
-                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className={inputFicha}
                         placeholder="Pérez"
                     />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-sub">Email</label>
+                    <label className="dato text-[#5B5348] block">Email</label>
                     <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-background-light border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-gold transition-colors"
+                        className={inputFicha}
                         placeholder="juan@ejemplo.com"
                     />
                 </div>
             </div>
 
             {error && (
-                <div className="text-red-500 text-sm font-bold bg-red-50 p-3 rounded-lg">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] text-sm font-medium">
                     {error}
                 </div>
             )}
@@ -117,7 +122,7 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-lg transition-all disabled:opacity-50"
+                className={`${btnPrimary} w-full disabled:opacity-50 disabled:cursor-not-allowed`}
             >
                 {loading ? "Guardando..." : "Guardar y continuar al pago"}
             </button>

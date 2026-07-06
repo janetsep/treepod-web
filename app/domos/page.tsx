@@ -2,15 +2,43 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getDomoBasePrice, getDomoPriceForNights } from "@/lib/pricing";
+import { getDomoPriceForNights } from "@/lib/pricing";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Ruler, Users, Wifi, ParkingCircle, Waves, Grid3X3, ArrowRight, Flame } from "lucide-react";
 import CinematicSection from "../components/CinematicSection";
+import SectionFolio from "../components/SectionFolio";
+import TriBullet from "../components/deco/TriBullet";
+import GeoDivider from "../components/deco/GeoDivider";
 
+// Ficha técnica como índice de revista: numeral, título y dato — sin iconos en cajitas.
+const fichaTecnica = [
+    {
+        titulo: "Tu Espacio",
+        detalle: "38 m² de interior + 8 m² de terraza privada.",
+    },
+    {
+        titulo: "Capacidad",
+        detalle: "Hasta 4 adultos cómodamente.",
+    },
+    {
+        titulo: "Internet (Starlink)",
+        detalle: "Alta velocidad. Perfecto si necesitas teletrabajar o ver una película sin cortes.",
+    },
+    {
+        titulo: "Seguridad y Acceso",
+        detalle: "Estacionamiento privado y acceso seguro por pasarelas de madera.",
+    },
+    {
+        titulo: "Áreas Comunes",
+        detalle: "Quincho listo para tus asados y un Invernadero Nativo para explorar.",
+    },
+    {
+        titulo: "Calor 24/7",
+        detalle: "Estufa a pellet automática: cero humo, cero frío. Tu domo siempre cálido aunque afuera nieve.",
+    },
+];
 
 export default function DomosPage() {
     const [price1Night, setPrice1Night] = useState<string | null>(null);
-    const [price2NightsPerNight, setPrice2NightsPerNight] = useState<string | null>(null);
     useEffect(() => {
         // Disparar evento view_item_list a GA4
         if (typeof window !== 'undefined') {
@@ -23,24 +51,18 @@ export default function DomosPage() {
                     item_name: 'Domo TreePod'
                 }]
             });
-            console.log('✅ Evento view_item_list enviado a GA4');
         }
 
         // Cargar precios
         async function loadPrices() {
             const rawPrice1Night = await getDomoPriceForNights(1);
-            const rawPrice2Nights = await getDomoPriceForNights(2);
-
             setPrice1Night(rawPrice1Night ? new Intl.NumberFormat('es-CL').format(rawPrice1Night) : null);
-            setPrice2NightsPerNight(rawPrice2Nights ? new Intl.NumberFormat('es-CL').format(Math.round(rawPrice2Nights / 2)) : null);
         }
         loadPrices();
-
-
     }, []);
 
     return (
-        <div className="bg-white font-sans text-text-main min-h-screen transition-colors duration-500">
+        <div className="bg-white font-sans text-[#1E1B16] min-h-screen">
 
             <CinematicSection
                 image="/images/Galeria/lastrancas-exterior-domo-8-2.jpg"
@@ -52,230 +74,211 @@ export default function DomosPage() {
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
+                photoCaption="Exterior del domo, Valle Las Trancas"
             />
 
-            <main className="container mx-auto px-4 md:px-12 lg:px-24 py-16 md:py-24">
+            <GeoDivider left="14%" />
 
-                {/* SECTION: Concept & Architecture with Background */}
-                {/* SECTION: Concept & Architecture - Centered Intro to match Home aesthetic */}
-                <div className="flex flex-col items-center text-center mb-16 md:mb-24 px-4 md:px-10">
-                    <div className="max-w-4xl w-full">
-                        <div className="inline-flex items-center gap-2 mb-4">
-                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">La idea detrás</span>
-                        </div>
-                        <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
-                            Bosque nativo afuera, <br className="hidden md:block" />
-                            <span className="text-primary italic-display font-light">comodidad real adentro</span>
+            <main className="mx-auto max-w-[1280px] px-5 md:px-10 py-16 md:py-24">
+
+                {/* Artículo 01 — La idea detrás: titular a la izquierda + croquis como figura */}
+                <SectionFolio num="N° 01" label="La idea detrás" />
+                <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12 items-start mb-24 md:mb-32">
+                    <div className="col-span-12 lg:col-span-7">
+                        <h2 className="display-lg text-[#1E1B16] mb-8">
+                            Bosque nativo afuera,{" "}
+                            <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                comodidad real adentro
+                            </span>
                         </h2>
-                        <p className="text-lg md:text-xl leading-relaxed text-text-main font-medium">
-                            Diseñamos este domo para que estés inmerso en el bosque nativo, durmiendo en una buena cama y con todas las comodidades de la ciudad. <br className="hidden md:block" />
-                            <span className="text-primary italic-display">Cuidamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
+                        <p className="lead text-[#5B5348] max-w-xl">
+                            Diseñamos este domo para que estés inmerso en el bosque nativo, durmiendo en una buena cama y con todas las comodidades de la ciudad.{" "}
+                            <span className="font-display italic text-[#1E1B16]">Cuidamos el entorno para que tú solo te preocupes de disfrutarlo.</span>
                         </p>
                     </div>
-                </div>
 
-                {/* Architecture Sketch - Balanced in centered layout */}
-                <div className="relative h-[300px] md:h-[500px] w-full max-w-5xl mx-auto mb-32 bg-surface rounded-[3rem] p-4 md:p-8 shadow-2xl border border-black/5 flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-white opacity-40"></div>
-
-                    {/* Sketch (Always Visible) */}
-                    <Image
-                        src="/images/concept/concept-bg-real.png"
-                        alt="Croquis Arquitectónico Domo"
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-contain mix-blend-multiply opacity-100 p-8 z-10"
-                    />
-                </div>
-
-
-                {/* 3. Zig-Zag Details (The Experience) */}
-                <div className="space-y-24 md:space-y-32">
-
-
-                    {/* Block A: Dormitorio / Descanso */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-1 grid grid-cols-2 grid-rows-2 gap-2 h-[500px]">
-                            <div className="col-span-2 row-span-1 relative group overflow-hidden">
+                    {/* Croquis como figura de imprenta */}
+                    <figure className="col-span-12 lg:col-span-4 lg:col-start-9">
+                        <div className="relative aspect-[4/3] bg-white border border-[#1E1B16]/15 rounded-[2px] p-3">
+                            <div className="relative w-full h-full">
                                 <Image
-                                    src="/images/interiors/interior-domo-acogedor-78-2.jpg"
-                                    alt="Refugio TreePod con cama de alta densidad y vistas al bosque"
+                                    src="/images/concept/concept-bg-real.png"
+                                    alt="Croquis Arquitectónico Domo"
                                     fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
-                                />
-                            </div>
-                            <div className="col-span-1 row-span-1 relative group overflow-hidden">
-                                <Image
-                                    src="/images/interiors/interior-domo-acogedor-21-4.jpg"
-                                    alt="Detalle interior de descanso"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
-                                />
-                            </div>
-                            {/* Sub Image 2: Table Detail */}
-                            <div className="col-span-1 row-span-1 relative group overflow-hidden">
-                                <Image
-                                    src="/images/interiors/interior-domo-acogedor-89-2.jpg"
-                                    alt="Interior acogedor del domo TreePod"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
+                                    sizes="(max-width: 1024px) 100vw, 33vw"
+                                    className="object-contain mix-blend-multiply"
                                 />
                             </div>
                         </div>
-                        <div className="space-y-8 order-2 md:order-2">
-                            <div className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Afuera nevando, tú en polera</span>
+                        <figcaption className="mt-2 flex items-center gap-2">
+                            <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                            <span className="caption-editorial">Fig. 01 — Croquis del domo geodésico</span>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                {/* Artículo 02 — spreads asimétricos foto + texto */}
+                <SectionFolio num="N° 02" label="Dentro del domo" />
+                <div className="space-y-24 md:space-y-32">
+
+                    {/* Block A: Dormitorio / Descanso */}
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-center">
+                        <div className="col-span-12 md:col-span-7">
+                            <div className="grid grid-cols-2 grid-rows-2 gap-2 h-[420px] md:h-[500px]">
+                                <div className="col-span-2 row-span-1 relative group overflow-hidden rounded-[2px]">
+                                    <Image
+                                        src="/images/interiors/interior-domo-acogedor-78-2.jpg"
+                                        alt="Refugio TreePod con cama de alta densidad y vistas al bosque"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                </div>
+                                <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-[2px]">
+                                    <Image
+                                        src="/images/interiors/interior-domo-acogedor-21-4.jpg"
+                                        alt="Detalle interior de descanso"
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 25vw"
+                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                </div>
+                                <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-[2px]">
+                                    <Image
+                                        src="/images/interiors/interior-domo-acogedor-89-2.jpg"
+                                        alt="Interior acogedor del domo TreePod"
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 25vw"
+                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                </div>
                             </div>
-                            <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Cama con vista <span className="italic-display">panorámica</span></h3>
-                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
+                            <p className="mt-2 flex items-center gap-2">
+                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                <span className="caption-editorial">Interior del domo, cama con vista al bosque</span>
+                            </p>
+                        </div>
+                        <div className="col-span-12 md:col-span-5 space-y-6">
+                            <p className="flex items-baseline gap-3">
+                                <TriBullet />
+                                <span className="font-display italic text-lg text-[#1E1B16]">Afuera nevando, tú en polera</span>
+                            </p>
+                            <h3 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">
+                                Cama con vista <span className="italic">panorámica</span>
+                            </h3>
+                            <p className="text-[#5B5348] leading-relaxed text-base md:text-lg">
                                 Despierta con energía viendo y escuchando el bosque directamente desde tu cama.
                             </p>
-                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
-                                <strong>Calor las 24 horas:</strong> Tu domo cuenta con estufa a pellet automática y programable. Afuera puede estar bajo cero, pero adentro mantienes una temperatura agradable de día y de noche.
+                            <p className="text-[#5B5348] leading-relaxed text-base md:text-lg">
+                                <strong className="text-[#1E1B16]">Calor las 24 horas:</strong> Tu domo cuenta con estufa a pellet automática y programable. Afuera puede estar bajo cero, pero adentro mantienes una temperatura agradable de día y de noche.
                             </p>
                         </div>
                     </div>
 
                     {/* Block B: Baño & Cocina */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-                        <div className="space-y-8 order-2 md:order-1">
-                            <div className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Todo a mano, sin salir del domo</span>
-                            </div>
-                            <h3 className="h2-display text-text-main leading-tight !text-3xl md:!text-5xl">Tienes <span className="italic-display">todo lo que necesitas</span></h3>
-                            <p className="text-text-sub leading-relaxed font-medium text-lg md:text-xl">
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-center">
+                        <div className="col-span-12 md:col-span-5 space-y-6 order-2 md:order-1">
+                            <p className="flex items-baseline gap-3">
+                                <TriBullet />
+                                <span className="font-display italic text-lg text-[#1E1B16]">Todo a mano, sin salir del domo</span>
+                            </p>
+                            <h3 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">
+                                Tienes <span className="italic">todo lo que necesitas</span>
+                            </h3>
+                            <p className="text-[#5B5348] leading-relaxed text-base md:text-lg">
                                 Si quieres, no sales en todo el fin de semana: tienes lo necesario para pasarla bien sin depender de nadie.
                             </p>
-                            <ul className="space-y-4 pt-4">
-                                <li className="flex items-center gap-4 group/item">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                                    </div>
-                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Baño privado completo con ducha de agua caliente.</span>
+                            <ul className="pt-2 border-t border-[#1E1B16]/12">
+                                <li className="flex items-baseline gap-3 py-3 border-b border-[#1E1B16]/10">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[15px] font-medium text-[#1E1B16]">Baño privado completo con ducha de agua caliente.</span>
                                 </li>
-                                <li className="flex items-center gap-4 group/item">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                                    </div>
-                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Cocina equipada con frigobar.</span>
+                                <li className="flex items-baseline gap-3 py-3 border-b border-[#1E1B16]/10">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[15px] font-medium text-[#1E1B16]">Cocina equipada con frigobar.</span>
                                 </li>
-                                <li className="flex items-center gap-4 group/item">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                                    </div>
-                                    <span className="font-bold text-base md:text-lg text-text-main tracking-tight group-hover/item:text-primary transition-colors">Cafetera Nespresso y utensilios listos para usar.</span>
+                                <li className="flex items-baseline gap-3 py-3">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[15px] font-medium text-[#1E1B16]">Cafetera Nespresso y utensilios listos para usar.</span>
                                 </li>
                             </ul>
                         </div>
-                        <div className="rounded-[3rem] overflow-hidden shadow-2xl order-1 md:order-2 h-[500px] grid grid-cols-2 gap-2 relative group">
-                            <div className="relative overflow-hidden h-full">
-                                <Image
-                                    src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
-                                    alt="Cocina y Kitchenette Real en Domo TreePod"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
-                                />
+                        <div className="col-span-12 md:col-span-7 order-1 md:order-2">
+                            <div className="grid grid-cols-2 gap-2 h-[420px] md:h-[500px] group">
+                                <div className="relative overflow-hidden rounded-[2px] h-full">
+                                    <Image
+                                        src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
+                                        alt="Cocina y Kitchenette Real en Domo TreePod"
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 35vw"
+                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                </div>
+                                <div className="relative overflow-hidden rounded-[2px] h-full">
+                                    <Image
+                                        src="/images/interiors/CafeteraNespresso.jpg"
+                                        alt="Cafetera Nespresso en el domo"
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 35vw"
+                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                </div>
                             </div>
-                            <div className="relative overflow-hidden h-full">
-                                <Image
-                                    src="/images/interiors/CafeteraNespresso.jpg"
-                                    alt="Cafetera Nespresso en el domo"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
-                                />
-                            </div>
+                            <p className="mt-2 flex items-center gap-2 md:justify-end">
+                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                <span className="caption-editorial">Cocina equipada y cafetera Nespresso</span>
+                            </p>
                         </div>
                     </div>
 
                 </div>
 
-
-                {/* 4. Technical Specs (The Whitepod Grid) */}
+                {/* Artículo 03 — Ficha técnica como índice numerado, sin iconos */}
                 <div className="mt-24 md:mt-32">
-                    <h3 className="h3-display mb-12 text-center text-text-main">Ficha técnica</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <Ruler className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
+                    <SectionFolio num="N° 03" label="Ficha técnica" />
+                    <div className="border-t border-[#1E1B16]/12">
+                        {fichaTecnica.map((item, i) => (
+                            <div key={item.titulo} className="border-b border-[#1E1B16]/12 py-5 md:py-6 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline">
+                                <span className="col-span-2 md:col-span-1 font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">
+                                    {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <h4 className="col-span-10 md:col-span-4 display-md text-[#1E1B16]">{item.titulo}</h4>
+                                <p className="col-span-12 md:col-span-7 text-[#5B5348] leading-relaxed">{item.detalle}</p>
                             </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Tu Espacio</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">38 m² de interior<br />+ 8 m² de terraza privada.</p>
-                        </div>
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <Users className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                            </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Capacidad</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">Hasta 4 adultos cómodamente.</p>
-                        </div>
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <Wifi className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                            </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Internet (Starlink)</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">Alta velocidad. Perfecto si necesitas teletrabajar o ver una película sin cortes.</p>
-                        </div>
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <ParkingCircle className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                            </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Seguridad y Acceso</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">Estacionamiento privado y acceso seguro por pasarelas de madera.</p>
-                        </div>
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <Grid3X3 className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                            </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Áreas Comunes</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">Quincho listo para tus asados y un Invernadero Nativo para explorar.</p>
-                        </div>
-                        <div className="space-y-4 text-center md:text-left flex flex-col items-center md:items-start group p-6 rounded-3xl bg-surface border border-black/5 hover:border-primary/20 transition-colors">
-                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                                <Flame className="text-primary w-8 h-8 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                            </div>
-                            <h4 className="font-black text-xs uppercase tracking-[0.2em] text-text-main">Calor 24/7</h4>
-                            <p className="text-base text-text-sub font-bold leading-snug">Estufa a pellet automática: cero humo, cero frío. Tu domo siempre cálido aunque afuera nieve.</p>
-                        </div>
+                        ))}
                     </div>
                 </div>
-            </main >
+            </main>
 
             {/* Sección de tarifas removida - se maneja desde admin */}
 
-            {/* 5. Sticky Booking Bar / Footer CTA */}
-            <div className="sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 py-4 px-6 shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
-                <div className="container mx-auto max-w-6xl flex flex-row justify-between items-center gap-4 md:gap-6">
-                    {/* Price structure visible across all devices, stacked nicely on mobile */}
-                    <div className="flex flex-col items-start">
-                        <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-text-sub/60 mb-1.5">Tarifa para 2 personas</span>
-                        <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
-                            <div className="flex items-center gap-2.5">
-                                <span className="text-xl md:text-2xl font-black text-primary">
-                                    {price1Night ? `Desde $${price1Night}` : '—'}
-                                </span>
-                                <span className="text-[11px] font-bold text-text-sub/70 leading-none">/ noche</span>
-                            </div>
+            {/* Barra-folio sticky: precio real en Fraunces + botón sello de imprenta */}
+            <div
+                className="sticky bottom-0 z-50 bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 md:px-10 py-2.5"
+                style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
+            >
+                <div className="mx-auto max-w-[1280px] flex flex-row justify-between items-center gap-4">
+                    <div className="min-w-0">
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">Desde</span>
+                            <span className="font-display font-medium text-xl leading-none tabular-nums text-[#1E1B16] whitespace-nowrap">
+                                {price1Night ? `$${price1Night}` : '—'}
+                            </span>
+                        </div>
+                        <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
+                            / noche · 2 personas
                         </div>
                     </div>
 
                     <Link
                         href="/disponibilidad"
-                        className="w-auto flex-1 md:flex-none bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-5 sm:px-8 md:px-10 rounded-full text-sm md:text-base shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                        className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5 whitespace-nowrap"
                     >
-                        <span>Reservar ahora</span>
-                        <ArrowRight className="w-4 h-4 shrink-0" />
+                        Reservar ahora <span aria-hidden="true">→</span>
                     </Link>
                 </div>
-            </div >
+            </div>
 
-        </div >
+        </div>
     );
 }

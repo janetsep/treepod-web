@@ -2,9 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import TrackView from '../components/TrackView';
 import { trackEvent } from '../lib/analytics';
 import CinematicSection from '../components/CinematicSection';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import GeoDivider from '../components/deco/GeoDivider';
+import { btnPrimary } from '../components/deco/cta';
 
 
 export default function ServicesPage() {
@@ -15,6 +20,7 @@ export default function ServicesPage() {
             description: "Tu propia tinaja al aire libre, con agua mineralizada y vista al bosque. Sin compartir con nadie. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             image: "/images/wellness/Tinaja1.jpg",
             alt: "Tinaja privada de ciprés al aire libre en TreePod",
+            caption: "Tinaja de temporada, al aire libre",
             features: ["Disponible desde primavera (no opera en invierno)", "Uso exclusivo, sin compartir", "Agua mineralizada al aire libre"],
             buttonText: "Ver disponibilidad",
             href: "/disponibilidad"
@@ -26,6 +32,7 @@ export default function ServicesPage() {
             image: "/images/real/comidatreepod.jpg",
             secondaryImage: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
+            caption: "Desayuno cordillerano y quincho",
             features: ["Desayuno a la habitación", "Quincho equipado para asados", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
@@ -33,7 +40,7 @@ export default function ServicesPage() {
     ];
 
     return (
-        <div className="bg-white font-sans text-text-main transition-colors duration-300 min-h-screen">
+        <div className="bg-white font-sans text-[#1E1B16] min-h-screen">
             <TrackView eventName="view_servicios" />
 
             <CinematicSection
@@ -46,190 +53,148 @@ export default function ServicesPage() {
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
+                photoCaption="Tinaja al aire libre, Valle Las Trancas"
             />
 
-            {/* Featured Services Grid */}
-            <main className="py-16 md:py-24 container mx-auto px-6 md:px-10">
-                {/* Título editorial - Centered to match News/Amenities style */}
-                <div className="flex flex-col items-center text-center mb-16 md:mb-24">
-                    <div className="max-w-4xl w-full">
-                        <div className="inline-flex items-center gap-2 mb-4">
-                            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Tu refugio en la cordillera</span>
-                        </div>
-                        <h2 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15] mb-8">
-                            Afuera el bosque, <br className="hidden md:block" />
-                            <span className="italic-display text-primary font-light">adentro el descanso</span>
+            <GeoDivider left="22%" />
+
+            {/* Artículos de servicio: retícula asimétrica, folios y viñetas triángulo */}
+            <main className="py-16 md:py-24 mx-auto max-w-[1280px] px-5 md:px-10">
+                <SectionFolio num="N° 01" label="Tu refugio en la cordillera" />
+                <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-20 md:mb-28">
+                    <div className="col-span-12 lg:col-span-8">
+                        <h2 className="display-lg text-[#1E1B16] mb-6">
+                            Afuera el bosque,{" "}
+                            <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                adentro el descanso
+                            </span>
                         </h2>
-                        <p className="text-text-sub text-lg md:text-xl font-medium leading-relaxed">
-                            Cada experiencia está pensada para que solo te preocupes de disfrutar. <br className="hidden md:block" />
+                        <p className="lead text-[#5B5348] max-w-2xl">
+                            Cada experiencia está pensada para que solo te preocupes de disfrutar.
                             Tu única decisión del día será si te tomas el café en la cama o en la terraza.
                         </p>
                     </div>
                 </div>
 
-                <div className="space-y-32">
+                <div className="space-y-24 md:space-y-32">
                     {mainServices.map((service, index) => {
-                        /* Primera sección (Tinaja): layout vertical, imagen centrada arriba */
-                        if (index === 0) {
-                            return (
-                                <div key={index} className="flex flex-col gap-16 items-center">
-                                    {/* Imagen centrada arriba */}
-                                    <div className="w-full max-w-3xl mx-auto relative group">
-                                        <div className="absolute -inset-6 bg-primary/5 rounded-[2.5rem] transform rotate-1 group-hover:rotate-0 transition-transform duration-700"></div>
-                                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/3] border border-black/5">
-                                            <Image
-                                                alt={service.alt}
-                                                src={service.image}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-                                        </div>
-                                    </div>
-
-                                    {/* Texto centrado abajo */}
-                                    <div className="w-full max-w-3xl mx-auto text-center space-y-8">
-                                        <div className="inline-flex items-center gap-2 mb-4">
-                                            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                            <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">{service.subtitle}</span>
-                                        </div>
-                                        <h2 className="h2-display leading-tight text-text-main !text-3xl md:!text-5xl">
-                                            {service.title}
-                                        </h2>
-                                        <p className="text-base md:text-lg text-text-sub leading-relaxed font-medium max-w-2xl mx-auto">
-                                            {service.description}
-                                        </p>
-                                        <div className="inline-flex flex-col gap-4 pt-4 text-left">
-                                            {service.features.map((feature, i) => (
-                                                <div key={i} className="flex items-center gap-4 group/item">
-                                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                                        <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                                                    </div>
-                                                    <span className="font-bold text-base text-text-main tracking-tight group-hover/item:text-primary transition-colors">{feature}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="pt-8">
-                                            <Link
-                                                href={service.href}
-                                                onClick={() => trackEvent('click_reservar', { service_title: service.title, page: 'servicios' })}
-                                                className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg active:scale-95"
-                                            >
-                                                {service.buttonText}
-                                            </Link>
-                                            <p className="mt-4 text-xs text-text-sub/70">
-                                                * Algunos servicios pueden tener costo adicional
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-
-                        /* Segunda sección (Desayunos): layout horizontal */
+                        const num = String(index + 2).padStart(2, "0");
+                        const reverse = index % 2 === 1;
                         return (
-                            <div key={index} className="flex flex-col lg:flex-row-reverse gap-16 items-center">
-                                {/* Image side */}
-                                <div className="w-full lg:w-1/2 relative group">
-                                    <div className="absolute -inset-6 bg-primary/5 rounded-[2.5rem] transform rotate-2 group-hover:rotate-1 transition-transform duration-700"></div>
+                            <article key={index} className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-center">
+                                {/* Foto protagonista con pie de foto, sin marcos girados ni gradientes */}
+                                <div className={`col-span-12 lg:col-span-7 ${reverse ? "lg:order-2" : ""}`}>
                                     {service.secondaryImage ? (
-                                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/3] border border-black/5 flex">
-                                            <div className="relative w-1/2 h-full border-r border-white/20">
+                                        <figure>
+                                            <div className="grid grid-cols-2 gap-2 aspect-[4/3]">
+                                                <div className="relative overflow-hidden rounded-[2px] group">
+                                                    <Image
+                                                        alt={service.alt}
+                                                        src={service.secondaryImage}
+                                                        fill
+                                                        sizes="(max-width: 1024px) 50vw, 30vw"
+                                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                                    />
+                                                </div>
+                                                <div className="relative overflow-hidden rounded-[2px] group">
+                                                    <Image
+                                                        alt="Asados y celebraciones en TreePod"
+                                                        src={service.image}
+                                                        fill
+                                                        sizes="(max-width: 1024px) 50vw, 30vw"
+                                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <figcaption className="mt-2 flex items-center gap-2">
+                                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                                <span className="caption-editorial">{service.caption}</span>
+                                            </figcaption>
+                                        </figure>
+                                    ) : (
+                                        <figure>
+                                            <div className="relative overflow-hidden rounded-[2px] aspect-[4/3] group">
                                                 <Image
                                                     alt={service.alt}
-                                                    src={service.secondaryImage}
-                                                    fill
-                                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
-                                                />
-                                            </div>
-                                            <div className="relative w-1/2 h-full">
-                                                <Image
-                                                    alt="Asados y celebraciones en TreePod"
                                                     src={service.image}
                                                     fill
-                                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                                    className="object-cover object-center transition-transform duration-[3s] group-hover:scale-105"
+                                                    sizes="(max-width: 1024px) 100vw, 60vw"
+                                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                                 />
                                             </div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-                                        </div>
-                                    ) : (
-                                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-[4/3] border border-black/5">
-                                            <Image
-                                                alt={service.alt}
-                                                src={service.image}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                className="object-cover object-center transition-transform duration-[2s] group-hover:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-                                        </div>
+                                            <figcaption className="mt-2 flex items-center gap-2">
+                                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                                <span className="caption-editorial">{service.caption}</span>
+                                            </figcaption>
+                                        </figure>
                                     )}
                                 </div>
 
-                                {/* Text side */}
-                                <div className="w-full lg:w-1/2 space-y-8">
-                                    <div className="inline-flex items-center gap-2 mb-4">
-                                        <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                        <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">{service.subtitle}</span>
-                                    </div>
-                                    <h2 className="h2-display leading-tight text-text-main !text-3xl md:!text-5xl">
+                                {/* Texto: folio + titular + lista de filetes + CTA */}
+                                <div className={`col-span-12 lg:col-span-5 space-y-6 ${reverse ? "lg:order-1" : ""}`}>
+                                    <p className="flex items-baseline gap-3">
+                                        <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">{num}</span>
+                                        <span className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#5B5348]">{service.subtitle}</span>
+                                    </p>
+                                    <h2 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">
                                         {service.title}
                                     </h2>
-                                    <p className="text-base md:text-lg text-text-sub leading-relaxed font-medium">
+                                    <p className="text-[#5B5348] leading-relaxed text-base md:text-lg">
                                         {service.description}
                                     </p>
-                                    <div className="space-y-4 pt-4">
+                                    <ul className="border-t border-[#1E1B16]/12">
                                         {service.features.map((feature, i) => (
-                                            <div key={i} className="flex items-center gap-4 group/item">
-                                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                                                </div>
-                                                <span className="font-bold text-base text-text-main tracking-tight group-hover/item:text-primary transition-colors">{feature}</span>
-                                            </div>
+                                            <li key={i} className="flex items-baseline gap-3 py-3 border-b border-[#1E1B16]/10">
+                                                <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                                <span className="text-[15px] font-medium text-[#1E1B16]">{feature}</span>
+                                            </li>
                                         ))}
-                                    </div>
-                                    <div className="pt-8">
+                                    </ul>
+                                    <div className="pt-2">
                                         <Link
                                             href={service.href}
                                             onClick={() => trackEvent('click_reservar', { service_title: service.title, page: 'servicios' })}
-                                            className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold text-base rounded-full hover:bg-primary-dark transition-all shadow-lg active:scale-95 w-full md:w-auto"
+                                            className={btnPrimary}
                                         >
                                             {service.buttonText}
                                         </Link>
-                                        <p className="mt-4 text-xs text-text-sub/70 pl-2">
+                                        <p className="caption-editorial mt-4">
                                             * Algunos servicios pueden tener costo adicional
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         );
                     })}
                 </div>
             </main>
 
-            {/* CTA Section */}
-            <section className="py-24 bg-surface border-y border-black/5 backdrop-blur-sm">
-                <div className="container mx-auto px-6 text-center max-w-4xl">
-                    <h2 className="h2-display mb-8 text-text-main">
-                        ¿Vienes a celebrar algo importante? <br />
-                        <span className="text-primary italic-display">Déjalo en nuestras manos</span>
-                    </h2>
-                    <p className="text-lg md:text-xl text-text-sub font-medium mb-14 leading-relaxed max-w-3xl mx-auto">
-                        ¿Quieres sorprender a tu pareja por un aniversario o pedir matrimonio sin estrés? Cuéntanos tu idea. Nosotros armamos el plan perfecto en el bosque y tú te llevas todo el crédito.
-                    </p>
-                    <a
-                        href="https://wa.me/56984643307?text=Quiero%20preparar%20una%20sorpresa%20especial"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => trackEvent('click_whatsapp_servicios', { page: 'servicios' })}
-                        className="bg-[#25D366] text-white font-semibold text-base py-4 px-8 rounded-full hover:bg-[#20ba5a] transition-all shadow-lg active:scale-95 inline-flex items-center justify-center gap-3 max-w-full"
-                    >
-                        Hablar por WhatsApp para una sorpresa
-                    </a>
+            <GeoDivider left="78%" />
+
+            {/* CTA de cierre: composición a la izquierda, sin espejo centrado */}
+            <section className="py-20 md:py-28 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10 grid grid-cols-12 gap-x-4 md:gap-x-6">
+                    <div className="col-span-12 lg:col-span-8">
+                        <h2 className="display-lg text-[#1E1B16] mb-6">
+                            ¿Vienes a celebrar algo importante?{" "}
+                            <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                Déjalo en nuestras manos
+                            </span>
+                        </h2>
+                        <p className="lead text-[#5B5348] mb-10 max-w-2xl">
+                            ¿Quieres sorprender a tu pareja por un aniversario o pedir matrimonio sin estrés? Cuéntanos tu idea. Nosotros armamos el plan perfecto en el bosque y tú te llevas todo el crédito.
+                        </p>
+                        <a
+                            href="https://wa.me/56984643307?text=Quiero%20preparar%20una%20sorpresa%20especial"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => trackEvent('click_whatsapp_servicios', { page: 'servicios' })}
+                            className="inline-flex items-center gap-2.5 font-semibold text-[15px] text-[#1E1B16] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors"
+                        >
+                            <MessageCircle className="w-4 h-4 text-[#00ADEF]" />
+                            Hablar por WhatsApp para una sorpresa
+                        </a>
+                    </div>
                 </div>
             </section>
         </div>
