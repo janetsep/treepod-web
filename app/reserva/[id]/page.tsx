@@ -7,7 +7,7 @@ import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
 import { TrackingService } from "@/services/TrackingService";
 import { trackEvent } from "../../lib/analytics";
-import { CheckCircle2, Lock, Sparkles, Info, Hourglass, AlertCircle, TimerOff, Timer } from "lucide-react";
+import { CheckCircle2, Lock, Sparkles, Info, AlertCircle, TimerOff, Timer } from "lucide-react";
 import Stepper from "../../components/Stepper";
 
 function diffMinutes(from: Date, to: Date) {
@@ -167,34 +167,6 @@ function ReservaContent({ id }: { id: string }) {
   }
 
   const isExpired = minutesLeft === 0 && reserva.estado === "pendiente_pago";
-  if (statusParam === "SUCCESS_TRANSFER") {
-    return (
-      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main transition-colors">
-        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto shadow-inner">
-            <Hourglass className="text-gold w-10 h-10" />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-3xl font-display font-bold tracking-tight">Transferencia <span className="text-gold italic-display">Informada</span></h1>
-            <p className="text-text-sub font-normal leading-relaxed">
-              Hemos recibido tu aviso de transferencia. Tu reserva quedará confirmada una vez que verifiquemos el pago (24-48hrs).
-              <br /><br />
-              Te enviaremos la confirmación definitiva a <span className="font-bold text-text-main">{reserva.email}</span>.
-            </p>
-          </div>
-          <div className="pt-4">
-            <Link
-              href="/"
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
-            >
-              Volver al inicio
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const isPaid = reserva.estado === "pagado";
 
   if (isPaid || statusParam === "SUCCESS") {
