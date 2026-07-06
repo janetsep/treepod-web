@@ -15,6 +15,19 @@ function fmtFecha(iso: string | null | undefined) {
     return y && m && d ? `${d}-${m}-${y}` : String(iso);
 }
 
+// Etiquetas legibles para la fuente/canal (mismos valores que el select del ReservaModal).
+const FUENTE_LABELS: Record<string, string> = {
+    web: "Web",
+    whatsapp: "WhatsApp",
+    airbnb: "Airbnb",
+    booking: "Booking",
+    instagram: "Instagram",
+    presencial: "Presencial",
+    manual_admin: "Manual Admin",
+};
+const fuenteLabel = (fuente?: string | null) =>
+    fuente ? (FUENTE_LABELS[fuente.toLowerCase()] || fuente) : "—";
+
 export default function PapeleraConsole({ adminEmail }: Props) {
     const [reservas, setReservas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -53,7 +66,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                 alert(action === "restore" ? "Reserva restaurada correctamente." : "Reserva eliminada permanentemente.");
             } else {
                 const data = await res.json();
-                alert("Error: " + data.error);
+                alert("No se pudo completar la acción:\n" + data.error);
             }
         } catch {
             alert("Error de conexión.");
@@ -139,7 +152,7 @@ export default function PapeleraConsole({ adminEmail }: Props) {
                                         {r.domos?.nombre || "—"}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-900">{r.fuente}</span>
+                                        <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-900">{fuenteLabel(r.fuente)}</span>
                                     </td>
                                     <td className="px-4 py-3 text-gray-700 text-xs">
                                         {r.deleted_at ? new Date(r.deleted_at).toLocaleString("es-CL") : "—"}

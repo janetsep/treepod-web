@@ -334,7 +334,7 @@ export default function CartolasPanel() {
           {fileName && (
             <span className="flex items-center gap-1.5 text-xs text-gray-600 font-semibold">
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> {fileName}
-              <button onClick={() => { setRows([]); setFileName(""); }} className="text-gray-400 hover:text-gray-600"><X className="w-3.5 h-3.5" /></button>
+              <button onClick={() => { setRows([]); setFileName(""); }} title="Quitar archivo" aria-label="Quitar archivo" className="text-gray-400 hover:text-gray-600"><X className="w-3.5 h-3.5" /></button>
             </span>
           )}
         </div>

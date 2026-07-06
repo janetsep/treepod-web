@@ -272,7 +272,7 @@ export default function AdminDashboard() {
                     window.open(calUrl, "_blank");
                 }
             } else {
-                alert("Error: " + data.error);
+                alert(`No se pudo confirmar la reserva:\n${data.error}`);
             }
         } catch (e) {
             alert("Error de conexión");
@@ -334,7 +334,9 @@ export default function AdminDashboard() {
 
         return true;
     };
-    const todayStr = new Date().toISOString().split('T')[0];
+    // Fecha de HOY en horario local (en-CA da aaaa-mm-dd). Con toISOString() la fecha
+    // saltaba al día siguiente desde las ~20:00-21:00 hora de Chile (UTC-3/UTC-4).
+    const todayStr = new Date().toLocaleDateString('en-CA');
     const validReservas = reservas.filter(isValidReserva);
 
     // ¿A esta reserva le falta emitir boleta/factura? (misma regla que el dashboard de estadísticas)
@@ -455,6 +457,21 @@ export default function AdminDashboard() {
         }
     };
 
+    // Etiquetas legibles para la fuente/canal (mismos valores que el select del ReservaModal).
+    const FUENTE_LABELS: Record<string, string> = {
+        web: "Web",
+        whatsapp: "WhatsApp",
+        airbnb: "Airbnb",
+        booking: "Booking",
+        instagram: "Instagram",
+        presencial: "Presencial",
+        manual_admin: "Manual Admin",
+    };
+    const getFuenteLabel = (fuente?: string | null) => {
+        const f = (fuente || "web").toLowerCase();
+        return FUENTE_LABELS[f] || fuente || "Web";
+    };
+
     return (
         <div className="min-h-screen bg-white p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
@@ -463,7 +480,7 @@ export default function AdminDashboard() {
                         <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-14 w-14 object-contain" />
                         <div>
                             <h1 className="text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
-                            <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con DomoTreePod.cl</p>
+                            <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con domostreepod.cl</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-6">
@@ -657,7 +674,7 @@ export default function AdminDashboard() {
                             // Fechas con llegadas o salidas en los próximos 7 días (para resaltar en el widget)
                             const en7dias = new Date();
                             en7dias.setDate(en7dias.getDate() + 7);
-                            const en7Str = en7dias.toISOString().split('T')[0];
+                            const en7Str = en7dias.toLocaleDateString('en-CA');
                             const fechasConReserva = [
                                 ...validReservas
                                     .filter((r: any) => estadosFirmes.includes(r.estado) && r.fecha_inicio >= todayStr && r.fecha_inicio <= en7Str)
@@ -1002,7 +1019,7 @@ export default function AdminDashboard() {
                                                                     {reserva.fuente === 'whatsapp' && <MessageCircle className="w-2.5 h-2.5" />}
                                                                     {reserva.fuente === 'airbnb' && <Home className="w-2.5 h-2.5" />}
                                                                     {reserva.fuente === 'booking' && <CreditCard className="w-2.5 h-2.5" />}
-                                                                    {reserva.fuente || 'web'}
+                                                                    {getFuenteLabel(reserva.fuente)}
                                                                 </span>
                                                             </div>
                                                         </td>
@@ -1040,11 +1057,6 @@ export default function AdminDashboard() {
                                                                     ? (reserva.expires_at && new Date(reserva.expires_at) < new Date() ? 'Carrito expirado' : 'Check-out Web')
                                                                     : getStatusLabel(reserva.estado)}
                                                             </span>
-                                                            {reserva.fuente && (
-                                                                <div className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-600 mt-1">
-                                                                    {reserva.fuente}
-                                                                </div>
-                                                            )}
                                                         </td>
                                                         <td className="px-5 py-4 text-right">
                                                             <div className="flex justify-end items-center gap-1.5">

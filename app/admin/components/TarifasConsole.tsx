@@ -246,8 +246,9 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                     </td>
                                     <td className="px-8 py-5 text-[10px] font-bold">
                                         {(() => {
-                                            // Comparación por texto ISO (aaaa-mm-dd): evita el desfase de un día por zona horaria.
-                                            const hoy = new Date().toISOString().split("T")[0];
+                                            // Comparación por texto ISO (aaaa-mm-dd) con fecha LOCAL (en-CA da aaaa-mm-dd):
+                                            // toISOString() es UTC y en Chile adelantaba el estado un día desde las ~20:00-21:00.
+                                            const hoy = new Date().toLocaleDateString("en-CA");
                                             if (hoy < temp.fecha_inicio) return <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full">Próxima</span>;
                                             if (hoy > temp.fecha_fin) return <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">Vencida</span>;
                                             return <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full">Activa</span>;
@@ -276,6 +277,8 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                         <button
                             onClick={() => setTemporadaPage(p => Math.max(1, p - 1))}
                             disabled={temporadaPage === 1}
+                            title="Página anterior"
+                            aria-label="Página anterior"
                             className="p-2 bg-white border border-gray-100 rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-all shadow-sm"
                         >
                             <ArrowRight className="w-4 h-4 rotate-180" />
@@ -286,6 +289,8 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                         <button
                             onClick={() => setTemporadaPage(p => Math.min(totalTemporadaPages, p + 1))}
                             disabled={temporadaPage === totalTemporadaPages}
+                            title="Página siguiente"
+                            aria-label="Página siguiente"
                             className="p-2 bg-white border border-gray-100 rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-all shadow-sm"
                         >
                             <ArrowRight className="w-4 h-4" />

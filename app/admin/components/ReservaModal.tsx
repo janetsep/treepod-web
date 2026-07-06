@@ -482,7 +482,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Gestión administrativa interna</p>
                         )}
                     </div>
-                    <button onClick={onClose} className="p-2 bg-white text-gray-700 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
+                    <button onClick={onClose} title="Cerrar" aria-label="Cerrar" className="p-2 bg-white text-gray-700 hover:text-red-500 rounded-xl shadow-sm transition-all active:scale-90 border border-gray-100">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -693,6 +693,26 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     placeholder="0"
                                 />
                                 <p className="text-[9px] text-gray-500 font-bold pl-1">Solo el valor del domo. Los servicios se suman abajo.</p>
+                                {buscandoTarifa && !isViewer && (
+                                    <p className="text-[9px] text-gray-500 font-bold pl-1 animate-pulse">Buscando tarifa vigente…</p>
+                                )}
+                                {!buscandoTarifa && tarifaSugerida && !isViewer && (
+                                    <div className="flex items-center justify-between gap-2 px-3 py-2 bg-primary/5 border border-primary/20 rounded-xl">
+                                        <span className="text-[10px] font-bold text-gray-700 leading-tight">
+                                            Tarifa "{tarifaSugerida.temporada}": ${tarifaSugerida.total_hospedaje.toLocaleString('es-CL')}
+                                            <span className="text-gray-500 font-medium"> (${tarifaSugerida.precio_noche.toLocaleString('es-CL')}/noche)</span>
+                                            {tarifaSugerida.es_fallback && <span className="text-amber-600"> · aprox. por noches</span>}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={aplicarTarifa}
+                                            disabled={baseAlojamiento === tarifaSugerida.total_hospedaje}
+                                            className="flex-shrink-0 px-3 py-1 bg-primary text-white rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-primary-dark transition-all disabled:opacity-40 disabled:cursor-default"
+                                        >
+                                            {baseAlojamiento === tarifaSugerida.total_hospedaje ? 'Aplicada' : 'Aplicar'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-green-600 uppercase tracking-widest pl-1">Monto Pagado ($)</label>
@@ -886,7 +906,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-600"
                                                             }`}
                                                         >
-                                                            {esCortesia ? "Cortesia (quitar)" : "Marcar como cortesia"}
+                                                            {esCortesia ? "Cortesía (quitar)" : "Marcar como cortesía"}
                                                         </button>
                                                     )}
                                                 </div>

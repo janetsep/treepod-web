@@ -855,6 +855,8 @@ function Boletas() {
                 <span className="text-zinc-900 text-xs">{b.sicra_boleta_items?.length || 0} items</span>
                 <button
                   onClick={(e) => { e.stopPropagation(); eliminarBoleta(b.id); }}
+                  title="Eliminar boleta"
+                  aria-label="Eliminar boleta"
                   className="text-red-600 hover:text-red-500"
                 >
                   <Trash2 size={14} />
@@ -898,7 +900,7 @@ function Boletas() {
                                     </option>
                                   ))}
                                 </select>
-                                <button onClick={() => setVinculando(null)} className="text-zinc-700 hover:text-gray-900">
+                                <button onClick={() => setVinculando(null)} title="Cerrar" aria-label="Cerrar" className="text-zinc-700 hover:text-gray-900">
                                   <X size={12} />
                                 </button>
                               </div>
@@ -1173,7 +1175,7 @@ function Inventario() {
               <label className="text-xs text-gray-700">Categoría</label>
               <select value={nuevoForm.categoria} onChange={(e) => setNuevoForm((f) => ({ ...f, categoria: e.target.value }))}
                 className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded px-2 py-1.5 mt-1">
-                {CATEGORIAS_OPTS.map((c) => <option key={c}>{c}</option>)}
+                {CATEGORIAS_OPTS.map((c) => <option key={c} value={c}>{labelCategoria(c)}</option>)}
               </select>
             </div>
             <div>
@@ -1219,7 +1221,7 @@ function Inventario() {
         {cats.map((cat) => (
           <div key={cat} className="mb-4">
             <div className="text-xs text-gray-900 uppercase tracking-wider px-2 py-1 bg-gray-50 rounded-t font-bold">
-              {cat}
+              {labelCategoria(cat)}
             </div>
             <table className="w-full text-xs">
               <thead>
@@ -1254,7 +1256,7 @@ function Inventario() {
                                 className="bg-gray-100 text-gray-900 text-xs rounded px-1 py-0.5 w-full" />
                               <select value={editForm.categoria || cat} onChange={(e) => setEditForm((f) => ({ ...f, categoria: e.target.value }))}
                                 className="bg-gray-100 text-gray-900 text-[10px] rounded px-1 py-0.5 w-full">
-                                {CATEGORIAS_OPTS.map((c) => <option key={c}>{c}</option>)}
+                                {CATEGORIAS_OPTS.map((c) => <option key={c} value={c}>{labelCategoria(c)}</option>)}
                               </select>
                               <label className="flex items-center gap-1 text-[10px] text-gray-600">
                                 <input type="checkbox" checked={editForm.activo ?? true} onChange={(e) => setEditForm((f) => ({ ...f, activo: e.target.checked }))} /> Activo
@@ -1282,8 +1284,8 @@ function Inventario() {
                                 className="w-12 bg-gray-100 text-gray-900 text-center rounded px-1 py-0.5 text-xs" placeholder="30" />
                               <input value={editConv.uc} onChange={e => setEditConv({ ...editConv, uc: e.target.value })}
                                 className="w-16 bg-gray-100 text-gray-900 rounded px-1 py-0.5 text-xs" placeholder="huevo" />
-                              <button onClick={() => guardarConversion(p.id)} className="text-emerald-600"><Check size={12} /></button>
-                              <button onClick={() => setEditConv(null)} className="text-gray-500"><X size={12} /></button>
+                              <button onClick={() => guardarConversion(p.id)} title="Guardar conversión" aria-label="Guardar conversión" className="text-emerald-600"><Check size={12} /></button>
+                              <button onClick={() => setEditConv(null)} title="Cancelar" aria-label="Cancelar" className="text-gray-500"><X size={12} /></button>
                             </div>
                           ) : (
                             <button
@@ -1313,8 +1315,8 @@ function Inventario() {
                                 className="w-20 bg-gray-100 text-gray-900 text-right rounded px-1 py-0.5"
                               />
                               <span className="text-gray-700">{uc}</span>
-                              <button onClick={() => guardarStock(p.id, editStock.val)} className="text-emerald-600"><Check size={12} /></button>
-                              <button onClick={() => setEditStock(null)} className="text-gray-700"><X size={12} /></button>
+                              <button onClick={() => guardarStock(p.id, editStock.val)} title="Guardar stock" aria-label="Guardar stock" className="text-emerald-600"><Check size={12} /></button>
+                              <button onClick={() => setEditStock(null)} title="Cancelar" aria-label="Cancelar" className="text-gray-700"><X size={12} /></button>
                             </div>
                           ) : (
                             <button
@@ -1366,15 +1368,15 @@ function Inventario() {
                           <div className="flex gap-1.5 justify-end">
                             {enEdicion ? (
                               <>
-                                <button onClick={guardarEdit} className="text-emerald-600"><Check size={13} /></button>
-                                <button onClick={() => setEditId(null)} className="text-gray-500"><X size={13} /></button>
+                                <button onClick={guardarEdit} title="Guardar cambios" aria-label="Guardar cambios" className="text-emerald-600"><Check size={13} /></button>
+                                <button onClick={() => setEditId(null)} title="Cancelar" aria-label="Cancelar" className="text-gray-500"><X size={13} /></button>
                               </>
                             ) : (
                               <>
                                 <button onClick={() => setEditCompra(editCompra?.id === p.id ? null : { id: p.id, cantidad: "", precio: "", fecha: "" })}
-                                  className="text-blue-600 hover:text-blue-700" title="Registrar compra"><ShoppingCart size={12} /></button>
-                                <button onClick={() => startEdit(p)} className="text-gray-600 hover:text-gray-900"><Pencil size={12} /></button>
-                                <button onClick={() => eliminar(p.id)} className="text-red-600 hover:text-red-500"><Trash2 size={12} /></button>
+                                  className="text-blue-600 hover:text-blue-700" title="Registrar compra" aria-label="Registrar compra"><ShoppingCart size={12} /></button>
+                                <button onClick={() => startEdit(p)} title="Editar producto" aria-label="Editar producto" className="text-gray-600 hover:text-gray-900"><Pencil size={12} /></button>
+                                <button onClick={() => eliminar(p.id)} title="Eliminar producto" aria-label="Eliminar producto" className="text-red-600 hover:text-red-500"><Trash2 size={12} /></button>
                               </>
                             )}
                           </div>
@@ -1753,7 +1755,7 @@ function ConsumoSection() {
                           />
                           <span className="text-gray-600 w-12 truncate">{uc}</span>
                           <span className="text-emerald-700 font-bold w-20 text-right">{fmt(costoLinea(c))}</span>
-                          <button onClick={() => eliminar(c.id)} className="text-red-600 hover:text-red-500 p-1"><Trash2 size={12} /></button>
+                          <button onClick={() => eliminar(c.id)} title="Quitar consumo" aria-label="Quitar consumo" className="text-red-600 hover:text-red-500 p-1"><Trash2 size={12} /></button>
                         </div>
                       </div>
                     );
@@ -1925,6 +1927,8 @@ function ConsumoSection() {
                         const qty = Number(input?.value || 1);
                         if (qty > 0) agregar(p.id, qty);
                       }}
+                      title="Agregar consumo"
+                      aria-label="Agregar consumo"
                       className="p-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded"
                     >
                       <Plus size={14} />
@@ -1934,7 +1938,7 @@ function ConsumoSection() {
               ))}
               {prodsFiltrados.length === 0 && (
                 <p className="text-center text-xs text-gray-500 py-4">
-                  {search.trim() ? "Sin resultados" : "Sin productos en inventario. Importa desde Boletas o Gastos en la seccion Inventario."}
+                  {search.trim() ? "Sin resultados" : "Sin productos en inventario. Importa desde Boletas o Gastos en la sección Inventario."}
                 </p>
               )}
             </div>
@@ -1948,6 +1952,10 @@ function ConsumoSection() {
 // ─── PROYECTOS ────────────────────────────────────────────────────────────────
 
 const TIPO_GASTO_OPTS = ["material", "mano_de_obra", "servicio", "herramienta", "otro"];
+const TIPO_GASTO_LABELS: Record<string, string> = {
+  material: "Material", mano_de_obra: "Mano de obra", servicio: "Servicio",
+  herramienta: "Herramienta", otro: "Otro",
+};
 const ESTADO_OPTS = ["activo", "completado", "pausado", "cancelado"];
 const ESTADO_PROY_LABELS: Record<string, string> = {
   activo: "Activo", completado: "Completado", pausado: "Pausado", cancelado: "Cancelado",
@@ -2168,12 +2176,16 @@ function Proyectos() {
                   <div className="flex gap-1">
                     <button
                       onClick={(e) => { e.stopPropagation(); setEditProj(p); }}
+                      title="Editar proyecto"
+                      aria-label="Editar proyecto"
                       className="text-zinc-700 hover:text-gray-900 p-1"
                     >
                       <Pencil size={13} />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); eliminarProyecto(p.id); }}
+                      title="Eliminar proyecto"
+                      aria-label="Eliminar proyecto"
                       className="text-red-600 hover:text-red-500 p-1"
                     >
                       <Trash2 size={13} />
@@ -2285,7 +2297,7 @@ function Proyectos() {
                               onChange={(e) => setFormGasto((f) => ({ ...f, tipo: e.target.value }))}
                               className="w-full bg-gray-100 text-gray-900 text-xs rounded px-2 py-1 mt-0.5"
                             >
-                              {TIPO_GASTO_OPTS.map((t) => <option key={t} value={t}>{t}</option>)}
+                              {TIPO_GASTO_OPTS.map((t) => <option key={t} value={t}>{TIPO_GASTO_LABELS[t] || t}</option>)}
                             </select>
                           </div>
                           <div>
@@ -2364,7 +2376,7 @@ function Proyectos() {
                                     <select value={editGasto.tipo}
                                       onChange={(e) => setEditGasto((eg) => eg ? { ...eg, tipo: e.target.value } : eg)}
                                       className="bg-gray-100 text-gray-900 text-xs rounded px-1 py-0.5">
-                                      {TIPO_GASTO_OPTS.map((t) => <option key={t} value={t}>{t}</option>)}
+                                      {TIPO_GASTO_OPTS.map((t) => <option key={t} value={t}>{TIPO_GASTO_LABELS[t] || t}</option>)}
                                     </select>
                                   </td>
                                   <td className="py-1 pr-1 text-right">
@@ -2374,10 +2386,10 @@ function Proyectos() {
                                   </td>
                                   <td className="py-1">
                                     <div className="flex gap-1 justify-end">
-                                      <button onClick={guardarGasto} className="text-emerald-600 hover:text-emerald-300">
+                                      <button onClick={guardarGasto} title="Guardar gasto" aria-label="Guardar gasto" className="text-emerald-600 hover:text-emerald-300">
                                         <Check size={12} />
                                       </button>
-                                      <button onClick={() => setEditGasto(null)} className="text-zinc-700 hover:text-gray-900">
+                                      <button onClick={() => setEditGasto(null)} title="Cancelar" aria-label="Cancelar" className="text-zinc-700 hover:text-gray-900">
                                         <X size={12} />
                                       </button>
                                     </div>
@@ -2388,14 +2400,14 @@ function Proyectos() {
                                   <td className="py-1.5 pr-2 text-zinc-700">{labelDate(g.fecha)}</td>
                                   <td className="py-1.5 pr-2 text-gray-900">{g.concepto || "—"}</td>
                                   <td className="py-1.5 pr-2 text-zinc-700">{g.proveedor || "—"}</td>
-                                  <td className="py-1.5 pr-2 text-zinc-900">{g.tipo}</td>
+                                  <td className="py-1.5 pr-2 text-zinc-900">{TIPO_GASTO_LABELS[g.tipo] || g.tipo}</td>
                                   <td className="py-1.5 text-right text-gray-900">{fmt(g.monto)}</td>
                                   <td className="py-1.5">
                                     <div className="flex gap-1 justify-end">
-                                      <button onClick={() => setEditGasto(g)} className="text-zinc-700 hover:text-gray-900">
+                                      <button onClick={() => setEditGasto(g)} title="Editar gasto" aria-label="Editar gasto" className="text-zinc-700 hover:text-gray-900">
                                         <Pencil size={12} />
                                       </button>
-                                      <button onClick={() => eliminarGasto(g.id)} className="text-red-600 hover:text-red-500">
+                                      <button onClick={() => eliminarGasto(g.id)} title="Eliminar gasto" aria-label="Eliminar gasto" className="text-red-600 hover:text-red-500">
                                         <Trash2 size={12} />
                                       </button>
                                     </div>
@@ -2426,6 +2438,16 @@ const CATEGORIAS_OPTS = [
   "Despensa", "Lácteos", "Panadería", "Frutas y verduras", "Carnes",
   "Aseo", "Lavandería", "Amenities", "Otros",
 ];
+// Etiquetas legibles para las categorías guardadas en crudo en la BD.
+// Los <option> conservan el valor crudo (value) para no romper los datos existentes.
+const CATEGORIA_LABELS: Record<string, string> = {
+  base_domo: "Base domo", desayuno: "Desayuno", cena: "Cena",
+  almuerzo: "Almuerzo", tinaja: "Tinaja", bebidas: "Bebidas",
+  lacteos: "Lácteos", panaderia: "Panadería", abarrotes: "Abarrotes",
+  carnes: "Carnes", frutas: "Frutas", verduras: "Verduras",
+  limpieza: "Limpieza", otros: "Otros",
+};
+const labelCategoria = (c: string) => CATEGORIA_LABELS[c] || c;
 const UNIDADES_OPTS = ["kg", "g", "L", "ml", "unidad", "pack", "bandeja", "docena"];
 
 // ─── RECETAS ──────────────────────────────────────────────────────────────────
@@ -2608,8 +2630,8 @@ function Recetas() {
                   className="bg-white border border-blue-300 text-gray-900 text-xs rounded px-2 py-1">
                   {["Desayuno", "Cena", "Amenities", "Aseo", "Otros"].map((c) => <option key={c}>{c}</option>)}
                 </select>
-                <button onClick={guardarReceta} className="text-emerald-600 hover:text-emerald-500"><Check size={15} /></button>
-                <button onClick={() => setEditReceta(null)} className="text-gray-500 hover:text-gray-700"><X size={15} /></button>
+                <button onClick={guardarReceta} title="Guardar receta" aria-label="Guardar receta" className="text-emerald-600 hover:text-emerald-500"><Check size={15} /></button>
+                <button onClick={() => setEditReceta(null)} title="Cancelar" aria-label="Cancelar" className="text-gray-500 hover:text-gray-700"><X size={15} /></button>
               </div>
             ) : (
               <div className="flex items-center justify-between p-3 cursor-pointer hover:bg-gray-50" onClick={() => setExpandida(expandida === r.id ? null : r.id)}>
@@ -2622,8 +2644,8 @@ function Recetas() {
                 <div className="flex items-center gap-3">
                   <span className="text-emerald-700 font-medium text-sm">{fmt(r.costo_unitario)}</span>
                   <span className="text-[10px] text-gray-500">{r.items.length} ingred.</span>
-                  <button onClick={(e) => { e.stopPropagation(); setEditReceta({ id: r.id, nombre: r.nombre, categoria: r.categoria }); }} className="text-gray-400 hover:text-blue-600"><Pencil size={13} /></button>
-                  <button onClick={(e) => { e.stopPropagation(); eliminarReceta(r.id); }} className="text-red-600 hover:text-red-500"><Trash2 size={13} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); setEditReceta({ id: r.id, nombre: r.nombre, categoria: r.categoria }); }} title="Editar receta" aria-label="Editar receta" className="text-gray-400 hover:text-blue-600"><Pencil size={13} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); eliminarReceta(r.id); }} title="Eliminar receta" aria-label="Eliminar receta" className="text-red-600 hover:text-red-500"><Trash2 size={13} /></button>
                 </div>
               </div>
             )}
@@ -2680,7 +2702,7 @@ function Recetas() {
                         </td>
                         <td className="py-1.5 text-right text-gray-900">{fmt(it.costo)}</td>
                         <td className="py-1.5 text-right">
-                          <button onClick={() => eliminarItem(it.id)} className="text-red-600 hover:text-red-500"><Trash2 size={11} /></button>
+                          <button onClick={() => eliminarItem(it.id)} title="Quitar ingrediente" aria-label="Quitar ingrediente" className="text-red-600 hover:text-red-500"><Trash2 size={11} /></button>
                         </td>
                       </tr>
                     ))}
@@ -3268,7 +3290,7 @@ function Pedidos() {
         <div className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <p className="text-xs text-zinc-700">
-              Fecha: <span className="font-semibold text-gray-900">{preview.fecha || "no detectada"}</span>
+              Fecha: <span className="font-semibold text-gray-900">{preview.fecha ? labelDate(preview.fecha) : "no detectada"}</span>
             </p>
             <p className="text-xs font-semibold text-gray-900">Total general: {fmt(totalGeneral)}</p>
           </div>
@@ -3296,11 +3318,11 @@ function Pedidos() {
                       )}
                     </p>
                     {pedido.cliente ? (
-                      <p className="text-xs text-zinc-700">Huesped: {pedido.cliente}</p>
+                      <p className="text-xs text-zinc-700">Huésped: {pedido.cliente}</p>
                     ) : (
                       <div className="space-y-1">
                         <p className="text-xs text-red-600">
-                          {pedido.domo_id ? "Sin reserva activa este dia" : `Domo "${pedido.domo_texto}" no encontrado en el sistema`}
+                          {pedido.domo_id ? "Sin reserva activa este día" : `Domo "${pedido.domo_texto}" no encontrado en el sistema`}
                         </p>
                         {pedido.reservas_disponibles.length > 0 && (
                           <select
@@ -3433,8 +3455,8 @@ function Pedidos() {
                               >
                                 <option value="desayuno">Desayuno</option>
                                 <option value="bebidas">Bebidas</option>
-                                <option value="lacteos">Lacteos</option>
-                                <option value="panaderia">Panaderia</option>
+                                <option value="lacteos">Lácteos</option>
+                                <option value="panaderia">Panadería</option>
                                 <option value="abarrotes">Abarrotes</option>
                                 <option value="carnes">Carnes</option>
                                 <option value="frutas">Frutas</option>
