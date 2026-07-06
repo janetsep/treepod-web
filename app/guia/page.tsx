@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "../components/Navbar";
 import { CheckCircle2 } from "lucide-react";
 
 export default function GuiaPage() {
     return (
+        // El Navbar global lo inyecta AdminAwareLayout: renderizarlo aquí de nuevo
+        // duplicaba el menú (dos <nav> fijos superpuestos).
         <div className="bg-background-dark text-white transition-colors duration-300 font-sans min-h-screen flex flex-col">
-            <Navbar />
-
             <main className="flex-1 w-full flex flex-col pt-36">
                 <div className="px-6 md:px-40 flex flex-1 justify-center py-10 md:py-16">
                     <div className="flex flex-col max-w-[960px] flex-1">

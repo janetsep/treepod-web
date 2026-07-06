@@ -12,7 +12,6 @@ import DomoAmenities from "./components/DomoAmenities";
 import News from "./components/News";
 import Testimonios from "./components/Testimonios";
 import Ubicacion from "./components/Ubicacion";
-import Galeria from "./components/Galeria";
 import ValueBand from "./components/ValueBand";
 import ComoReservar from "./components/ComoReservar";
 import FAQ from "./components/FAQ";

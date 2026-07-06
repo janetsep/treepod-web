@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Tipografía de artículos (blog, términos, privacidad): sin este plugin las clases
+   prose/prose-* no compilaban y el cuerpo de los artículos quedaba sin jerarquía. */
+@plugin "@tailwindcss/typography";
 
 :root {
   /* Brand Colors */
@@ -237,14 +240,6 @@ html.reveal-ready .reveal.is-visible {
   line-height: 1.4;
 }
 
-.subtitle-caps {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: var(--primary);
-}
-
 /* Elegant italic modifier for display fonts */
 .italic-display {
   font-family: var(--font-display);
@@ -267,79 +262,6 @@ html.reveal-ready .reveal.is-visible {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* 🚀 ACCIONES HOY STYLES */
-
-/* Cambio #1: Hero Badge (Rediseño Premium y Visibilidad Máxima) */
-@keyframes badge-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
-  }
-
-  50% {
-    transform: scale(1.05) translateY(-5px);
-  }
-
-  /* Pequeño rebote para llamar la atención */
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-/* Cambio #1: Hero Rating Badge (Estilo Premium y Máxima Visibilidad) */
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 12px 24px;
-  margin-bottom: 32px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--primary);
-  /* Sombra suave y borde fino para profundidad */
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  border: 1.5px solid rgba(0, 173, 239, 0.15);
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: badge-pop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  z-index: 50;
-}
-
-.hero-badge:hover {
-  transform: translateY(-6px) scale(1.03);
-  background: #ffffff;
-  box-shadow: 0 20px 40px -8px rgba(0, 173, 239, 0.35);
-  color: var(--primary-dark);
-}
-
-.hero-badge .star {
-  font-size: 16px;
-  margin-bottom: 2px;
-  /* Alineación óptica */
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-@media (max-width: 768px) {
-  .hero-badge {
-    font-size: 10px;
-    padding: 8px 16px;
-    margin-bottom: 24px;
-    gap: 8px;
-  }
-
-  .hero-badge .star {
-    font-size: 13px;
-  }
 }
 
 /* Padding de sección SOLO opt-in vía .section-padding. Antes esta regla apuntaba a
@@ -366,65 +288,6 @@ html.reveal-ready .reveal.is-visible {
 }
 
 
-/* Cambio #4: Hero CTA (Destacado Premium) */
-.cta-hero {
-  padding: 20px 56px;
-  font-size: 15px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 15px 35px -10px rgba(0, 173, 239, 0.6),
-    0 5px 15px rgba(0, 0, 0, 0.15);
-  min-width: 320px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.cta-hero:hover {
-  background: var(--primary-dark);
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 25px 50px -12px rgba(0, 173, 239, 0.8),
-    0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.cta-hero::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(45deg);
-  transition: all 0.6s ease;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.cta-hero:hover::after {
-  left: 120%;
-  opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .cta-hero {
-    width: 90%;
-    min-width: auto;
-    padding: 18px 32px;
-    font-size: 13px;
-    letter-spacing: 0.15em;
-  }
-}
 /* rebuild trigger */
 
 /* cine-enter rebuild */

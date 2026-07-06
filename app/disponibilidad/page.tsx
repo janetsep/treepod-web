@@ -42,7 +42,10 @@ function DisponibilidadContent() {
   const searchParams = useSearchParams();
   const [entrada, setEntrada] = useState(searchParams.get("entrada") || "");
   const [salida, setSalida] = useState(searchParams.get("salida") || "");
-  const [adultos, setAdultos] = useState(Number(searchParams.get("adultos")) || 2);
+  // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
+  // rango (?adultos=6) dejaba el select en un valor sin opción visible y pedía
+  // precios para una capacidad que no existe.
+  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(searchParams.get("adultos")) || 2)));
   const [resultado, setResultado] = useState<ResultadoPrecio | null>(null);
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
@@ -961,14 +964,14 @@ function DisponibilidadContent() {
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
                       disabled={reserving || disponibilidad.disponible === false}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                      className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-5 rounded-full text-base shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
                     >
                       {reserving ? (
                         <>
                           <RefreshCw className="w-5 h-5 animate-spin" />
                           <span>Procesando...</span>
                         </>
-                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar Ahora"}
+                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar ahora"}
                     </button>
 
                     <div className="flex flex-col items-center justify-center pt-6 opacity-70">
@@ -1001,9 +1004,9 @@ function DisponibilidadContent() {
               <button
                 onClick={() => { trackEvent("click_reservar_sticky"); reservar(); }}
                 disabled={reserving || disponibilidad.disponible === false}
-                className="flex-1 bg-primary text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex-1 bg-primary text-white font-semibold py-4 rounded-full text-base shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar Ahora"}
+                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar ahora"}
               </button>
             </div>
           </div>

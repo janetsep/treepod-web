@@ -79,7 +79,7 @@ export default function DomoAmenities() {
                         <div
                             key={index}
                             className={`group flex flex-col rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 bg-surface border border-black/5
-                                ${index === 0 || index === 4 ? 'md:col-span-2' : 'md:col-span-1'}
+                                ${index === 0 ? 'md:col-span-2' : index === 4 ? 'md:col-span-3' : 'md:col-span-1'}
                             `}
                         >
                             {/* Image Section */}
@@ -92,7 +92,7 @@ export default function DomoAmenities() {
                                                     src={img}
                                                     alt={`${item.title} ${imgIdx}`}
                                                     fill
-                                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                                    sizes="(max-width: 768px) 50vw, 38vw"
                                                     className={`object-cover object-center transition-transform duration-[2s] group-hover:scale-110`}
                                                 />
                                             </div>

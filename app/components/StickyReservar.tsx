@@ -42,10 +42,13 @@ export default function StickyReservar() {
       .catch(() => {});
   }, []);
 
-  // No mostrar en la página de reserva, en /domos (ya tiene su propia barra de
+  // No mostrar en el flujo de reserva (checkout y confirmación: competiría con el
+  // botón de pago), en /disponibilidad, en /domos (ya tiene su propia barra de
   // precio + reservar) ni en zonas privadas.
   if (
     pathname?.startsWith("/disponibilidad") ||
+    pathname?.startsWith("/reserva") ||
+    pathname?.startsWith("/confirmacion") ||
     pathname?.startsWith("/domos") ||
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/login")

@@ -332,7 +332,18 @@ export default async function BlogPost({ params }: Props) {
                             prose-td:border-b prose-td:border-black/5 prose-td:p-4 prose-td:text-text-main
                             prose-hr:my-16 prose-hr:border-0 prose-hr:h-px prose-hr:bg-gradient-to-r prose-hr:from-transparent prose-hr:via-text-sub/30 prose-hr:to-transparent
                         ">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    // Las tablas del markdown se envuelven en un contenedor con
+                                    // scroll horizontal propio: sin esto desbordan la página en móvil.
+                                    table: ({ node, ...props }) => (
+                                        <div className="overflow-x-auto">
+                                            <table {...props} />
+                                        </div>
+                                    ),
+                                }}
+                            >
                                 {article.content}
                             </ReactMarkdown>
                         </div>

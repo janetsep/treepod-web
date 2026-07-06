@@ -185,9 +185,9 @@ function ReservaContent({ id }: { id: string }) {
           <div className="pt-4">
             <Link
               href="/"
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-bold py-5 rounded-full text-sm uppercase tracking-[0.3em] shadow-xl transition-all"
+              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
             >
-              Volver al Inicio
+              Volver al inicio
             </Link>
           </div>
         </div>
@@ -216,9 +216,9 @@ function ReservaContent({ id }: { id: string }) {
           <div className="pt-4">
             <Link
               href="/"
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-bold py-5 rounded-full text-sm uppercase tracking-[0.3em] shadow-xl transition-all"
+              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
             >
-              Cerrar y Volver al Inicio
+              Cerrar y volver al inicio
             </Link>
           </div>
         </div>
@@ -242,11 +242,11 @@ function ReservaContent({ id }: { id: string }) {
           <div className="pt-4 space-y-4">
             <Link
               href={`/reserva/${id}`}
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-bold py-5 rounded-full text-sm uppercase tracking-[0.3em] shadow-xl transition-all"
+              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
             >
-              Reintentar Pago Seguro
+              Reintentar pago seguro
             </Link>
-            <Link href="/contacto" className="block text-xs font-bold text-text-sub uppercase tracking-widest hover:text-gold transition-colors">Necesito Ayuda</Link>
+            <Link href="/contacto" className="block text-sm font-semibold text-text-sub hover:text-gold transition-colors">Necesito ayuda</Link>
           </div>
         </div>
       </div>
@@ -267,8 +267,8 @@ function ReservaContent({ id }: { id: string }) {
             </p>
           </div>
           <div className="pt-4">
-            <Link href="/disponibilidad" className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-bold py-5 rounded-full text-sm uppercase tracking-[0.3em] shadow-xl transition-all">
-              Ver Nuevas Fechas
+            <Link href="/disponibilidad" className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all">
+              Ver nuevas fechas
             </Link>
           </div>
         </div>
@@ -518,8 +518,8 @@ function ReservaContent({ id }: { id: string }) {
 
                       <PagarButton
                         reservaId={id}
-                        className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-full text-base uppercase tracking-[0.2em] shadow-xl transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 h-16"
-                        label="Pagar y Confirmar"
+                        className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 h-16"
+                        label="Pagar y confirmar"
                       />
                     </div>
 
