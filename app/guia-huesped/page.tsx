@@ -1,17 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Key, Wifi, Waves, Utensils, MessageCircle } from "lucide-react";
 import TrackView from '../components/TrackView';
 import { trackEvent } from '../lib/analytics';
+import CinematicSection from '../components/CinematicSection';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import GeoDivider from '../components/deco/GeoDivider';
+import { btnPrimaryDark, linkLineDark } from '../components/deco/cta';
 
 
 export default function GuestGuidePage() {
     const sections = [
         {
             title: "Llegada y Acceso",
-            icon: "vpn_key",
             content: "El check-in es a partir de las 16:00 hrs. Tu domo tiene cerradura digital. Recibirás tu código personal por WhatsApp el día de tu llegada.",
             items: [
                 "Llegada (check-in): 16:00 hrs",
@@ -21,7 +23,6 @@ export default function GuestGuidePage() {
         },
         {
             title: "Conexión en el Bosque",
-            icon: "wifi",
             content: "Estar en la montaña no significa quedar incomunicado. Tenemos Starlink para que compartas tu estadía o trabajes si lo necesitas.",
             // La clave del WiFi no se publica aquí: esta página es pública e indexable.
             // Se entrega por WhatsApp junto al código de acceso, el día de la llegada.
@@ -33,7 +34,6 @@ export default function GuestGuidePage() {
         },
         {
             title: "Tinaja de Ciprés (servicio de temporada)",
-            icon: "hot_tub",
             content: "Nuestras tinajas de ciprés son de uso simple. El agua se calienta con una caldera de leña. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
             items: [
                 "Tiempo de calentamiento: 3 a 4 horas",
@@ -43,7 +43,6 @@ export default function GuestGuidePage() {
         },
         {
             title: "Sabores del Valle",
-            icon: "restaurant",
             content: "La gastronomía de Las Trancas es parte del viaje. Aquí nuestras recomendaciones locales favoritas:",
             items: [
                 "Oliva Kitchen: Cocina de autor y productos locales.",
@@ -54,85 +53,90 @@ export default function GuestGuidePage() {
     ];
 
     return (
-        <div className="bg-background-dark font-sans text-white min-h-screen transition-colors duration-300">
+        <div className="bg-[#F7F3EC] font-sans text-[#1E1B16] min-h-screen">
             <TrackView eventName="view_guia_huesped" />
-            {/* Hero Section */}
-            <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden pt-20">
-                <Image
-                    src="/images/interiors/interior-domo-acogedor-78-2.jpg"
-                    alt="Interior Domo TreePod"
-                    fill
-                    sizes="100vw"
-                    className="object-cover"
-                    priority
-                />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-                <div className="relative z-10 text-center px-4 max-w-4xl">
-                    <div className="inline-block mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2 rounded-full">
-                        <span className="text-white text-xs font-black tracking-[0.2em] uppercase">Valle Las Trancas · Nevados de Chillán</span>
-                    </div>
-                    <h1 className="h1-display text-white mb-4 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">Guía del Huésped</h1>
-                    <p className="text-white/80 uppercase tracking-[0.3em] text-xs font-bold">Lo que necesitas saber para tu estadía</p>
-                </div>
-            </section>
 
-            <main className="max-w-4xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Portada editorial: foto a sangre, leyenda abajo-izquierda */}
+            <CinematicSection
+                image="/images/interiors/interior-domo-acogedor-78-2.jpg"
+                alt="Interior Domo TreePod"
+                eyebrow="Valle Las Trancas · Nevados de Chillán"
+                title={<>Guía <span className="italic">del Huésped</span></>}
+                text="Lo que necesitas saber para tu estadía."
+                priority
+                titleAs="h1"
+                photoCaption="Interior del domo, Valle Las Trancas"
+            />
+
+            <GeoDivider left="40%" />
+
+            <main className="mx-auto max-w-[1100px] px-5 md:px-10 py-16 md:py-24">
+                {/* Capítulos de la guía: índice numerado entre filetes */}
+                <SectionFolio num="N° 01" label="Manual de estadía" />
+
+                <div className="border-b border-[#1E1B16]/12">
                     {sections.map((section, index) => (
-                        <div key={index} className="bg-white/5 p-10 rounded-[2.5rem] shadow-xl border border-white/10 hover:border-primary/30 transition-all backdrop-blur-sm">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                                    {section.icon === 'vpn_key' && <Key className="text-primary w-6 h-6" />}
-                                    {section.icon === 'wifi' && <Wifi className="text-primary w-6 h-6" />}
-                                    {section.icon === 'hot_tub' && <Waves className="text-primary w-6 h-6" />}
-                                    {section.icon === 'restaurant' && <Utensils className="text-primary w-6 h-6" />}
-                                </div>
-                                <h2 className="h4-display text-white">{section.title}</h2>
+                        <section
+                            key={index}
+                            className="border-t border-[#1E1B16]/12 py-8 md:py-10 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-6"
+                        >
+                            <span
+                                className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums"
+                                aria-hidden="true"
+                            >
+                                {String(index + 1).padStart(2, "0")}
+                            </span>
+
+                            <div className="col-span-10 md:col-span-4">
+                                <h2 className="display-md text-[#1E1B16]">{section.title}</h2>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    {section.content}
+                                </p>
                             </div>
-                            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                                {section.content}
-                            </p>
-                            <ul className="space-y-3 border-t border-white/10 pt-6 mt-6">
+
+                            <ul className="col-span-12 md:col-span-7 space-y-3.5 self-center">
                                 {section.items.map((item, i) => (
-                                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-white/90 group/item">
-                                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110">
-                                            <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                                        </div>
-                                        <span className="transition-colors group-hover/item:text-white">{item}</span>
+                                    <li key={i} className="flex items-start gap-3 border-b border-dotted border-[#1E1B16]/15 pb-3 last:border-0">
+                                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1.5" />
+                                        <span className="text-[15px] text-[#1E1B16] leading-relaxed">{item}</span>
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </section>
                     ))}
                 </div>
+            </main>
 
-                {/* Contact Footer */}
-                <div className="mt-16 bg-primary text-white p-12 md:p-16 rounded-[3rem] text-center shadow-2xl shadow-primary/20 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
-                    <div className="relative z-10">
-                        <h3 className="h3-display mb-4 text-white">¿Necesitas ayuda adicional?</h3>
-                        <p className="text-white/80 mb-8 max-w-lg mx-auto text-sm leading-relaxed">
-                            Nuestro equipo está disponible vía WhatsApp para cualquier duda operativa durante tu estadía.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <GeoDivider left="82%" />
+
+            {/* Cierre: banda charcoal editorial */}
+            <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
+                <div className="mx-auto max-w-[1100px] px-5 md:px-10">
+                    <SectionFolio num="Km 72" label="Durante tu estadía" dark />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg !text-[#F7F3EC]">
+                                ¿Necesitas ayuda <span className="italic text-[#00ADEF]">adicional</span>?
+                            </h2>
+                            <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl">
+                                Nuestro equipo está disponible vía WhatsApp para cualquier duda operativa durante tu estadía.
+                            </p>
+                        </div>
+                        <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-6">
                             <a
                                 href="https://wa.me/56984643307"
                                 onClick={() => trackEvent('click_whatsapp_guia', { page: 'guia_huesped' })}
-                                className="bg-white text-primary px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-100 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                className={btnPrimaryDark}
                             >
-                                <MessageCircle className="w-5 h-5" />
                                 Enviar WhatsApp
                             </a>
-                            <Link
-                                href="/servicios"
-                                className="bg-primary-dark text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-black/20 transition-all active:scale-95"
-                            >
-                                Ver todos los servicios
+                            <Link href="/servicios" className={`${linkLineDark} !text-sm`}>
+                                Ver todos los servicios <span aria-hidden="true">→</span>
                             </Link>
                         </div>
                     </div>
                 </div>
-            </main>
+            </section>
         </div>
     );
 }

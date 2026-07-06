@@ -87,7 +87,11 @@ export default function DomoAmenities() {
               key={item.title}
               className="group border-t border-[#1E1B16]/12 py-6 grid grid-cols-12 gap-4 items-center"
             >
-              <div className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#00ADEF] tabular-nums">
+              {/* #008CBF sobre blanco (4,0:1): el cyan puro daba 2,5:1 y fallaba AA */}
+              <div
+                className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums"
+                aria-hidden="true"
+              >
                 {String(index + 1).padStart(2, "0")}
               </div>
 

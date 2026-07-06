@@ -30,7 +30,7 @@ const Stepper: React.FC<StepperProps> = ({ activeStep }) => {
                             {isActive && <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />}
                             <span
                                 className={`font-display italic text-xl leading-none tabular-nums ${
-                                    isActive || isCompleted ? 'text-[#00ADEF]' : 'text-[#1E1B16]/30'
+                                    isActive || isCompleted ? 'text-[#008CBF]' : 'text-[#1E1B16]/30'
                                 }`}
                                 aria-hidden="true"
                             >

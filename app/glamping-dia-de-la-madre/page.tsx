@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Script from 'next/script';
-import { ArrowRight, Heart, Waves, TreePine, Star, Gift, Check, MapPin } from 'lucide-react';
 import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
+import CinematicSection from '../components/CinematicSection';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import GeoDivider from '../components/deco/GeoDivider';
+import { btnPrimaryDark, linkLineDark } from '../components/deco/cta';
 
 export const metadata: Metadata = {
     title: 'Glamping Día de la Madre en Ñuble | Domos en Las Trancas — TreePod',
@@ -69,9 +73,37 @@ const jsonLd = {
     },
 };
 
+// La experiencia como índice numerado de revista, sin iconos ni tarjetas
+const experiencia = [
+    {
+        title: "Tinaja de ciprés (de temporada)",
+        desc: "Agua caliente, vista a la montaña y cielo estrellado. Es un servicio de temporada que vuelve en primavera; en invierno no opera. Consúltanos por la disponibilidad de tu fecha."
+    },
+    {
+        title: "Domo geodésico equipado",
+        desc: "Cama matrimonial y dos camas individuales, ropa de cama de calidad, calefacción, baño privado y vistas al bosque nativo de Ñuble."
+    },
+    {
+        title: "A minutos de las Termas",
+        desc: "Nevados de Chillán — termas y ski — está a pocos minutos en auto. Desde TreePod tienes acceso fácil a uno de los principales destinos de montaña de Ñuble."
+    },
+    {
+        title: "Registro SERNATUR N° 36806",
+        desc: "Somos un establecimiento turístico registrado en SERNATUR. Eso respalda nuestros estándares de calidad, seguridad y servicio."
+    },
+    {
+        title: "Privacidad en el bosque",
+        desc: "Cada domo está separado del resto, rodeado de bosque nativo y silencio. Sin pasillos ni vecinos al lado: el descanso que mamá merece."
+    },
+    {
+        title: "Cocina equipada",
+        desc: "Cada domo tiene cocina completa para que preparen juntos el desayuno del Día de la Madre con vista a la cordillera, a su propio ritmo."
+    },
+];
+
 export default function GlampingDiaDeLaMadrePage() {
     return (
-        <div className="bg-white text-text-main transition-colors duration-300 font-sans min-h-screen">
+        <div className="bg-white text-[#1E1B16] font-sans min-h-screen">
             <Script
                 id="json-ld-dia-madre"
                 type="application/ld+json"
@@ -79,177 +111,128 @@ export default function GlampingDiaDeLaMadrePage() {
             />
             <TrackView eventName="view_dia_de_la_madre" />
 
-            {/* HERO */}
-            <section className="relative h-[85vh] min-h-[550px] md:min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
-                <div className="absolute inset-0 bg-background-dark">
-                    <Image
-                        src="/images/wellness/Tinaja1.jpg"
-                        alt="Tinaja de ciprés en Domos TreePod Valle Las Trancas — Día de la Madre"
-                        fill
-                        priority
-                        className="object-cover object-center"
-                        sizes="100vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/60 z-10"></div>
-                </div>
-
-                <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
-                    <div className="inline-block mb-6 bg-rose-700/30 backdrop-blur-md border border-rose-400/30 px-6 py-2 rounded-full">
-                        <span className="text-white text-xs font-black tracking-[0.2em] uppercase">10 de Mayo 2026</span>
-                    </div>
-
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight drop-shadow-lg max-w-4xl">
-                        Un regalo que<br />
-                        <span className="text-rose-300">mamá va a recordar siempre</span>
-                    </h1>
-
-                    <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl drop-shadow leading-relaxed">
-                        Glamping en domos geodésicos en Valle Las Trancas, entre bosque nativo y la montaña de Ñuble.
-                        Un regalo distinto: tiempo para mamá.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* PORTADA — foto a sangre, leyenda abajo-izquierda */}
+            <CinematicSection
+                image="/images/wellness/Tinaja1.jpg"
+                alt="Tinaja de ciprés en Domos TreePod Valle Las Trancas — Día de la Madre"
+                eyebrow="10 de Mayo 2026 · Día de la Madre"
+                title={<>Un regalo que mamá va a <span className="italic">recordar siempre</span></>}
+                text="Glamping en domos geodésicos en Valle Las Trancas, entre bosque nativo y la montaña de Ñuble. Un regalo distinto: tiempo para mamá."
+                priority
+                titleAs="h1"
+                stat="10"
+                statCaption="de mayo · Día de la Madre"
+                photoCaption="Tinaja de ciprés, Valle Las Trancas"
+                ctaSlot={
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-6">
                         <TrackedLink
                             href="/reserva"
                             eventName="cta_dia_madre_hero_reserva"
-                            className="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold px-8 py-4 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl text-base"
+                            className={btnPrimaryDark}
                         >
-                            <Gift className="w-5 h-5" />
                             Ver disponibilidad 10 mayo
-                            <ArrowRight className="w-4 h-4" />
                         </TrackedLink>
                         <a
                             href={whatsappUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 text-white font-bold px-8 py-4 rounded-full transition-all duration-200 text-base"
+                            className={`${linkLineDark} !text-sm`}
                         >
-                            Consultar por WhatsApp
+                            Consultar por WhatsApp <span aria-hidden="true">→</span>
                         </a>
                     </div>
-                </div>
-            </section>
+                }
+            />
 
-            {/* POR QUÉ UN GLAMPING */}
-            <section className="py-20 bg-white">
-                <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-                    <div className="inline-flex items-center gap-2 bg-rose-50 text-rose-700 text-sm font-bold px-4 py-2 rounded-full mb-6">
-                        <Heart className="w-4 h-4" />
-                        El regalo diferente
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-black mb-6 text-gray-900 leading-tight">
-                        Hay regalos que se usan y se olvidan.<br />
-                        <span className="text-rose-600">Hay experiencias que se cuentan por años.</span>
-                    </h2>
-                    <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                        Lo que la mayoría de las mamás más necesita no es una cosa — es tiempo. Tiempo sin agenda,
-                        sin deberes, sin ruido de fondo. En Domos TreePod, en el Valle Las Trancas, eso es
-                        exactamente lo que entregamos.
-                    </p>
-                </div>
-            </section>
+            <GeoDivider left="14%" />
 
-            {/* QUÉ INCLUYE */}
-            <section className="py-20 bg-stone-50">
-                <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center mb-14">
-                        <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
-                            La experiencia TreePod
-                        </h2>
-                        <p className="text-gray-600 text-lg max-w-xl mx-auto">
-                            Todo lo que mamá merece, en un solo lugar.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
-                                <Waves className="w-6 h-6 text-rose-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Tinaja de ciprés (de temporada)</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Agua caliente, vista a la montaña y cielo estrellado. Es un servicio de temporada que
-                                vuelve en primavera; en invierno no opera. Consúltanos por la disponibilidad de tu fecha.
-                            </p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                                <TreePine className="w-6 h-6 text-emerald-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Domo geodésico equipado</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Cama matrimonial y dos camas individuales, ropa de cama de calidad, calefacción, baño privado
-                                y vistas al bosque nativo de Ñuble.
-                            </p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <MapPin className="w-6 h-6 text-amber-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">A minutos de las Termas</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Nevados de Chillán — termas y ski — está a pocos minutos en auto. Desde TreePod
-                                tienes acceso fácil a uno de los principales destinos de montaña de Ñuble.
-                            </p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                                <Star className="w-6 h-6 text-purple-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Registro SERNATUR N° 36806</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Somos un establecimiento turístico registrado en SERNATUR. Eso respalda nuestros
-                                estándares de calidad, seguridad y servicio.
-                            </p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                <TreePine className="w-6 h-6 text-blue-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Privacidad en el bosque</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Cada domo está separado del resto, rodeado de bosque nativo y silencio. Sin pasillos
-                                ni vecinos al lado: el descanso que mamá merece.
-                            </p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 flex flex-col gap-4">
-                            <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
-                                <Gift className="w-6 h-6 text-rose-600" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Cocina equipada</h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                Cada domo tiene cocina completa para que preparen juntos el desayuno del
-                                Día de la Madre con vista a la cordillera, a su propio ritmo.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* IMAGEN + TEXTO */}
-            <section className="py-20 bg-white">
-                <div className="container mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-                        <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                            <Image
-                                src="/images/interiors/interior-domo-acogedor-18.jpg"
-                                alt="Interior domo geodésico TreePod — cama con vista al bosque"
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1024px) 100vw, 50vw"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-6">
-                            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
-                                Despertar con la montaña<br />
-                                <span className="text-rose-600">desde la cama</span>
+            {/* N° 01 — EL REGALO DIFERENTE: declaración editorial asimétrica */}
+            <section className="py-16 md:py-24 bg-white">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 01" label="El regalo diferente" />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6">
+                        <div className="col-span-12 lg:col-span-9">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Hay regalos que se usan y se olvidan.{' '}
+                                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                    Hay experiencias que se cuentan por años.
+                                </span>
                             </h2>
-                            <p className="text-gray-600 leading-relaxed text-lg">
+                            <p className="lead text-[#5B5348] mt-6 max-w-2xl">
+                                Lo que la mayoría de las mamás más necesita no es una cosa — es tiempo. Tiempo sin agenda,
+                                sin deberes, sin ruido de fondo. En Domos TreePod, en el Valle Las Trancas, eso es
+                                exactamente lo que entregamos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <GeoDivider left="32%" />
+
+            {/* N° 02 — LA EXPERIENCIA: índice numerado entre filetes */}
+            <section className="py-16 md:py-24 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 02" label="La experiencia" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-14">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                La experiencia <span className="italic">TreePod</span>
+                            </h2>
+                            <p className="lead text-[#5B5348] mt-5">
+                                Todo lo que mamá merece, en un solo lugar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="border-b border-[#1E1B16]/12">
+                        {experiencia.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="border-t border-[#1E1B16]/12 py-6 md:py-7 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline"
+                            >
+                                <span
+                                    className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums"
+                                    aria-hidden="true"
+                                >
+                                    {String(idx + 1).padStart(2, "0")}
+                                </span>
+                                <h3 className="col-span-10 md:col-span-4 display-md text-[#1E1B16]">{item.title}</h3>
+                                <p className="col-span-12 md:col-span-7 text-[15px] text-[#5B5348] leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <GeoDivider left="52%" />
+
+            {/* N° 03 — IMAGEN + TEXTO: artículo asimétrico */}
+            <section className="py-16 md:py-24 bg-white">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 03" label="Desde la cama" />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-center">
+                        <figure className="col-span-12 lg:col-span-7">
+                            <div className="relative aspect-[4/3] rounded-[2px] overflow-hidden">
+                                <Image
+                                    src="/images/interiors/interior-domo-acogedor-18.jpg"
+                                    alt="Interior domo geodésico TreePod — cama con vista al bosque"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                />
+                            </div>
+                            <figcaption className="mt-2 flex items-center gap-2">
+                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                <span className="caption-editorial">Interior del domo, con vista al bosque</span>
+                            </figcaption>
+                        </figure>
+                        <div className="col-span-12 lg:col-span-5 flex flex-col gap-6">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Despertar con la montaña <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">desde la cama</span>
+                            </h2>
+                            <p className="text-[15px] md:text-base text-[#5B5348] leading-relaxed">
                                 Las mamás que han estado en TreePod suelen describir lo mismo: el silencio
                                 de la montaña, el olor a madera y el calor del domo cuando la temperatura cae.
                                 Cosas que no caben en una foto pero que se quedan.
@@ -262,9 +245,9 @@ export default function GlampingDiaDeLaMadrePage() {
                                     'Estacionamiento privado sin costo',
                                     'Acceso a áreas comunes del glamping',
                                 ].map((item) => (
-                                    <li key={item} className="flex items-center gap-3 text-gray-700">
-                                        <Check className="w-5 h-5 text-rose-500 flex-shrink-0" />
-                                        {item}
+                                    <li key={item} className="flex items-start gap-3 border-b border-dotted border-[#1E1B16]/15 pb-3 last:border-0">
+                                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1.5" />
+                                        <span className="text-[15px] text-[#1E1B16] leading-relaxed">{item}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -273,71 +256,91 @@ export default function GlampingDiaDeLaMadrePage() {
                 </div>
             </section>
 
-            {/* OPCIONES DE ESTADÍA */}
-            <section className="py-20 bg-stone-50">
-                <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
-                            Opciones para el Día de la Madre
-                        </h2>
+            <GeoDivider left="70%" />
+
+            {/* N° 04 — OPCIONES DE ESTADÍA: fichas técnicas */}
+            <section className="py-16 md:py-24 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 04" label="Opciones de estadía" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Opciones para el <span className="italic">Día de la Madre</span>
+                            </h2>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-white rounded-2xl p-8 border-2 border-stone-200 flex flex-col gap-4">
-                            <div className="text-sm font-bold text-gray-500 uppercase tracking-widest">Opción 1</div>
-                            <h3 className="text-2xl font-black text-gray-900">Una noche</h3>
-                            <p className="text-gray-600 leading-relaxed">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        <div className="bg-white rounded-[2px] border border-[#1E1B16]/12 p-7 md:p-8 flex flex-col gap-4">
+                            <p className="flex items-baseline gap-3">
+                                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
+                                <span className="dato text-[#5B5348]">Opción 1</span>
+                                <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
+                            </p>
+                            <h3 className="display-md text-[#1E1B16]">Una noche</h3>
+                            <p className="text-[15px] text-[#5B5348] leading-relaxed">
                                 Llegan el sábado 9 en la tarde, cenan tranquilos en el domo y se despiertan
                                 el domingo 10 — el Día de la Madre — con el paisaje de los Andes desde la cama.
                             </p>
-                            <p className="text-rose-600 font-bold text-lg mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
+                            <p className="caption-editorial mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
                         </div>
 
-                        <div className="bg-rose-600 rounded-2xl p-8 border-2 border-rose-600 flex flex-col gap-4 text-white shadow-xl">
-                            <div className="text-sm font-bold text-rose-200 uppercase tracking-widest">Opción 2 — Recomendada</div>
-                            <h3 className="text-2xl font-black">Dos noches</h3>
-                            <p className="text-rose-100 leading-relaxed">
+                        <div className="bg-white rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF] p-7 md:p-8 flex flex-col gap-4">
+                            <p className="flex items-baseline gap-3">
+                                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
+                                <span className="dato text-[#1E1B16]">Opción 2 — Recomendada</span>
+                                <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
+                            </p>
+                            <h3 className="display-md text-[#1E1B16]">Dos noches</h3>
+                            <p className="text-[15px] text-[#5B5348] leading-relaxed">
                                 Viernes 8 + sábado 9. Con dos noches hay tiempo para explorar Las Trancas con
                                 calma, visitar las termas y disfrutar la experiencia completa sin apuro.
                             </p>
-                            <p className="text-white font-bold text-lg mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
+                            <p className="caption-editorial mt-auto">Tarifa por noche según temporada — revísala en el calendario</p>
                         </div>
                     </div>
 
-                    <p className="text-center text-gray-500 text-sm mt-8">
+                    <p className="mt-8 flex items-center gap-2 caption-editorial">
+                        <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
                         Las fechas del Día de la Madre se agotan rápido. Si quieres asegurar disponibilidad para el 10 de mayo, reserva esta semana.
                     </p>
                 </div>
             </section>
 
-            {/* CTA FINAL */}
-            <section className="py-24 bg-gradient-to-br from-rose-700 to-rose-900 text-white text-center">
-                <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-                    <h2 className="text-3xl md:text-4xl font-black mb-4 leading-tight">
-                        Un regalo que mamá va a recordar
-                    </h2>
-                    <p className="text-rose-200 text-lg mb-10 leading-relaxed">
-                        Reserva directamente en domostreepod.cl — sin intermediarios, con abono del 50% y saldo en el check-in.
-                        O escríbenos por WhatsApp si tienes preguntas.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <TrackedLink
-                            href="/reserva"
-                            eventName="cta_dia_madre_final_reserva"
-                            className="inline-flex items-center gap-2 bg-white text-rose-700 font-bold px-8 py-4 rounded-full transition-all duration-200 hover:bg-rose-50 shadow-lg text-base"
-                        >
-                            <Gift className="w-5 h-5" />
-                            Reservar para el 10 de mayo
-                            <ArrowRight className="w-4 h-4" />
-                        </TrackedLink>
-                        <a
-                            href={whatsappUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-8 py-4 rounded-full transition-all duration-200 text-base"
-                        >
-                            Consultar por WhatsApp
-                        </a>
+            <GeoDivider left="86%" />
+
+            {/* CIERRE — banda charcoal editorial */}
+            <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="Km 72" label="Reserva directa" dark />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg !text-[#F7F3EC]">
+                                Un regalo que mamá <span className="italic text-[#00ADEF]">va a recordar</span>
+                            </h2>
+                            <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl">
+                                Reserva directamente en domostreepod.cl — sin intermediarios, con abono del 50% y saldo en el check-in.
+                                O escríbenos por WhatsApp si tienes preguntas.
+                            </p>
+                        </div>
+                        <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-6">
+                            <TrackedLink
+                                href="/reserva"
+                                eventName="cta_dia_madre_final_reserva"
+                                className={btnPrimaryDark}
+                            >
+                                Reservar para el 10 de mayo
+                            </TrackedLink>
+                            <a
+                                href={whatsappUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${linkLineDark} !text-sm`}
+                            >
+                                Consultar por WhatsApp <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>

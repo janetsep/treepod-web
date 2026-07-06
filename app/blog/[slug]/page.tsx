@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Calendar, Clock, Info } from 'lucide-react';
 import TrackView from '../../components/TrackView';
+import SectionFolio from '../../components/SectionFolio';
+import TriBullet from '../../components/deco/TriBullet';
+import GeoDivider from '../../components/deco/GeoDivider';
+import { btnPrimaryDark, linkLineDark, btnPrimary, linkLine } from '../../components/deco/cta';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -208,35 +211,27 @@ export default async function BlogPost({ params }: Props) {
     // Si el artículo no tiene contenido desarrollado, mostrar placeholder
     if (!article) {
         return (
-            <div className="bg-white text-text-main min-h-screen">
+            <div className="bg-[#F7F3EC] text-[#1E1B16] font-sans min-h-screen">
                 <TrackView eventName="view_blog_post_placeholder" params={{ slug }} />
 
                 <section className="py-24 md:py-32">
-                    <div className="container mx-auto px-6 md:px-10">
-                        <div className="max-w-4xl mx-auto text-center">
-                            <div className="bg-background-light rounded-[2.5rem] p-12">
-                                <h1 className="h2-display mb-6 text-text-main">
-                                    Artículo en Desarrollo
-                                </h1>
-                                <p className="text-xl text-text-sub font-medium mb-8">
-                                    Este artículo está siendo escrito por nuestro equipo.
-                                    Vuelve pronto para leer el contenido completo.
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                    <Link
-                                        href="/blog"
-                                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-primary-dark active:scale-95"
-                                    >
-                                        <ArrowLeft size={20} />
-                                        Volver al blog
-                                    </Link>
-                                    <Link
-                                        href="/disponibilidad"
-                                        className="inline-flex items-center gap-2 bg-background-dark text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-black active:scale-95"
-                                    >
-                                        Reservar estadía
-                                    </Link>
-                                </div>
+                    <div className="mx-auto max-w-[720px] px-5 md:px-10">
+                        <div className="bg-white rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF] p-8 md:p-12">
+                            <p className="dato text-[#5B5348] mb-5">Editorial TreePod</p>
+                            <h1 className="display-md text-[#1E1B16] mb-5">
+                                Artículo en Desarrollo
+                            </h1>
+                            <p className="text-[#5B5348] leading-relaxed mb-8">
+                                Este artículo está siendo escrito por nuestro equipo.
+                                Vuelve pronto para leer el contenido completo.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-6 sm:items-center">
+                                <Link href="/disponibilidad" className={btnPrimary}>
+                                    Reservar estadía
+                                </Link>
+                                <Link href="/blog" className={`${linkLine} !text-sm`}>
+                                    Volver al blog <span aria-hidden="true">→</span>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -273,51 +268,47 @@ export default async function BlogPost({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
             />
 
-            {/* CATEGORÍA + BREADCRUMB (estilo editorial Awasi) */}
-            <section className="pt-32 pb-12 bg-white">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-3xl mx-auto text-center">
-                        <div className="flex items-center justify-center gap-3 text-xs font-bold tracking-[0.3em] uppercase text-text-sub/70 mb-8">
-                            <Link href="/blog" className="hover:text-primary transition-colors">
-                                {article.category}
-                            </Link>
-                            <span className="w-8 h-px bg-text-sub/30"></span>
-                            <span>{article.readTime} de lectura</span>
-                        </div>
+            {/* Cabecera editorial KM 72: folio + filete, titular a la izquierda */}
+            <section className="pt-32 pb-10 bg-white">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="Bitácora" label={article.category} note={`${article.readTime} de lectura`} />
 
-                        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-text-main leading-[1.15] mb-8 tracking-tight">
-                            {article.title}
-                        </h1>
-
-                        <p className="text-lg md:text-xl text-text-sub font-medium italic font-display leading-relaxed max-w-2xl mx-auto">
-                            {article.excerpt}
-                        </p>
-
-                        <div className="flex items-center justify-center gap-4 mt-10 text-xs font-bold tracking-[0.2em] uppercase text-text-sub/60">
-                            <span className="flex items-center gap-2">
-                                <Calendar size={14} />
-                                {formatFechaPublicacion(article.publishDate)}
-                            </span>
-                            <span className="w-1 h-1 bg-text-sub/40 rounded-full"></span>
-                            <span>TreePod Editorial</span>
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6">
+                        <div className="col-span-12 lg:col-span-9">
+                            <h1 className="display-lg text-[#1E1B16]">
+                                {article.title}
+                            </h1>
+                            <p className="lead text-[#5B5348] mt-6 max-w-2xl font-display italic">
+                                {article.excerpt}
+                            </p>
+                            <p className="mt-8 flex items-center gap-2 dato text-[#5B5348]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                {formatFechaPublicacion(article.publishDate)} · TreePod Editorial
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* HERO IMAGE — full bleed estilo magazine */}
+            {/* FOTO DE APERTURA con pie de foto editorial */}
             <section className="relative w-full">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-[1rem] md:rounded-[2rem]">
-                        <Image
-                            src={article.image}
-                            alt={article.title}
-                            fill
-                            priority
-                            className="object-cover object-center"
-                            sizes="100vw"
-                        />
-                    </div>
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <figure>
+                        <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-[2px]">
+                            <Image
+                                src={article.image}
+                                alt={article.title}
+                                fill
+                                priority
+                                className="object-cover object-center"
+                                sizes="100vw"
+                            />
+                        </div>
+                        <figcaption className="mt-2 flex items-center gap-2">
+                            <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                            <span className="caption-editorial">Valle Las Trancas, Ñuble</span>
+                        </figcaption>
+                    </figure>
                 </div>
             </section>
 
@@ -331,14 +322,14 @@ export default async function BlogPost({ params }: Props) {
                             prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:font-black prose-h2:mb-6 prose-h2:mt-16 prose-h2:leading-tight
                             prose-h3:text-xl md:prose-h3:text-2xl prose-h3:font-bold prose-h3:mb-4 prose-h3:mt-10 prose-h3:text-text-main
                             prose-p:text-lg md:prose-p:text-xl prose-p:mb-7 prose-p:leading-[1.8] prose-p:text-text-main prose-p:font-normal
-                            prose-p:first-of-type:first-letter:font-display prose-p:first-of-type:first-letter:text-7xl prose-p:first-of-type:first-letter:font-black prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:mt-1 prose-p:first-of-type:first-letter:leading-[0.85] prose-p:first-of-type:first-letter:text-primary
+                            prose-p:first-of-type:first-letter:font-display prose-p:first-of-type:first-letter:text-7xl prose-p:first-of-type:first-letter:font-black prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:mt-1 prose-p:first-of-type:first-letter:leading-[0.85] prose-p:first-of-type:first-letter:text-primary-dark
                             prose-ul:mb-8 prose-ul:list-none prose-ul:pl-0
                             prose-ol:mb-8 prose-ol:list-decimal prose-ol:pl-6
                             prose-li:mb-3 prose-li:text-lg md:prose-li:text-xl prose-li:text-text-main prose-li:leading-relaxed
                             prose-ul>li:relative prose-ul>li:pl-6 prose-ul>li:before:content-[''] prose-ul>li:before:absolute prose-ul>li:before:left-0 prose-ul>li:before:top-[0.85em] prose-ul>li:before:w-3 prose-ul>li:before:h-px prose-ul>li:before:bg-primary
                             prose-strong:text-text-main prose-strong:font-bold
                             prose-em:italic prose-em:font-display
-                            prose-a:text-primary prose-a:font-bold prose-a:no-underline prose-a:border-b prose-a:border-primary/30 hover:prose-a:border-primary
+                            prose-a:text-primary-dark prose-a:font-bold prose-a:no-underline prose-a:border-b prose-a:border-primary/40 hover:prose-a:border-primary
                             prose-blockquote:border-0 prose-blockquote:my-12 prose-blockquote:px-0 prose-blockquote:py-0
                             prose-blockquote:font-display prose-blockquote:italic prose-blockquote:text-2xl md:prose-blockquote:text-3xl prose-blockquote:font-medium prose-blockquote:text-text-main prose-blockquote:text-center prose-blockquote:leading-snug prose-blockquote:relative
                             prose-table:w-full prose-table:border-collapse prose-table:my-10
@@ -362,17 +353,17 @@ export default async function BlogPost({ params }: Props) {
                             </ReactMarkdown>
                         </div>
 
-                        {/* SEPARADOR ORNAMENTAL */}
-                        <div className="flex items-center justify-center my-16">
-                            <span className="w-12 h-px bg-text-sub/30"></span>
-                            <span className="mx-4 text-primary text-2xl font-display italic">~</span>
-                            <span className="w-12 h-px bg-text-sub/30"></span>
+                        {/* Separador triangulado: el motivo geodésico, no la tilde curva */}
+                        <div className="flex items-center gap-4 my-16" aria-hidden="true">
+                            <span className="flex-1 h-px bg-[#1E1B16]/15"></span>
+                            <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+                            <span className="flex-1 h-px bg-[#1E1B16]/15"></span>
                         </div>
 
                         {/* DISCLAIMER — estilo editorial sutil */}
-                        <div className="border-l-2 border-primary/40 pl-6 py-2 my-12">
+                        <div className="border-l-2 border-[#00ADEF] pl-6 py-2 my-12">
                             <p className="text-sm md:text-base text-text-sub italic font-display leading-relaxed">
-                                <strong className="not-italic font-bold text-text-main uppercase tracking-wider text-xs block mb-2">Nota editorial</strong>
+                                <strong className="not-italic font-semibold text-[#1E1B16] dato block mb-2">Nota editorial</strong>
                                 Los precios, horarios y disponibilidad de operadores externos cambian con frecuencia. Te recomendamos verificar valores actualizados directamente con cada operador antes de tu viaje.
                             </p>
                         </div>
@@ -380,33 +371,28 @@ export default async function BlogPost({ params }: Props) {
                 </div>
             </article>
 
-            {/* CTA FINAL — estilo editorial elegante */}
-            <section className="py-20 md:py-28 bg-background-light border-t border-black/5">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="max-w-2xl mx-auto text-center">
-                        <span className="text-[11px] md:text-xs font-black tracking-[0.3em] uppercase text-primary mb-6 block">
-                            Tu refugio en Valle Las Trancas
-                        </span>
-                        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-text-main leading-tight mb-8">
-                            Domos geodésicos en bosque nativo
-                        </h2>
-                        <p className="text-lg text-text-sub font-medium italic font-display leading-relaxed mb-10 max-w-xl mx-auto">
-                            Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada en temporada. Reserva directa con abono del 50%.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
-                            <Link
-                                href="/disponibilidad"
-                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all active:scale-95 items-center gap-2 text-base"
-                            >
+            <GeoDivider left="84%" />
+
+            {/* CTA FINAL — banda charcoal editorial, composición asimétrica */}
+            <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="Km 72" label="Tu refugio en Valle Las Trancas" dark />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg !text-[#F7F3EC]">
+                                Domos geodésicos{' '}
+                                <span className="italic text-[#00ADEF]">en bosque nativo</span>
+                            </h2>
+                            <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl font-display italic">
+                                Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada en temporada. Reserva directa con abono del 50%.
+                            </p>
+                        </div>
+                        <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-6">
+                            <Link href="/disponibilidad" className={btnPrimaryDark}>
                                 Ver disponibilidad
-                                <ArrowRight size={18} />
                             </Link>
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-semibold transition-colors text-sm"
-                            >
-                                <ArrowLeft size={16} />
-                                Volver al blog
+                            <Link href="/blog" className={`${linkLineDark} !text-sm`}>
+                                Volver al blog <span aria-hidden="true">→</span>
                             </Link>
                         </div>
                     </div>

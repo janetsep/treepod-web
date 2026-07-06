@@ -317,7 +317,7 @@ function ReservaContent({ id }: { id: string }) {
             <div className="space-y-6">
               <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
                 <div className="flex items-baseline gap-3 mb-8">
-                  <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">01</span>
+                  <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
                   <h2 className="dato text-[#1E1B16]">Tu Estadía</h2>
                   <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                 </div>
@@ -440,7 +440,7 @@ function ReservaContent({ id }: { id: string }) {
 
               <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
                 <div className="flex items-baseline gap-3 mb-6">
-                  <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">02</span>
+                  <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
                   <h2 className="dato text-[#1E1B16]">Información de Contacto</h2>
                   <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                 </div>
@@ -483,7 +483,7 @@ function ReservaContent({ id }: { id: string }) {
                 <section className="animate-fade-in">
                   <div className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
                     <div className="flex items-baseline gap-3 mb-6">
-                      <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">03</span>
+                      <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
                       <h2 className="dato text-[#1E1B16]">Método de Pago</h2>
                       <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                     </div>

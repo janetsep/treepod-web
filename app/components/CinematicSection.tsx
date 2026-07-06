@@ -10,6 +10,8 @@ interface Props {
   text?: string;
   ctaText?: string;
   ctaHref?: string;
+  /** CTA propio (ej: TrackedLink con eventos): reemplaza a ctaText/ctaHref */
+  ctaSlot?: React.ReactNode;
   align?: "left" | "center"; // compat: la composición ancla siempre abajo-izquierda
   position?: string; // object-position
   priority?: boolean; // marcar como LCP cuando es el hero de la página
@@ -31,6 +33,7 @@ export default function CinematicSection({
   text,
   ctaText,
   ctaHref,
+  ctaSlot,
   position = "center",
   priority = false,
   titleAs = "h2",
@@ -87,15 +90,20 @@ export default function CinematicSection({
               {text}
             </p>
           )}
-          {ctaText && ctaHref && (
-            <div className="mt-8">
-              <Link
-                href={ctaHref}
-                className="inline-flex items-center gap-2 font-semibold text-[15px] text-[#F7F3EC] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors"
-              >
-                {ctaText} <span aria-hidden="true">→</span>
-              </Link>
-            </div>
+          {ctaSlot ? (
+            <div className="mt-8">{ctaSlot}</div>
+          ) : (
+            ctaText &&
+            ctaHref && (
+              <div className="mt-8">
+                <Link
+                  href={ctaHref}
+                  className="inline-flex items-center gap-2 font-semibold text-[15px] text-[#F7F3EC] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors"
+                >
+                  {ctaText} <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            )
           )}
         </div>
 

@@ -454,7 +454,7 @@ function DisponibilidadContent() {
           {!isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
-                <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">01</span>
+                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
                 <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">Estadía</h2>
                 <span className="ml-auto hidden md:block caption-editorial">Huéspedes y fechas</span>
               </header>
@@ -536,7 +536,7 @@ function DisponibilidadContent() {
           {!isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
-                <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">02</span>
+                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
                 <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">Extras</h2>
                 {!(entrada && salida) ? (
                   <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
@@ -705,7 +705,7 @@ function DisponibilidadContent() {
           {/* COL 3: 03 — Resumen (ficha de reserva) */}
           <aside className={`lg:sticky lg:top-28 z-20 pb-24 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
             <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
-              <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">03</span>
+              <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
               <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">
                 {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
               </h2>

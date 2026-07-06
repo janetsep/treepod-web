@@ -1,33 +1,32 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import GeoArc from './components/deco/GeoArc';
+import TriBullet from './components/deco/TriBullet';
+import { btnPrimary } from './components/deco/cta';
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-background-light flex flex-col items-center justify-center p-4 text-center">
-            <div className="relative w-64 h-64 mb-8 opacity-80">
-                {/* Using a nature image or just the logo. Let's use the logo for clarity */}
-                <Image
-                    src="/images/branding/logo-treepod.jpg"
-                    alt="TreePod Logo"
-                    fill
-                    sizes="256px"
-                    className="object-contain"
-                />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-display font-bold text-primary mb-4">404</h1>
-            <h2 className="text-2xl md:text-3xl font-display font-medium text-text-main mb-6">
-                Te has desviado del sendero
-            </h2>
-            <p className="text-text-sub max-w-md mb-8 text-lg">
-                La página que buscas no existe o ha sido movida. Pero no te preocupes, el refugio siempre está cerca.
-            </p>
+        <div className="relative min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16] overflow-hidden flex items-center">
+            {/* Arco geodésico como marca de agua: la página perdida sigue siendo TreePod */}
+            <GeoArc className="absolute bottom-0 right-0 w-[420px] max-w-[70vw] text-[#1E1B16]/[0.08] pointer-events-none" />
 
-            <Link
-                href="/"
-                className="bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-full transition-all transform hover:-translate-y-1 shadow-lg"
-            >
-                Volver al inicio
-            </Link>
+            <div className="relative z-10 mx-auto w-full max-w-[720px] px-5 md:px-10 py-24">
+                <p className="flex items-center gap-2 dato text-[#5B5348] mb-6">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+                    Error 404 · Ruta N-55, Km desconocido
+                </p>
+                <h1 className="display-lg text-[#1E1B16]">
+                    Te has desviado <span className="italic">del sendero</span>
+                </h1>
+                <p className="text-[#5B5348] leading-relaxed max-w-md mt-6">
+                    La página que buscas no existe o ha sido movida. Pero no te preocupes, el refugio siempre está cerca.
+                </p>
+
+                <div className="mt-10">
+                    <Link href="/" className={btnPrimary}>
+                        Volver al inicio
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 }

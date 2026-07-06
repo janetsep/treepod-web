@@ -133,7 +133,7 @@ export default function ServicesPage() {
                                 {/* Texto: folio + titular + lista de filetes + CTA */}
                                 <div className={`col-span-12 lg:col-span-5 space-y-6 ${reverse ? "lg:order-1" : ""}`}>
                                     <p className="flex items-baseline gap-3">
-                                        <span className="font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">{num}</span>
+                                        <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">{num}</span>
                                         <span className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#5B5348]">{service.subtitle}</span>
                                     </p>
                                     <h2 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16]">

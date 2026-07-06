@@ -2,31 +2,33 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import TriBullet from "../components/deco/TriBullet";
+import GeoDivider from "../components/deco/GeoDivider";
+import { btnPrimaryDark, linkLineDark } from "../components/deco/cta";
 
 export default function GuiaPage() {
     return (
         // El Navbar global lo inyecta AdminAwareLayout: renderizarlo aquí de nuevo
         // duplicaba el menú (dos <nav> fijos superpuestos).
-        <div className="bg-background-dark text-white transition-colors duration-300 font-sans min-h-screen flex flex-col">
+        <div className="bg-[#1E1B16] text-[#F7F3EC] font-sans min-h-screen flex flex-col">
             <main className="flex-1 w-full flex flex-col pt-36">
-                <div className="px-6 md:px-40 flex flex-1 justify-center py-10 md:py-16">
-                    <div className="flex flex-col max-w-[960px] flex-1">
-                        <div className="flex flex-col-reverse gap-10 py-6 md:flex-row md:items-center md:gap-16">
+                <div className="px-5 md:px-10 flex flex-1 justify-center py-10 md:py-16">
+                    <div className="flex flex-col max-w-[1100px] flex-1">
+                        <div className="grid grid-cols-12 gap-x-4 md:gap-x-10 gap-y-10 items-center">
                             {/* Left: Text Content */}
-                            <div className="flex flex-col gap-6 md:min-w-[400px] md:gap-8 flex-1 text-left">
+                            <div className="col-span-12 md:col-span-7 flex flex-col gap-6 md:gap-8 text-left order-2 md:order-1">
                                 <div className="flex flex-col gap-4">
-                                    <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-wider text-xs">
-                                        <CheckCircle2 className="w-5 h-5" />
-                                        <span>Confirmado</span>
-                                    </div>
-                                    <h1 className="text-white text-4xl font-display font-black leading-[1.1] tracking-[-0.033em] md:text-5xl">
-                                        ¡Gracias por tu interés!
+                                    <p className="flex items-center gap-2 dato text-[#F7F3EC]/70">
+                                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+                                        Confirmado
+                                    </p>
+                                    <h1 className="display-lg !text-[#F7F3EC]">
+                                        ¡Gracias por <span className="italic text-[#00ADEF]">tu interés</span>!
                                     </h1>
-                                    <h2 className="text-white/80 text-base font-normal leading-relaxed md:text-lg">
-                                        Tu <span className="font-bold text-primary">Guía de Glamping en Las Trancas</span> está lista: recomendaciones locales y datos prácticos para tu visita al Valle Las Trancas.
+                                    <h2 className="text-[#F7F3EC]/80 text-base font-normal leading-relaxed md:text-lg">
+                                        Tu <span className="font-semibold text-[#00ADEF]">Guía de Glamping en Las Trancas</span> está lista: recomendaciones locales y datos prácticos para tu visita al Valle Las Trancas.
                                     </h2>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-[#F7F3EC]/60">
                                         Te enviamos el acceso al correo que registraste. Si no lo ves, revisa la carpeta de spam o promociones. También puedes leerla aquí mismo:
                                     </p>
                                 </div>
@@ -34,56 +36,66 @@ export default function GuiaPage() {
                                     prometer un documento que no existe como PDF. Cuando haya un PDF
                                     publicado, se puede sumar aquí el botón de descarga. */}
                                 <div>
-                                    <Link href="/guia-huesped" className="inline-flex items-center justify-center rounded-full h-12 px-8 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                    <Link href="/guia-huesped" className={btnPrimaryDark}>
                                         Ver la guía online
                                     </Link>
                                 </div>
                             </div>
 
-                            {/* Right: Visual Asset (Guide Mockup) */}
-                            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-                                <div className="relative group w-full max-w-[400px]">
-                                    {/* Decorative background blob */}
-                                    <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                                    {/* Image Container */}
-                                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-white/5 shadow-2xl ring-1 ring-white/10">
+                            {/* Right: portada de la guía como ficha editorial */}
+                            <div className="col-span-12 md:col-span-5 flex justify-center md:justify-end order-1 md:order-2">
+                                <figure className="w-full max-w-[400px]">
+                                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px] border border-white/15">
                                         <Image
                                             alt="Bosque nativo de Valle Las Trancas, portada de la guía TreePod"
                                             src="/images/Galeria/Las Trancas Bosque Nativo 2.jpeg"
                                             fill
                                             sizes="(max-width: 768px) 100vw, 400px"
-                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            className="object-cover"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
-                                            <p className="text-white text-sm font-medium tracking-widest uppercase opacity-90">TreePod</p>
-                                            <p className="text-white text-2xl font-display font-bold">Guía de Las Trancas</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#1E1B16]/70 via-transparent to-transparent flex flex-col justify-end p-6">
+                                            <p className="dato text-[#F7F3EC]/90">TreePod</p>
+                                            <p className="font-display font-medium text-2xl text-[#F7F3EC] mt-1">Guía de Las Trancas</p>
                                         </div>
                                     </div>
-                                </div>
+                                    <figcaption className="mt-2 flex items-center gap-2">
+                                        <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                        <span className="caption-editorial !text-[#F7F3EC]/60">Bosque nativo, Valle Las Trancas</span>
+                                    </figcaption>
+                                </figure>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <GeoDivider left="70%" tone="dark" />
+
                 {/* CTA Section: Keep engaging */}
-                <div className="w-full bg-white/5 border-y border-white/10">
-                    <div className="px-6 md:px-40 flex justify-center py-16 md:py-20">
-                        <div className="flex flex-col max-w-[960px] flex-1 text-center items-center gap-8">
-                            <div className="flex flex-col gap-4 max-w-[720px]">
-                                <h2 className="text-white text-3xl font-bold font-display leading-tight tracking-[-0.015em] md:text-4xl">
-                                    ¿Listo para tu escapada a Las Trancas?
-                                </h2>
-                                <p className="text-gray-400 text-lg font-normal leading-relaxed">
-                                    Mientras revisas tu guía, mira nuestros domos en Valle Las Trancas y encuentra el indicado para tu escapada.
-                                </p>
-                            </div>
-                            <div className="flex flex-wrap justify-center gap-4 w-full">
-                                <Link href="/domos" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 active:scale-95">
-                                    Ver nuestros alojamientos
-                                </Link>
-                                <a href="https://instagram.com/domostreepod" target="_blank" rel="noopener noreferrer" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-transparent border border-white/20 text-white text-base font-semibold leading-normal hover:bg-white/5 transition-all">
-                                    Seguir en Instagram
-                                </a>
+                <div className="w-full border-t border-white/10">
+                    <div className="px-5 md:px-10 flex justify-center py-16 md:py-20">
+                        <div className="flex flex-col max-w-[1100px] flex-1">
+                            <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                                <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
+                                    <h2 className="display-md !text-[#F7F3EC]">
+                                        ¿Listo para tu escapada a Las Trancas?
+                                    </h2>
+                                    <p className="text-[#F7F3EC]/70 text-lg font-normal leading-relaxed max-w-2xl">
+                                        Mientras revisas tu guía, mira nuestros domos en Valle Las Trancas y encuentra el indicado para tu escapada.
+                                    </p>
+                                </div>
+                                <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-6">
+                                    <Link href="/domos" className={btnPrimaryDark}>
+                                        Ver nuestros alojamientos
+                                    </Link>
+                                    <a
+                                        href="https://instagram.com/domostreepod"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`${linkLineDark} !text-sm`}
+                                    >
+                                        Seguir en Instagram <span aria-hidden="true">→</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

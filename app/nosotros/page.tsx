@@ -132,7 +132,7 @@ export default function NosotrosPage() {
                 key={obj.numero}
                 className="border-b border-[#1E1B16]/12 py-6 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline"
               >
-                <span className="col-span-2 md:col-span-1 font-display italic text-lg text-[#00ADEF] tabular-nums" aria-hidden="true">
+                <span className="col-span-2 md:col-span-1 font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">
                   {obj.numero}
                 </span>
                 <h3 className="col-span-10 md:col-span-4 display-md text-[#1E1B16]">

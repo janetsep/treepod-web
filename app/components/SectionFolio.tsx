@@ -22,7 +22,15 @@ export default function SectionFolio({
 }: Props) {
   return (
     <header className={`flex items-baseline gap-4 mb-10 md:mb-14 ${className}`}>
-      <span className="font-display italic text-lg md:text-xl text-[#00ADEF] tabular-nums" aria-hidden="true">
+      {/* Cyan #00ADEF puro da 2,3:1 sobre crema: bajo el 3:1 de AA para texto grande.
+          Sobre fondos claros el folio usa #008CBF (4,0:1); el cyan puro queda para
+          fondos oscuros y elementos decorativos. */}
+      <span
+        className={`font-display italic text-lg md:text-xl tabular-nums ${
+          dark ? "text-[#00ADEF]" : "text-[#008CBF]"
+        }`}
+        aria-hidden="true"
+      >
         {num}
       </span>
       <span
