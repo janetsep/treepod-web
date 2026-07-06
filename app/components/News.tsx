@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function News() {
     const activities = [
         {
-            image: "/images/real/VegetacionOtono.jpg",
+            image: "/images/Galeria/domoinvierno.jpeg",
             title: "Qué Hacer en Valle Las Trancas",
             description: "Ski y termas en invierno, trekking en verano, colores de bosque en otoño. Una guía del valle para elegir cuándo venir.",
             tag: "Guía por temporada",
