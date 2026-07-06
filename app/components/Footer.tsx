@@ -66,6 +66,7 @@ export default function Footer() {
                             <li><Link href="/blog" className="hover:text-[#00ADEF] transition-colors">Blog</Link></li>
                             <li><Link href="/galeria" className="hover:text-[#00ADEF] transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-[#00ADEF] transition-colors">Ubicación & Contacto</Link></li>
+                            <li><Link href="/en" className="hover:text-[#00ADEF] transition-colors">English</Link> <span className="text-white/40" aria-hidden="true">·</span> <Link href="/pt" className="hover:text-[#00ADEF] transition-colors">Português</Link></li>
                         </ul>
                     </div>
 
