@@ -142,7 +142,7 @@ export default function GaleriaPage() {
                                 <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center mb-10 mx-auto shadow-xl transform group-hover:rotate-12 transition-transform duration-500">
                                     <Sparkles className="text-primary w-10 h-10" strokeWidth={2.5} />
                                 </div>
-                                <h4 className="h3-display mb-6 text-text-main">Tu escapada <br /> comienza aquí</h4>
+                                <h3 className="h3-display mb-6 text-text-main">Tu escapada <br /> comienza aquí</h3>
                                 <p className="text-text-sub text-base md:text-lg mb-10 font-medium leading-relaxed max-w-md mx-auto">Elige tu fecha y reserva tu domo en el Valle Las Trancas.</p>
                                 <Link href="/disponibilidad" className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-primary-dark transition-all inline-block shadow-lg active:scale-95">
                                     Ver disponibilidad

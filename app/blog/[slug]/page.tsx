@@ -185,6 +185,14 @@ export async function generateMetadata({ params }: Props) {
             type: 'article',
             locale: 'es_CL',
         },
+        // Sin este bloque, el artículo hereda el twitter:* del layout de /blog
+        // (título e imagen del listado) y al compartir en X se ve la card equivocada.
+        twitter: {
+            card: 'summary_large_image',
+            title: article.title,
+            description: article.metaDescription ?? article.excerpt,
+            images: [article.image],
+        },
     };
 }
 

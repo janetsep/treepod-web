@@ -443,7 +443,7 @@ function DisponibilidadContent() {
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Calendar className="text-primary w-4 h-4" />
                   </div>
-                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h3>
+                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h2>
                 </div>
                 <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
               </header>
@@ -527,7 +527,7 @@ function DisponibilidadContent() {
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Sparkles className="text-primary w-4 h-4" />
                   </div>
-                  <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h3>
+                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h2>
                   {!(entrada && salida) && (
                     <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-primary/10 animate-pulse">
                       Elige fechas primero
@@ -695,9 +695,9 @@ function DisponibilidadContent() {
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
                   <Settings className="text-primary w-4 h-4" />
                 </div>
-                <h3 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
+                <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
                   {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
-                </h3>
+                </h2>
               </div>
               <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Tu reserva en un vistazo</p>
             </header>
