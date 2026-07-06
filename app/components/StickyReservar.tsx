@@ -78,7 +78,7 @@ export default function StickyReservar() {
                   </span>
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
-                  /noche · 2 personas · 4,9 (59)
+                  /noche · 2 personas · 4,9 (209)
                   {desde.nochesMin > 1 ? ` · ${desde.nochesMin}+ noches` : ""}
                 </div>
               </>
