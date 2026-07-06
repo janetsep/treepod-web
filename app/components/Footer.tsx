@@ -45,6 +45,8 @@ export default function Footer() {
                             <li><Link href="/glamping-valle-las-trancas" className="hover:text-primary transition-colors">Domos en Las Trancas</Link></li>
                             <li><Link href="/escapada-romantica-las-trancas" className="hover:text-primary transition-colors">Escapada Romántica</Link></li>
                             <li><Link href="/servicios" className="hover:text-primary transition-colors">Servicios</Link></li>
+                            <li><Link href="/paquetes" className="hover:text-primary transition-colors">Paquetes y Experiencias</Link></li>
+                            <li><Link href="/guia-huesped" className="hover:text-primary transition-colors">Guía del Huésped</Link></li>
                             <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
                             <li><Link href="/galeria" className="hover:text-primary transition-colors">Galería Inmersiva</Link></li>
                             <li><Link href="/contacto" className="hover:text-primary transition-colors">Ubicación & Contacto</Link></li>

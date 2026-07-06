@@ -90,7 +90,9 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                 onChange={(e) => setAdultos(Number(e.target.value))}
                 className={`${baseField} md:w-32`}
               >
-                {[1, 2, 3, 4, 5, 6].map((n) => (
+                {/* Capacidad máxima real por domo: 4 personas (igual que el select de /disponibilidad).
+                    Ofrecer 5-6 llevaba siempre a "No disponible en estas fechas". */}
+                {[1, 2, 3, 4].map((n) => (
                   <option key={n} value={n}>{n} {n === 1 ? "persona" : "personas"}</option>
                 ))}
               </select>

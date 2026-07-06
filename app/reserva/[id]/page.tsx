@@ -25,6 +25,7 @@ function formatDate(dateString: string) {
 interface Reserva {
   id: string;
   created_at: string;
+  expires_at?: string | null;
   estado: string;
   fecha_inicio: string;
   fecha_fin: string;
@@ -55,9 +56,10 @@ function ReservaContent({ id }: { id: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
+  const errorParam = searchParams.get("error");
   const [reserva, setReserva] = useState<Reserva | null>(null);
   const [loading, setLoading] = useState(true);
-  const [minutesLeft, setMinutesLeft] = useState(15);
+  const [minutesLeft, setMinutesLeft] = useState(10);
 
   useEffect(() => {
     // El intervalo se guarda fuera de la función async para poder limpiarlo
@@ -83,9 +85,12 @@ function ReservaContent({ id }: { id: string }) {
             noches: Math.ceil(Math.abs(new Date(data.fecha_fin).getTime() - new Date(data.fecha_inicio).getTime()) / (1000 * 60 * 60 * 24))
           });
 
-          // Calculate minutes left
-          const createdAt = new Date(data.created_at);
-          const expiresAt = new Date(createdAt.getTime() + 15 * 60000);
+          // Minutos restantes de retención del domo. Usamos el expires_at real que
+          // fija el servidor (10 min); antes se hardcodeaban 15 min y la UI prometía
+          // más tiempo del que el domo estaba efectivamente retenido.
+          const expiresAt = data.expires_at
+            ? new Date(data.expires_at)
+            : new Date(new Date(data.created_at).getTime() + 10 * 60000);
           const updateTimer = () => {
             const now = new Date();
             setMinutesLeft(diffMinutes(now, expiresAt));
@@ -142,7 +147,7 @@ function ReservaContent({ id }: { id: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark font-display text-2xl font-bold animate-pulse">
+      <div className="min-h-screen flex items-center justify-center bg-background-light font-display text-2xl font-bold animate-pulse">
         TreePod...
       </div>
     );
@@ -164,17 +169,17 @@ function ReservaContent({ id }: { id: string }) {
   const isExpired = minutesLeft === 0 && reserva.estado === "pendiente_pago";
   if (statusParam === "SUCCESS_TRANSFER") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark transition-colors">
-        <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-gold/10 dark:bg-gold/20 rounded-full flex items-center justify-center mx-auto shadow-inner">
+      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main transition-colors">
+        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
+          <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <Hourglass className="text-gold w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight">Transferencia <span className="text-gold italic-display">Informada</span></h1>
-            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
+            <p className="text-text-sub font-normal leading-relaxed">
               Hemos recibido tu aviso de transferencia. Tu reserva quedará confirmada una vez que verifiquemos el pago (24-48hrs).
               <br /><br />
-              Te enviaremos la confirmación definitiva a <span className="font-bold text-text-main dark:text-text-main-dark">{reserva.email}</span>.
+              Te enviaremos la confirmación definitiva a <span className="font-bold text-text-main">{reserva.email}</span>.
             </p>
           </div>
           <div className="pt-4">
@@ -194,16 +199,16 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isPaid || statusParam === "SUCCESS") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark transition-colors">
-        <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-green-500/10 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto shadow-inner">
+      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main transition-colors">
+        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
+          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="text-green-500 w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-display font-bold tracking-tight">¡Reserva <span className="text-gold italic-display">Confirmada</span>!</h1>
-            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-2026-{reserva.id.split('-')[0].toUpperCase()}</p>
-            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
-              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main dark:text-text-main-dark">{reserva.email}</span>.
+            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-{new Date(reserva.created_at).getFullYear()}-{reserva.id.split('-')[0].toUpperCase()}</p>
+            <p className="text-text-sub font-normal leading-relaxed">
+              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main">{reserva.email}</span>.
             </p>
           </div>
           <div className="pt-4">
@@ -221,14 +226,14 @@ function ReservaContent({ id }: { id: string }) {
 
   if (statusParam === "FAILURE") {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark">
-        <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-red-100 dark:border-red-900/20 space-y-8 animate-fade-in">
+      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main">
+        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-red-100 space-y-8 animate-fade-in">
           <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="text-red-500 w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight">No pudimos procesar el pago</h1>
-            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
+            <p className="text-text-sub font-normal leading-relaxed">
               Hubo un inconveniente con la transacción. No te preocupes, tu reserva sigue disponible por unos minutos.
             </p>
           </div>
@@ -248,14 +253,14 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isExpired) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans flex flex-col items-center justify-center p-6 text-center text-text-main dark:text-text-main-dark">
-        <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gray-100 dark:border-gray-800 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-gray-100 dark:bg-black/10 rounded-full flex items-center justify-center mx-auto opacity-40">
+      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main">
+        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gray-100 space-y-8 animate-fade-in">
+          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto opacity-40">
             <TimerOff className="w-10 h-10" />
           </div>
           <div className="space-y-4">
             <h1 className="text-3xl font-display font-bold tracking-tight opacity-60">Tiempo Excedido</h1>
-            <p className="text-text-sub dark:text-text-sub-dark font-normal leading-relaxed">
+            <p className="text-text-sub font-normal leading-relaxed">
               Lo sentimos, la reserva ha expirado para liberar el espacio a otros huéspedes.
             </p>
           </div>
@@ -278,7 +283,7 @@ function ReservaContent({ id }: { id: string }) {
   const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email);
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark text-text-main dark:text-text-main-dark font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-background-light text-text-main font-sans transition-colors duration-300">
       <div className="h-16 md:h-20"></div>
 
       <div className="container mx-auto px-4 md:px-6 py-4 lg:py-6 max-w-5xl">
@@ -289,6 +294,15 @@ function ReservaContent({ id }: { id: string }) {
             <Stepper activeStep={isGuestDataComplete ? 3 : 2} />
           </div>
 
+          {/* Aviso cuando el huésped canceló o abortó el pago en Webpay y vuelve al checkout.
+              Sin esto, ?error=webpay_abort / ?error=missing_token no mostraban ningún mensaje. */}
+          {(errorParam === "webpay_abort" || errorParam === "missing_token") && (
+            <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-2xl text-sm font-medium flex items-start gap-3 animate-fade-in">
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-amber-500" />
+              <span>El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras.</span>
+            </div>
+          )}
+
           <header className="text-center space-y-4">
             <div className="inline-block px-3 py-1 bg-gold/10 rounded-full">
               <span className="text-gold text-[9px] font-bold tracking-[0.3em] uppercase">Checkout Seguro</span>
@@ -296,7 +310,7 @@ function ReservaContent({ id }: { id: string }) {
             <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
               Finaliza <span className="text-gold italic-display font-normal">Tu Reserva</span>
             </h1>
-            <p className="text-sm md:text-base text-text-sub dark:text-text-sub-dark max-w-xl mx-auto font-normal leading-relaxed">
+            <p className="text-sm md:text-base text-text-sub max-w-xl mx-auto font-normal leading-relaxed">
               Revisa los detalles finales y asegura tu refugio en la cordillera.
             </p>
           </header>
@@ -304,7 +318,7 @@ function ReservaContent({ id }: { id: string }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Columna 1: Resumen y Detalle Financiero */}
             <div className="space-y-6">
-              <section className="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-800 relative py-10 md:py-12">
+              <section className="bg-surface-light p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100 relative py-10 md:py-12">
                 <div className="absolute top-0 right-0 px-4 py-2 bg-primary/10 rounded-tr-[2rem] rounded-bl-2xl text-[9px] font-semibold text-primary uppercase tracking-widest">
                   Detalle de Reserva
                 </div>
@@ -335,7 +349,7 @@ function ReservaContent({ id }: { id: string }) {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-gray-100 dark:border-gray-800 space-y-3">
+                <div className="pt-6 border-t border-gray-100 space-y-3">
                   {/* Desglose Matemático Correcto */}
                   {(() => {
                     const totalExtras = reserva.reserva_servicios?.reduce((acc: number, s: any) => acc + s.total, 0) || 0;
@@ -435,7 +449,7 @@ function ReservaContent({ id }: { id: string }) {
             {/* Columna 2: Datos y Pago */}
             <div className="space-y-6">
 
-              <section className="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-800">
+              <section className="bg-surface-light p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                     <span className="text-primary font-bold font-display text-sm">2</span>
@@ -479,7 +493,7 @@ function ReservaContent({ id }: { id: string }) {
 
               {isGuestDataComplete && (
                 <section className="space-y-8 animate-fade-in">
-                  <div className="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-800">
+                  <div className="bg-surface-light p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-gray-100">
                     <div className="flex items-center gap-4 mb-6">
                       <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                         <span className="text-primary font-bold font-display text-sm">3</span>
@@ -487,7 +501,7 @@ function ReservaContent({ id }: { id: string }) {
                       <h2 className="text-xl font-display font-bold">Método de Pago</h2>
                     </div>
 
-                    <div className="bg-gold/5 dark:bg-gold/10 p-8 rounded-3xl border border-gold/20 animate-fade-in">
+                    <div className="bg-gold/5 p-8 rounded-3xl border border-gold/20 animate-fade-in">
                       <div className="flex items-center gap-3 mb-4">
                         <Lock className="text-primary w-5 h-5" />
                         <div>
@@ -496,7 +510,7 @@ function ReservaContent({ id }: { id: string }) {
                         </div>
                       </div>
 
-                      <p className="text-sm text-text-sub dark:text-text-sub-dark mb-8 leading-relaxed font-normal italic">
+                      <p className="text-sm text-text-sub mb-8 leading-relaxed font-normal italic">
                         Serás redirigido al servidor seguro de Transbank. TreePod no almacena los datos de tu tarjeta.
                       </p>
 
@@ -508,7 +522,7 @@ function ReservaContent({ id }: { id: string }) {
                     </div>
 
                     {minutesLeft > 0 && (
-                      <div className="mt-8 flex items-center justify-center gap-3 text-primary dark:text-gold font-semibold animate-pulse text-[10px] uppercase tracking-[0.4em]">
+                      <div className="mt-8 flex items-center justify-center gap-3 text-primary font-semibold animate-pulse text-[10px] uppercase tracking-[0.4em]">
                         <Timer className="w-4 h-4" />
                         <span>Reserva garantizada por {minutesLeft} min</span>
                       </div>
@@ -532,7 +546,7 @@ export default function ReservaPage({
   const { id } = use(params);
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark font-display text-2xl font-bold animate-pulse">
+      <div className="min-h-screen flex items-center justify-center bg-background-light font-display text-2xl font-bold animate-pulse">
         TreePod...
       </div>
     }>

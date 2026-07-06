@@ -107,6 +107,15 @@ function DisponibilidadContent() {
     fetchServicios();
   }, []);
 
+  // El retorno de Webpay redirige aquí con ?error=webpay_abort o ?error=missing_token
+  // cuando el huésped cancela/aborta el pago. Sin este aviso, volvía sin ningún mensaje.
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam === "webpay_abort" || errorParam === "missing_token") {
+      setError("El pago no se completó en Webpay y no se realizó ningún cobro. Puedes intentar tu reserva de nuevo cuando quieras.");
+    }
+  }, [searchParams]);
+
   const fetchServicios = async () => {
     try {
       const { data, error } = await supabase
@@ -453,7 +462,7 @@ function DisponibilidadContent() {
                     <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
                     <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0, 173, 239,0.3)]"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
                         <span className="text-text-main">Selección</span>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -966,10 +975,9 @@ function DisponibilidadContent() {
                       <p className="text-[10px] font-bold text-text-sub uppercase tracking-wider mb-2 flex items-center gap-1">
                         Pago 100% Seguro <Check className="w-3 h-3 text-emerald-500" />
                       </p>
+                      {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
                       <div className="flex items-center gap-4">
                         <span className="text-[10px] font-bold font-sans tracking-wide">Webpay Plus</span>
-                        <span className="w-1 h-1 rounded-full bg-black/20"></span>
-                        <span className="text-[10px] font-bold font-sans tracking-wide">Transferencia</span>
                       </div>
                     </div>
                   </div>
