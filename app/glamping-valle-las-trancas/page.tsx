@@ -348,7 +348,7 @@ export default function GlampingValleLasTrancasPage() {
                         <h2 className="h2-display text-text-main mb-6">Lo que dicen quienes ya se quedaron en TreePod</h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            4.9 estrellas en Google con 59 reseñas verificadas
+                            4,9 estrellas en Google con 59 reseñas verificadas
                         </p>
                     </div>
 

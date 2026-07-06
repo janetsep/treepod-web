@@ -24,7 +24,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <p className="text-sm text-text-sub">Valoración general</p>
-              <p className="mt-1 text-2xl font-semibold text-text-main">4.9</p>
+              <p className="mt-1 text-2xl font-semibold text-text-main">4,9</p>
             </div>
 
             <div>

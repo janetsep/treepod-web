@@ -876,7 +876,7 @@ function DisponibilidadContent() {
                       <div className="flex flex-wrap justify-between items-center gap-y-4">
                         <div className="flex flex-col">
                           <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest leading-none mb-1">Total Estadía</span>
-                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">Iva Incluido</span>
+                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">IVA incluido</span>
                         </div>
                         <div key={calcularTotalConServicios()} className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap animate-fade-in">
                           <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
@@ -891,7 +891,7 @@ function DisponibilidadContent() {
                         <div className="flex justify-between items-end relative z-10">
                           <div className="flex flex-col">
                             <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
-                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estancia</span>
+                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estadía</span>
                           </div>
                           <div className="text-3xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
                             <span className="text-lg mr-1 text-primary/70 font-sans">$</span>

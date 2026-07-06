@@ -247,7 +247,7 @@ export default function EscapadaRomanticaPage() {
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <h2 className="h2-display text-text-main mb-6">Parejas que ya vinieron a TreePod</h2>
                         <div className="h-1.5 w-24 bg-rose-500 mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">4.9 estrellas en Google con 59 reseñas verificadas</p>
+                        <p className="text-lg text-text-sub font-bold">4,9 estrellas en Google con 59 reseñas verificadas</p>
                     </div>
 
                     <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">

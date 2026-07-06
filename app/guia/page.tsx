@@ -24,14 +24,20 @@ export default function GuiaPage() {
                                         ¡Gracias por tu interés!
                                     </h1>
                                     <h2 className="text-white/80 text-base font-normal leading-relaxed md:text-lg">
-                                        Tu <span className="font-bold text-primary">Guía de Glamping en Las Trancas</span> está lista. Adentro encontrarás recomendaciones locales, qué llevar y lugares para visitar en el Valle Las Trancas.
+                                        Tu <span className="font-bold text-primary">Guía de Glamping en Las Trancas</span> está lista: recomendaciones locales y datos prácticos para tu visita al Valle Las Trancas.
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        Te la enviamos al correo que registraste. Si no la ves, revisa la carpeta de spam o promociones.
+                                        Te enviamos el acceso al correo que registraste. Si no lo ves, revisa la carpeta de spam o promociones. También puedes leerla aquí mismo:
                                     </p>
                                 </div>
-                                {/* El botón "Descargar guía (PDF)" se quitó porque no existe un PDF publicado:
-                                    era un <button> sin acción. Cuando el PDF esté disponible, enlazarlo aquí. */}
+                                {/* La guía "enviada" es la guía online (/guia-huesped): este enlace evita
+                                    prometer un documento que no existe como PDF. Cuando haya un PDF
+                                    publicado, se puede sumar aquí el botón de descarga. */}
+                                <div>
+                                    <Link href="/guia-huesped" className="inline-flex items-center justify-center rounded-full h-12 px-8 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                        Ver la guía online
+                                    </Link>
+                                </div>
                             </div>
 
                             {/* Right: Visual Asset (Guide Mockup) */}

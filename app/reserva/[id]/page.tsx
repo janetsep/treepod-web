@@ -210,7 +210,7 @@ function ReservaContent({ id }: { id: string }) {
                 para que el cliente reciba un único código en todas las pantallas. */}
             <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}</p>
             <p className="text-text-sub font-normal leading-relaxed">
-              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main">{reserva.email}</span>.
+              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estadía a <span className="font-bold text-text-main">{reserva.email}</span>.
             </p>
           </div>
           <div className="pt-4">
@@ -329,7 +329,7 @@ function ReservaContent({ id }: { id: string }) {
                   <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                     <span className="text-primary font-bold font-display text-sm">1</span>
                   </div>
-                  <h2 className="text-xl font-display font-bold">Tu Estancia</h2>
+                  <h2 className="text-xl font-display font-bold">Tu Estadía</h2>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 mb-8">

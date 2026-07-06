@@ -248,7 +248,7 @@ export const NotificationService = {
       await getResend().emails.send({
         from: 'TreePod <info@domostreepod.cl>',
         to: [recipient],
-        subject: 'Tu Guía de Retiro en la Montaña + Regalo Especial',
+        subject: 'Tu Guía de Glamping en Las Trancas + Regalo de bienvenida',
         html: `
           <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #00ADEF; padding: 40px 20px; text-align: center; color: white;">
@@ -258,10 +258,13 @@ export const NotificationService = {
             
             <div style="padding: 30px 20px;">
               <p>Hola,</p>
-              <p>Es un gusto saludarte. Tal como prometimos, aquí tienes el acceso a nuestra <strong>Guía de Retiro en la Montaña</strong>, diseñada para ayudarte a planificar una escapada perfecta al Valle Las Trancas.</p>
-              
+              <p>Es un gusto saludarte. Tal como prometimos, aquí tienes el acceso a nuestra <strong>Guía de Glamping en Las Trancas</strong>, con recomendaciones locales y datos prácticos para planificar tu escapada al Valle Las Trancas.</p>
+
+              <!-- El botón apunta a /guia-huesped (la guía online con contenido real).
+                   Antes enlazaba a /guia, que es solo la página de "gracias" y remitía
+                   de vuelta a este correo: un círculo sin guía. -->
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://domostreepod.cl/guia" style="background-color: #1a1a1a; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Ver Guía Digital</a>
+                <a href="https://domostreepod.cl/guia-huesped" style="background-color: #1a1a1a; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Ver la guía online</a>
               </div>
 
               <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
@@ -318,7 +321,8 @@ export const NotificationService = {
     extras?: string[];
   }) {
     const adminTo = 'janetsep@gmail.com';
-    const shortId = data.reservaId.slice(0, 8).toUpperCase();
+    // Últimos 5 del id: mismo código que ve el huésped en la web y en el correo de bienvenida.
+    const shortId = data.reservaId.slice(-5).toUpperCase();
 
     // Formatear fechas para mostrar
     const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -495,7 +499,8 @@ export const NotificationService = {
     total: number;
     domoNombre?: string | null;
   }) {
-    const shortId = data.reservaId.slice(0, 8).toUpperCase();
+    // Últimos 5 del id: mismo código que ve el huésped, para que admin y huésped hablen del mismo número.
+    const shortId = data.reservaId.slice(-5).toUpperCase();
     const abono = Math.round((data.total || 0) * 0.5);
     try {
       await getResend().emails.send({
@@ -709,7 +714,7 @@ export const NotificationService = {
         return { success: false, skipped: true };
       }
 
-      const shortId = reserva.id.slice(0, 8).toUpperCase();
+      const shortId = reserva.id.slice(-5).toUpperCase();
       const guestName = `${reserva.nombre || ''} ${reserva.apellido || ''}`.trim() || 'Huésped';
       const domo = reserva.domoNombre || 'Domo';
       const saldo = (Number(reserva.total) || 0) - (Number(reserva.monto_pagado) || 0);

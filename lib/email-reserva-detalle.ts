@@ -82,7 +82,9 @@ export async function obtenerDetalleReserva(reservaId: string): Promise<DetalleR
   const lineas = construirLineas(r, noches, total, domoNombre);
 
   return {
-    shortId: r.id.slice(0, 6).toUpperCase(),
+    // Mismo formato que /confirmacion, /reserva/[id] y el header del correo de
+    // bienvenida (últimos 5 del id): el huésped debe ver UN solo código.
+    shortId: r.id.slice(-5).toUpperCase(),
     domoNombre,
     fechaInicio: r.fecha_inicio,
     fechaFin: r.fecha_fin,
