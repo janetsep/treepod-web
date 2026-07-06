@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { Resend } from "resend";
+import { refrescarPreciosMercado } from "@/lib/refrescar-precios";
+
+// 60s: tope del plan Hobby. Deja margen para el refresco de ofertas que corre al final.
+export const maxDuration = 60;
 
 const ADMIN_EMAIL = "janetsep@gmail.com";
 
@@ -170,11 +174,22 @@ export async function GET(request: NextRequest) {
             html,
         });
 
+        // Refresco diario de OFERTAS de supermercados (Pilar B de ALMA). Va DESPUÉS del
+        // correo y es no-fatal: si Knasta falla o se acaba el tiempo, el reporte ya se envió.
+        let ofertasRefrescadas = 0;
+        try {
+            const r = await refrescarPreciosMercado(15);
+            ofertasRefrescadas = r.guardados;
+        } catch (e) {
+            console.error("Refresco de ofertas falló (no bloquea el reporte):", e);
+        }
+
         return NextResponse.json({
             ok: true,
             total: reservasParaTabla.length,
             transferencias_liberadas: transferLiberadas.length,
             transferencias_por_vencer: transferPorVencer.length,
+            ofertas_refrescadas: ofertasRefrescadas,
             enviado_a: ADMIN_EMAIL,
         });
     } catch (e: any) {

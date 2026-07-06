@@ -26,6 +26,8 @@ const CATEGORIAS = [
   { value: "proyecto", label: "Proyecto", color: "bg-purple-100 text-purple-700" },
   { value: "operacion", label: "Operación normal", color: "bg-blue-100 text-blue-700" },
   { value: "ingreso", label: "Ingreso", color: "bg-emerald-100 text-emerald-700" },
+  { value: "reversa_ingreso", label: "Reversa de ingreso", color: "bg-rose-100 text-rose-800" },
+  { value: "traspaso", label: "Traspaso entre cuentas", color: "bg-sky-100 text-sky-700" },
   { value: "prestamo", label: "Préstamo", color: "bg-rose-100 text-rose-700" },
   { value: "terceros", label: "Terceros (no es de Migryk)", color: "bg-amber-100 text-amber-700" },
 ];

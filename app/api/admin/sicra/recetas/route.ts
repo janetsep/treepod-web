@@ -189,7 +189,7 @@ export async function POST(request: Request) {
 
       if (prod) {
         await supabaseAdmin.from("sicra_productos")
-          .update({ stock_actual: Math.max(0, Number(prod.stock_actual) - ing.cantidad) })
+          .update({ stock_actual: Number(prod.stock_actual) - ing.cantidad })
           .eq("id", ing.producto_id);
       }
       insertados++;

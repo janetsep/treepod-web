@@ -227,7 +227,7 @@ async function vincularItem(item_id: string, producto_id: string | null) {
     if (oldProd) {
       const factorOld = Number(oldProd.contenido_por_unidad) || 1;
       await supabaseAdmin.from("sicra_productos")
-        .update({ stock_actual: Math.max(0, Number(oldProd.stock_actual) - Number(item.cantidad) * factorOld) })
+        .update({ stock_actual: Number(oldProd.stock_actual) - Number(item.cantidad) * factorOld })
         .eq("id", item.producto_id);
     }
   }
