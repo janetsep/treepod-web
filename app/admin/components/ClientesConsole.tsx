@@ -1,13 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
-import { Search, UserCircle, Star, Phone, Mail, FileText, ChevronRight, Hash } from "lucide-react";
+import { Search, UserCircle, Phone, Mail, FileText, ChevronDown, ChevronRight, Hash, Landmark } from "lucide-react";
 
 export default function ClientesConsole() {
     const [clientes, setClientes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    // Ficha expandida: conciliación bancaria del cliente (movimientos de cartola
+    // enlazados a sus reservas). Cache por cliente para no re-pedir al re-abrir.
+    const [expandido, setExpandido] = useState<string | null>(null);
+    const [concil, setConcil] = useState<Record<string, any[]>>({});
+    const [concilLoading, setConcilLoading] = useState(false);
+
+    async function toggleFicha(c: any) {
+        if (expandido === c.id) { setExpandido(null); return; }
+        setExpandido(c.id);
+        if (concil[c.id]) return;
+        const ids = (c.reservas || []).map((r: any) => r.id).filter(Boolean);
+        if (!ids.length) { setConcil((prev) => ({ ...prev, [c.id]: [] })); return; }
+        setConcilLoading(true);
+        try {
+            const res = await adminFetch(`/api/admin/cartolas?reserva_ids=${ids.join(",")}`);
+            const data = res.ok ? await res.json() : { movimientos: [] };
+            setConcil((prev) => ({ ...prev, [c.id]: data.movimientos || [] }));
+        } catch {
+            setConcil((prev) => ({ ...prev, [c.id]: [] }));
+        }
+        setConcilLoading(false);
+    }
+
+    const fmtFecha = (iso: string | null | undefined) => {
+        if (!iso) return "—";
+        const [y, m, d] = String(iso).slice(0, 10).split("-");
+        return y && m && d ? `${d}-${m}-${y}` : String(iso);
+    };
 
     useEffect(() => {
         fetchClientes();
@@ -108,9 +136,11 @@ export default function ClientesConsole() {
                             ) : filteredClientes.length === 0 ? (
                                 <tr><td colSpan={6} className="px-8 py-20 text-center text-gray-700 font-bold italic">No se encontraron clientes coincidentes.</td></tr>
                             ) : filteredClientes.map((c) => (
-                                <tr key={c.id} className="hover:bg-gray-50/50 transition-colors group">
+                                <Fragment key={c.id}>
+                                <tr onClick={() => toggleFicha(c)} className="hover:bg-gray-50/50 transition-colors group cursor-pointer" title="Ver conciliación bancaria">
                                     <td className="px-8 py-5">
                                         <div className="flex items-center gap-3">
+                                            {expandido === c.id ? <ChevronDown className="w-4 h-4 text-primary shrink-0" /> : <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 shrink-0" />}
                                             <div className="h-10 w-10 bg-primary/5 rounded-full flex items-center justify-center font-black text-primary text-xs border border-primary/10">
                                                 {c.nombre?.slice(0, 1).toUpperCase()}{c.apellido?.slice(0, 1).toUpperCase()}
                                             </div>
@@ -161,6 +191,61 @@ export default function ClientesConsole() {
                                         </div>
                                     </td>
                                 </tr>
+                                {expandido === c.id && (
+                                    <tr className="bg-gray-50/60">
+                                        <td colSpan={6} className="px-8 py-5">
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <Landmark className="w-4 h-4 text-primary" />
+                                                <span className="text-[11px] font-black uppercase tracking-widest text-gray-700">Conciliación bancaria</span>
+                                            </div>
+                                            {concilLoading && !concil[c.id] ? (
+                                                <p className="text-xs text-gray-500 italic">Buscando movimientos conciliados…</p>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    {(c.reservas || [])
+                                                        .slice()
+                                                        .sort((a: any, b: any) => String(b.fecha_inicio || "").localeCompare(String(a.fecha_inicio || "")))
+                                                        .map((r: any) => {
+                                                            const movs = (concil[c.id] || []).filter((m: any) => m.reserva_id === r.id);
+                                                            const conciliado = movs.reduce((s2: number, m: any) => s2 + (m.monto || 0), 0);
+                                                            return (
+                                                                <div key={r.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                                                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                                                        <div className="text-xs font-bold text-gray-900">
+                                                                            Estadía {fmtFecha(r.fecha_inicio)} → {fmtFecha(r.fecha_fin)}
+                                                                            <span className="text-gray-500 font-medium ml-2">Total ${Number(r.total || 0).toLocaleString("es-CL")} · Pagado ${Number(r.monto_pagado || 0).toLocaleString("es-CL")}</span>
+                                                                        </div>
+                                                                        {movs.length > 0 ? (
+                                                                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Conciliado ${conciliado.toLocaleString("es-CL")}</span>
+                                                                        ) : (
+                                                                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-700">Sin movimiento en cartola</span>
+                                                                        )}
+                                                                    </div>
+                                                                    {movs.length > 0 && (
+                                                                        <div className="mt-2 space-y-1">
+                                                                            {movs.map((m: any) => (
+                                                                                <div key={m.id} className="flex flex-wrap items-center gap-x-3 text-[11px] text-gray-600">
+                                                                                    <span className="text-gray-400">{fmtFecha(m.fecha)}</span>
+                                                                                    {m.banco && <span className="text-gray-400">{m.banco}</span>}
+                                                                                    <span className="font-medium truncate max-w-[380px]">{m.descripcion}</span>
+                                                                                    <span className="font-black text-emerald-700">+${Number(m.monto || 0).toLocaleString("es-CL")}</span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    {(c.reservas || []).length === 0 && (
+                                                        <p className="text-xs text-gray-500 italic">Este cliente no tiene reservas registradas.</p>
+                                                    )}
+                                                    <p className="text-[10px] text-gray-400">Los movimientos se concilian en la sección Cartolas (abonos enlazados a la reserva del cliente).</p>
+                                                </div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                )}
+                                </Fragment>
                             ))}
                         </tbody>
                     </table>
