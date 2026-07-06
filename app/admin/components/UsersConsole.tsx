@@ -174,7 +174,7 @@ export default function UsersConsole() {
             setPasswordResetUser(null);
             setNewPassword("");
         } catch (error: any) {
-            alert("Error: " + error.message);
+            alert("No se pudo cambiar la contraseña:\n" + error.message);
         }
         setActionLoading(null);
     }

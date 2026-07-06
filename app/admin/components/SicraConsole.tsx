@@ -557,7 +557,7 @@ function OfertasJumbo() {
                   <div className="flex items-center gap-2 flex-wrap text-xs p-2">
                   <div className="min-w-0 flex-1">
                     <span className="font-medium text-gray-900">{p.nombre}</span>
-                    <span className="text-gray-500 ml-1.5 text-[10px]">{p.categoria} · usado {p.veces_usado}×</span>
+                    <span className="text-gray-500 ml-1.5 text-[10px]">{labelCategoria(p.categoria)} · usado {p.veces_usado}×</span>
                     <div className="flex items-center gap-1 mt-0.5">
                       <span className="text-[9px] text-gray-400">buscar como:</span>
                       <input
@@ -2781,7 +2781,9 @@ interface RentaFila {
 }
 
 function Rentabilidad() {
-  const hoyMes = new Date().toISOString().slice(0, 7);
+  // toLocaleDateString("en-CA") da aaaa-mm-dd en hora LOCAL (toISOString es UTC
+  // y la última noche del mes abría el mes siguiente).
+  const hoyMes = new Date().toLocaleDateString("en-CA").slice(0, 7);
   const [mes, setMes] = useState(hoyMes);
   const [filas, setFilas] = useState<RentaFila[]>([]);
   const [totales, setTotales] = useState({ ingreso: 0, insumos: 0, aseo: 0, energia: 0, costo: 0, utilidad: 0 });
@@ -3336,7 +3338,7 @@ function Pedidos() {
                             <option value="">Asignar manualmente...</option>
                             {pedido.reservas_disponibles.map(r => (
                               <option key={r.id} value={r.id}>
-                                {r.nombre} — {r.domo_nombre} ({r.fecha_inicio.slice(5).replace("-", "/")} al {r.fecha_fin.slice(5).replace("-", "/")})
+                                {r.nombre} — {r.domo_nombre} ({labelDate(r.fecha_inicio)} al {labelDate(r.fecha_fin)})
                               </option>
                             ))}
                           </select>

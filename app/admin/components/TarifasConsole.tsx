@@ -137,7 +137,7 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
             setIsCreating(false);
             alert(isCreating ? "Temporada creada" : "Cambios guardados");
         } catch (error: any) {
-            alert("Error: " + error.message);
+            alert("No se pudo guardar la temporada:\n" + error.message);
         } finally {
             setSaving(null);
         }
@@ -199,8 +199,8 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                 setEditingTemporada({
                                     id: '',
                                     nombre: "Nueva Temporada",
-                                    fecha_inicio: new Date().toISOString().split('T')[0],
-                                    fecha_fin: new Date().toISOString().split('T')[0],
+                                    fecha_inicio: new Date().toLocaleDateString('en-CA'),
+                                    fecha_fin: new Date().toLocaleDateString('en-CA'),
                                     prioridad: 0
                                 });
                             }}

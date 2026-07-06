@@ -181,7 +181,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                 setBaseAlojamiento(Math.max(0, (Number(reservaToEdit.total) || 0) - extrasPersistidos));
             } else {
                 setFormData({
-                    fecha_inicio: new Date().toISOString().split('T')[0],
+                    fecha_inicio: new Date().toLocaleDateString('en-CA'),
                     fecha_fin: "",
                     domo_id: domos[0]?.id || "",
                     nombre: "",
@@ -437,7 +437,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     onClose();
                 }
             } else {
-                alert("Error: " + data.error);
+                alert("No se pudo guardar la reserva:\n" + data.error);
             }
         } catch (error) {
             alert("Error de conexión");

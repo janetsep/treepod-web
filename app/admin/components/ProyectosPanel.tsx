@@ -112,7 +112,7 @@ export default function ProyectosPanel() {
   const [showNewProyecto, setShowNewProyecto] = useState(false);
   const [newP, setNewP] = useState({ nombre: "", descripcion: "", presupuesto: "", categoria: "" });
   const [showNewGasto, setShowNewGasto] = useState(false);
-  const [newG, setNewG] = useState({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
+  const [newG, setNewG] = useState({ fecha: new Date().toLocaleDateString("en-CA"), concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
 
   // Edit project state
   const [editingProyecto, setEditingProyecto] = useState<string | null>(null);
@@ -186,7 +186,7 @@ export default function ProyectosPanel() {
       }),
     });
     if (res.ok) {
-      setNewG({ fecha: new Date().toISOString().split("T")[0], concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
+      setNewG({ fecha: new Date().toLocaleDateString("en-CA"), concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
       setShowNewGasto(false);
       loadGastos(proyectoId);
       loadProyectos();
@@ -607,7 +607,7 @@ export default function ProyectosPanel() {
                               <div className="flex items-center justify-between flex-wrap gap-2">
                                 <div>
                                   <p className="text-xs font-black text-amber-800">
-                                    {parsedBoleta.tienda} · Boleta {parsedBoleta.numero_boleta || "s/n"} · {parsedBoleta.fecha}
+                                    {parsedBoleta.tienda} · Boleta {parsedBoleta.numero_boleta || "s/n"} · {fmtFecha(parsedBoleta.fecha)}
                                   </p>
                                   <p className="text-[10px] text-amber-600">
                                     {parsedItems.length} productos · Total boleta: {fmt(parsedBoleta.total)}
