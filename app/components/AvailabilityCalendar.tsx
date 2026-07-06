@@ -146,91 +146,95 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     };
 
     const css = `
-    /* react-day-picker v9 styling with cyan/primary color */
+    /* react-day-picker v9 — dirección "revista": mes en Fraunces, días en charcoal
+       cálido y texto CHARCOAL sobre cyan en los días elegidos (el blanco sobre
+       cyan falla contraste AA). */
     .rdp-root {
       --rdp-accent-color: #00ADEF;
       --rdp-accent-background-color: rgba(0, 173, 239, 0.1);
       --rdp-range_start-date-background-color: #00ADEF;
       --rdp-range_end-date-background-color: #00ADEF;
       --rdp-range_middle-background-color: rgba(0, 173, 239, 0.12);
-      --rdp-range_middle-color: #00ADEF;
-      --rdp-range_start-color: #FFFFFF;
-      --rdp-range_end-color: #FFFFFF;
-      --rdp-today-color: #00ADEF;
+      --rdp-range_middle-color: #1E1B16;
+      --rdp-range_start-color: #1E1B16;
+      --rdp-range_end-color: #1E1B16;
+      --rdp-today-color: #008CBF;
       --rdp-day-width: 38px;
       --rdp-day-height: 38px;
       --rdp-day_button-width: 36px;
       --rdp-day_button-height: 36px;
       margin: 0;
-      color: #0F172A;
+      color: #1E1B16;
     }
     .rdp-month_grid {
       border-collapse: collapse !important;
     }
     .rdp-day {
-      color: #0F172A;
-      font-weight: 500;
+      color: #1E1B16;
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
     }
     .rdp-day_button:hover:not(:disabled) {
-      background-color: rgba(0, 173, 239, 0.1) !important;
-      color: #00ADEF !important;
+      background-color: rgba(0, 173, 239, 0.12) !important;
+      color: #1E1B16 !important;
     }
     /* Selected day buttons (start and end of range) */
     .rdp-range_start .rdp-day_button,
     .rdp-range_end .rdp-day_button {
       background-color: #00ADEF !important;
-      color: #FFFFFF !important;
-      font-weight: 800;
-      box-shadow: 0 4px 12px rgba(0, 173, 239, 0.3) !important;
+      color: #1E1B16 !important;
+      font-weight: 600;
     }
     /* Middle of range */
     .rdp-range_middle {
       background-color: rgba(0, 173, 239, 0.12) !important;
     }
     .rdp-range_middle .rdp-day_button {
-      color: #00ADEF !important;
+      color: #1E1B16 !important;
     }
     .rdp-month {
         width: 100%;
     }
+    /* Mes y año como titular editorial: Fraunces mediana, sin mayúsculas gritadas */
     .rdp-caption_label {
-        font-size: 1.1rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #0F172A !important;
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-transform: capitalize;
+        letter-spacing: -0.01em;
+        color: #1E1B16 !important;
         margin-bottom: 1rem;
     }
     .rdp-button_previous,
     .rdp-button_next {
-        color: #0F172A !important;
-        background: rgba(0, 0, 0, 0.03) !important;
-        border: 1px solid rgba(0, 0, 0, 0.05) !important;
-        border-radius: 8px !important;
+        color: #1E1B16 !important;
+        background: #FFFFFF !important;
+        border: 1px solid rgba(30, 27, 22, 0.2) !important;
+        border-radius: 2px !important;
     }
     .rdp-button_previous:hover,
     .rdp-button_next:hover {
         background: #00ADEF !important;
-        color: white !important;
-        border-color: #00ADEF !important;
+        color: #1E1B16 !important;
+        border-color: rgba(30, 27, 22, 0.3) !important;
     }
     .rdp-weekday {
-        font-size: 0.75rem;
-        font-weight: 800;
+        font-size: 0.7rem;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: #00ADEF !important;
+        color: #5B5348 !important;
         opacity: 1 !important;
         padding-bottom: 1.5rem;
     }
     /* Disabled / unavailable styling */
     .rdp-disabled {
-        color: rgba(0, 0, 0, 0.1) !important;
+        color: rgba(30, 27, 22, 0.15) !important;
         pointer-events: none;
     }
     .rdp-unavailable {
-        background-color: rgba(0, 0, 0, 0.02) !important;
-        color: rgba(0, 0, 0, 0.2) !important;
+        background-color: rgba(30, 27, 22, 0.03) !important;
+        color: rgba(30, 27, 22, 0.25) !important;
         text-decoration: line-through;
     }
   `;
@@ -240,9 +244,9 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
             <style>{css}</style>
 
             {loading && (
-                <div className="flex items-center gap-3 text-primary font-bold animate-pulse mb-6 bg-primary/10 px-6 py-2 rounded-full border border-primary/20">
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span className="text-[10px] uppercase tracking-[0.3em]">Sincronizando</span>
+                <div className="flex items-center gap-2 text-[#5B5348] mb-4">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#00ADEF]" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">Sincronizando disponibilidad</span>
                 </div>
             )}
 
@@ -265,7 +269,7 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
                 className="font-sans"
             />
             {aviso && (
-                <p className="mt-2 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-center max-w-xs">
+                <p className="mt-2 text-xs font-medium text-amber-800 bg-amber-50 border border-amber-200 rounded-[2px] px-3 py-2 text-center max-w-xs">
                     {aviso}
                 </p>
             )}

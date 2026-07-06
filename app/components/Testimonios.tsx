@@ -1,19 +1,36 @@
-// Reseñas DINÁMICAS con Elfsight (se actualizan solas desde Google). platform.js se
-// carga una sola vez de forma global (layout.tsx, lazyOnload) y data-elfsight-app-lazy
-// difiere el widget hasta que entra en viewport, para no penalizar la carga inicial.
+import SectionFolio from "./SectionFolio";
+import TriBullet from "./deco/TriBullet";
+
+// Artículo 02 — el dato real como titular: "4,9" gigante en Fraunces con la marca
+// de kilómetro al costado. Reseñas DINÁMICAS con Elfsight (se actualizan solas
+// desde Google): el widget NO se toca. platform.js se carga una sola vez de forma
+// global (layout.tsx, lazyOnload) y data-elfsight-app-lazy difiere el widget hasta
+// que entra en viewport.
 export default function Testimonios() {
   return (
-    <section className="py-16 md:py-28 bg-white border-t border-black/[0.06]" id="testimonios">
-      <div className="container mx-auto px-6 text-center max-w-7xl">
-        <div className="inline-flex items-center gap-2 mb-4">
-          <span className="w-2.5 h-2.5 bg-primary rounded-full"></span>
-          <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Testimonios</span>
-        </div>
+    <section className="bg-[#F7F3EC] py-14 md:py-20" id="testimonios">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 02" label="Huéspedes" note="Estas aguas tienen fama desde 1869" />
 
-        <h2 className="h2-display mb-10 text-text-main">Lo que dicen nuestros huéspedes</h2>
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+          <div className="col-span-12 lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <h2 className="sr-only">Lo que dicen nuestros huéspedes</h2>
+              <div className="flex items-start gap-3" aria-hidden="true">
+                <TriBullet className="w-4 h-3.5 text-[#00ADEF] shrink-0 mt-5" />
+                <span className="font-display font-medium text-[clamp(5rem,10vw,9rem)] leading-none tabular-nums text-[#1E1B16]">
+                  4,9
+                </span>
+              </div>
+              <p className="caption-editorial mt-3">59 reseñas verificadas en Google</p>
+            </div>
+          </div>
 
-        <div className="w-full relative min-h-[320px] md:min-h-[500px]">
-          <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab" data-elfsight-app-lazy></div>
+          <div className="col-span-12 lg:col-span-8">
+            <div className="w-full relative min-h-[320px] md:min-h-[500px]">
+              <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab" data-elfsight-app-lazy></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

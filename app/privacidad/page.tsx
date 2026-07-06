@@ -20,17 +20,23 @@ export default function PrivacidadPage() {
     return (
         <main className="bg-surface-light font-sans text-text-main min-h-screen pt-32 pb-24">
             <div className="container mx-auto px-6 max-w-4xl">
-                <div className="text-center mb-16 animate-fade-in-up">
-                    <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase mb-4 block bg-primary/10 w-fit mx-auto px-4 py-1.5 rounded-full">Legal</span>
-                    <h1 className="h1-display pt-2"><span className="italic-display">Política de</span> Privacidad</h1>
-                </div>
+                {/* Cabecera editorial KM 72: folio + rótulo + filete, sin badge-píldora centrado */}
+                <header className="mb-14 animate-fade-in-up">
+                    <div className="flex items-baseline gap-4 mb-8">
+                        <span className="font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums" aria-hidden="true">Anexo</span>
+                        <span className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#5B5348]">Legal</span>
+                        <span className="flex-1 h-px self-center bg-[#1E1B16]/15" aria-hidden="true" />
+                        <span className="hidden md:block font-display italic text-[12px] text-[#5B5348]/70">Valle Las Trancas · Ñuble</span>
+                    </div>
+                    <h1 className="h1-display"><span className="italic-display">Política de</span> Privacidad</h1>
+                </header>
 
-                <div className="prose prose-lg mx-auto bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-black/5 animate-fade-in text-text-sub">
+                <div className="prose prose-lg mx-auto bg-white p-8 md:p-12 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF] animate-fade-in text-text-sub">
                     <p className="lead font-bold text-text-main">
                         En TreePod valoramos tu confianza y estamos comprometidos con la protección de tu información personal. Esta política explica cómo recopilamos, usamos y resguardamos tus datos.
                     </p>
 
-                    <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 my-8 text-sm">
+                    <div className="bg-surface-light/50 p-6 rounded-[2px] border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] my-8 text-sm">
                         <p className="font-bold text-text-main mb-1">Responsable del tratamiento de datos</p>
                         <p className="mb-1"><strong>Razón social:</strong> Migryk Correa Ltda.</p>
                         <p className="mb-1"><strong>RUT:</strong> 76.286.428-2</p>
@@ -72,7 +78,7 @@ export default function PrivacidadPage() {
                     <p>
                         Tienes derecho a acceder, rectificar o solicitar la eliminación de tus datos personales en nuestros registros. Para ejercer estos derechos o consultar dudas sobre nuestra política, puedes escribirnos directamente a:
                     </p>
-                    <div className="bg-surface-light/50 p-6 rounded-2xl border border-black/5 mt-6 font-bold text-text-main">
+                    <div className="bg-surface-light/50 p-6 rounded-[2px] border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] mt-6 font-bold text-text-main">
                         <p className="mb-2">Correo: info@domostreepod.cl</p>
                         <p>WhatsApp: +56 9 8464 3307</p>
                     </div>

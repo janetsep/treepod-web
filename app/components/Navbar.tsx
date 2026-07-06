@@ -48,7 +48,8 @@ export default function Navbar() {
         "/galeria",
         "/nosotros",
         "/paquetes",
-        "/disponibilidad",
+        // "/disponibilidad" ya no abre con foto oscura: su cabecera-documento es
+        // crema, así que el navbar va sólido desde el inicio.
     ]);
     const hasImmersiveHero = immersiveHeroRoutes.has(pathname || "");
     const isNavbarSolid = isScrolled || !hasImmersiveHero;
@@ -103,9 +104,11 @@ export default function Navbar() {
 
                     {!isDisponibilidadPage && (
                         <div className="flex items-center gap-3">
+                            {/* Botón primario "sello de imprenta": texto charcoal sobre cyan (AA)
+                                y marco desfasado; sobre foto el marco pasa a crema */}
                             <button
                                 onClick={() => router.push('/disponibilidad')}
-                                className="px-9 py-3.5 rounded-full font-semibold text-sm transition-all shadow-lg bg-primary text-white hover:bg-primary-dark"
+                                className={`relative z-0 px-7 py-3 rounded-[2px] font-semibold text-sm transition-all bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] after:absolute after:inset-0 after:rounded-[2px] after:border after:-z-10 after:translate-x-1 after:translate-y-1 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5 ${isNavbarSolid ? 'after:border-[#1E1B16]' : 'after:border-[#F7F3EC]/70'}`}
                             >
                                 Reservar
                             </button>
@@ -125,7 +128,7 @@ export default function Navbar() {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => router.push('/disponibilidad')}
-                                className="px-6 py-3 rounded-full font-semibold text-sm bg-primary text-white shadow-lg"
+                                className={`relative z-0 px-5 py-2.5 rounded-[2px] font-semibold text-sm bg-[#00ADEF] text-[#1E1B16] after:absolute after:inset-0 after:rounded-[2px] after:border after:-z-10 after:translate-x-1 after:translate-y-1 ${isNavbarSolid ? 'after:border-[#1E1B16]' : 'after:border-[#F7F3EC]/70'}`}
                             >
                                 Reservar
                             </button>
@@ -154,7 +157,7 @@ export default function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`text-2xl font-black tracking-[0.2em] uppercase transition-colors ${pathname === link.href ? 'text-primary' : 'text-text-main'
+                                    className={`text-2xl font-black tracking-[0.14em] uppercase transition-colors ${pathname === link.href ? 'text-primary' : 'text-text-main'
                                         }`}
                                 >
                                     {link.name}
@@ -166,7 +169,7 @@ export default function Navbar() {
                                         setIsMobileMenuOpen(false);
                                         router.push('/disponibilidad');
                                     }}
-                                    className="block bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full text-base shadow-lg active:scale-95 transition-all w-full"
+                                    className="relative z-0 block bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold py-4 px-8 rounded-[2px] text-base transition-all w-full after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1.5 after:translate-y-1.5 after:-z-10"
                                 >
                                     Reservar ahora
                                 </button>

@@ -1,239 +1,240 @@
 'use client';
 
 import GoogleMapsSection from '../components/GoogleMapsSection';
-import { Phone, Mail, MapPin, Send, MessageCircle, Check } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import TrackView from '../components/TrackView';
 import { trackEvent } from '../lib/analytics';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import { btnPrimary } from '../components/deco/cta';
+
+/* Inputs de ficha del sistema: rectangulares, foco cyan, sin anillos */
+const inputFicha =
+    "w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] text-[#1E1B16] placeholder:text-[#5B5348]/50 outline-none focus:border-[#00ADEF] focus:ring-0 transition-colors";
 
 export default function ContactoPage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     return (
-        <div className="bg-surface-light font-sans text-text-main min-h-screen">
+        <div className="bg-[#F7F3EC] font-sans text-[#1E1B16] min-h-screen">
             <TrackView eventName="view_contacto" />
-            <main className="container mx-auto px-4 md:px-10 lg:px-20 pt-32 pb-16 md:pt-40 md:pb-24">
-                <div className="max-w-6xl mx-auto">
-                    {/* Standardized Header Section - Centered */}
-                    <div className="flex flex-col items-center text-center mb-16 md:mb-24">
-                        <div className="max-w-4xl w-full">
-                            <div className="inline-flex items-center gap-2 mb-4">
-                                <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Contacto</span>
-                            </div>
-                            <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15]">
-                                Hablemos de <span className="text-primary italic-display">tu escapada</span>
-                            </h1>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <main className="mx-auto max-w-[1280px] px-5 md:px-10 pt-28 md:pt-32 pb-16 md:pb-24">
+                {/* Cabecera-documento: folio + titular a la izquierda, nunca centrado */}
+                <SectionFolio num="N° 01" label="Contacto" note="Ruta N-55 · Km 72" />
+                <h1 className="display-lg text-[#1E1B16] max-w-3xl mb-14 md:mb-20">
+                    Hablemos de{" "}
+                    <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                        tu escapada
+                    </span>
+                </h1>
 
-                        {/* Left Column: Information & Map */}
-                        <div className="lg:col-span-5 space-y-10">
-                            <div className="space-y-6">
-                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
-                                    <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                                        <Phone className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        {/* p en vez de h3: son rótulos de tarjetas, no encabezados;
-                                            con h3 la página saltaba de h1 a h3 antes del primer h2 */}
-                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</p>
-                                        <a href="tel:+56984643307" className="text-xl font-black text-text-main hover:text-primary transition-colors">+56 9 8464 3307</a>
-                                        <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Atención todos los días</p>
-                                    </div>
-                                </div>
+                <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12 items-start">
 
-                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
-                                    <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                                        <Mail className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</p>
-                                        <a href="mailto:info@domostreepod.cl" className="text-xl font-black text-text-main hover:text-primary transition-colors">info@domostreepod.cl</a>
-                                        <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Respuesta en menos de 24h</p>
-                                    </div>
-                                </div>
-
-                                <div className="group flex items-center gap-6 p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
-                                    <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                                        <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación</p>
-                                        <p className="text-xl font-black text-text-main">Ruta N-55, Km 72</p>
-                                        <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Valle Las Trancas, Ñuble</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Map Card - Optimized for Mobile */}
-                            <div className="relative aspect-[4/3] md:aspect-video w-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/50 bg-white group hover:scale-[1.02] transition-transform duration-700">
-                                <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''} />
-
-                                {/* Always visible on mobile, hover on desktop */}
-                                <div className="absolute top-4 left-4 right-4 md:top-auto md:bottom-6 md:left-6 md:right-6 md:p-5 p-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-black/5 flex items-center justify-between shadow-2xl md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-20">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                            <MapPin className="text-primary w-5 h-5" strokeWidth={3} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-primary leading-tight">Glamping TreePod</p>
-                                            <p className="text-xs font-bold text-text-main">Punto de Referencia: Km 72</p>
-                                        </div>
-                                    </div>
-                                    <a
-                                        href="https://maps.app.goo.gl/WXUyDLhcVnJfA3Lm6"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="h-10 px-6 bg-primary text-white text-xs font-semibold rounded-full flex items-center justify-center hover:bg-primary-dark active:scale-95 transition-all shadow-lg shadow-primary/20"
-                                    >
-                                        Ir
+                    {/* Columna izquierda: tabla de leyenda + mapa en marco de imprenta */}
+                    <div className="col-span-12 lg:col-span-5 space-y-10">
+                        {/* Información como tabla de leyenda con líneas punteadas */}
+                        <div className="border-t border-[#1E1B16]/15">
+                            <div className="py-4 border-b border-[#1E1B16]/10">
+                                <div className="flex items-baseline gap-3">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[14px] font-semibold text-[#1E1B16]">Consultas</span>
+                                    <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-6" aria-hidden="true" />
+                                    <a href="tel:+56984643307" className="text-sm font-semibold tabular-nums text-[#1E1B16] hover:text-[#008CBF] transition-colors whitespace-nowrap">
+                                        +56 9 8464 3307
                                     </a>
                                 </div>
+                                <p className="caption-editorial mt-1.5 pl-[22px]">Atención todos los días</p>
                             </div>
 
-                            {/* Authority/Trust Tip */}
-                            <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-3">
-                                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-                                    <Send className="w-3.5 h-3.5" /> Consejo de tus anfitriones
-                                </p>
-                                <p className="text-sm font-medium text-text-sub leading-relaxed">
-                                    Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a 12 minutos de la nieve real.
+                            <div className="py-4 border-b border-[#1E1B16]/10">
+                                <div className="flex items-baseline gap-3">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[14px] font-semibold text-[#1E1B16]">Email Oficial</span>
+                                    <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-6" aria-hidden="true" />
+                                    <a href="mailto:info@domostreepod.cl" className="text-sm font-semibold text-[#1E1B16] hover:text-[#008CBF] transition-colors whitespace-nowrap">
+                                        info@domostreepod.cl
+                                    </a>
+                                </div>
+                                <p className="caption-editorial mt-1.5 pl-[22px]">Respondemos generalmente dentro del día</p>
+                            </div>
+
+                            <div className="py-4 border-b border-[#1E1B16]/10">
+                                <div className="flex items-baseline gap-3">
+                                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                                    <span className="text-[14px] font-semibold text-[#1E1B16]">Ubicación</span>
+                                    <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-6" aria-hidden="true" />
+                                    <span className="dato text-[#1E1B16] whitespace-nowrap">Km 72</span>
+                                </div>
+                                <p className="text-sm text-[#5B5348] leading-relaxed mt-1.5 pl-[22px]">
+                                    Ruta N-55, Km 72 · Valle Las Trancas, Ñuble
                                 </p>
                             </div>
                         </div>
 
-                        {/* Right Column: Premium Form */}
-                        <div className="lg:col-span-7">
-                            <div className="bg-white p-8 md:p-14 rounded-[2rem] shadow-2xl border border-black/5 relative overflow-hidden">
-                                {/* Subtle Light Accents */}
-                                <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
-                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -ml-24 -mb-24 blur-[60px]"></div>
+                        {/* Mapa en marco de imprenta con pie de foto */}
+                        <figure>
+                            <div className="relative aspect-[4/3] md:aspect-video w-full rounded-[2px] border border-[#1E1B16]/20 overflow-hidden">
+                                <GoogleMapsSection apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''} />
+                            </div>
+                            <figcaption className="mt-2 flex items-center justify-between gap-4">
+                                <span className="flex items-center gap-2">
+                                    <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                    <span className="caption-editorial">Punto de referencia: Km 72</span>
+                                </span>
+                                <a
+                                    href="https://maps.app.goo.gl/WXUyDLhcVnJfA3Lm6"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 font-semibold text-[13px] text-[#1E1B16] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors whitespace-nowrap"
+                                >
+                                    Abrir en Google Maps <span aria-hidden="true">→</span>
+                                </a>
+                            </figcaption>
+                        </figure>
 
-                                <div className="relative z-10 mb-10 text-center md:text-left">
-                                    <h2 className="h2-display text-text-main mb-3 !leading-tight">
-                                        Envíanos un <span className="text-primary italic-display">Mensaje</span>
-                                    </h2>
-                                    <p className="text-text-sub font-medium text-lg md:text-xl">
-                                        ¿Dudas sobre el clima, servicios o reservas especiales?
-                                    </p>
-                                </div>
+                        {/* Consejo de anfitriones como ficha del sistema */}
+                        <div className="bg-white border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] rounded-[2px] p-5 space-y-2">
+                            <p className="flex items-center gap-2 dato text-[#1E1B16]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                Consejo de tus anfitriones
+                            </p>
+                            <p className="text-sm text-[#5B5348] leading-relaxed">
+                                Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a unos 12 minutos de Nevados de Chillán.
+                            </p>
+                        </div>
+                    </div>
 
-                                <form className="relative z-10 space-y-7" onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    setStatus('loading');
-                                    const formData = new FormData(e.currentTarget);
-                                    const data = {
-                                        name: formData.get('name'),
-                                        email: formData.get('email'),
-                                        subject: formData.get('subject'),
-                                        message: formData.get('message')
-                                    };
+                    {/* Columna derecha: formulario como ficha de reserva */}
+                    <div className="col-span-12 lg:col-span-7">
+                        <div className="bg-white p-6 md:p-10 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                            <div className="mb-10">
+                                <h2 className="font-display font-medium text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] text-[#1E1B16] mb-3">
+                                    Envíanos un{" "}
+                                    <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                        Mensaje
+                                    </span>
+                                </h2>
+                                <p className="text-[#5B5348] text-base md:text-lg leading-relaxed">
+                                    ¿Dudas sobre el clima, servicios o reservas especiales?
+                                </p>
+                            </div>
 
-                                    try {
-                                        const response = await fetch('/api/contact', {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify(data)
-                                        });
+                            <form className="space-y-6" onSubmit={async (e) => {
+                                e.preventDefault();
+                                setStatus('loading');
+                                const formData = new FormData(e.currentTarget);
+                                const data = {
+                                    name: formData.get('name'),
+                                    email: formData.get('email'),
+                                    subject: formData.get('subject'),
+                                    message: formData.get('message')
+                                };
 
-                                        if (response.ok) {
-                                            trackEvent('generate_lead', { subject: formData.get('subject') as string, page: 'contacto' });
-                                            setStatus('success');
-                                            (e.target as HTMLFormElement).reset();
-                                        } else {
-                                            setStatus('error');
-                                        }
-                                    } catch (_error) {
+                                try {
+                                    const response = await fetch('/api/contact', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(data)
+                                    });
+
+                                    if (response.ok) {
+                                        trackEvent('generate_lead', { subject: formData.get('subject') as string, page: 'contacto' });
+                                        setStatus('success');
+                                        (e.target as HTMLFormElement).reset();
+                                    } else {
                                         setStatus('error');
                                     }
-                                }}>
-                                    {status === 'success' && (
-                                        <div className="bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] px-6 py-4 rounded-2xl flex items-start gap-4 animate-fade-in-up">
-                                            <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shrink-0 mt-0.5">
-                                                <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                                            </div>
-                                            <p className="text-sm font-bold">¡Listo! Recibimos tu mensaje. Te contactaremos dentro de las próximas horas.</p>
-                                        </div>
-                                    )}
-
-                                    {status === 'error' && (
-                                        <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center gap-4 animate-shake">
-                                            <p className="text-sm font-bold">Hubo un error de conexión. Escríbenos por WhatsApp y te respondemos a la brevedad.</p>
-                                        </div>
-                                    )}
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-                                        <div className="space-y-2.5">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">Nombre</label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                placeholder="Ej. Juan Pérez"
-                                                required
-                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
-                                            />
-                                        </div>
-                                        <div className="space-y-2.5">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">Tu Email</label>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                placeholder="juan@correo.com"
-                                                required
-                                                className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
-                                            />
-                                        </div>
+                                } catch (_error) {
+                                    setStatus('error');
+                                }
+                            }}>
+                                {status === 'success' && (
+                                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-[2px] flex items-start gap-3 animate-fade-in-up">
+                                        <TriBullet className="w-2.5 h-2 text-emerald-600 shrink-0 mt-1.5" />
+                                        <p className="text-sm font-medium">¡Listo! Recibimos tu mensaje. Te contactaremos a la brevedad.</p>
                                     </div>
-                                    <div className="space-y-2.5">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">¿Qué necesitas consultar?</label>
-                                        <div className="relative">
-                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 pl-6 pr-14 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer truncate">
-                                                <option>Información de Disponibilidad</option>
-                                                <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
-                                                <option>Convenios Corporativos</option>
-                                                <option>Otros</option>
-                                            </select>
-                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-primary">
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-                                            </div>
-                                        </div>
+                                )}
+
+                                {status === 'error' && (
+                                    <div className="bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-[2px]">
+                                        <p className="text-sm font-medium">Hubo un error de conexión. Escríbenos por WhatsApp y te respondemos a la brevedad.</p>
                                     </div>
-                                    <div className="space-y-2.5">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">Tu Mensaje</label>
-                                        <textarea
-                                            name="message"
-                                            rows={5}
-                                            placeholder="Escribe aquí tu consulta..."
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="space-y-2">
+                                        <label className="dato text-[#5B5348] block">Nombre</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            placeholder="Ej. Juan Pérez"
                                             required
-                                            className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl p-6 text-text-main font-bold focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none resize-none"
-                                        ></textarea>
+                                            className={inputFicha}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="dato text-[#5B5348] block">Tu Email</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="juan@correo.com"
+                                            required
+                                            className={inputFicha}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="dato text-[#5B5348] block">¿Qué necesitas consultar?</label>
+                                    <div className="relative">
+                                        <select name="subject" className={`${inputFicha} pr-12 appearance-none cursor-pointer truncate`}>
+                                            <option>Información de Disponibilidad</option>
+                                            <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
+                                            <option>Convenios Corporativos</option>
+                                            <option>Otros</option>
+                                        </select>
+                                        <svg viewBox="0 0 10 9" className="absolute right-4 top-1/2 -translate-y-1/2 w-2.5 h-2 text-[#00ADEF] rotate-180 pointer-events-none" aria-hidden="true">
+                                            <path d="M5 0.8 L9.4 8.2 H0.6 Z" stroke="currentColor" strokeWidth="1.4" fill="none" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="dato text-[#5B5348] block">Tu Mensaje</label>
+                                    <textarea
+                                        name="message"
+                                        rows={5}
+                                        placeholder="Escribe aquí tu consulta..."
+                                        required
+                                        className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] p-4 text-[15px] text-[#1E1B16] placeholder:text-[#5B5348]/50 outline-none focus:border-[#00ADEF] focus:ring-0 transition-colors resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <div className="space-y-6 pt-2">
+                                    <button
+                                        disabled={status === 'loading'}
+                                        type="submit"
+                                        className={`${btnPrimary} w-full disabled:opacity-50 disabled:cursor-not-allowed`}
+                                    >
+                                        {status === 'loading' ? 'Enviando...' : 'Enviar mensaje'}
+                                    </button>
+
+                                    <div className="flex items-center gap-4" aria-hidden="true">
+                                        <span className="flex-1 h-px bg-[#1E1B16]/12" />
+                                        <span className="dato text-[#5B5348]">¿Prefieres una respuesta más rápida?</span>
+                                        <span className="flex-1 h-px bg-[#1E1B16]/12" />
                                     </div>
 
-                                    <div className="space-y-6 pt-4">
-                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
-                                            {status === 'loading' ? 'Enviando...' : 'Enviar mensaje'}
-                                            {!status || status !== 'loading' && <Send className="w-4 h-4" />}
-                                        </button>
-
-                                        <div className="relative py-4 flex items-center justify-center">
-                                            <div className="absolute w-full border-t border-black/5"></div>
-                                            <span className="relative bg-white px-6 text-[10px] font-black text-text-sub/40 uppercase tracking-[0.2em]">¿Prefieres una respuesta más rápida?</span>
-                                        </div>
-
-                                        <a
-                                            href="https://wa.me/56984643307?text=Hola%20TreePod,%20vengo%20de%20la%20web%20y%20necesito%20información."
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={() => trackEvent('click_whatsapp_contacto', { page: 'contacto' })}
-                                            className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3"
-                                        >
-                                            Hablar por WhatsApp
-                                            <MessageCircle className="w-5 h-5 fill-white" />
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
+                                    <a
+                                        href="https://wa.me/56984643307?text=Hola%20TreePod,%20vengo%20de%20la%20web%20y%20necesito%20información."
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => trackEvent('click_whatsapp_contacto', { page: 'contacto' })}
+                                        className="w-full inline-flex items-center justify-center gap-2.5 font-semibold text-[15px] text-[#1E1B16] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors py-2"
+                                    >
+                                        <MessageCircle className="w-4 h-4 text-[#00ADEF]" />
+                                        Hablar por WhatsApp
+                                    </a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

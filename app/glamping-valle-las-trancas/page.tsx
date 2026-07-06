@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Script from 'next/script';
-import { ArrowRight, Mountain, Waves, TreePine, Thermometer, Wifi, Check, MapPin } from 'lucide-react';
 import TrackedLink from '../components/TrackedLink';
 import TrackView from '../components/TrackView';
+import CinematicSection from '../components/CinematicSection';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import GeoDivider from '../components/deco/GeoDivider';
+import { btnPrimary, btnPrimaryDark, linkLineDark } from '../components/deco/cta';
 
 export const metadata: Metadata = {
     title: 'Domos en Las Trancas | Glamping en Bosque Nativo — TreePod',
@@ -73,9 +77,56 @@ const jsonLd = {
     ]
 };
 
+// Índice de lo que incluye la estadía: filas numeradas, sin iconos ni tarjetas
+const queIncluye = [
+    {
+        title: "Tinaja privada de ciprés (de temporada)",
+        desc: "Cada domo tiene su propia tinaja de agua caliente con pasarela por el bosque, sin compartir con nadie. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
+    },
+    {
+        title: "Estufa a pellet automática: calor constante",
+        desc: "Olvídate de pasar frío. La estufa programable mantiene tu domo cálido toda la noche. Afuera puede estar bajo cero, adentro estarás en polera."
+    },
+    {
+        title: "Bosque nativo real, no un jardín decorado",
+        desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres, cada uno con su propio espacio entre los árboles."
+    },
+    {
+        title: "A 12 minutos de Nevados de Chillán",
+        desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán."
+    },
+    {
+        title: "WiFi Starlink de alta velocidad",
+        desc: "Internet satelital real en la montaña. Trabaja remoto, sube fotos o haz streaming sin cortes. Conectado cuando lo necesites, tranquilo cuando no."
+    },
+];
+
+const galeria = [
+    {
+        src: "/images/Galeria/domo-iluminado-noche.jpg",
+        alt: "Domo geodésico iluminado de noche en Valle Las Trancas",
+        caption: "Domo panorámico · vista al bosque nativo",
+    },
+    {
+        src: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
+        alt: "Interior cálido del domo con cama matrimonial y estufa a pellet",
+        caption: "Interior equipado · cama matrimonial y estufa a pellet",
+    },
+    {
+        src: "/images/wellness/Tinaja1.jpg",
+        alt: "Tinaja privada de ciprés en el bosque nativo de Las Trancas",
+        caption: "Tinaja privada · ciprés, servicio de temporada",
+    },
+    {
+        src: "/images/EquipamientoParaTuEstadia/Cocina.jpg",
+        alt: "Cocina completamente equipada del domo en Las Trancas",
+        caption: "Cocina completa · cafetera Nespresso incluida",
+    },
+];
+
 export default function GlampingValleLasTrancasPage() {
     return (
-        <div className="bg-white text-text-main transition-colors duration-300 font-sans min-h-screen">
+        <div className="bg-white text-[#1E1B16] font-sans min-h-screen">
             <TrackView eventName="view_glamping_valle_las_trancas" />
 
             <script
@@ -83,222 +134,151 @@ export default function GlampingValleLasTrancasPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            {/* HERO SECTION */}
-            <section className="relative h-[85vh] min-h-[550px] md:min-h-[700px] text-white overflow-hidden flex items-center justify-center pt-20">
-                <div className="absolute inset-0 bg-background-dark">
-                    <Image
-                        src="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
-                        alt="Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo"
-                        fill
-                        priority
-                        className="object-cover object-center"
-                        sizes="100vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/60 z-10"></div>
-                </div>
-
-                <div className="relative z-20 container mx-auto px-4 md:px-6 flex flex-col items-center text-center">
-                    <div className="inline-block mb-8 bg-primary/20 backdrop-blur-md border border-primary/30 px-6 py-2 rounded-full animate-fade-in-up">
-                        <span className="text-white text-xs font-black tracking-[0.2em] uppercase">
-                            <MapPin className="inline w-3 h-3 mr-1" /> Valle Las Trancas · Nevados de Chillán
-                        </span>
-                    </div>
-
-                    <h1 className="h1-display mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] max-w-4xl mx-auto animate-fade-in-up delay-100 !text-white leading-tight">
-                        Domos en Las Trancas: <br className="hidden md:block" />
-                        glamping geodésico <span className="text-primary italic-display block md:inline">en bosque nativo</span>
-                    </h1>
-
-                    <div className="mb-8 animate-fade-in-up delay-150">
-                        <p className="text-white/90 text-sm md:text-base font-bold tracking-wide max-w-2xl mx-auto">
-                            Estufa a pellet · cocina equipada · WiFi Starlink incluidos
-                        </p>
-                    </div>
-
-                    <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Tu propio refugio en la cordillera. Sin vecinos ruidosos, sin pasillos de hotel. Solo tú, el bosque nativo y la montaña a un paso del domo.
-                    </p>
-
-                    <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
+            {/* PORTADA — foto a sangre, leyenda abajo-izquierda, dato duro a la derecha */}
+            <CinematicSection
+                image="/images/Galeria/lastrancas-exterior-domo-14-2.jpg"
+                alt="Domo geodésico TreePod en Valle Las Trancas rodeado de bosque nativo"
+                eyebrow="Valle Las Trancas · Nevados de Chillán"
+                title={<>Domos en Las Trancas: glamping geodésico <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[8px]">en bosque nativo</span></>}
+                text="Tu propio refugio en la cordillera, sin pasillos de hotel: un domo entre árboles, con el bosque nativo y la montaña a un paso."
+                priority
+                titleAs="h1"
+                stat="12"
+                statCaption="minutos a Nevados de Chillán"
+                photoCaption="Ruta N-55, Km 72 · Valle Las Trancas"
+                ctaSlot={
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-6">
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=glamping-las-trancas"
                             eventName="click_reservar_glamping_trancas"
                             secondEventName="begin_checkout_glamping_trancas"
                             secondParams={{ event: "glamping_valle_las_trancas" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
+                            className={btnPrimaryDark}
                         >
-                            <span className="text-lg md:text-xl">Ver disponibilidad y tarifas</span>
-                            <span className="text-sm font-normal opacity-90">(Reserva directa, mejor precio)</span>
+                            Ver disponibilidad y tarifas
                         </TrackedLink>
+                        <TrackedLink
+                            href={whatsappUrl}
+                            eventName="click_whatsapp_glamping_trancas"
+                            className={`${linkLineDark} !text-sm`}
+                        >
+                            Consultar por WhatsApp <span aria-hidden="true">→</span>
+                        </TrackedLink>
+                    </div>
+                }
+            />
 
-                        <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-semibold text-sm">¿Preguntas?</span>
-                            <TrackedLink
-                                href={whatsappUrl}
-                                eventName="click_whatsapp_glamping_trancas"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
-                            >
-                                Consultar por WhatsApp
-                            </TrackedLink>
+            <GeoDivider left="14%" />
+
+            {/* N° 01 — QUÉ INCLUYE: índice numerado entre filetes */}
+            <section className="py-16 md:py-24 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 01" label="La estadía" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-14">
+                        <div className="col-span-12 lg:col-span-9">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Todo lo que necesitas para una estadía perfecta{' '}
+                                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">en Las Trancas</span>
+                            </h2>
+                            <p className="lead text-[#5B5348] mt-6 max-w-2xl">
+                                No es una cabaña tradicional. Es un domo geodésico de 38 m² con todo incluido.
+                            </p>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            {/* SECCIÓN 1 – QUÉ INCLUYE */}
-            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-4xl mx-auto mb-20">
-                        <h2 className="h2-display text-text-main mb-6">Todo lo que necesitas para una estadía perfecta <span className="italic-display text-primary">en Las Trancas</span></h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">
-                            No es una cabaña tradicional. Es un domo geodésico de 38 m² con todo incluido.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                        {[
-                            {
-                                icon: Waves,
-                                title: "Tinaja privada de ciprés (de temporada)",
-                                desc: "Cada domo tiene su propia tinaja de agua caliente con pasarela por el bosque, sin compartir con nadie. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
-                            },
-                            {
-                                icon: Thermometer,
-                                title: "Estufa a pellet automática: calor constante",
-                                desc: "Olvídate de pasar frío. La estufa programable mantiene tu domo cálido toda la noche. Afuera puede estar bajo cero, adentro estarás en polera."
-                            },
-                            {
-                                icon: TreePine,
-                                title: "Bosque nativo real, no un jardín decorado",
-                                desc: "Los domos están inmersos en bosque nativo de robles, coigües y ñirres. No hay cabañas pegadas ni vecinos a pocos metros. Privacidad de verdad."
-                            },
-                            {
-                                icon: Mountain,
-                                title: "A 12 minutos de Nevados de Chillán",
-                                desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán."
-                            },
-                            {
-                                icon: Wifi,
-                                title: "WiFi Starlink de alta velocidad",
-                                desc: "Internet satelital real en la montaña. Trabaja remoto, sube fotos o haz streaming sin cortes. Conectado cuando lo necesites, tranquilo cuando no."
-                            },
-                        ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col md:flex-row gap-8 items-start group hover:shadow-2xl transition-all duration-300">
-                                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary flex-shrink-0 group-hover:scale-110 transition-transform">
-                                    <item.icon size={32} strokeWidth={1.5} />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-display font-black mb-4 text-text-main leading-tight">{item.title}</h3>
-                                    <p className="text-text-sub text-lg font-bold leading-relaxed">{item.desc}</p>
-                                </div>
+                    <div className="border-b border-[#1E1B16]/12">
+                        {queIncluye.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="border-t border-[#1E1B16]/12 py-6 md:py-7 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline"
+                            >
+                                <span
+                                    className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums"
+                                    aria-hidden="true"
+                                >
+                                    {String(idx + 1).padStart(2, "0")}
+                                </span>
+                                <h3 className="col-span-10 md:col-span-4 display-md text-[#1E1B16]">{item.title}</h3>
+                                <p className="col-span-12 md:col-span-7 text-[15px] text-[#5B5348] leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* SECCIÓN 2 – GALERÍA */}
-            <section className="py-16 md:py-24 lg:py-32 bg-white">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">Así se ve tu alojamiento en Las Trancas</h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">
-                            Fotos reales de los domos TreePod. Sin filtros, sin IA, sin trucos.
-                        </p>
-                    </div>
+            <GeoDivider left="30%" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
-                            <Image
-                                src="/images/Galeria/domo-iluminado-noche.jpg"
-                                alt="Domo geodésico iluminado de noche en Valle Las Trancas"
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Domo panorámico</p>
-                                <p className="text-xs opacity-80">Vista al bosque nativo</p>
-                            </div>
-                        </div>
+            {/* N° 02 — GALERÍA: retícula asimétrica con pies de foto, sin gradientes negros */}
+            <section className="py-16 md:py-24 bg-white">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 02" label="Fotos reales" note="Sin filtros, sin IA, sin trucos" />
 
-                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
-                            <Image
-                                src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
-                                alt="Interior cálido del domo con cama matrimonial y estufa a pellet"
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Interior equipado</p>
-                                <p className="text-xs opacity-80">Cama matrimonial + estufa a pellet</p>
-                            </div>
-                        </div>
-
-                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
-                            <Image
-                                src="/images/wellness/Tinaja1.jpg"
-                                alt="Tinaja privada de ciprés en el bosque nativo de Las Trancas"
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Tinaja privada</p>
-                                <p className="text-xs opacity-80">Ciprés · servicio de temporada</p>
-                            </div>
-                        </div>
-
-                        <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
-                            <Image
-                                src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
-                                alt="Cocina completamente equipada del domo en Las Trancas"
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <p className="font-black text-sm">Cocina completa</p>
-                                <p className="text-xs opacity-80">Cafetera Nespresso incluida</p>
-                            </div>
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Así se ve tu alojamiento <span className="italic">en Las Trancas</span>
+                            </h2>
                         </div>
                     </div>
 
-                    <div className="text-center">
+                    <div className="grid grid-cols-12 gap-4 md:gap-6">
+                        {galeria.map((foto, idx) => (
+                            <figure
+                                key={foto.src}
+                                className={`col-span-12 sm:col-span-6 ${idx % 3 === 0 ? "lg:col-span-5" : idx % 3 === 1 ? "lg:col-span-4" : "lg:col-span-3"}`}
+                            >
+                                <div className={`relative rounded-[2px] overflow-hidden group ${idx % 2 === 0 ? "aspect-[4/5]" : "aspect-[4/4.4]"}`}>
+                                    <Image
+                                        src={foto.src}
+                                        alt={foto.alt}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    />
+                                </div>
+                                <figcaption className="mt-2 flex items-center gap-2">
+                                    <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                    <span className="caption-editorial">{foto.caption}</span>
+                                </figcaption>
+                            </figure>
+                        ))}
+                    </div>
+
+                    <div className="mt-14">
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=glamping-las-trancas"
                             eventName="click_reservar_glamping_trancas"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
+                            className={btnPrimary}
                         >
                             Ver disponibilidad y precios
-                            <ArrowRight size={20} />
                         </TrackedLink>
                     </div>
                 </div>
             </section>
 
-            {/* SECCIÓN 3 – QUÉ INCLUYE CADA DOMO */}
-            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">Todo incluido en tu domo <span className="italic-display text-primary">TreePod</span></h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">
-                            Cada detalle pensado para que no eches nada de menos
-                        </p>
+            <GeoDivider left="46%" />
+
+            {/* N° 03 — FICHA TÉCNICA: dos columnas de leyenda con viñetas triángulo */}
+            <section className="py-16 md:py-24 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 03" label="Ficha técnica" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Todo incluido en tu domo <span className="italic text-[#008CBF]">TreePod</span>
+                            </h2>
+                            <p className="lead text-[#5B5348] mt-5">
+                                Cada detalle pensado para que no eches nada de menos
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                        <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5">
-                            <h3 className="text-2xl font-display font-black mb-6 text-primary">Equipamiento</h3>
-                            <ul className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-12">
+                        <div className="bg-white p-6 md:p-8 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                            <h3 className="dato text-[#1E1B16] mb-6">Equipamiento</h3>
+                            <ul className="space-y-3.5">
                                 {[
                                     "Tinaja privada de ciprés (servicio de temporada)",
                                     "Estufa a pellet automática y programable",
@@ -309,30 +289,30 @@ export default function GlampingValleLasTrancasPage() {
                                     "Terraza privada con vista al bosque",
                                     "Estacionamiento en la puerta",
                                 ].map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-3">
-                                        <Check size={20} className="text-primary flex-shrink-0 mt-1" />
-                                        <span className="text-text-sub font-bold">{item}</span>
+                                    <li key={idx} className="flex items-start gap-3 border-b border-dotted border-[#1E1B16]/15 pb-3 last:border-0">
+                                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1.5" />
+                                        <span className="text-[15px] text-[#5B5348] leading-relaxed">{item}</span>
                                     </li>
                                 ))}
                             </ul>
                         </div>
 
-                        <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-black/5">
-                            <h3 className="text-2xl font-display font-black mb-6 text-primary">Experiencia</h3>
-                            <ul className="space-y-4">
+                        <div className="bg-white p-6 md:p-8 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                            <h3 className="dato text-[#1E1B16] mb-6">Experiencia</h3>
+                            <ul className="space-y-3.5">
                                 {[
                                     "Vista panorámica del bosque nativo",
-                                    "Privacidad real, sin vecinos cercanos",
-                                    "Check-in autónomo con clave digital",
+                                    "Domo y baño de uso exclusivo",
+                                    "Check-in coordinado por WhatsApp",
                                     "Guía de experiencias locales",
                                     "A 12 min de Nevados de Chillán",
-                                    "Senderos de trekking desde el glamping",
+                                    "Senderos de trekking a minutos",
                                     "Registro Sernatur verificado",
                                     "Atención directa por WhatsApp",
                                 ].map((item, idx) => (
-                                    <li key={idx} className="flex items-start gap-3">
-                                        <Check size={20} className="text-primary flex-shrink-0 mt-1" />
-                                        <span className="text-text-sub font-bold">{item}</span>
+                                    <li key={idx} className="flex items-start gap-3 border-b border-dotted border-[#1E1B16]/15 pb-3 last:border-0">
+                                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1.5" />
+                                        <span className="text-[15px] text-[#5B5348] leading-relaxed">{item}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -341,24 +321,29 @@ export default function GlampingValleLasTrancasPage() {
                 </div>
             </section>
 
-            {/* SECCIÓN 4 – RESEÑAS */}
-            <section className="py-16 md:py-24 lg:py-32 bg-white">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">Lo que dicen quienes ya se quedaron en TreePod</h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                        <p className="text-lg text-text-sub font-bold">
-                            4,9 estrellas en Google con 59 reseñas verificadas
-                        </p>
+            <GeoDivider left="60%" />
+
+            {/* N° 04 — RESEÑAS */}
+            <section className="py-16 md:py-24 bg-white">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 04" label="Reseñas verificadas" note="4,9 en Google · 59 reseñas" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Lo que dicen quienes ya se quedaron <span className="italic">en TreePod</span>
+                            </h2>
+                            <p className="mt-5 flex items-center gap-2 dato text-[#5B5348]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                4,9 estrellas en Google con 59 reseñas verificadas
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center bg-gray-50/50 rounded-[2rem]">
+                    <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center rounded-[2px] border border-[#1E1B16]/10">
                         <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <div className="flex flex-col items-center gap-3 opacity-50">
-                                <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                                <span className="text-sm font-bold text-text-sub">Cargando reseñas...</span>
-                            </div>
+                            <span className="caption-editorial opacity-60">Cargando reseñas…</span>
                         </div>
                     </div>
 
@@ -370,63 +355,80 @@ export default function GlampingValleLasTrancasPage() {
                 </div>
             </section>
 
-            {/* SECCIÓN 5 – UBICACIÓN Y CONTEXTO */}
-            <section className="py-16 md:py-24 lg:py-32 bg-background-light">
-                <div className="container mx-auto px-6 md:px-10">
-                    <div className="text-center max-w-4xl mx-auto mb-16">
-                        <h2 className="h2-display text-text-main mb-6">Dónde estamos en Valle Las Trancas</h2>
-                        <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
-                    </div>
+            <GeoDivider left="74%" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        {[
-                            { title: "12 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
-                            { title: "6 a 7 hrs", desc: "desde Santiago por Ruta 5 Sur" },
-                            { title: "1 hr", desc: "desde Chillán ciudad" },
-                        ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-5 md:p-8 rounded-xl md:rounded-[2rem] shadow-lg border border-black/5 text-center">
-                                <p className="text-4xl font-display font-black text-primary mb-3">{item.title}</p>
-                                <p className="text-text-sub font-bold text-lg">{item.desc}</p>
+            {/* N° 05 — UBICACIÓN: datos duros como leyenda de mapa */}
+            <section className="py-16 md:py-24 bg-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="N° 05" label="Cómo llegar" note="Ruta N-55, Km 72" />
+
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12">
+                        <div className="col-span-12 lg:col-span-5">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Dónde estamos en <span className="italic">Valle Las Trancas</span>
+                            </h2>
+                        </div>
+
+                        <div className="col-span-12 lg:col-span-7">
+                            <div className="border-b border-[#1E1B16]/12">
+                                {[
+                                    { title: "12 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
+                                    { title: "6 a 7 hrs", desc: "desde Santiago por Ruta 5 Sur" },
+                                    { title: "1 hr", desc: "desde Chillán ciudad" },
+                                ].map((item, idx) => (
+                                    <div key={idx} className="border-t border-[#1E1B16]/12 py-5 flex items-baseline gap-4 md:gap-6">
+                                        <span className="font-display italic text-[clamp(1.8rem,3.5vw,2.8rem)] leading-none tabular-nums text-[#1E1B16] w-32 md:w-44 shrink-0">
+                                            {item.title}
+                                        </span>
+                                        <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 self-center min-w-4" aria-hidden="true" />
+                                        <span className="text-[15px] text-[#5B5348] leading-relaxed text-right max-w-[55%]">{item.desc}</span>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                    <div className="mt-16 max-w-4xl mx-auto text-center">
-                        <p className="text-lg text-text-sub font-bold leading-relaxed mb-8">
-                            TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, con acceso directo a senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
-                        </p>
+                            <p className="text-[15px] text-[#5B5348] leading-relaxed mt-10">
+                                TreePod está en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán, en el corazón del Valle Las Trancas. Rodeados de bosque nativo, cerca de senderos de trekking, rutas de mountain bike, cascadas y la Laguna del Huemul. En invierno, a minutos del centro de ski. En verano, el punto de partida perfecto para explorar la cordillera de Ñuble.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA FINAL */}
-            <section className="py-20 md:py-24 bg-background-dark text-white relative border-t-8 border-primary">
-                <div className="container mx-auto px-6 md:px-10 relative z-10">
-                    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-12 border border-white/20 shadow-2xl text-center">
+            <GeoDivider left="86%" />
 
-                        <h2 className="text-2xl md:text-4xl font-display font-black text-white mb-6 leading-tight">
-                            Reserva directo y obtén el mejor precio
-                        </h2>
-
-                        <p className="text-lg md:text-xl text-white/80 font-bold mb-8 leading-relaxed max-w-2xl mx-auto">
-                            Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el mejor precio y atención personalizada por WhatsApp.
-                        </p>
-
-                        <TrackedLink
-                            href="/disponibilidad?adultos=2&event=glamping-las-trancas"
-                            eventName="click_reservar_glamping_trancas_final"
-                            secondEventName="begin_checkout_glamping_trancas"
-                            secondParams={{ event: "glamping_valle_las_trancas" }}
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
-                        >
-                            <span className="text-lg md:text-xl">Ver disponibilidad ahora</span>
-                        </TrackedLink>
-
-                        <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
-                            <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Reserva con el 50%</span>
-                            <span className="flex items-center gap-2"><Check size={12} /> Registro Sernatur</span>
+            {/* CIERRE — banda charcoal editorial */}
+            <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="Km 72" label="Reserva directa" dark />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg !text-[#F7F3EC]">
+                                Reserva directo y obtén <span className="italic text-[#00ADEF]">el mejor precio</span>
+                            </h2>
+                            <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl">
+                                Sin comisiones de Airbnb ni Booking. Al reservar directo en domostreepod.cl tienes el mejor precio y atención personalizada por WhatsApp.
+                            </p>
                         </div>
+                        <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-8">
+                            <TrackedLink
+                                href="/disponibilidad?adultos=2&event=glamping-las-trancas"
+                                eventName="click_reservar_glamping_trancas_final"
+                                secondEventName="begin_checkout_glamping_trancas"
+                                secondParams={{ event: "glamping_valle_las_trancas" }}
+                                className={btnPrimaryDark}
+                            >
+                                Ver disponibilidad ahora
+                            </TrackedLink>
+                        </div>
+                    </div>
+
+                    <div className="mt-14 pt-6 border-t border-white/15 flex flex-wrap gap-x-8 gap-y-3">
+                        {["Mejor Precio Directo", "Reserva con el 50%", "Registro Sernatur"].map((t) => (
+                            <span key={t} className="inline-flex items-center gap-2 dato text-[#F7F3EC]/70">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                {t}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </section>

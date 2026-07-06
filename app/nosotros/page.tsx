@@ -2,6 +2,9 @@
 
 import TrackView from '../components/TrackView';
 import CinematicSection from '../components/CinematicSection';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import GeoDivider from '../components/deco/GeoDivider';
 
 const objetivosSociales = [
   {
@@ -42,115 +45,121 @@ const objetivosSociales = [
   },
 ];
 
+const fichaLegal: Array<[string, string]> = [
+  ["Razón social", "Migryk Correa Ltda."],
+  ["RUT", "76.286.428-2"],
+  ["Marca comercial", "TreePod / Domos TreePod"],
+  ["Sitio web", "domostreepod.cl"],
+  ["Domicilio", "Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile"],
+  ["Correo de contacto", "info@domostreepod.cl"],
+  ["Registro SERNATUR", "N° 36806"],
+];
+
 export default function NosotrosPage() {
   return (
-    <div className="bg-surface text-text-main transition-colors duration-300">
+    <div className="bg-white text-[#1E1B16] font-sans">
       <TrackView eventName="view_nosotros" />
 
       {/* HERO SECTION */}
       <CinematicSection
         image="/images/real/NOdomoaereo4.jpeg"
         alt="Domos geodésicos TreePod integrados en el Valle Las Trancas"
+        folio="72"
         eyebrow="Quiénes somos"
         title={<>Glamping con propósito<br className="hidden md:block" /> en el Valle Las Trancas</>}
         text="Cuatro domos rodeados de montaña, con la calidez de lo local y el compromiso de operar en armonía con la naturaleza."
         priority
         titleAs="h1"
+        photoCaption="Los domos desde el aire, Valle Las Trancas"
       />
 
-      {/* MISIÓN Y VISIÓN */}
-      <section className="py-20 md:py-28">
-        <div className="container mx-auto px-6 md:px-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
-              {/* Misión */}
-              <div className="bg-primary/5 rounded-[2.5rem] p-8 md:p-12 border border-primary/10">
-                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mb-6">
-                  <span className="text-white font-black text-2xl">M</span>
-                </div>
-                <h2 className="h2-display text-text-main mb-6">Misión</h2>
-                <p className="text-text-sub text-lg leading-relaxed">
-                  En Domos TreePod ofrecemos alojamiento en domos geodésicos en el Valle Las Trancas,
-                  en la Cordillera de la Región de Ñuble, junto a los Nevados de Chillán. Trabajamos con
-                  un servicio cercano, cocina con productos de la zona y un compromiso real con el
-                  medioambiente y la comunidad de montaña que nos rodea.
-                </p>
-              </div>
+      <GeoDivider left="18%" />
 
-              {/* Visión */}
-              <div className="bg-background-light rounded-[2.5rem] p-8 md:p-12 border border-black/5">
-                <div className="w-16 h-16 rounded-full bg-primary-dark flex items-center justify-center mb-6">
-                  <span className="text-white font-black text-2xl">V</span>
-                </div>
-                <h2 className="h2-display text-text-main mb-6">Visión</h2>
-                <p className="text-text-sub text-lg leading-relaxed">
-                  Ser un destino de glamping sustentable en el Valle Las Trancas, donde cada visita
-                  acerca a las personas a la naturaleza, apoya a la comunidad cordillerana y cuida el
-                  patrimonio natural que nos rodea.
-                </p>
-              </div>
+      {/* MISIÓN Y VISIÓN — página de texto impreso, sin tarjetas */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+          <SectionFolio num="N° 01" label="Misión y visión" />
+          <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-12">
+            <div className="col-span-12 md:col-span-6 lg:col-span-5 border-t-2 border-[#1E1B16] pt-6">
+              <h2 className="display-md text-[#1E1B16] mb-4">
+                <span className="italic">Misión</span>
+              </h2>
+              <p className="text-[#5B5348] leading-relaxed">
+                En Domos TreePod ofrecemos alojamiento en domos geodésicos en el Valle Las Trancas,
+                en la Cordillera de la Región de Ñuble, junto a los Nevados de Chillán. Trabajamos con
+                un servicio cercano, cocina con productos de la zona y un compromiso real con el
+                medioambiente y la comunidad de montaña que nos rodea.
+              </p>
+            </div>
+
+            <div className="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-8 border-t-2 border-[#1E1B16] pt-6">
+              <h2 className="display-md text-[#1E1B16] mb-4">
+                <span className="italic">Visión</span>
+              </h2>
+              <p className="text-[#5B5348] leading-relaxed">
+                Ser un destino de glamping sustentable en el Valle Las Trancas, donde cada visita
+                acerca a las personas a la naturaleza, apoya a la comunidad cordillerana y cuida el
+                patrimonio natural que nos rodea.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* OBJETIVOS SOCIALES */}
-      <section className="py-20 md:py-28 bg-background-light">
-        <div className="container mx-auto px-6 md:px-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
-                  Nuestro compromiso
+      <GeoDivider left="42%" />
+
+      {/* OBJETIVOS SOCIALES — índice numerado de revista */}
+      <section className="py-16 md:py-24 bg-[#F7F3EC]">
+        <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+          <SectionFolio num="N° 02" label="Nuestro compromiso" />
+          <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-12 md:mb-16">
+            <div className="col-span-12 lg:col-span-8">
+              <h2 className="display-lg text-[#1E1B16] mb-6">
+                Objetivos Sociales y{" "}
+                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                  Ambientales
                 </span>
-              </div>
-              <h2 className="h2-display text-text-main mb-6">
-                Objetivos Sociales y Ambientales
               </h2>
-              <p className="text-lg md:text-xl text-text-sub font-medium max-w-2xl mx-auto">
+              <p className="lead text-[#5B5348] max-w-2xl">
                 La sustentabilidad no es un certificado: es la forma en que
                 tomamos cada decisión del negocio.
               </p>
             </div>
+          </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {objetivosSociales.map((obj) => (
-                <div
-                  key={obj.numero}
-                  className="bg-white rounded-[2rem] p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-black/5"
-                >
-                  <div className="mb-6">
-                    <span className="text-primary text-xs font-black tracking-[0.2em] uppercase block mb-2">
-                      {obj.numero}
-                    </span>
-                    <h3 className="text-xl font-display font-bold text-text-main mb-4">
-                      {obj.titulo}
-                    </h3>
-                  </div>
-                  <p className="text-text-sub leading-relaxed">
-                    {obj.descripcion}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="border-t border-[#1E1B16]/12">
+            {objetivosSociales.map((obj) => (
+              <div
+                key={obj.numero}
+                className="border-b border-[#1E1B16]/12 py-6 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline"
+              >
+                <span className="col-span-2 md:col-span-1 font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">
+                  {obj.numero}
+                </span>
+                <h3 className="col-span-10 md:col-span-4 display-md text-[#1E1B16]">
+                  {obj.titulo}
+                </h3>
+                <p className="col-span-12 md:col-span-7 text-[#5B5348] leading-relaxed">
+                  {obj.descripcion}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
+      <GeoDivider left="68%" />
+
       {/* CERTIFICACIONES */}
-      <section className="py-20 md:py-28">
-        <div className="container mx-auto px-6 md:px-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-primary/5 rounded-[2.5rem] p-12 text-center border border-primary/10">
-              <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
-                  Certificaciones
-                </span>
-              </div>
-              <h2 className="h2-display text-text-main mb-6">
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+          <SectionFolio num="N° 03" label="Certificaciones" />
+          <div className="grid grid-cols-12 gap-x-4 md:gap-x-6">
+            <div className="col-span-12 lg:col-span-8">
+              <h2 className="display-md text-[#1E1B16] mb-5">
                 Registro Activo SERNATUR · Sello Impacta Sustentable
               </h2>
-              <p className="text-text-sub text-lg leading-relaxed max-w-3xl mx-auto">
+              <p className="text-[#5B5348] leading-relaxed max-w-3xl">
                 Operamos bajo los estándares del Servicio Nacional de Turismo de
                 Chile y contamos con la certificación del Sello Impacta
                 Sustentable, que valida nuestra gestión ambiental, social y
@@ -161,34 +170,35 @@ export default function NosotrosPage() {
         </div>
       </section>
 
-      {/* INFORMACIÓN LEGAL DE LA EMPRESA */}
-      <section className="py-20 md:py-28 bg-background-light">
-        <div className="container mx-auto px-6 md:px-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-[2.5rem] p-10 md:p-14 border border-black/5 shadow-sm">
-              <div className="inline-block mb-6 bg-primary/10 backdrop-blur-md border border-primary/20 px-6 py-2 rounded-full">
-                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">
-                  Información legal
-                </span>
-              </div>
-              <h2 className="h2-display text-text-main mb-6">
+      <GeoDivider left="86%" />
+
+      {/* INFORMACIÓN LEGAL — tabla de leyenda con líneas punteadas */}
+      <section className="py-16 md:py-24 bg-[#F7F3EC]">
+        <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+          <SectionFolio num="N° 04" label="Información legal" />
+          <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+            <div className="col-span-12 lg:col-span-5">
+              <h2 className="display-md text-[#1E1B16] mb-5">
                 Empresa propietaria de TreePod
               </h2>
-              <p className="text-text-sub text-lg leading-relaxed mb-6">
-                <strong>TreePod</strong> (también <strong>Domos TreePod</strong>) es la marca
-                comercial bajo la cual <strong>Migryk Correa Ltda.</strong> opera su servicio
+              <p className="text-[#5B5348] leading-relaxed">
+                <strong className="text-[#1E1B16]">TreePod</strong> (también <strong className="text-[#1E1B16]">Domos TreePod</strong>) es la marca
+                comercial bajo la cual <strong className="text-[#1E1B16]">Migryk Correa Ltda.</strong> opera su servicio
                 de glamping en el Valle Las Trancas. Toda reserva, contrato y comunicación
                 comercial es responsabilidad de esta entidad legal.
               </p>
-              <ul className="text-text-sub text-base leading-relaxed space-y-2">
-                <li><strong>Razón social:</strong> Migryk Correa Ltda.</li>
-                <li><strong>RUT:</strong> 76.286.428-2</li>
-                <li><strong>Marca comercial:</strong> TreePod / Domos TreePod</li>
-                <li><strong>Sitio web:</strong> domostreepod.cl</li>
-                <li><strong>Domicilio:</strong> Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile</li>
-                <li><strong>Correo de contacto:</strong> info@domostreepod.cl</li>
-                <li><strong>Registro SERNATUR:</strong> N° 36806</li>
-              </ul>
+            </div>
+            <div className="col-span-12 lg:col-span-6 lg:col-start-7">
+              <div className="border-t border-[#1E1B16]/15">
+                {fichaLegal.map(([k, v]) => (
+                  <div key={k} className="flex items-baseline gap-3 py-3 border-b border-[#1E1B16]/10">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                    <span className="text-[14px] font-semibold text-[#1E1B16] whitespace-nowrap">{k}</span>
+                    <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-6" aria-hidden="true" />
+                    <span className="text-sm text-[#1E1B16] text-right max-w-[60%]">{v}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

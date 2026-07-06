@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import CinematicSection from "../components/CinematicSection";
+import SectionFolio from "../components/SectionFolio";
+import TriBullet from "../components/deco/TriBullet";
+import GeoDivider from "../components/deco/GeoDivider";
+import { btnPrimaryDark, linkLine } from "../components/deco/cta";
 
 interface Servicio {
     id: string;
@@ -37,7 +41,7 @@ export default function PaquetesPage() {
                         let displayImage = s.image_url;
                         if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/Desayuno.jpg";
                         if (s.nombre.toLowerCase().includes('tinaja')) displayImage = "/images/wellness/Tinaja1.jpg";
-                        if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+                        if (s.nombre.toLowerCase().includes('pack') || s.nombre.toLowerCase().includes('romántico') || s.nombre.toLowerCase().includes('cena')) displayImage = "/images/Galeria/domo-treepod-camara-19-2.jpg";
 
                         return {
                             ...s,
@@ -61,13 +65,13 @@ export default function PaquetesPage() {
     }, []);
 
     return (
-        <div className="bg-white font-sans text-text-main min-h-screen flex flex-col transition-colors duration-300">
+        <div className="bg-white font-sans text-[#1E1B16] min-h-screen flex flex-col">
 
             <CinematicSection
-                image="/images/Galeria/comidadomoafuerapizza.jpg"
+                image="/images/Galeria/domo-treepod-camara-20-2.jpg"
                 alt="Cena y experiencias especiales en TreePod, Valle Las Trancas"
                 eyebrow="Experiencias TreePod"
-                title={<>Suma detalles<br className="hidden md:block" /> a tu estadía</>}
+                title={<>Suma <span className="bg-[#00ADEF] text-[#1E1B16] px-2 box-decoration-clone">detalles</span><br className="hidden md:block" /> a tu estadía</>}
                 text="Desayunos, cenas y sorpresas para armar tu escapada a tu medida. La tinaja es servicio de temporada."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
@@ -75,92 +79,122 @@ export default function PaquetesPage() {
                 titleAs="h1"
             />
 
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-10 py-16 md:py-24">
-                {/* Título editorial */}
-                <div className="mb-16 md:mb-24">
-                    <div className="inline-block mb-4">
-                        <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase">
-                            Personaliza tu refugio
-                        </span>
+            <GeoDivider left="24%" />
+
+            <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 md:px-10 py-16 md:py-24">
+                {/* Cabecera editorial */}
+                <SectionFolio num="N° 01" label="Personaliza tu refugio" />
+                <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-14 md:mb-20">
+                    <div className="col-span-12 lg:col-span-9">
+                        <h2 className="display-lg text-[#1E1B16]">
+                            Cada servicio,{" "}
+                            <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                pensado en tu comodidad
+                            </span>
+                        </h2>
+                        <p className="lead text-[#5B5348] mt-6 max-w-2xl">
+                            Suma a tu reserva lo que más disfrutes y aprovecha tu estadía en la montaña.
+                        </p>
                     </div>
-                    <h2 className="h1-display text-text-main leading-tight mb-6">
-                        Cada servicio, <span className="italic-display text-primary">pensado en tu comodidad</span>
-                    </h2>
-                    <div className="h-1.5 w-24 bg-primary mb-6"></div>
-                    <p className="text-text-sub text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
-                        Suma a tu reserva lo que más disfrutes y aprovecha tu estadía en la montaña.
-                    </p>
                 </div>
 
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-                        <p className="text-sm font-bold uppercase tracking-widest text-text-sub">Cargando servicios...</p>
+                    <div className="flex items-center justify-center py-20 font-display italic text-2xl text-[#1E1B16] animate-pulse">
+                        TreePod…
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {servicios.map((extra) => (
-                            <div key={extra.id} className="flex flex-col md:flex-row bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-black/5 hover:border-primary/30 transition-all duration-500 group">
-                                <div className="w-full md:w-5/12 relative h-72 md:h-auto overflow-hidden">
-                                    <Image
-                                        alt={extra.nombre}
-                                        src={extra.image_url}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                        className="object-cover transition-transform duration-[2s] group-hover:scale-110"
-                                    />
-                                </div>
-                                <div className="flex-1 p-8 md:p-12 flex flex-col justify-between">
-                                    <div className="space-y-6">
-                                        <h3 className="h3-display text-text-main">{extra.nombre}</h3>
-                                        <p className="text-text-sub text-lg leading-relaxed font-medium">
-                                            {extra.descripcion}
-                                        </p>
-                                        <div className="flex flex-wrap gap-4 pt-2">
-                                            {extra.multiplicador_personas && (
-                                                <span className="text-primary text-[11px] font-black uppercase tracking-widest">Por Persona</span>
-                                            )}
-                                            {extra.multiplicador_noches && (
-                                                <span className="text-primary text-[11px] font-black uppercase tracking-widest">Por Noche</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between pt-10 mt-10 border-t border-black/5">
-                                        <div className="flex flex-col">
-                                            <span className="text-[11px] text-text-sub font-black uppercase tracking-[0.3em] mb-1">Precio</span>
-                                            <span className="font-display font-bold text-4xl text-primary">
-                                                {extra.precio > 0 ? `$${extra.precio.toLocaleString("es-CL")}` : "Consultar"}
+                    /* Índice de servicios: filas numeradas entre filetes, foto pequeña a un lado */
+                    <div className="border-b border-[#1E1B16]/12">
+                        {servicios.map((extra, index) => (
+                            <article
+                                key={extra.id}
+                                className="group border-t border-[#1E1B16]/12 py-8 md:py-10 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-6 items-center"
+                            >
+                                <span
+                                    className="col-span-2 md:col-span-1 font-display italic text-lg md:text-xl text-[#008CBF] tabular-nums"
+                                    aria-hidden="true"
+                                >
+                                    {String(index + 1).padStart(2, "0")}
+                                </span>
+
+                                <div className="col-span-10 md:col-span-6 lg:col-span-7">
+                                    <p className="dato text-[#5B5348] mb-3">{extra.category}</p>
+                                    <h3 className="display-md text-[#1E1B16]">{extra.nombre}</h3>
+                                    <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3 max-w-2xl">
+                                        {extra.descripcion}
+                                    </p>
+
+                                    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 mt-5">
+                                        <span className="font-display font-medium text-2xl md:text-3xl tabular-nums text-[#1E1B16]">
+                                            {extra.precio > 0 ? `$${extra.precio.toLocaleString("es-CL")}` : "Consultar"}
+                                        </span>
+                                        {extra.multiplicador_personas && (
+                                            <span className="inline-flex items-center gap-1.5 dato text-[#5B5348]">
+                                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                                Por persona
                                             </span>
-                                        </div>
-                                        {/* "Consultar" y no "Reservar": este botón lleva al formulario de contacto,
-                                            no a un flujo de reserva. Los extras se agregan en /disponibilidad. */}
-                                        <Link href="/contacto" className="bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/20 transition-all px-8 py-3.5 rounded-full text-base font-semibold active:scale-95">
-                                            Consultar
+                                        )}
+                                        {extra.multiplicador_noches && (
+                                            <span className="inline-flex items-center gap-1.5 dato text-[#5B5348]">
+                                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                                Por noche
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* "Consultar" y no "Reservar": este enlace lleva al formulario de contacto,
+                                        no a un flujo de reserva. Los extras se agregan en /disponibilidad. */}
+                                    <div className="mt-6">
+                                        <Link href="/contacto" className={linkLine}>
+                                            Consultar <span aria-hidden="true">→</span>
                                         </Link>
                                     </div>
                                 </div>
-                            </div>
+
+                                <figure className="col-span-12 md:col-span-5 lg:col-span-4">
+                                    <div className="relative aspect-[4/3] rounded-[2px] overflow-hidden">
+                                        <Image
+                                            alt={extra.nombre}
+                                            src={extra.image_url}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                        />
+                                    </div>
+                                    <figcaption className="mt-2 flex items-center gap-2">
+                                        <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                        <span className="caption-editorial">{extra.nombre}</span>
+                                    </figcaption>
+                                </figure>
+                            </article>
                         ))}
                     </div>
                 )}
+            </main>
 
-                <div className="container mx-auto px-6 max-w-7xl mt-32">
-                    <hr className="border-t border-black/10" />
-                </div>
+            <GeoDivider left="76%" />
 
-                <div className="mt-20 text-center bg-surface rounded-[4rem] p-12 md:p-20 border border-black/5 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="relative z-10">
-                        <h3 className="h2-display mb-8 text-text-main">¿Tienes algo <span className="text-primary italic-display">especial</span> en mente?</h3>
-                        <p className="text-text-sub text-lg md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-medium">
-                            Podemos ayudarte a organizar cumpleaños, aniversarios o sorpresas personalizadas. Escríbenos y nuestro equipo lo hará realidad.
-                        </p>
-                        <Link href="/contacto" className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-primary-dark transition-all shadow-lg active:scale-95 inline-block">
-                            Hablar con el equipo
-                        </Link>
+            {/* CIERRE — banda charcoal editorial */}
+            <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
+                <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+                    <SectionFolio num="Km 72" label="A tu medida" dark />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
+                        <div className="col-span-12 lg:col-span-8">
+                            <h2 className="display-lg !text-[#F7F3EC]">
+                                ¿Tienes algo <span className="italic text-[#00ADEF]">especial</span> en mente?
+                            </h2>
+                            <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl">
+                                Podemos ayudarte a organizar cumpleaños, aniversarios o sorpresas personalizadas. Escríbenos y nuestro equipo lo hará realidad.
+                            </p>
+                        </div>
+                        <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end">
+                            <Link href="/contacto" className={btnPrimaryDark}>
+                                Hablar con el equipo
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </main>
+            </section>
         </div>
     );
 }

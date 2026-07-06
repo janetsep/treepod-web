@@ -7,11 +7,19 @@ import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
 import { TrackingService } from "@/services/TrackingService";
 import { trackEvent } from "../../lib/analytics";
-import { CheckCircle2, Lock, Sparkles, Info, AlertCircle, TimerOff, Timer } from "lucide-react";
 import Stepper from "../../components/Stepper";
+import SectionFolio from "../../components/SectionFolio";
+import TriBullet from "../../components/deco/TriBullet";
+import GeoArc from "../../components/deco/GeoArc";
+import { btnPrimary, linkLine } from "../../components/deco/cta";
 
 function diffMinutes(from: Date, to: Date) {
   return Math.max(0, Math.ceil((to.getTime() - from.getTime()) / 60000));
+}
+
+/* Línea punteada de los desgloses (dotted leader), como en /disponibilidad */
+function DottedLeader() {
+  return <span className="flex-1 border-b border-dotted border-[#1E1B16]/25 min-w-4" aria-hidden="true" />;
 }
 
 function formatDate(dateString: string) {
@@ -147,20 +155,20 @@ function ReservaContent({ id }: { id: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-light font-display text-2xl font-bold animate-pulse">
-        TreePod...
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-2xl text-[#1E1B16] animate-pulse">
+        TreePod…
       </div>
     );
   }
 
   if (!reserva) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-red-50 text-red-800">
-        <div className="max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-4">
-          <h2 className="text-2xl font-bold">Error de Carga</h2>
-          <p>No pudimos encontrar la reserva con ID: <code className="bg-red-100 px-2 py-1 rounded">{id}</code></p>
-          <p className="text-sm opacity-80">Si acabas de crear esta reserva, es posible que haya un retraso en la base de datos o un problema de permisos (RLS).</p>
-          <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full">Reintentar</button>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[#F7F3EC]">
+        <div className="max-w-md w-full bg-white p-8 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-red-500 space-y-4">
+          <h2 className="font-display font-medium text-2xl text-[#1E1B16]">Error de Carga</h2>
+          <p className="text-[#5B5348]">No pudimos encontrar la reserva con ID: <code className="bg-red-50 text-red-700 px-2 py-1 rounded-[2px]">{id}</code></p>
+          <p className="text-sm text-[#5B5348]">Si acabas de crear esta reserva, es posible que haya un retraso en la base de datos o un problema de permisos (RLS).</p>
+          <button onClick={() => window.location.reload()} className={`${btnPrimary} w-full mt-4`}>Reintentar</button>
         </div>
       </div>
     );
@@ -171,25 +179,44 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isPaid || statusParam === "SUCCESS") {
     return (
-      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main transition-colors">
-        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gold/20 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto shadow-inner">
-            <CheckCircle2 className="text-green-500 w-10 h-10" />
+      <div className="relative min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16] overflow-hidden">
+        {/* Arco geodésico en cyan/10, colgando del borde superior: página editorial */}
+        <GeoArc className="absolute -top-px left-1/2 -translate-x-1/2 rotate-180 w-[560px] max-w-[90vw] text-[#00ADEF]/10 pointer-events-none" />
+
+        <div className="relative z-10 mx-auto max-w-[720px] px-5 md:px-10 pt-32 md:pt-40 pb-24 animate-fade-in">
+          <p className="dato text-[#5B5348] mb-6">Reserva directa TreePod</p>
+          <h1 className="display-lg text-[#1E1B16]">
+            ¡Reserva <span className="italic">Confirmada</span>!
+          </h1>
+          {/* Mismo formato de código que /confirmacion y el calendario del admin (últimos 5 del id),
+              para que el cliente reciba un único código en todas las pantallas. */}
+          <p className="mt-4 flex items-center gap-2 dato text-[#1E1B16]">
+            <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+            Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}
+          </p>
+          <p className="mt-6 text-[#5B5348] leading-relaxed max-w-lg">
+            Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estadía a{" "}
+            <span className="font-semibold text-[#1E1B16]">{reserva.email}</span>.
+          </p>
+
+          {/* Datos reales de la estadía en tabla de leyenda con puntos */}
+          <div className="mt-10 border-t border-[#1E1B16]/15">
+            {[
+              ["Llegada", formatDate(reserva.fecha_inicio)],
+              ["Salida", formatDate(reserva.fecha_fin)],
+              ["Huéspedes", `${reserva.adultos} personas`],
+            ].map(([k, v]) => (
+              <div key={k} className="flex items-baseline gap-3 py-3.5 border-b border-[#1E1B16]/10">
+                <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                <span className="text-[14px] font-semibold text-[#1E1B16]">{k}</span>
+                <DottedLeader />
+                <span className="text-sm font-semibold tabular-nums text-[#1E1B16] whitespace-nowrap">{v}</span>
+              </div>
+            ))}
           </div>
-          <div className="space-y-4">
-            <h1 className="text-4xl font-display font-bold tracking-tight">¡Reserva <span className="text-gold italic-display">Confirmada</span>!</h1>
-            {/* Mismo formato de código que /confirmacion y el calendario del admin (últimos 5 del id),
-                para que el cliente reciba un único código en todas las pantallas. */}
-            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}</p>
-            <p className="text-text-sub font-normal leading-relaxed">
-              Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estadía a <span className="font-bold text-text-main">{reserva.email}</span>.
-            </p>
-          </div>
-          <div className="pt-4">
-            <Link
-              href="/"
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
-            >
+
+          <div className="mt-12">
+            <Link href="/" className={btnPrimary}>
               Cerrar y volver al inicio
             </Link>
           </div>
@@ -200,25 +227,20 @@ function ReservaContent({ id }: { id: string }) {
 
   if (statusParam === "FAILURE") {
     return (
-      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main">
-        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-red-100 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto">
-            <AlertCircle className="text-red-500 w-10 h-10" />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-3xl font-display font-bold tracking-tight">No pudimos procesar el pago</h1>
-            <p className="text-text-sub font-normal leading-relaxed">
-              Hubo un inconveniente con la transacción. No te preocupes, tu reserva sigue disponible por unos minutos.
-            </p>
-          </div>
-          <div className="pt-4 space-y-4">
-            <Link
-              href={`/reserva/${id}`}
-              className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all"
-            >
+      <div className="min-h-screen bg-[#F7F3EC] font-sans flex items-center justify-center p-6 text-[#1E1B16]">
+        <div className="max-w-lg w-full bg-white p-8 md:p-10 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-red-500 space-y-6 animate-fade-in">
+          <p className="dato text-red-600">Pago no completado</p>
+          <h1 className="font-display font-medium text-3xl leading-tight">No pudimos procesar el pago</h1>
+          <p className="text-[#5B5348] leading-relaxed">
+            Hubo un inconveniente con la transacción. No te preocupes, tu reserva sigue disponible por unos minutos.
+          </p>
+          <div className="pt-2 space-y-5">
+            <Link href={`/reserva/${id}`} className={`${btnPrimary} w-full`}>
               Reintentar pago seguro
             </Link>
-            <Link href="/contacto" className="block text-sm font-semibold text-text-sub hover:text-gold transition-colors">Necesito ayuda</Link>
+            <Link href="/contacto" className={`${linkLine} !text-sm`}>
+              Necesito ayuda <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -227,19 +249,15 @@ function ReservaContent({ id }: { id: string }) {
 
   if (isExpired) {
     return (
-      <div className="min-h-screen bg-background-light font-sans flex flex-col items-center justify-center p-6 text-center text-text-main">
-        <div className="bg-surface-light p-12 rounded-[3.5rem] shadow-2xl max-w-lg w-full border border-gray-100 space-y-8 animate-fade-in">
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto opacity-40">
-            <TimerOff className="w-10 h-10" />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-3xl font-display font-bold tracking-tight opacity-60">Tiempo Excedido</h1>
-            <p className="text-text-sub font-normal leading-relaxed">
-              Lo sentimos, la reserva ha expirado para liberar el espacio a otros huéspedes.
-            </p>
-          </div>
-          <div className="pt-4">
-            <Link href="/disponibilidad" className="inline-block w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transition-all">
+      <div className="min-h-screen bg-[#F7F3EC] font-sans flex items-center justify-center p-6 text-[#1E1B16]">
+        <div className="max-w-lg w-full bg-white p-8 md:p-10 rounded-[2px] border border-[#1E1B16]/12 space-y-6 animate-fade-in">
+          <p className="dato text-[#5B5348]">Reserva expirada</p>
+          <h1 className="font-display font-medium text-3xl leading-tight">Tiempo Excedido</h1>
+          <p className="text-[#5B5348] leading-relaxed">
+            Lo sentimos, la reserva ha expirado para liberar el espacio a otros huéspedes.
+          </p>
+          <div className="pt-2">
+            <Link href="/disponibilidad" className={`${btnPrimary} w-full`}>
               Ver nuevas fechas
             </Link>
           </div>
@@ -257,73 +275,73 @@ function ReservaContent({ id }: { id: string }) {
   const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email);
 
   return (
-    <div className="min-h-screen bg-background-light text-text-main font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-[#F7F3EC] text-[#1E1B16] font-sans transition-colors duration-300">
       <div className="h-16 md:h-20"></div>
 
-      <div className="container mx-auto px-4 md:px-6 py-4 lg:py-6 max-w-5xl">
+      <div className="container mx-auto px-4 md:px-6 pt-4 pb-32 lg:pt-6 lg:pb-16 max-w-5xl">
         <div className="space-y-10">
 
-          {/* Paso Visual del Checkout (Stepper) */}
+          {/* Paso Visual del Checkout (Stepper) + retención del domo siempre visible:
+              la urgencia legítima vive junto al Stepper, no escondida al final. */}
           <div className="mb-0 pt-4">
             <Stepper activeStep={isGuestDataComplete ? 3 : 2} />
+            {reserva.estado === "pendiente_pago" && minutesLeft > 0 && (
+              <p className="-mt-5 md:-mt-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
+                <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+                Domo retenido · {minutesLeft} min
+              </p>
+            )}
           </div>
 
           {/* Aviso cuando el huésped canceló o abortó el pago en Webpay y vuelve al checkout.
               Sin esto, ?error=webpay_abort / ?error=missing_token no mostraban ningún mensaje. */}
           {(errorParam === "webpay_abort" || errorParam === "missing_token") && (
-            <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-2xl text-sm font-medium flex items-start gap-3 animate-fade-in">
-              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-amber-500" />
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-[2px] text-sm font-medium flex items-start gap-3 animate-fade-in">
+              <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0 mt-1.5" />
               <span>El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras.</span>
             </div>
           )}
 
-          <header className="text-center space-y-4">
-            <div className="inline-block px-3 py-1 bg-gold/10 rounded-full">
-              <span className="text-gold text-[9px] font-bold tracking-[0.3em] uppercase">Checkout Seguro</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
-              Finaliza <span className="text-gold italic-display font-normal">Tu Reserva</span>
+          <header>
+            <SectionFolio num="Paso 3 de 3" label="Confirmar y pagar" note="Reserva directa TreePod" className="!mb-8" />
+            <h1 className="display-lg text-[#1E1B16]">
+              Finaliza <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">Tu Reserva</span>
             </h1>
-            <p className="text-sm md:text-base text-text-sub max-w-xl mx-auto font-normal leading-relaxed">
+            <p className="text-sm md:text-base text-[#5B5348] max-w-xl mt-4 leading-relaxed">
               Revisa los detalles finales y asegura tu refugio en la cordillera.
             </p>
           </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            {/* Columna 1: Resumen y Detalle Financiero */}
+            {/* Columna 1: Resumen y Detalle Financiero — ficha de reserva */}
             <div className="space-y-6">
-              <section className="bg-surface-light p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100 relative py-10 md:py-12">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-primary/10 rounded-tr-[2rem] rounded-bl-2xl text-[9px] font-semibold text-primary uppercase tracking-widest">
-                  Detalle de Reserva
-                </div>
-
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <span className="text-primary font-bold font-display text-sm">1</span>
-                  </div>
-                  <h2 className="text-xl font-display font-bold">Tu Estadía</h2>
+              <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                <div className="flex items-baseline gap-3 mb-8">
+                  <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
+                  <h2 className="dato text-[#1E1B16]">Tu Estadía</h2>
+                  <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 mb-8">
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Llegada</span>
-                    <p className="text-sm font-medium">{formatDate(reserva.fecha_inicio)}</p>
+                  <div className="space-y-1">
+                    <span className="dato text-[#5B5348]">Llegada</span>
+                    <p className="text-sm font-medium tabular-nums">{formatDate(reserva.fecha_inicio)}</p>
                   </div>
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Salida</span>
-                    <p className="text-sm font-medium">{formatDate(reserva.fecha_fin)}</p>
+                  <div className="space-y-1">
+                    <span className="dato text-[#5B5348]">Salida</span>
+                    <p className="text-sm font-medium tabular-nums">{formatDate(reserva.fecha_fin)}</p>
                   </div>
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Huéspedes</span>
+                  <div className="space-y-1">
+                    <span className="dato text-[#5B5348]">Huéspedes</span>
                     <p className="text-sm font-medium">{reserva.adultos} Personas</p>
                   </div>
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-text-sub/60">Duración</span>
+                  <div className="space-y-1">
+                    <span className="dato text-[#5B5348]">Duración</span>
                     <p className="text-sm font-medium">{diffDays} {diffDays === 1 ? 'Noche' : 'Noches'}</p>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-gray-100 space-y-3">
+                <div className="pt-6 border-t border-[#1E1B16]/12 space-y-3">
                   {/* Desglose Matemático Correcto */}
                   {(() => {
                     const totalExtras = reserva.reserva_servicios?.reduce((acc: number, s: any) => acc + s.total, 0) || 0;
@@ -333,85 +351,82 @@ function ReservaContent({ id }: { id: string }) {
 
                     return (
                       <>
-                        <div className="flex justify-between text-xs text-text-sub">
-                          <span>Domo ({diffDays} {diffDays === 1 ? 'noche' : 'noches'})</span>
-                          <div className="text-right">
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Domo ({diffDays} {diffDays === 1 ? 'noche' : 'noches'})</span>
+                          <DottedLeader />
+                          <span className="text-right">
                             {reserva.precio_original && reserva.precio_original > subtotalDomoConDescuento && (
-                              <span className="block text-[10px] text-text-sub/60 line-through">${reserva.precio_original.toLocaleString("es-CL")}</span>
+                              <span className="block text-[11px] text-[#5B5348]/60 line-through tabular-nums">${reserva.precio_original.toLocaleString("es-CL")}</span>
                             )}
-                            <span className="font-bold">${subtotalDomoConDescuento.toLocaleString("es-CL")}</span>
-                          </div>
+                            <span className="font-semibold tabular-nums text-[#1E1B16]">${subtotalDomoConDescuento.toLocaleString("es-CL")}</span>
+                          </span>
                         </div>
 
-                        <div className="flex justify-between text-[10px] text-text-sub/60 pl-4 border-l-2 border-primary/20">
+                        <div className="flex items-baseline gap-3 text-[11px] text-[#5B5348]/80 pl-4">
                           <span>Tarifa base por noche</span>
-                          <span>${tarifaPorNoche.toLocaleString("es-CL")}</span>
+                          <DottedLeader />
+                          <span className="tabular-nums">${tarifaPorNoche.toLocaleString("es-CL")}</span>
                         </div>
 
                         {reserva.descuento_detalle && reserva.descuento_detalle.length > 0 && (
                           <div className="pt-1 space-y-1 pl-4">
                             {reserva.descuento_detalle.map((d, i) => (
-                              <div key={i} className="flex justify-between text-[10px] text-emerald-600 font-medium italic">
-                                <span>Descuento: {d.motivo}</span>
-                                <span>-${d.monto.toLocaleString("es-CL")}</span>
+                              <div key={i} className="flex items-baseline gap-3 text-[11px] text-emerald-700 font-medium">
+                                <span className="font-display italic">Descuento: {d.motivo}</span>
+                                <DottedLeader />
+                                <span className="tabular-nums">-${d.monto.toLocaleString("es-CL")}</span>
                               </div>
                             ))}
                           </div>
                         )}
 
                         {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
-                          <div className="pt-2 space-y-2">
-                            <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">Extras Seleccionados</span>
+                          <div className="pt-3 space-y-2">
+                            <span className="dato text-[#5B5348]">Extras Seleccionados</span>
                             {reserva.reserva_servicios.map((s) => (
-                              <div key={s.id} className="flex justify-between items-start gap-4 text-xs text-text-sub py-1">
-                                <span className="flex items-start gap-2 flex-1 leading-snug">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
-                                  {s.servicios?.nombre || "Servicio adicional"}
-                                </span>
-                                <span className="font-semibold whitespace-nowrap">${s.total.toLocaleString("es-CL")}</span>
+                              <div key={s.id} className="flex items-baseline gap-3 text-[13px] text-[#5B5348]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
+                                <span className="leading-snug">{s.servicios?.nombre || "Servicio adicional"}</span>
+                                <DottedLeader />
+                                <span className="font-semibold tabular-nums text-[#1E1B16] whitespace-nowrap">${s.total.toLocaleString("es-CL")}</span>
                               </div>
                             ))}
                           </div>
                         )}
 
-                        <div className="flex justify-between text-[10px] text-emerald-600 font-bold pt-2">
+                        <div className="flex items-baseline gap-3 text-[11px] text-emerald-700 font-semibold pt-2">
                           <span>Impuestos (IVA)</span>
+                          <DottedLeader />
                           <span>Incluido</span>
                         </div>
 
-                        <div className="pt-4 space-y-4 border-t border-dashed border-gray-200 mt-2">
-                          <div className="flex justify-between items-center text-[10px] font-semibold uppercase tracking-widest text-text-sub px-1">
-                            <span>Total Estadía</span>
-                            <span>${total.toLocaleString("es-CL")}</span>
-                          </div>
-
-                          <div className="bg-primary/5 p-5 rounded-[1.5rem] border border-primary/10 shadow-sm relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
-                              <Sparkles className="w-8 h-8 text-primary" />
+                        {/* Jerarquía invertida: lo que sale de la tarjeta HOY es el número
+                            dominante; el total de la estadía es la línea secundaria. */}
+                        <div className="pt-5 border-t border-[#1E1B16]/15 mt-2 space-y-4">
+                          <div>
+                            <span className="dato text-[#5B5348]">Abonas hoy (50%)</span>
+                            <div className="font-display font-medium text-[clamp(2.2rem,4vw,3rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
+                              ${Math.round(total * 0.5).toLocaleString("es-CL")}
                             </div>
-                            <div className="flex justify-between items-end relative z-10">
-                              <div className="flex flex-col">
-                                <span className="block text-[11px] font-semibold text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
-                                <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar y garantizar<br />tu reserva inmediata</span>
-                              </div>
-                              <div className="text-3xl sm:text-4xl font-display font-semibold text-primary leading-none flex items-baseline whitespace-nowrap">
-                                <span className="text-lg sm:text-2xl mr-1.5 text-primary/70 font-sans">$</span>
-                                {Math.round(total * 0.5).toLocaleString("es-CL")}
-                              </div>
+                            <p className="caption-editorial mt-2">Para confirmar y garantizar tu reserva inmediata</p>
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <div className="flex items-baseline gap-3 text-[13px]">
+                              <span className="text-[#5B5348]">Total Estadía</span>
+                              <DottedLeader />
+                              <span className="font-semibold tabular-nums text-[#1E1B16]">${total.toLocaleString("es-CL")}</span>
+                            </div>
+                            <div className="flex items-baseline gap-3 text-[13px]">
+                              <span className="text-[#5B5348]">Saldo a pagar en check-in (50%)</span>
+                              <DottedLeader />
+                              <span className="tabular-nums text-[#1E1B16]">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
                             </div>
                           </div>
 
-                          <div className="flex justify-between items-center text-[10px] text-text-sub/80 px-2">
-                            <span className="flex items-center gap-2 font-medium">
-                              <Info className="w-3.5 h-3.5 text-primary/60" />
-                              Saldo a pagar en check-in (50%)
-                            </span>
-                            <span className="font-semibold text-text-main">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
-                          </div>
-
-                          <div className="text-[10px] text-primary/90 bg-primary/5 px-4 py-3 rounded-xl text-center font-bold leading-relaxed border border-primary/5">
+                          <p className="text-[12px] text-[#5B5348] leading-relaxed border border-[#1E1B16]/12 rounded-[2px] px-4 py-3">
                             Pagas el 50% hoy vía Webpay. El saldo restante se cancela directamente al inicio de tu estadía.
-                          </div>
+                          </p>
                         </div>
                       </>
                     );
@@ -423,12 +438,11 @@ function ReservaContent({ id }: { id: string }) {
             {/* Columna 2: Datos y Pago */}
             <div className="space-y-6">
 
-              <section className="bg-surface-light p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <span className="text-primary font-bold font-display text-sm">2</span>
-                  </div>
-                  <h2 className="text-xl font-display font-bold">Información de Contacto</h2>
+              <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
+                <div className="flex items-baseline gap-3 mb-6">
+                  <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
+                  <h2 className="dato text-[#1E1B16]">Información de Contacto</h2>
+                  <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                 </div>
 
                 {!isGuestDataComplete ? (
@@ -451,14 +465,14 @@ function ReservaContent({ id }: { id: string }) {
                     }}
                   />
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub">Nombre Completo</span>
+                      <span className="dato text-[#5B5348]">Nombre Completo</span>
                       <p className="text-lg font-medium">{reserva.nombre} {reserva.apellido}</p>
                     </div>
 
                     <div className="space-y-1 sm:col-span-2">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-sub">Email de Notificación</span>
+                      <span className="dato text-[#5B5348]">Email de Notificación</span>
                       <p className="text-lg font-medium">{reserva.email}</p>
                     </div>
                   </div>
@@ -466,41 +480,36 @@ function ReservaContent({ id }: { id: string }) {
               </section>
 
               {isGuestDataComplete && (
-                <section className="space-y-8 animate-fade-in">
-                  <div className="bg-surface-light p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-gray-100">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                        <span className="text-primary font-bold font-display text-sm">3</span>
-                      </div>
-                      <h2 className="text-xl font-display font-bold">Método de Pago</h2>
+                <section className="animate-fade-in">
+                  <div className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
+                    <div className="flex items-baseline gap-3 mb-6">
+                      <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
+                      <h2 className="dato text-[#1E1B16]">Método de Pago</h2>
+                      <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                     </div>
 
-                    <div className="bg-gold/5 p-8 rounded-3xl border border-gold/20 animate-fade-in">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Lock className="text-primary w-5 h-5" />
-                        <div>
-                          <h3 className="font-bold text-base">Pago Seguro vía WebPay</h3>
-                          <p className="text-[9px] uppercase tracking-widest text-gold font-bold">Transacción Inmediata</p>
-                        </div>
-                      </div>
+                    <div className="border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] rounded-[2px] p-5 md:p-6">
+                      <h3 className="font-display font-medium text-lg text-[#1E1B16]">Pago Seguro vía WebPay</h3>
+                      <p className="dato text-[#5B5348] mt-1">Transacción Inmediata</p>
 
-                      <p className="text-sm text-text-sub mb-8 leading-relaxed font-normal italic">
+                      <p className="text-sm text-[#5B5348] mt-4 mb-7 leading-relaxed">
                         Serás redirigido al servidor seguro de Transbank. TreePod no almacena los datos de tu tarjeta.
                       </p>
 
+                      {/* El label dice exactamente lo que se cobra: el 50% ya calculado,
+                          nunca dejar dudar si el botón cobra el 100%. */}
                       <PagarButton
                         reservaId={id}
-                        className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-xl transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3 h-16"
-                        label="Pagar y confirmar"
+                        className={`${btnPrimary} w-full disabled:opacity-50 disabled:cursor-not-allowed`}
+                        label={`Pagar $${Math.round(total * 0.5).toLocaleString("es-CL")} y confirmar`}
                       />
-                    </div>
 
-                    {minutesLeft > 0 && (
-                      <div className="mt-8 flex items-center justify-center gap-3 text-primary font-semibold animate-pulse text-[10px] uppercase tracking-[0.4em]">
-                        <Timer className="w-4 h-4" />
-                        <span>Reserva garantizada por {minutesLeft} min</span>
-                      </div>
-                    )}
+                      {/* Confianza en el punto de máxima ansiedad */}
+                      <p className="mt-5 flex items-center justify-center gap-2 dato text-[#5B5348] text-center">
+                        <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                        Registro SERNATUR N° 36806 · 4,9 en Google (59 reseñas)
+                      </p>
+                    </div>
                   </div>
                 </section>
               )}
@@ -508,6 +517,34 @@ function ReservaContent({ id }: { id: string }) {
           </div>
         </div>
       </div >
+
+      {/* Barra de pago sticky (mobile): la cifra principal es lo que se paga HOY.
+          Solo en el paso de pago; StickyReservar ya se excluye en /reserva. */}
+      {isGuestDataComplete && reserva.estado === "pendiente_pago" && (
+        <div className="lg:hidden fixed inset-x-0 bottom-0 z-[100] animate-fade-in-up">
+          <div
+            className="bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 py-2.5 flex items-center justify-between gap-3"
+            style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
+          >
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">Hoy pagas</span>
+                <span className="font-display font-medium text-xl leading-none tabular-nums text-[#1E1B16] whitespace-nowrap">
+                  ${Math.round(total * 0.5).toLocaleString("es-CL")}
+                </span>
+              </div>
+              <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
+                50% del total · ${total.toLocaleString("es-CL")}
+              </div>
+            </div>
+            <PagarButton
+              reservaId={id}
+              className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0 disabled:opacity-40"
+              label="Pagar"
+            />
+          </div>
+        </div>
+      )}
     </div >
   );
 }
@@ -520,8 +557,8 @@ export default function ReservaPage({
   const { id } = use(params);
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-background-light font-display text-2xl font-bold animate-pulse">
-        TreePod...
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-2xl text-[#1E1B16] animate-pulse">
+        TreePod…
       </div>
     }>
       <ReservaContent id={id} />

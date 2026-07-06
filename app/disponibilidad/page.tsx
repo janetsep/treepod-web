@@ -7,8 +7,11 @@ import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
-import { Settings, ChevronDown, Tag, Sparkles, Check, Calendar, RefreshCw, Info, Star } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import Stepper from '../components/Stepper';
+import SectionFolio from '../components/SectionFolio';
+import TriBullet from '../components/deco/TriBullet';
+import { btnPrimary, linkLine } from '../components/deco/cta';
 
 type ResultadoPrecio = {
   temporada: string;
@@ -36,7 +39,11 @@ type Servicio = {
   image_url: string;
 };
 
-
+// Línea punteada de leyenda (dotted leader): une el concepto con su dato,
+// como en una ficha técnica impresa.
+function DottedLeader({ className = "border-[#1E1B16]/25" }: { className?: string }) {
+  return <span className={`flex-1 border-b border-dotted min-w-4 ${className}`} aria-hidden="true" />;
+}
 
 function DisponibilidadContent() {
   const searchParams = useSearchParams();
@@ -63,8 +70,12 @@ function DisponibilidadContent() {
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
+  // Solo UI: al intentar reservar con datos incompletos, marca en rojo los campos
+  // vacíos y lleva la vista al formulario. Cero lógica de reserva.
+  const [intentoEnvio, setIntentoEnvio] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
+  const datosRef = useRef<HTMLDivElement>(null);
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
 
@@ -269,6 +280,9 @@ function DisponibilidadContent() {
       // Validate client data
       if (!nombre.trim() || !apellido.trim() || !email.trim() || !telefono.trim()) {
         setError("Por favor completa todos los datos: nombre, apellido, email y teléfono");
+        // Validación visible: marca los campos vacíos y lleva la vista al formulario
+        setIntentoEnvio(true);
+        datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
@@ -276,6 +290,8 @@ function DisponibilidadContent() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         setError("Por favor ingresa un email válido");
+        setIntentoEnvio(true);
+        datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
@@ -314,13 +330,13 @@ function DisponibilidadContent() {
             const isDinner = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
             const isTinaja = s.nombre.toLowerCase().includes("tinaja");
 
-            // Si es desayuno, multiplica por noches por defecto. 
+            // Si es desayuno, multiplica por noches por defecto.
             // Si es cena o tinaja, por defecto es 1 noche a menos que esté en nochesPorServicio.
             const multNoches = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
-            const nochesParaCalculo = nochesPorServicio[id] !== undefined 
-              ? nochesPorServicio[id] 
+            const nochesParaCalculo = nochesPorServicio[id] !== undefined
+              ? nochesPorServicio[id]
               : (multNoches ? (resultado.noches || 1) : 1);
-            
+
             const cantidad = (s.multiplicador_personas ? adultos : 1) * nochesParaCalculo;
 
             return {
@@ -371,8 +387,8 @@ function DisponibilidadContent() {
 
     // Lógica de noches: Desayuno multiplica por defecto. Cena y Tinaja son 1 noche por defecto.
     const multNochesDefault = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
-    const nochesParaCalculo = nochesEspecificas !== undefined 
-      ? nochesEspecificas 
+    const nochesParaCalculo = nochesEspecificas !== undefined
+      ? nochesEspecificas
       : (multNochesDefault ? nochesEstadia : 1);
 
     return basePrecio * (s.multiplicador_personas ? numAdultos : 1) * nochesParaCalculo;
@@ -387,102 +403,99 @@ function DisponibilidadContent() {
     return resultado.total + totalServicios;
   };
 
+  // Solo presentación: lo que sale de la tarjeta HOY (50% del total en pantalla).
+  // La decisión se toma sobre este número, no sobre el total de la estadía.
+  const abonoHoy = Math.round((calcularTotalConServicios() || 0) * 0.5);
+
+  // Campos del formulario: ficha rectangular, foco cyan, borde rojo si el campo
+  // quedó vacío tras intentar reservar.
+  const inputFicha =
+    "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
+  const bordeCampo = (v: string) => (intentoEnvio && !v.trim() ? "border-red-400" : "border-[#1E1B16]/20");
+
   return (
-    <div className="min-h-screen bg-surface font-sans text-text-main transition-colors duration-300">
-      {/* Banner compacto premium: foto real con Ken Burns + señales de confianza,
-          sin empujar el formulario de reserva fuera de la vista. */}
-      <section className="relative pt-44 pb-10 md:pt-48 md:pb-14 overflow-hidden">
-        <Image
-          src="/images/hero/domo-iluminado-noche.jpg"
-          alt="Domo TreePod iluminado de noche en Valle Las Trancas"
-          fill
-          priority
-          quality={75}
-          sizes="100vw"
-          className="object-cover object-center ken-burns-soft"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/80" />
-        <div className="relative z-10 container max-w-7xl mx-auto px-6">
-          <span className="inline-block text-[#00ADEF] text-xs font-black tracking-[0.3em] uppercase mb-3">
-            Reserva directa
-          </span>
-          <h1 className="font-display font-black !text-white text-3xl md:text-5xl leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]">
-            Reserva tu <span className="text-[#00ADEF] italic-display">glamping</span> en Las Trancas
+    <div className="min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16]">
+      {/* Cabecera-documento: sobre crema, sin foto ni gradiente (esta página queda
+          sin priority: el único de cada página es la portada del hero en la home). */}
+      <header className="bg-[#F7F3EC] border-b border-[#1E1B16]/15 pt-28 md:pt-32 pb-8">
+        <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+          <SectionFolio num={`Paso ${resultado ? 2 : 1} de 3`} label="Reserva directa" />
+          <h1 className="display-lg text-[#1E1B16] max-w-3xl">
+            Reserva tu{" "}
+            <span className="italic whitespace-nowrap">
+              glamping
+              <TriBullet className="inline-block w-3 h-2.5 ml-2 text-[#00ADEF]" />
+            </span>{" "}
+            en Las Trancas
           </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-white/85 text-[12px] md:text-sm font-medium">
-            <span className="inline-flex items-center gap-1.5">
-              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" /> 4,9 · 59 reseñas
-            </span>
-            <span className="text-white/40">•</span>
+          {/* Fila de confianza tipo masthead: el "50% hoy" es el reductor de
+              fricción n° 1 y se ve también en mobile. */}
+          <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
+            <span>4,9 · 59 reseñas</span>
+            <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
             <span>Mejor precio directo, sin comisiones</span>
-            <span className="text-white/40 hidden sm:inline">•</span>
-            <span className="hidden sm:inline">Reserva con el 50%, saldo en el check-in</span>
+            <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
+            <span>Reserva con el 50%, saldo en el check-in</span>
           </div>
         </div>
-      </section>
+      </header>
 
-      <main className="container max-w-7xl mx-auto px-6 py-8 md:py-10 flex-1">
-        {/* Cambio #2: Checkout Stepper */}
-        <Stepper activeStep={1} />
+      <main className="mx-auto max-w-[1280px] px-5 md:px-10 py-8 md:py-10 flex-1">
+        <Stepper activeStep={resultado ? 2 : 1} />
 
-        {/* HEADER & LEGEND */}
-        <header className="mb-8 border-b border-black/5 pb-6">
-          <p className="text-text-sub text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
-            {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
-          </p>
-        </header>
+        <p className="dato text-[#5B5348] mb-8">
+          {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
+        </p>
 
-        {/* THREE COLUMN HUD LAYOUT (CALENDAR - EXTRAS - SUMMARY) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-4 items-start">
+        {/* TRES COLUMNAS: ESTADÍA — EXTRAS — RESUMEN */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-2 items-start">
 
-          {/* COL 1: Step 1 - Calendar */}
+          {/* COL 1: 01 — Estadía */}
           {!isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
-              <header className="px-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                    <Calendar className="text-primary w-4 h-4" />
-                  </div>
-                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Estadía</h2>
-                </div>
-                <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Huéspedes y selección de fechas</p>
+              <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
+                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
+                <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">Estadía</h2>
+                <span className="ml-auto hidden md:block caption-editorial">Huéspedes y fechas</span>
               </header>
 
-              <section className="bg-white p-5 lg:p-6 rounded-2xl border border-black/5 shadow-lg space-y-6">
+              <section className="bg-white p-5 lg:p-6 rounded-[2px] border border-[#1E1B16]/12 space-y-6">
                 {/* Guest Selection moved here */}
-                <div className="space-y-3">
-                  <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">¿Cuántos huéspedes?</label>
+                <div className="space-y-2">
+                  <label className="dato text-[#5B5348] block">¿Cuántos huéspedes?</label>
                   <div className="relative">
                     <select
                       value={adultos}
                       onChange={(e) => setAdultos(Number(e.target.value))}
-                      className="w-full bg-black/5 border border-black/10 rounded-xl h-14 px-5 text-base font-bold appearance-none focus:border-primary transition-all outline-none text-text-main cursor-pointer"
+                      className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] font-medium appearance-none focus:border-[#00ADEF] focus:ring-0 transition-colors outline-none text-[#1E1B16] cursor-pointer"
                     >
                       {[1, 2, 3, 4].map(n => (
                         <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'Persona' : 'Personas'}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-primary w-6 h-6" />
+                    <TriBullet className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-2.5 text-[#00ADEF] rotate-180" />
                   </div>
                 </div>
 
-                <div className="h-px bg-black/5 w-full"></div>
+                <div className="h-px bg-[#1E1B16]/12 w-full"></div>
 
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <label className="text-[11px] font-bold text-text-sub uppercase tracking-[0.2em] ml-1">Selecciona tus fechas</label>
-                    <div className="flex flex-wrap items-center gap-3 text-[9px] font-bold uppercase tracking-widest text-text-sub">
+                    <label className="dato text-[#5B5348]">Selecciona tus fechas</label>
+                    {/* Leyenda del calendario (los dots redondos del calendario son
+                        la única excepción viva al rectangular) */}
+                    <div className="flex flex-wrap items-center gap-3 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(0,173,239,0.3)]"></div>
-                        <span className="text-text-main">Selección</span>
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#00ADEF]"></div>
+                        <span className="text-[#1E1B16]">Selección</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full border border-black/20 bg-white"></div>
+                        <div className="w-2.5 h-2.5 rounded-full border border-[#1E1B16]/25 bg-white"></div>
                         <span>Libre</span>
                       </div>
                       <div className="flex items-center gap-1.5 opacity-60">
-                        <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
-                          <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#1E1B16]/10 relative border border-[#1E1B16]/10 overflow-hidden">
+                          <div className="absolute inset-x-0 top-1/2 h-[1px] bg-[#1E1B16]/25 rotate-45"></div>
                         </div>
                         <span>Ocupado</span>
                       </div>
@@ -519,25 +532,25 @@ function DisponibilidadContent() {
             </div>
           )}
 
-          {/* COL 2: Step 2 - Extras */}
+          {/* COL 2: 02 — Extras */}
           {!isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
-              <header className="px-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                    <Sparkles className="text-primary w-4 h-4" />
-                  </div>
-                  <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">Extras</h2>
-                  {!(entrada && salida) && (
-                    <span className="bg-primary/5 text-primary text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-primary/10 animate-pulse">
-                      Elige fechas primero
-                    </span>
-                  )}
-                </div>
-                <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Packs y experiencias</p>
+              <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
+                <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
+                <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">Extras</h2>
+                {!(entrada && salida) ? (
+                  <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
+                    <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                    Elige fechas primero
+                  </span>
+                ) : (
+                  <span className="ml-auto hidden md:block caption-editorial">Packs y experiencias</span>
+                )}
               </header>
 
-              <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-all duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40 blur-[1px]'}`}>
+              {/* Índice de servicios: fila de ficha con foto cuadrada, línea punteada
+                  hasta el precio y borde izquierdo cyan al seleccionar. */}
+              <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-opacity duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40'}`}>
                 {servicios.map((s) => {
                   // Usar directamente los nombres y datos de la base de datos
                   let displayNombre = s.nombre;
@@ -550,7 +563,7 @@ function DisponibilidadContent() {
                   } else if (s.nombre.toLowerCase().includes("tinaja")) {
                       displayImage = "/images/wellness/Tinaja1.jpg";
                   } else if (s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("pack")) {
-                      displayImage = "/images/Galeria/comidadomoafuerapizza.jpg";
+                      displayImage = "/images/Galeria/domo-treepod-camara-19-2.jpg";
                   } else if (s.nombre.toLowerCase().includes("salida") || s.nombre.toLowerCase().includes("15:00") || s.nombre.toLowerCase().includes("checkout")) {
                       displayImage = "/images/Galeria/IMG_8987.JPG";
                   } else if (s.nombre.toLowerCase().includes("almuerzo") || s.nombre.toLowerCase().includes("relajado") || s.nombre.toLowerCase().includes("aperitivo")) {
@@ -562,71 +575,72 @@ function DisponibilidadContent() {
                   const isDinner = displayNombre.includes("Cena") || s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
                   const isTinaja = s.nombre.toLowerCase().includes("tinaja");
                   const isBreakfast = s.nombre.toLowerCase().includes("desayuno");
-                  
+
                   // Definimos cuántas noches mostrar por defecto en el tag
                   const multNochesDefault = (s.multiplicador_noches || isBreakfast) && !isDinner && !isTinaja;
-                  const currentNoches = nochesPorServicio[s.id] !== undefined 
-                    ? nochesPorServicio[s.id] 
+                  const currentNoches = nochesPorServicio[s.id] !== undefined
+                    ? nochesPorServicio[s.id]
                     : (multNochesDefault ? (resultado?.noches || 1) : 1);
+
+                  const seleccionado = serviciosSeleccionados.has(s.id);
 
                   return (
                     <div key={s.id} className="flex flex-col gap-2">
                       <div
-                        key={s.id}
                         onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
-                        className={`group relative flex flex-col sm:flex-row gap-4 p-4 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden extra-card-enhanced ${serviciosSeleccionados.has(s.id)
-                          ? 'bg-primary/10 border-primary ring-1 ring-primary/20 shadow-lg'
-                          : 'bg-white border-black/5 hover:border-primary/20 hover:bg-black/[0.02]'
-                          } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
+                        className={`group relative flex gap-4 p-4 bg-white rounded-[2px] border border-[#1E1B16]/12 transition-colors cursor-pointer ${
+                          seleccionado ? 'border-l-4 border-l-[#00ADEF]' : 'hover:border-[#1E1B16]/30'
+                        } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
                       >
-                        <div className="relative w-full sm:w-24 h-32 sm:h-24 rounded-2xl overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/30 transition-colors">
+                        <div className="relative w-24 h-24 rounded-[2px] overflow-hidden shrink-0">
                           <Image
                             src={displayImage}
                             alt={displayNombre}
                             fill
-                            sizes="(max-width: 640px) 100vw, 96px"
-                            className={`object-cover transition-transform duration-[2s] group-hover:scale-110 ${isDinner ? 'object-[center_75%]' : ''}`}
+                            sizes="96px"
+                            className={`object-cover transition-transform duration-700 group-hover:scale-[1.03] ${isDinner ? 'object-[center_75%]' : ''}`}
                           />
-                          {serviciosSeleccionados.has(s.id) && (
-                            <div className="absolute inset-0 bg-primary/40 backdrop-blur-[1px] flex items-center justify-center">
-                              <Check className="text-white w-10 h-10 drop-shadow-lg" />
-                            </div>
-                          )}
                         </div>
-                        <div className="flex-1 flex flex-col justify-center min-w-0">
-                          <div className="flex justify-between items-start mb-1">
-                            <h3 className={`font-display font-bold text-lg leading-tight transition-colors ${serviciosSeleccionados.has(s.id) ? 'text-primary' : 'text-text-main'}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-baseline gap-3">
+                            <h3 className="font-display font-medium text-lg leading-tight text-[#1E1B16]">
                               {displayNombre}
                             </h3>
-                            <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-all ${serviciosSeleccionados.has(s.id) ? 'bg-primary border-primary text-white scale-110' : 'border-black/10 text-transparent'}`}>
-                              <Check className="w-4 h-4" />
-                            </div>
+                            <DottedLeader />
+                            <span className="font-semibold text-[15px] tabular-nums text-[#1E1B16] whitespace-nowrap">
+                              ${(s.precio || 0).toLocaleString("es-CL")}
+                            </span>
                           </div>
-                          <p className="text-xs text-text-sub leading-relaxed font-bold mb-3">
+                          <p className="text-[13px] text-[#5B5348] leading-relaxed mt-1">
                             {displayDescripcion}
                           </p>
                           {isTinaja && (
-                            <span className="inline-flex items-center self-start gap-1 text-[9px] font-black uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full mb-3">
-                              Servicio de temporada · desde primavera
+                            <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
+                              <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                              De temporada · desde primavera
                             </span>
                           )}
-                          <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="text-lg font-bold text-text-main">
-                              ${(s.precio || 0).toLocaleString("es-CL")}
-                            </span>
-                            <span className="text-[10px] text-text-sub font-black uppercase tracking-widest bg-black/5 px-2 py-0.5 rounded-full">
+                          <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
                               {s.multiplicador_personas ? 'por persona' : 'precio fijo'}
                             </span>
                             {(s.multiplicador_noches || isDinner || isTinaja || isBreakfast) && (
-                              <span className="text-[10px] text-text-sub/60 font-bold">
+                              <span className="text-[10px] text-[#5B5348] tabular-nums">
                                 × {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
                               </span>
                             )}
+                            {seleccionado && (
+                              <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1E1B16]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                                Agregado
+                              </span>
+                            )}
                           </div>
-                          {serviciosSeleccionados.has(s.id) && resultado && (
-                            <div className="mt-2 flex items-center gap-1.5">
-                              <span className="text-[10px] text-text-sub/50 font-bold">Subtotal:</span>
-                              <span className="text-sm font-black text-primary">
+                          {seleccionado && resultado && (
+                            <div className="mt-1.5 flex items-baseline gap-3 text-[12px]">
+                              <span className="text-[#5B5348]">Subtotal</span>
+                              <DottedLeader />
+                              <span className="font-semibold tabular-nums text-[#1E1B16]">
                                 ${getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[s.id]).toLocaleString("es-CL")}
                               </span>
                             </div>
@@ -635,9 +649,9 @@ function DisponibilidadContent() {
                       </div>
 
                       {/* Selector de Noches para la Cena o Tinaja */}
-                      {serviciosSeleccionados.has(s.id) && (isDinner || isTinaja) && (
-                        <div className="bg-white border border-primary/20 rounded-2xl p-4 mt-1 shadow-sm animate-fade-in mx-2">
-                          <p className="text-[10px] font-black text-text-sub uppercase tracking-widest mb-3">
+                      {seleccionado && (isDinner || isTinaja) && (
+                        <div className="bg-white border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] rounded-[2px] p-4 animate-fade-in">
+                          <p className="dato text-[#5B5348] mb-3">
                             {isTinaja ? "¿Cuántas noches de tinaja deseas disfrutar?" : "¿Para cuántas noches lo deseas?"}
                           </p>
                           <div className="flex flex-wrap gap-2">
@@ -646,7 +660,7 @@ function DisponibilidadContent() {
                                 e.stopPropagation();
                                 setNochesPorServicio({ ...nochesPorServicio, [s.id]: (resultado?.noches || 1) });
                               }}
-                              className={`px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${currentNoches === (resultado?.noches || 1) ? 'bg-primary text-white border-primary shadow-md' : 'bg-black/5 text-text-sub border-transparent'}`}
+                              className={`px-3 py-2 rounded-[2px] text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors border ${currentNoches === (resultado?.noches || 1) ? 'bg-[#00ADEF] text-[#1E1B16] border-[#1E1B16]/30' : 'bg-white text-[#5B5348] border-[#1E1B16]/20 hover:border-[#1E1B16]/40'}`}
                             >
                               Toda la estadía ({resultado?.noches || 1})
                             </button>
@@ -655,13 +669,13 @@ function DisponibilidadContent() {
                                 e.stopPropagation();
                                 setNochesPorServicio({ ...nochesPorServicio, [s.id]: 1 });
                               }}
-                              className={`px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${currentNoches === 1 ? 'bg-primary text-white border-primary shadow-md' : 'bg-black/5 text-text-sub border-transparent'}`}
+                              className={`px-3 py-2 rounded-[2px] text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors border ${currentNoches === 1 ? 'bg-[#00ADEF] text-[#1E1B16] border-[#1E1B16]/30' : 'bg-white text-[#5B5348] border-[#1E1B16]/20 hover:border-[#1E1B16]/40'}`}
                             >
                               Solo 1 noche
                             </button>
                             {resultado?.noches && resultado.noches > 2 && (
-                              <div className="flex items-center gap-2 bg-black/5 rounded-xl px-3 ml-auto">
-                                <span className="text-[10px] font-black text-text-sub uppercase opacity-50">Noches:</span>
+                              <div className="flex items-center gap-2 border border-[#1E1B16]/20 rounded-[2px] px-3 ml-auto">
+                                <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]/70">Noches:</span>
                                 <input
                                   type="number"
                                   min="1"
@@ -674,7 +688,7 @@ function DisponibilidadContent() {
                                     if (val < 1) val = 1;
                                     setNochesPorServicio({ ...nochesPorServicio, [s.id]: val });
                                   }}
-                                  className="w-10 bg-transparent py-2 text-center text-xs font-bold text-text-main outline-none"
+                                  className="w-10 bg-transparent py-2 text-center text-xs font-semibold text-[#1E1B16] outline-none tabular-nums"
                                 />
                               </div>
                             )}
@@ -688,62 +702,65 @@ function DisponibilidadContent() {
             </div>
           )}
 
-          {/* COL 3: Final Summary */}
-          <aside className={`lg:sticky lg:top-28 z-20 pb-32 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
-            <header className="px-2">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                  <Settings className="text-primary w-4 h-4" />
-                </div>
-                <h2 className="font-display font-bold text-lg text-text-main uppercase tracking-tight">
-                  {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
-                </h2>
-              </div>
-              <p className="text-[10px] font-black text-text-sub uppercase tracking-widest ml-10">Tu reserva en un vistazo</p>
+          {/* COL 3: 03 — Resumen (ficha de reserva) */}
+          <aside className={`lg:sticky lg:top-28 z-20 pb-24 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
+            <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
+              <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
+              <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">
+                {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
+              </h2>
+              <span className="ml-auto hidden md:block caption-editorial">Tu reserva en un vistazo</span>
             </header>
 
-            <div className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-lg">
-              <div className="p-6 space-y-5">
-                <div className="space-y-4 border-b border-black/5 pb-6">
-                  {/* Guest selection removed from here as it is now in Step 01 */}
-                  <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-                      <span className="text-primary font-black text-xs">{adultos}</span>
-                    </div>
-                    <span className="text-xs font-black text-text-main uppercase tracking-widest">Huéspedes</span>
+            <div className="bg-white rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+              <div className="p-5 md:p-6 space-y-5">
+                {/* Tabla de leyenda: huéspedes y fechas con líneas punteadas */}
+                <div className="border-b border-[#1E1B16]/12 pb-4">
+                  <div className="flex items-baseline gap-3 py-1.5">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                    <span className="text-[13px] font-semibold text-[#1E1B16]">Huéspedes</span>
+                    <DottedLeader />
+                    <span className="text-[13px] tabular-nums text-[#1E1B16]">{adultos}</span>
                   </div>
-
-                  <div className="flex flex-col gap-3">
-                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1.5">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Ingreso</span>
-                      <span className="font-black text-text-main text-[13px] md:text-sm tracking-tight pb-0.5">
-                        {entrada ? `${entrada.split('-').reverse().join('-')} desde las 16:00 hrs.` : "—"}
-                      </span>
-                    </div>
-                    <div className="bg-black/5 p-4 rounded-xl border border-black/10 flex flex-col gap-1.5">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">Salida</span>
-                      <span className="font-black text-text-main text-[13px] md:text-sm tracking-tight pb-0.5">
-                        {salida ? `${salida.split('-').reverse().join('-')} hasta las 12:00 hrs.` : "—"}
-                      </span>
-                    </div>
+                  <div className="flex items-baseline gap-3 py-1.5">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                    <span className="text-[13px] font-semibold text-[#1E1B16]">Ingreso</span>
+                    <DottedLeader />
+                    <span className="text-[13px] tabular-nums text-[#1E1B16] whitespace-nowrap">
+                      {entrada ? entrada.split('-').reverse().join('-') : "—"}
+                    </span>
                   </div>
+                  <div className="flex items-baseline gap-3 py-1.5">
+                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                    <span className="text-[13px] font-semibold text-[#1E1B16]">Salida</span>
+                    <DottedLeader />
+                    <span className="text-[13px] tabular-nums text-[#1E1B16] whitespace-nowrap">
+                      {salida ? salida.split('-').reverse().join('-') : "—"}
+                    </span>
+                  </div>
+                  <p className="caption-editorial mt-2">
+                    Ingreso desde las 16:00 hrs. · salida hasta las 12:00 hrs.
+                  </p>
                 </div>
 
                 {/* Aviso de disponibilidad real por domo */}
                 {entrada && salida && disponibilidad.disponible === false && (
-                  <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl text-xs font-bold flex items-start gap-2">
-                    <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
+                  <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-[2px] text-xs font-medium flex items-start gap-2">
+                    <TriBullet className="w-2.5 h-2 text-amber-500 shrink-0 mt-1" />
                     <span>No tenemos un domo disponible para toda esta estadía. Prueba con otras fechas o escríbenos por WhatsApp y revisamos opciones.</span>
                   </div>
                 )}
                 {entrada && salida && disponibilidad.checking && (
-                  <div className="text-[10px] font-black text-text-sub uppercase tracking-widest flex items-center gap-2 px-1">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348] flex items-center gap-2">
                     <RefreshCw className="w-3 h-3 animate-spin" /> Verificando disponibilidad…
                   </div>
                 )}
 
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-xs font-bold animate-shake">
+                {/* Un solo mensaje de error visible a la vez: aquí cuando aún no hay
+                    resultado (errores de Webpay o de cálculo); junto al formulario
+                    cuando ya se está reservando. */}
+                {error && !resultado && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-[2px] text-xs font-medium">
                     {error}
                   </div>
                 )}
@@ -752,101 +769,117 @@ function DisponibilidadContent() {
                   <button
                     onClick={calcularPrecio}
                     disabled={loading || !entrada || !salida}
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-black py-4.5 rounded-xl text-xs uppercase tracking-[0.3em] shadow-xl shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-20"
+                    className={`${linkLine} disabled:opacity-30 disabled:cursor-not-allowed`}
                   >
-                    {loading ? "Calculando..." : "Calcular Total"}
+                    {loading ? "Calculando…" : "Ver precio de mis fechas"}
+                    <span aria-hidden="true">→</span>
                   </button>
                 ) : (
-                  <div className="space-y-6 pt-2">
-                    {/* Explicit Nights and Base Rate */}
-                    <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
-                      <div className="flex justify-between items-end mb-1">
-                        <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadía Total</span>
-                        <span className="text-2xl font-display font-bold text-text-main">{resultado.noches} {resultado.noches === 1 ? 'Noche' : 'Noches'}</span>
+                  <div ref={resultsRef} className="space-y-6 pt-1">
+                    {/* Desglose de la estadía: líneas punteadas y números tabulares */}
+                    <div className="space-y-2">
+                      <div className="flex items-baseline gap-3">
+                        <span className="dato text-[#5B5348]">Estadía</span>
+                        <DottedLeader />
+                        <span className="font-display font-medium text-lg tabular-nums text-[#1E1B16]">
+                          {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'}
+                        </span>
                       </div>
-                      <div className="space-y-3 mt-4">
-                        <div className="flex justify-between items-center text-xs text-text-sub font-medium">
-                          <span>Valor base promedio</span>
-                          <span>${(resultado.precio_promedio || resultado.precio_noche || 0).toLocaleString("es-CL")}</span>
-                        </div>
+                      <div className="flex items-baseline gap-3 text-[13px]">
+                        <span className="text-[#5B5348]">Valor base promedio</span>
+                        <DottedLeader />
+                        <span className="tabular-nums text-[#1E1B16]">
+                          ${(resultado.precio_promedio || resultado.precio_noche || 0).toLocaleString("es-CL")}
+                        </span>
+                      </div>
 
-                        {resultado.desglose && (
-                          <div className="mt-4 pt-4 border-t border-primary/10 space-y-2">
-                            <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Detalle por temporada</p>
-                            {(() => {
-                              const aggregated: Record<string, { name: string, nights: number, price: number, total: number, isRaw?: boolean }> = {};
-                              resultado.desglose.split('|').forEach((item: string) => {
-                                const parts = item.split(':');
-                                if (parts.length < 2) return;
-                                const name = parts[0].trim();
-                                const detail = parts.slice(1).join(':').trim();
-                                
-                                // Parse: "3 noches x $145000 = $435000"
-                                const match = detail.match(/(\d+)\s+noches?\s+x\s+\$(\d+)\s+=\s+\$(\d+)/);
-                                if (match) {
-                                  const nights = parseInt(match[1]);
-                                  const price = parseInt(match[2]);
-                                  const total = parseInt(match[3]);
-                                  const key = `${name}-${price}`;
-                                  
-                                  if (aggregated[key]) {
-                                    aggregated[key].nights += nights;
-                                    aggregated[key].total += total;
-                                  } else {
-                                    aggregated[key] = { name, nights, price, total };
-                                  }
+                      {resultado.desglose && (
+                        <div className="mt-2 pt-3 border-t border-[#1E1B16]/12 space-y-1.5">
+                          <p className="dato text-[#5B5348] mb-2">Detalle por temporada</p>
+                          {(() => {
+                            const aggregated: Record<string, { name: string, nights: number, price: number, total: number, isRaw?: boolean }> = {};
+                            resultado.desglose.split('|').forEach((item: string) => {
+                              const parts = item.split(':');
+                              if (parts.length < 2) return;
+                              const name = parts[0].trim();
+                              const detail = parts.slice(1).join(':').trim();
+
+                              // Parse: "3 noches x $145000 = $435000"
+                              const match = detail.match(/(\d+)\s+noches?\s+x\s+\$(\d+)\s+=\s+\$(\d+)/);
+                              if (match) {
+                                const nights = parseInt(match[1]);
+                                const price = parseInt(match[2]);
+                                const total = parseInt(match[3]);
+                                const key = `${name}-${price}`;
+
+                                if (aggregated[key]) {
+                                  aggregated[key].nights += nights;
+                                  aggregated[key].total += total;
                                 } else {
-                                  aggregated[item] = { name: item, nights: 0, price: 0, total: 0, isRaw: true };
+                                  aggregated[key] = { name, nights, price, total };
                                 }
-                              });
-                              
-                              return Object.values(aggregated).map((data, idx) => (
-                                <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
-                                  <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{data.name}</span>
-                                  <span className="font-medium">
-                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
-                                  </span>
-                                </div>
-                              ));
-                            })()}
-                          </div>
-                        )}
-                      </div>
+                              } else {
+                                aggregated[item] = { name: item, nights: 0, price: 0, total: 0, isRaw: true };
+                              }
+                            });
+
+                            return Object.values(aggregated).map((data, idx) => (
+                              <div key={idx} className="flex items-baseline gap-3 text-[12px]">
+                                <span className="text-[#5B5348]">{data.name}</span>
+                                <DottedLeader />
+                                <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
+                                  {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} × $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
+                                </span>
+                              </div>
+                            ));
+                          })()}
+                        </div>
+                      )}
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                       {resultado.precio_original && resultado.total < resultado.precio_original && (
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-text-sub">Precio Original</span>
-                          <span className="text-text-sub line-through">${(resultado.precio_original || 0).toLocaleString("es-CL")}</span>
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Precio original</span>
+                          <DottedLeader />
+                          <span className="text-[#5B5348] line-through tabular-nums">
+                            ${(resultado.precio_original || 0).toLocaleString("es-CL")}
+                          </span>
                         </div>
                       )}
 
                       {resultado.descuento_aplicado && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest pl-1">Descuentos Aplicados</p>
-                          <div className="flex justify-between items-center text-xs font-bold text-emerald-700 bg-emerald-50/40 p-3 rounded-xl border border-emerald-100/50">
-                            <span className="flex items-center gap-2">
-                              <Tag className="w-3.5 h-3.5 text-emerald-500" />
-                              {resultado.descuento_aplicado.tipo}
+                        <div className="space-y-1.5">
+                          <p className="dato text-emerald-700">Descuentos aplicados</p>
+                          <div className="flex items-baseline gap-3 text-[13px] text-emerald-700">
+                            <TriBullet className="w-2 h-1.5 text-emerald-500 shrink-0 self-center" />
+                            <span>{resultado.descuento_aplicado.tipo}</span>
+                            <DottedLeader className="border-emerald-700/30" />
+                            <span className="font-semibold tabular-nums">
+                              -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
                             </span>
-                            <span className="font-black">-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
                           </div>
-                          <div className="flex justify-between items-center px-3 py-1 text-[10px] font-black text-emerald-600/70">
-                            <span>Total Ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
-                            <span>-${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}</span>
+                          <div className="flex items-baseline gap-3 text-[11px] text-emerald-700/80">
+                            <span>Total ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
+                            <DottedLeader className="border-emerald-700/30" />
+                            <span className="tabular-nums">
+                              -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
+                            </span>
                           </div>
                         </div>
                       )}
 
-                      <div className="flex justify-between items-center text-sm font-bold">
-                        <span className="text-text-sub">Subtotal Domo</span>
-                        <span className="text-text-main">${(resultado.total || 0).toLocaleString("es-CL")}</span>
+                      <div className="flex items-baseline gap-3 text-sm font-semibold">
+                        <span className="text-[#5B5348]">Subtotal domo</span>
+                        <DottedLeader />
+                        <span className="tabular-nums text-[#1E1B16]">
+                          ${(resultado.total || 0).toLocaleString("es-CL")}
+                        </span>
                       </div>
 
                       {Array.from(serviciosSeleccionados).length > 0 && (
-                        <div className="space-y-3 pt-3 border-t border-black/5">
-                          <p className="text-[9px] font-black text-text-sub uppercase tracking-widest">Servicios Seleccionados</p>
+                        <div className="space-y-1.5 pt-3 border-t border-[#1E1B16]/12">
+                          <p className="dato text-[#5B5348]">Servicios seleccionados</p>
                           {Array.from(serviciosSeleccionados).map(id => {
                             const s = servicios.find(srv => srv.id === id);
                             if (!s) return null;
@@ -857,14 +890,15 @@ function DisponibilidadContent() {
                             const multNochesDefaultSrv = (s.multiplicador_noches || isBreakfastSrv) && !isDinnerSrv && !isTinajaSrv;
                             const nochesSrv = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNochesDefaultSrv ? resultado.noches : 1);
                             return (
-                              <div key={id} className="flex justify-between items-start gap-4 text-sm py-1">
-                                <span className="text-text-sub font-medium flex items-start gap-3">
-                                  <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><Check className="text-primary w-3 h-3" /></div>
-                                  <span className="flex-1 leading-snug">
-                                    {s.nombre} {nochesSrv && nochesSrv > 0 ? `(x${nochesSrv} ${nochesSrv === 1 ? 'noche' : 'noches'})` : ''}
-                                  </span>
+                              <div key={id} className="flex items-baseline gap-3 text-[13px]">
+                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
+                                <span className="text-[#5B5348] leading-snug">
+                                  {s.nombre} {nochesSrv && nochesSrv > 0 ? `(x${nochesSrv} ${nochesSrv === 1 ? 'noche' : 'noches'})` : ''}
                                 </span>
-                                <span className="text-text-main font-black tracking-tight whitespace-nowrap">${(costo || 0).toLocaleString("es-CL")}</span>
+                                <DottedLeader />
+                                <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
+                                  ${(costo || 0).toLocaleString("es-CL")}
+                                </span>
                               </div>
                             );
                           })}
@@ -872,68 +906,59 @@ function DisponibilidadContent() {
                       )}
                     </div>
 
-                    <div className="pt-6 border-t border-black/5 space-y-4 px-1">
-                      <div className="flex flex-wrap justify-between items-center gap-y-4">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] md:text-xs font-black text-text-sub uppercase tracking-widest leading-none mb-1">Total Estadía</span>
-                          <span className="text-[9px] md:text-[10px] text-text-sub/50 font-black uppercase tracking-tighter">IVA incluido</span>
+                    {/* Jerarquía invertida: lo que sale de la tarjeta HOY es el número
+                        dominante; el total de la estadía es la línea secundaria. */}
+                    <div className="pt-5 border-t border-[#1E1B16]/15 space-y-4">
+                      <div>
+                        <div className="dato text-[#5B5348]">Abonas hoy (50%)</div>
+                        <div key={abonoHoy} className="font-display font-medium text-[clamp(2.2rem,4vw,3rem)] leading-none tabular-nums text-[#1E1B16] mt-2 animate-fade-in">
+                          ${abonoHoy.toLocaleString("es-CL")}
                         </div>
-                        <div key={calcularTotalConServicios()} className="text-3xl sm:text-4xl xl:text-5xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap animate-fade-in">
-                          <span className="text-xl sm:text-2xl mr-1.5 text-primary/60 font-sans">$</span>
-                          {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
-                        </div>
+                        <p className="caption-editorial mt-2">Para confirmar tu estadía · IVA incluido</p>
                       </div>
-
-                      <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 shadow-sm relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
-                          <Sparkles className="w-8 h-8 text-primary" />
+                      <div className="space-y-1.5">
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Total estadía</span>
+                          <DottedLeader />
+                          <span className="font-semibold tabular-nums text-[#1E1B16]">
+                            ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+                          </span>
                         </div>
-                        <div className="flex justify-between items-end relative z-10">
-                          <div className="flex flex-col">
-                            <span className="block text-[11px] font-black text-primary uppercase tracking-[0.1em] leading-none mb-1">Abonas hoy (50%)</span>
-                            <span className="text-[9px] text-text-sub/70 font-medium leading-tight">Para confirmar tu estadía</span>
-                          </div>
-                          <div className="text-3xl font-display font-black text-primary leading-none flex items-baseline whitespace-nowrap">
-                            <span className="text-lg mr-1 text-primary/70 font-sans">$</span>
-                            {(Math.round((calcularTotalConServicios() || 0) * 0.5)).toLocaleString("es-CL")}
-                          </div>
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Saldo al check-in (50%)</span>
+                          <DottedLeader />
+                          <span className="tabular-nums text-[#1E1B16]">
+                            ${abonoHoy.toLocaleString("es-CL")}
+                          </span>
                         </div>
-                      </div>
-
-                      <div className="flex justify-between items-center text-[10px] text-text-sub/80 px-2">
-                        <span className="flex items-center gap-2 font-medium">
-                          <Info className="w-3.5 h-3.5 text-primary/60" />
-                          Saldo al check-in (50%)
-                        </span>
-                        <span className="font-bold text-text-main">${(Math.round((calcularTotalConServicios() || 0) * 0.5)).toLocaleString("es-CL")}</span>
                       </div>
                     </div>
 
                     {/* Client Data Form */}
-                    <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl p-6 border border-primary/10 mt-6">
-                      <h3 className="text-sm font-black text-text-main uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-primary rounded-full"></span>
-                        Tus Datos
+                    <div ref={datosRef} className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2">
+                      <h3 className="flex items-center gap-2 dato text-[#1E1B16] mb-4">
+                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
+                        Tus datos
                       </h3>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Nombre *</label>
+                          <label className="block dato text-[#5B5348] mb-2">Nombre *</label>
                           <input
                             type="text"
                             value={nombre}
                             onChange={(e) => setNombre(e.target.value)}
-                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            className={`${inputFicha} ${bordeCampo(nombre)}`}
                             placeholder="Tu nombre"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Apellido *</label>
+                          <label className="block dato text-[#5B5348] mb-2">Apellido *</label>
                           <input
                             type="text"
                             value={apellido}
                             onChange={(e) => setApellido(e.target.value)}
-                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            className={`${inputFicha} ${bordeCampo(apellido)}`}
                             placeholder="Tu apellido"
                           />
                         </div>
@@ -941,56 +966,58 @@ function DisponibilidadContent() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Email *</label>
+                          <label className="block dato text-[#5B5348] mb-2">Email *</label>
                           <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            className={`${inputFicha} ${bordeCampo(email)}`}
                             placeholder="tu@email.com"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-text-sub uppercase tracking-widest mb-2">Teléfono *</label>
+                          <label className="block dato text-[#5B5348] mb-2">Teléfono *</label>
                           <input
                             type="tel"
                             value={telefono}
                             onChange={(e) => setTelefono(e.target.value)}
-                            className="w-full px-4 py-3 border border-black/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all text-sm font-medium"
+                            className={`${inputFicha} ${bordeCampo(telefono)}`}
                             placeholder="+56 9 1234 5678"
                           />
                         </div>
                       </div>
 
                       {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mt-4 text-sm font-medium">
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
                           {error}
                         </div>
                       )}
                     </div>
 
+                    {/* CTA principal: dice exactamente lo que se cobra hoy (el 50%
+                        ya calculado en pantalla), no "Pagar ahora". */}
                     <button
                       onClick={() => { trackEvent("click_reservar"); reservar(); }}
                       disabled={reserving || disponibilidad.disponible === false}
-                      className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-5 rounded-full text-base shadow-2xl shadow-primary/30 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-3 mt-4 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                      className={`${btnPrimary} w-full mt-2 disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
                       {reserving ? (
                         <>
                           <RefreshCw className="w-5 h-5 animate-spin" />
-                          <span>Procesando...</span>
+                          <span>Procesando…</span>
                         </>
-                      ) : disponibilidad.disponible === false ? "No disponible en estas fechas" : "Pagar ahora"}
+                      ) : disponibilidad.disponible === false
+                        ? "No disponible en estas fechas"
+                        : abonoHoy > 0
+                          ? `Reservar — hoy pagas $${abonoHoy.toLocaleString("es-CL")}`
+                          : "Continuar al pago seguro"}
                     </button>
 
-                    <div className="flex flex-col items-center justify-center pt-6 opacity-70">
-                      <p className="text-[10px] font-bold text-text-sub uppercase tracking-wider mb-2 flex items-center gap-1">
-                        Pago 100% Seguro <Check className="w-3 h-3 text-emerald-500" />
-                      </p>
-                      {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
-                      <div className="flex items-center gap-4">
-                        <span className="text-[10px] font-bold font-sans tracking-wide">Webpay Plus</span>
-                      </div>
-                    </div>
+                    {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
+                    <p className="flex items-center justify-center gap-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348]">
+                      <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                      Pago 100% seguro · Webpay Plus
+                    </p>
                   </div>
                 )}
               </div>
@@ -998,23 +1025,32 @@ function DisponibilidadContent() {
           </aside>
         </div>
 
-        {/* STICKY BOTTOM BAR (Mobile) */}
+        {/* BARRA-FOLIO STICKY (Mobile): la cifra principal es lo que se paga HOY */}
         {resultado && (
-          <div className="lg:hidden fixed bottom-6 left-6 right-6 z-[100] animate-fade-in-up">
-            <div className="bg-white/95 backdrop-blur-2xl border border-black/10 p-5 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center justify-between gap-6 ring-1 ring-black/5">
-              <div className="flex flex-col min-w-0 pr-4">
-                <span className="text-[10px] font-black text-text-sub/60 uppercase tracking-widest leading-none mb-1">Total</span>
-                <div key={calcularTotalConServicios()} className="text-xl sm:text-3xl font-display font-black text-primary whitespace-nowrap leading-tight flex items-baseline animate-fade-in">
-                  <span className="text-lg mr-1 text-primary/60 font-sans">$</span>
-                  {(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+          <div className="lg:hidden fixed inset-x-0 bottom-0 z-[100] animate-fade-in-up">
+            <div
+              className="bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 py-2.5 flex items-center justify-between gap-3"
+              style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
+            >
+              <div className="min-w-0">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
+                    Hoy pagas
+                  </span>
+                  <span key={abonoHoy} className="font-display font-medium text-xl leading-none tabular-nums text-[#1E1B16] whitespace-nowrap animate-fade-in">
+                    ${abonoHoy.toLocaleString("es-CL")}
+                  </span>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
+                  50% del total · ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                 </div>
               </div>
               <button
                 onClick={() => { trackEvent("click_reservar_sticky"); reservar(); }}
                 disabled={reserving || disponibilidad.disponible === false}
-                className="flex-1 bg-primary text-white font-semibold py-4 rounded-full text-base shadow-2xl shadow-primary/40 flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {reserving ? <RefreshCw className="w-5 h-5 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Pagar ahora"}
+                {reserving ? <RefreshCw className="w-4 h-4 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Reservar"}
               </button>
             </div>
           </div>
@@ -1026,9 +1062,8 @@ function DisponibilidadContent() {
 
 export default function DisponibilidadPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background-dark font-display text-4xl font-bold animate-pulse text-primary italic">TreePod...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-3xl text-[#1E1B16] animate-pulse">TreePod…</div>}>
       <DisponibilidadContent />
     </Suspense>
   );
 }
-

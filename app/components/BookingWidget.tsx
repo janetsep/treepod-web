@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CalendarDays, Users, Search } from "lucide-react";
+import TriBullet from "./deco/TriBullet";
 
-// Buscador de disponibilidad en el home. Convierte el home de folleto en herramienta
-// de reserva (patrón de Airbnb/Booking): el visitante elige fechas y huéspedes y entra
-// al flujo con todo precargado, reduciendo la fricción al mínimo. Se posa sobre el hero.
+// "Ficha de reserva" del home. Convierte el home de folleto en herramienta de
+// reserva: el visitante elige fechas y huéspedes y entra al flujo con todo
+// precargado. Estilo ficha del sistema: rectangular, regla superior cyan, papel.
 export default function BookingWidget({ embedded = false }: { embedded?: boolean }) {
   const router = useRouter();
   const hoy = new Date().toISOString().slice(0, 10);
@@ -23,21 +23,25 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   };
 
   const baseField =
-    "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm outline-none focus:border-[#00ADEF] focus:ring-2 focus:ring-[#00ADEF]/20 transition";
+    "w-full bg-white border border-[#1E1B16]/20 rounded-[2px] px-3 py-2.5 text-[#1E1B16] text-sm outline-none focus:border-[#00ADEF] transition-colors";
   // appearance-none + color-scheme:light quitan el borde/sombra nativo que Safari iOS
   // le agrega a <input type="date"> encima de nuestro estilo, y evitan el date picker oscuro.
   const dateField = `${baseField} appearance-none [color-scheme:light]`;
 
   return (
     <div className={embedded ? "w-full" : "relative z-30 -mt-20 md:-mt-14 px-4"}>
-      <div className={embedded ? "w-full" : "container mx-auto max-w-4xl"}>
-        <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-black/5 p-4 md:p-5">
-          <div className="grid grid-cols-2 md:grid-cols-[1fr_1fr_auto_auto] gap-3 md:items-end">
+      <div className={embedded ? "w-full" : "mx-auto max-w-md"}>
+        <div className="bg-white text-[#1E1B16] rounded-[2px] border-t-4 border-[#00ADEF] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
+          <div className="flex items-center gap-2 mb-4">
+            <TriBullet />
+            <span className="dato text-[#5B5348]">Reserva directa</span>
+            <span className="flex-1 h-px bg-[#1E1B16]/10" aria-hidden="true" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             {/* Llegada */}
             <label className="block">
-              <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Llegada
-              </span>
+              <span className="block dato text-[#5B5348] mb-1.5">Llegada</span>
               <div className="relative">
                 <input
                   type="date"
@@ -52,7 +56,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                 {/* iOS Safari no muestra placeholder en <input type="date"> vacío: sin esto se ve como una caja en blanco.
                     text-transparent oculta el "dd/mm/aaaa" nativo de Chrome para que no choque con este texto. */}
                 {!entrada && (
-                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-400 pointer-events-none">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-600 pointer-events-none">
                     Elegir fecha
                   </span>
                 )}
@@ -61,9 +65,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
 
             {/* Salida */}
             <label className="block">
-              <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <CalendarDays className="w-3.5 h-3.5 text-[#00ADEF]" /> Salida
-              </span>
+              <span className="block dato text-[#5B5348] mb-1.5">Salida</span>
               <div className="relative">
                 <input
                   type="date"
@@ -73,7 +75,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                   className={`${dateField} ${!salida ? "text-transparent" : ""}`}
                 />
                 {!salida && (
-                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-400 pointer-events-none">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-600 pointer-events-none">
                     Elegir fecha
                   </span>
                 )}
@@ -81,33 +83,35 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             </label>
 
             {/* Huéspedes */}
-            <label className="block">
-              <span className="flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">
-                <Users className="w-3.5 h-3.5 text-[#00ADEF]" /> Huéspedes
-              </span>
+            <label className="block col-span-2">
+              <span className="block dato text-[#5B5348] mb-1.5">Huéspedes</span>
               <select
                 value={adultos}
                 onChange={(e) => setAdultos(Number(e.target.value))}
-                className={`${baseField} md:w-32`}
+                className={baseField}
               >
                 {/* Capacidad máxima real por domo: 4 personas (igual que el select de /disponibilidad).
                     Ofrecer 5-6 llevaba siempre a "No disponible en estas fechas". */}
                 {[1, 2, 3, 4].map((n) => (
-                  <option key={n} value={n}>{n} {n === 1 ? "persona" : "personas"}</option>
+                  <option key={n} value={n}>
+                    {n} {n === 1 ? "persona" : "personas"}
+                  </option>
                 ))}
               </select>
             </label>
 
-            {/* Buscar */}
+            {/* Buscar: botón primario "sello de imprenta" */}
             <button
               onClick={buscar}
-              className="col-span-2 md:col-span-1 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md active:scale-[0.98] transition-all"
+              className="col-span-2 relative z-0 inline-flex items-center justify-center gap-2.5 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-[15px] px-7 py-3.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1.5 after:translate-y-1.5 after:-z-10 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5"
             >
-              <Search className="w-4 h-4" /> Ver disponibilidad
+              Ver disponibilidad
             </button>
           </div>
-          <p className="text-[11px] text-gray-400 mt-2.5 px-1">
-            Reserva directa con el mejor precio. Confirmas pagando el 50%; el saldo se paga en el check-in.
+
+          <p className="text-[11px] text-gray-600 mt-3 leading-snug">
+            Reserva directa con el mejor precio. Confirmas pagando el 50%; el saldo se paga en el
+            check-in.
           </p>
         </div>
       </div>

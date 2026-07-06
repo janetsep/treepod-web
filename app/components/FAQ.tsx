@@ -2,67 +2,91 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { faqs } from "./faq-data";
+import SectionFolio from "./SectionFolio";
+import TriBullet from "./deco/TriBullet";
 
-// Las preguntas viven en faq-data.ts (compartidas con el JSON-LD FAQPage del home).
-// Responder dudas al instante es la palanca #1 contra el abandono hacia las OTA.
+// Artículo 06 — lista de filetes, sin tarjetas: preguntas en Fraunces con
+// indicador "+" tipográfico que rota 45° al abrir. Las preguntas viven en
+// faq-data.ts (compartidas con el JSON-LD FAQPage del home). Responder dudas al
+// instante es la palanca #1 contra el abandono hacia las OTA.
 
 export default function FAQ() {
   const [abierto, setAbierto] = useState<number | null>(0);
 
   return (
-    <section className="bg-surface-light py-16 md:py-24" id="faq">
-      <div className="container mx-auto px-6 max-w-3xl">
-        <div className="text-center mb-10 md:mb-14">
-          <span className="text-primary text-[11px] font-black tracking-[0.3em] uppercase mb-4 block">Antes de reservar</span>
-          <h2 className="h2-display text-text-main">Preguntas frecuentes</h2>
-        </div>
+    <section className="bg-[#F7F3EC] py-20 md:py-28">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 06" label="Antes de reservar" />
 
-        <div className="space-y-3">
-          {faqs.map((f, i) => {
-            const open = abierto === i;
-            return (
-              <div key={i} className="bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
-                <button
-                  onClick={() => setAbierto(open ? null : i)}
-                  className="w-full flex items-center justify-between gap-4 text-left px-5 md:px-6 py-4 md:py-5"
-                  aria-expanded={open}
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+          <div className="col-span-12 lg:col-span-4">
+            <div className="lg:sticky lg:top-28 space-y-6">
+              <h2 className="display-lg text-[#1E1B16]">
+                Preguntas{" "}
+                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                  frecuentes
+                </span>
+              </h2>
+              <p className="text-[#5B5348] leading-relaxed">
+                ¿Tienes otra consulta? Con gusto te ayudamos.
+              </p>
+              <div className="flex flex-col items-start gap-4">
+                <a
+                  href="https://wa.me/56984643307"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 font-semibold text-[15px] text-[#1E1B16] underline decoration-[3px] decoration-[#00ADEF] underline-offset-[6px] hover:decoration-[#008CBF] transition-colors"
                 >
-                  <span className="font-bold text-text-main text-[15px] md:text-base">{f.q}</span>
-                  <ChevronDown
-                    className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-                  />
-                </button>
-                <div
-                  className={`grid transition-all duration-300 ease-in-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+                  <MessageCircle className="w-4 h-4 text-[#00ADEF]" /> Escríbenos por WhatsApp
+                </a>
+                <Link
+                  href="/terminos"
+                  className="inline-flex items-center gap-2 text-[14px] text-[#5B5348] hover:text-[#1E1B16] transition-colors"
                 >
-                  <div className="overflow-hidden">
-                    <p className="px-5 md:px-6 pb-5 text-text-sub leading-relaxed text-[14px] md:text-[15px]">{f.a}</p>
-                  </div>
-                </div>
+                  <TriBullet /> Ver términos y condiciones completos
+                </Link>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          </div>
 
-        <div className="mt-10 text-center">
-          <p className="text-text-sub mb-4 font-medium">¿Tienes otra consulta? Con gusto te ayudamos.</p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="https://wa.me/56984643307"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold px-6 py-3 rounded-full transition-colors"
-            >
-              <MessageCircle className="w-5 h-5" /> Escríbenos por WhatsApp
-            </a>
-            <Link
-              href="/terminos"
-              className="inline-flex items-center text-text-sub font-semibold hover:text-primary px-4 py-3 transition-colors"
-            >
-              Ver términos y condiciones completos
-            </Link>
+          <div className="col-span-12 lg:col-span-7 lg:col-start-6">
+            <div className="divide-y divide-[#1E1B16]/12 border-y border-[#1E1B16]/12">
+              {faqs.map((f, i) => {
+                const open = abierto === i;
+                return (
+                  <div key={i}>
+                    <button
+                      onClick={() => setAbierto(open ? null : i)}
+                      className="w-full py-5 flex justify-between items-baseline gap-6 text-left"
+                      aria-expanded={open}
+                    >
+                      <span className="font-display font-medium text-lg md:text-xl text-[#1E1B16]">
+                        {f.q}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`font-display text-2xl text-[#00ADEF] shrink-0 transition-transform duration-300 ${
+                          open ? "rotate-45" : ""
+                        }`}
+                      >
+                        +
+                      </span>
+                    </button>
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${
+                        open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="pb-6 pr-10 text-[#5B5348] leading-relaxed text-[15px]">{f.a}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

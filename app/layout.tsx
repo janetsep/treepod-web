@@ -19,6 +19,9 @@ const playfair = Fraunces({
   variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
+  // La itálica de Fraunces es "la voz" del sistema editorial (folios, pies de foto,
+  // palabras clave). Sin declararla, el navegador sintetiza una cursiva falsa.
+  style: ['normal', 'italic'],
 });
 
 const inter = Figtree({
@@ -59,7 +62,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    // Las variables de fuente van en <html>: los alias --font-display/--font-sans
+    // se declaran en :root (globals.css) y las custom properties resuelven sus
+    // var() en el elemento donde se DECLARAN. Con las variables en <body>,
+    // --font-display quedaba vacía y todos los .display-*/.folio/h1-h6 caían en
+    // silencio a Figtree.
+    <html lang="es" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
       <head>
 
         {/* Google Tag Manager - Base Code */}
@@ -90,10 +98,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body
-        suppressHydrationWarning
-        className={`${playfair.variable} ${inter.variable} antialiased`}
-      >
+      <body suppressHydrationWarning className="antialiased">
         {/* Google Tag Manager (noscript) - Fallback */}
         <noscript>
           <iframe

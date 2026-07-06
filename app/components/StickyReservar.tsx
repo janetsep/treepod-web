@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, Star } from "lucide-react";
 
-// Barra fija de "Reservar" para MÓVIL. Aparece al pasar el hero, mantiene la acción
-// de reserva siempre a un toque (palanca de conversión usada por los mejores sitios
-// de hospedaje). Oculta en desktop, donde el CTA del hero y el header ya bastan.
-// Global en todo el sitio público, salvo la propia página de reserva.
+// Embudo visible. MOBILE: barra-folio a todo el ancho (regla superior cyan, precio
+// en Fraunces tabular). DESKTOP: "marcador de página" vertical al borde derecho,
+// solo en la home. Misma lógica de siempre: fetch /api/tarifas y umbral scrollY>640.
 export default function StickyReservar() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
@@ -57,35 +55,59 @@ export default function StickyReservar() {
   }
 
   return (
-    <div
-      className={`lg:hidden fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ${
-        visible ? "translate-y-0" : "translate-y-full"
-      }`}
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-    >
-      <div className="mx-3 mb-3 rounded-2xl bg-white/95 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.18)] border border-black/5 px-4 py-3 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-1 text-[11px] font-bold text-gray-700">
-            <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> 4,9 · 59 reseñas
-          </div>
-          <div className="text-[13px] font-semibold text-gray-900 truncate">
+    <>
+      {/* MOBILE: barra-folio a todo el ancho */}
+      <div
+        className={`lg:hidden fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ${
+          visible ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        <div
+          className="bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 py-2.5 flex items-center justify-between gap-3"
+          style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
+        >
+          <div className="min-w-0">
             {desde ? (
               <>
-                Desde <span className="font-black">${desde.precio.toLocaleString("es-CL")}</span>
-                <span className="text-[11px] text-gray-500"> /noche · 2 personas{desde.nochesMin > 1 ? ` · ${desde.nochesMin}+ noches` : ""}</span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
+                    Desde
+                  </span>
+                  <span className="font-display font-medium text-xl leading-none tabular-nums text-[#1E1B16]">
+                    ${desde.precio.toLocaleString("es-CL")}
+                  </span>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
+                  /noche · 2 personas · 4,9 (59)
+                  {desde.nochesMin > 1 ? ` · ${desde.nochesMin}+ noches` : ""}
+                </div>
               </>
             ) : (
-              "Tu domo en el bosque nativo"
+              <div className="text-[13px] font-semibold text-[#1E1B16] truncate">
+                Tu domo en el bosque nativo
+              </div>
             )}
           </div>
+          <Link
+            href="/disponibilidad"
+            className="shrink-0 relative z-0 inline-flex items-center justify-center bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0"
+          >
+            Reservar
+          </Link>
         </div>
+      </div>
+
+      {/* DESKTOP: marcador de página al borde derecho, solo en la home */}
+      {pathname === "/" && (
         <Link
           href="/disponibilidad"
-          className="shrink-0 inline-flex items-center gap-1.5 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all"
+          className={`hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 [writing-mode:vertical-rl] bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-2.5 py-5 rounded-[2px] border border-[#1E1B16]/30 transition-all duration-300 ${
+            visible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          }`}
         >
-          Reservar <ArrowRight className="w-4 h-4" />
+          {desde ? `Reservar · desde $${desde.precio.toLocaleString("es-CL")}` : "Reservar"}
         </Link>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
