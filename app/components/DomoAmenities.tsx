@@ -133,7 +133,7 @@ export default function DomoAmenities() {
                 <div className="text-center mt-12 md:mt-16">
                     <a
                         href="/disponibilidad"
-                        className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
+                        className="inline-flex items-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold px-8 py-3.5 rounded-full shadow-md active:scale-95 transition-all"
                     >
                         Quiero mi escapada al bosque
                     </a>

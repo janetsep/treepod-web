@@ -108,7 +108,7 @@ export default function BlogPage() {
             <section className="pt-32 pb-16 md:pb-20 bg-white">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="max-w-3xl mx-auto text-center">
-                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-8 block">
+                        <span className="text-[11px] md:text-xs font-black tracking-[0.3em] uppercase text-primary mb-8 block">
                             Editorial TreePod
                         </span>
 
@@ -275,15 +275,15 @@ export default function BlogPage() {
                         <h2 className="h2-display mb-6 text-white">
                             ¿Listo para tu aventura en Valle Las Trancas?
                         </h2>
-                        <p className="text-xl text-white/80 font-bold mb-8 leading-relaxed">
+                        <p className="text-lg md:text-xl text-white/80 font-medium mb-8 leading-relaxed">
                             Ahora que conoces todos los secretos del valle, reserva tu domo
                             y vive la experiencia TreePod.
                         </p>
                         <Link
                             href="/disponibilidad"
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
-                            Ver Disponibilidad
+                            Ver disponibilidad
                             <ArrowRight size={20} />
                         </Link>
                     </div>

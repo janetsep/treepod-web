@@ -87,7 +87,7 @@ export default function PaquetesPage() {
                         Cada servicio, <span className="italic-display text-primary">pensado en tu comodidad</span>
                     </h2>
                     <div className="h-1.5 w-24 bg-primary mb-6"></div>
-                    <p className="text-text-sub text-lg md:text-xl font-bold max-w-2xl leading-relaxed">
+                    <p className="text-text-sub text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
                         Suma a tu reserva lo que más disfrutes y aprovecha tu estadía en la montaña.
                     </p>
                 </div>
@@ -113,7 +113,7 @@ export default function PaquetesPage() {
                                 <div className="flex-1 p-8 md:p-12 flex flex-col justify-between">
                                     <div className="space-y-6">
                                         <h3 className="h3-display text-text-main">{extra.nombre}</h3>
-                                        <p className="text-text-sub text-lg leading-relaxed font-bold">
+                                        <p className="text-text-sub text-lg leading-relaxed font-medium">
                                             {extra.descripcion}
                                         </p>
                                         <div className="flex flex-wrap gap-4 pt-2">
@@ -132,7 +132,7 @@ export default function PaquetesPage() {
                                                 {extra.precio > 0 ? `$${extra.precio.toLocaleString("es-CL")}` : "Consultar"}
                                             </span>
                                         </div>
-                                        <Link href="/contacto" className="bg-primary hover:bg-primary-dark text-white shadow-2xl shadow-primary/30 transition-all px-10 py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transform hover:scale-105 active:scale-95">
+                                        <Link href="/contacto" className="bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/20 transition-all px-8 py-3.5 rounded-full text-base font-semibold active:scale-95">
                                             Reservar
                                         </Link>
                                     </div>
@@ -150,10 +150,10 @@ export default function PaquetesPage() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                     <div className="relative z-10">
                         <h3 className="h2-display mb-8 text-text-main">¿Tienes algo <span className="text-primary italic-display">especial</span> en mente?</h3>
-                        <p className="text-text-sub text-lg md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-bold">
+                        <p className="text-text-sub text-lg md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed font-medium">
                             Podemos ayudarte a organizar cumpleaños, aniversarios o sorpresas personalizadas. Escríbenos y nuestro equipo lo hará realidad.
                         </p>
-                        <Link href="/contacto" className="bg-primary text-white px-16 py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:bg-primary-dark transition-all transform hover:scale-105 shadow-2xl shadow-primary/40 inline-block">
+                        <Link href="/contacto" className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-primary-dark transition-all shadow-lg active:scale-95 inline-block">
                             Hablar con el equipo
                         </Link>
                     </div>

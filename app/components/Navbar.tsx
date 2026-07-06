@@ -166,9 +166,9 @@ export default function Navbar() {
                                         setIsMobileMenuOpen(false);
                                         router.push('/disponibilidad');
                                     }}
-                                    className="block bg-primary hover:bg-primary-dark text-white font-black py-5 px-8 rounded-2xl text-base uppercase tracking-[0.2em] shadow-xl w-full"
+                                    className="block bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full text-base shadow-lg active:scale-95 transition-all w-full"
                                 >
-                                    Reservar Ahora
+                                    Reservar ahora
                                 </button>
                             </div>
                         </div>

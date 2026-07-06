@@ -79,7 +79,7 @@ export default function FAQ() {
               href="https://wa.me/56984643307"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold px-6 py-3 rounded-full transition-colors"
+              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold px-6 py-3 rounded-full transition-colors"
             >
               <MessageCircle className="w-5 h-5" /> Escríbenos por WhatsApp
             </a>

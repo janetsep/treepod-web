@@ -83,18 +83,18 @@ export default function EscapadaRomanticaPage() {
                             eventName="click_reservar_romantica"
                             secondEventName="begin_checkout_romantica"
                             secondParams={{ event: "escapada_romantica" }}
-                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-8 md:py-6 md:px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-lg md:text-xl">RESERVA TU ESCAPADA</span>
+                            <span className="text-lg md:text-xl">Reserva tu escapada</span>
                             <span className="text-sm font-normal opacity-90">(Mejor precio directo)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Sorpresa?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Sorpresa?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_romantica"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Coordina por WhatsApp
                             </TrackedLink>
@@ -232,7 +232,7 @@ export default function EscapadaRomanticaPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=escapada-romantica"
                             eventName="click_reservar_romantica"
-                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-black py-4 px-8 rounded-full transition-all shadow-lg items-center justify-center gap-2 tracking-wide uppercase text-lg"
+                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-8 rounded-full transition-all shadow-lg active:scale-95 items-center justify-center gap-2 text-base"
                         >
                             Ver disponibilidad
                             <ArrowRight size={20} />
@@ -276,9 +276,9 @@ export default function EscapadaRomanticaPage() {
                         <TrackedLink
                             href="/disponibilidad?adultos=2&event=escapada-romantica"
                             eventName="click_reservar_romantica_final"
-                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">RESERVA TU ESCAPADA</span>
+                            <span className="text-lg md:text-xl">Reserva tu escapada</span>
                         </TrackedLink>
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">
                             <span className="flex items-center gap-2"><Check size={12} /> Mejor Precio Directo</span>

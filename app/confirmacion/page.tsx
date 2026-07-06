@@ -117,7 +117,7 @@ function ConfirmacionContent() {
                     <p className="text-gray-600 mb-8 leading-relaxed">No pudimos encontrar los detalles de tu reserva o ha ocurrido un error al procesar el pago.</p>
                     <button
                         onClick={() => router.push('/disponibilidad')}
-                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-bold uppercase tracking-widest text-xs"
+                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all active:scale-95 font-semibold text-base"
                     >
                         Volver a disponibilidad
                     </button>
@@ -140,7 +140,7 @@ function ConfirmacionContent() {
                     <p className="text-gray-500 text-sm mb-8">No se realizó ningún cobro. Puedes intentar de nuevo o escribirnos si necesitas ayuda.</p>
                     <button
                         onClick={() => router.push('/disponibilidad')}
-                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-xs mb-3"
+                        className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all font-semibold text-base mb-3"
                     >
                         Intentar de nuevo
                     </button>
@@ -292,9 +292,9 @@ function ConfirmacionContent() {
                         <div className="flex justify-center mb-10">
                             <button
                                 onClick={() => router.push('/')}
-                                className="w-full bg-primary text-white px-10 py-5 rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-primary/30 flex items-center justify-center gap-3"
+                                className="w-full bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-dark transition-all active:scale-95 font-semibold text-base shadow-lg shadow-primary/30 flex items-center justify-center gap-3"
                             >
-                                Volver al Inicio →
+                                Volver al inicio →
                             </button>
                         </div>
 

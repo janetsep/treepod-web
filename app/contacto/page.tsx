@@ -18,7 +18,7 @@ export default function ContactoPage() {
                         <div className="max-w-4xl w-full">
                             <div className="inline-flex items-center gap-2 mb-4">
                                 <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary text-base font-black tracking-[0.2em] uppercase">Contacto</span>
+                                <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Contacto</span>
                             </div>
                             <h1 className="h1-display text-text-main !text-3xl md:!text-5xl lg:!text-7xl !leading-[1.15]">
                                 Hablemos de <span className="text-primary italic-display">tu escapada</span>
@@ -83,7 +83,7 @@ export default function ContactoPage() {
                                         href="https://maps.app.goo.gl/WXUyDLhcVnJfA3Lm6"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="h-10 px-6 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
+                                        className="h-10 px-6 bg-primary text-white text-xs font-semibold rounded-full flex items-center justify-center hover:bg-primary-dark active:scale-95 transition-all shadow-lg shadow-primary/20"
                                     >
                                         Ir
                                     </a>
@@ -95,7 +95,7 @@ export default function ContactoPage() {
                                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
                                     <Send className="w-3.5 h-3.5" /> Consejo de tus anfitriones
                                 </p>
-                                <p className="text-sm font-bold text-text-sub leading-relaxed">
+                                <p className="text-sm font-medium text-text-sub leading-relaxed">
                                     Si viajas en invierno, recuerda portar siempre cadenas y revisar el estado de la ruta. Estamos a 12 minutos de la nieve real.
                                 </p>
                             </div>
@@ -112,7 +112,7 @@ export default function ContactoPage() {
                                     <h2 className="h2-display text-text-main mb-3 !leading-tight">
                                         Envíanos un <span className="text-primary italic-display">Mensaje</span>
                                     </h2>
-                                    <p className="text-text-sub font-bold text-lg md:text-xl">
+                                    <p className="text-text-sub font-medium text-lg md:text-xl">
                                         ¿Dudas sobre el clima, servicios o reservas especiales?
                                     </p>
                                 </div>
@@ -186,7 +186,7 @@ export default function ContactoPage() {
                                     <div className="space-y-2.5">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-sub/60 ml-1">¿Qué necesitas consultar?</label>
                                         <div className="relative">
-                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 px-6 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer">
+                                            <select name="subject" className="w-full bg-surface-light border border-transparent focus:border-primary/20 rounded-xl h-14 pl-6 pr-14 text-text-main font-bold focus:bg-white transition-all outline-none appearance-none cursor-pointer truncate">
                                                 <option>Información de Disponibilidad</option>
                                                 <option>Eventos Especiales (Cumpleaños/Aniversarios)</option>
                                                 <option>Convenios Corporativos</option>
@@ -209,8 +209,8 @@ export default function ContactoPage() {
                                     </div>
 
                                     <div className="space-y-6 pt-4">
-                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-black py-6 rounded-xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(0, 173, 239,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed">
-                                            {status === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
+                                        <button disabled={status === 'loading'} type="submit" className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                                            {status === 'loading' ? 'Enviando...' : 'Enviar mensaje'}
                                             {!status || status !== 'loading' && <Send className="w-4 h-4" />}
                                         </button>
 
@@ -224,7 +224,7 @@ export default function ContactoPage() {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={() => trackEvent('click_whatsapp_contacto', { page: 'contacto' })}
-                                            className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-black py-6 rounded-2xl text-xs uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(37,211,102,0.3)] transform hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
+                                            className="w-full bg-[#25D366] hover:bg-[#22c35e] text-white font-semibold py-4 rounded-full text-base shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3"
                                         >
                                             Hablar por WhatsApp
                                             <MessageCircle className="w-5 h-5 fill-white" />

@@ -32,9 +32,9 @@ export default function GuiaPage() {
                                     </p>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button className="flex grow sm:grow-0 min-w-[200px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 hover:shadow-lg hover:shadow-primary/20 transition-all shadow-md shadow-primary/10">
+                                    <button className="flex grow sm:grow-0 min-w-[200px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/20 transition-all shadow-md shadow-primary/10 active:scale-95">
                                         <Download className="w-5 h-5" />
-                                        <span className="truncate">Descargar Guía (PDF)</span>
+                                        <span className="truncate">Descargar guía (PDF)</span>
                                     </button>
                                 </div>
                             </div>
@@ -77,10 +77,10 @@ export default function GuiaPage() {
                                 </p>
                             </div>
                             <div className="flex flex-wrap justify-center gap-4 w-full">
-                                <Link href="/domos" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    Ver Nuestros Alojamientos
+                                <Link href="/domos" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                    Ver nuestros alojamientos
                                 </Link>
-                                <a href="https://instagram.com/domostreepod" target="_blank" rel="noopener noreferrer" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-transparent border border-white/20 text-white text-base font-bold leading-normal hover:bg-white/5 transition-all">
+                                <a href="https://instagram.com/domostreepod" target="_blank" rel="noopener noreferrer" className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-transparent border border-white/20 text-white text-base font-semibold leading-normal hover:bg-white/5 transition-all">
                                     Seguir en Instagram
                                 </a>
                             </div>

@@ -78,7 +78,7 @@ export default function StickyReservar() {
         </div>
         <Link
           href="/disponibilidad"
-          className="shrink-0 inline-flex items-center gap-1.5 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all"
+          className="shrink-0 inline-flex items-center gap-1.5 bg-[#00ADEF] hover:bg-[#0098d4] text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all"
         >
           Reservar <ArrowRight className="w-4 h-4" />
         </Link>

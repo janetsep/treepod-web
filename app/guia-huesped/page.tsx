@@ -116,14 +116,14 @@ export default function GuestGuidePage() {
                             <a
                                 href="https://wa.me/56984643307"
                                 onClick={() => trackEvent('click_whatsapp_guia', { page: 'guia_huesped' })}
-                                className="bg-white text-primary px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                                className="bg-white text-primary px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-100 transition-all active:scale-95 flex items-center justify-center gap-2"
                             >
                                 <MessageCircle className="w-5 h-5" />
                                 Enviar WhatsApp
                             </a>
                             <Link
                                 href="/servicios"
-                                className="bg-primary-dark text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-black/20 transition-all"
+                                className="bg-primary-dark text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-black/20 transition-all active:scale-95"
                             >
                                 Ver todos los servicios
                             </Link>

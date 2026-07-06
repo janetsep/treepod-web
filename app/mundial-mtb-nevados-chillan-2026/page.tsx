@@ -65,18 +65,18 @@ export default function MundialMtbPage() {
                             eventName="click_reservar_mundial"
                             secondEventName="begin_checkout_mundial"
                             secondParams={{ event: "mundial_mtb_2026" }}
-                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black py-6 px-12 rounded-full transition-all transform hover:-translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center gap-1 tracking-widest uppercase"
+                            className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 md:py-5 md:px-10 rounded-full transition-all shadow-xl active:scale-95 flex flex-col items-center justify-center gap-1"
                         >
-                            <span className="text-xl md:text-2xl">BLOQUEA TU DOMO AHORA</span>
+                            <span className="text-xl md:text-2xl">Reserva tu domo ahora</span>
                             <span className="text-sm font-normal opacity-90">(26–29 Marzo)</span>
                         </TrackedLink>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-white/80 font-bold uppercase tracking-tighter text-sm">¿Dudas?</span>
+                            <span className="text-white/80 font-semibold text-sm">¿Dudas?</span>
                             <TrackedLink
                                 href={whatsappUrl}
                                 eventName="click_whatsapp_mundial"
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-bold py-3 px-6 rounded-full transition-all tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold py-3 px-6 rounded-full transition-all text-sm flex items-center justify-center gap-2"
                             >
                                 Consultar por WhatsApp
                             </TrackedLink>
@@ -210,9 +210,9 @@ export default function MundialMtbPage() {
                             eventName="click_reservar_mundial_final"
                             secondEventName="begin_checkout_mundial"
                             secondParams={{ event: "mundial_mtb_2026" }}
-                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-black py-5 px-10 rounded-full transition-all shadow-xl items-center justify-center gap-2 tracking-widest uppercase transform hover:scale-105"
+                            className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-9 rounded-full transition-all shadow-xl active:scale-95 items-center justify-center gap-2"
                         >
-                            <span className="text-lg md:text-xl">ASEGURA TU CUPO AHORA</span>
+                            <span className="text-lg md:text-xl">Reserva tu cupo ahora</span>
                         </TrackedLink>
 
                         <div className="mt-10 flex flex-wrap justify-center gap-6 text-white/50 text-[10px] font-black tracking-widest uppercase">

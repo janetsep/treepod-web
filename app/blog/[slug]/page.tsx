@@ -198,23 +198,23 @@ export default async function BlogPost({ params }: Props) {
                                 <h1 className="h2-display mb-6 text-text-main">
                                     Artículo en Desarrollo
                                 </h1>
-                                <p className="text-xl text-text-sub font-bold mb-8">
+                                <p className="text-xl text-text-sub font-medium mb-8">
                                     Este artículo está siendo escrito por nuestro equipo.
                                     Vuelve pronto para leer el contenido completo.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                     <Link
                                         href="/blog"
-                                        className="inline-flex items-center gap-2 bg-primary text-white font-black py-3 px-6 rounded-full transition-all hover:bg-primary-dark"
+                                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-primary-dark active:scale-95"
                                     >
                                         <ArrowLeft size={20} />
-                                        Volver al Blog
+                                        Volver al blog
                                     </Link>
                                     <Link
                                         href="/disponibilidad"
-                                        className="inline-flex items-center gap-2 bg-background-dark text-white font-black py-3 px-6 rounded-full transition-all hover:bg-black"
+                                        className="inline-flex items-center gap-2 bg-background-dark text-white font-semibold py-3 px-6 rounded-full transition-all hover:bg-black active:scale-95"
                                     >
-                                        Reservar Estadía
+                                        Reservar estadía
                                     </Link>
                                 </div>
                             </div>
@@ -333,7 +333,7 @@ export default async function BlogPost({ params }: Props) {
             <section className="py-20 md:py-28 bg-background-light border-t border-black/5">
                 <div className="container mx-auto px-6 md:px-10">
                     <div className="max-w-2xl mx-auto text-center">
-                        <span className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-6 block">
+                        <span className="text-[11px] md:text-xs font-black tracking-[0.3em] uppercase text-primary mb-6 block">
                             Tu refugio en Valle Las Trancas
                         </span>
                         <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-text-main leading-tight mb-8">
@@ -345,14 +345,14 @@ export default async function BlogPost({ params }: Props) {
                         <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
                             <Link
                                 href="/disponibilidad"
-                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-full transition-all items-center gap-3 tracking-widest uppercase text-sm"
+                                className="inline-flex bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-full transition-all active:scale-95 items-center gap-2 text-base"
                             >
                                 Ver disponibilidad
                                 <ArrowRight size={18} />
                             </Link>
                             <Link
                                 href="/blog"
-                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-bold transition-colors text-sm tracking-widest uppercase"
+                                className="inline-flex items-center gap-2 text-text-sub hover:text-primary font-semibold transition-colors text-sm"
                             >
                                 <ArrowLeft size={16} />
                                 Volver al blog
