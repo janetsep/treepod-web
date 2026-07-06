@@ -26,6 +26,7 @@ const CATEGORIAS = [
   { value: "proyecto", label: "Proyecto", color: "bg-purple-100 text-purple-700" },
   { value: "operacion", label: "Operación normal", color: "bg-blue-100 text-blue-700" },
   { value: "ingreso", label: "Ingreso", color: "bg-emerald-100 text-emerald-700" },
+  { value: "prestamo", label: "Préstamo", color: "bg-rose-100 text-rose-700" },
   { value: "terceros", label: "Terceros (no es de Migryk)", color: "bg-amber-100 text-amber-700" },
 ];
 const FUENTES = [
@@ -261,6 +262,41 @@ export default function CartolasPanel() {
     cargar();
   }
 
+  // ── Modo revisar-y-grabar: los desplegables editan LOCAL (sin guardar). Janet
+  // clasifica varios, revisa con calma, y "Grabar cambios" los guarda todos de una
+  // vez. Mucho más rápido que guardar en cada selección.
+  const [pendGrabar, setPendGrabar] = useState<Set<string>>(new Set());
+  const [grabando, setGrabando] = useState(false);
+
+  function editarLocal(m: Movimiento, cambios: Partial<Movimiento>) {
+    setTocados((t) => new Set(t).add(m.id));
+    setPendGrabar((p) => new Set(p).add(m.id));
+    setMovimientos((ms) => ms.map((x) => (x.id === m.id ? { ...x, ...cambios } : x)));
+  }
+
+  async function grabarCambios() {
+    setGrabando(true);
+    let propagadosTotal = 0;
+    // Usa el estado actual (ya editado localmente) de cada movimiento pendiente.
+    const aGrabar = movimientos.filter((m) => pendGrabar.has(m.id));
+    for (const m of aGrabar) {
+      const res = await adminFetch("/api/admin/cartolas", {
+        method: "PATCH",
+        body: JSON.stringify({ id: m.id, categoria: m.categoria, proyecto_id: m.proyecto_id, reserva_id: m.reserva_id, fuente_pago: m.fuente_pago }),
+      });
+      try { const d = await res.json(); propagadosTotal += d.propagados || 0; } catch { }
+    }
+    setPendGrabar(new Set());
+    setGrabando(false);
+    setMsg(`✓ ${aGrabar.length} cambio${aGrabar.length !== 1 ? "s" : ""} grabado${aGrabar.length !== 1 ? "s" : ""}${propagadosTotal ? ` · ${propagadosTotal} movimiento${propagadosTotal !== 1 ? "s" : ""} similares clasificados solos` : ""}.`);
+    cargar();
+  }
+
+  function descartarCambios() {
+    setPendGrabar(new Set());
+    cargar();
+  }
+
   // Busca, para cada abono sin clasificar, la reserva que calza por nombre + fecha.
   async function sugerir() {
     setSugiriendo(true);
@@ -455,6 +491,20 @@ export default function CartolasPanel() {
         {msg && <span className="block text-xs font-semibold text-gray-600">{msg}</span>}
       </div>
 
+      {/* Barra de grabado: aparece cuando hay clasificaciones locales sin guardar.
+          Sticky para que acompañe mientras se revisa la lista. */}
+      {pendGrabar.size > 0 && (
+        <div className="sticky top-2 z-20 bg-amber-50 border border-amber-300 rounded-2xl p-3 flex flex-wrap items-center gap-3 shadow-md">
+          <span className="text-sm font-bold text-amber-800">{pendGrabar.size} cambio{pendGrabar.size !== 1 ? "s" : ""} sin grabar</span>
+          <button onClick={grabarCambios} disabled={grabando} className="px-5 py-2 bg-gray-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50">
+            {grabando ? "Grabando…" : "Grabar cambios"}
+          </button>
+          <button onClick={descartarCambios} disabled={grabando} className="px-4 py-2 bg-white text-gray-600 border border-gray-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-100 transition-all disabled:opacity-50">
+            Descartar
+          </button>
+        </div>
+      )}
+
       {/* Conciliación: botón de auto-match + resumen por categoría */}
       {movimientos.length > 0 && (() => {
         const suma = (cat: string) => movimientos.filter((m) => m.categoria === cat).reduce((s, m) => s + m.monto, 0);
@@ -471,6 +521,7 @@ export default function CartolasPanel() {
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span className="font-semibold text-gray-600">Ingresos:</span><span className="font-black text-gray-900">{fmt(suma("ingreso"))}</span></span>
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span className="font-semibold text-gray-600">Proyectos:</span><span className="font-black text-gray-900">{fmt(suma("proyecto"))}</span></span>
             <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span className="font-semibold text-gray-600">Operación:</span><span className="font-black text-gray-900">{fmt(suma("operacion"))}</span></span>
+            {suma("prestamo") > 0 && <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span><span className="font-semibold text-gray-600">Préstamos:</span><span className="font-black text-gray-900">{fmt(suma("prestamo"))}</span></span>}
             {suma("por_revisar") > 0 && <span className="flex items-center gap-1.5 text-sm"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span className="font-semibold text-amber-700">Por revisar:</span><span className="font-black text-amber-700">{fmt(suma("por_revisar"))}</span></span>}
           </div>
         );
@@ -519,7 +570,7 @@ export default function CartolasPanel() {
                     <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wide">Sin conciliar</span>
                     <select
                       value=""
-                      onChange={(e) => e.target.value && categorizar(m, { reserva_id: e.target.value })}
+                      onChange={(e) => e.target.value && editarLocal(m, { reserva_id: e.target.value })}
                       className="border border-amber-200 rounded-lg px-2 py-1 text-[11px] outline-none bg-white max-w-[280px]"
                     >
                       <option value="">Conciliar con reserva…</option>
@@ -545,9 +596,12 @@ export default function CartolasPanel() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2 shrink-0">
+                {pendGrabar.has(m.id) && (
+                  <span className="text-[9px] font-black uppercase tracking-wider text-amber-600 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">Sin grabar</span>
+                )}
                 <select
                   value={m.categoria}
-                  onChange={(e) => categorizar(m, { categoria: e.target.value, proyecto_id: e.target.value === "proyecto" ? m.proyecto_id : null })}
+                  onChange={(e) => editarLocal(m, { categoria: e.target.value, proyecto_id: e.target.value === "proyecto" ? m.proyecto_id : null })}
                   className="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-primary/20 bg-white"
                 >
                   {CATEGORIAS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -555,11 +609,11 @@ export default function CartolasPanel() {
 
                 {m.categoria === "proyecto" && (
                   <>
-                    <select value={m.proyecto_id || ""} onChange={(e) => categorizar(m, { proyecto_id: e.target.value || null })} className="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-primary/20 bg-white">
+                    <select value={m.proyecto_id || ""} onChange={(e) => editarLocal(m, { proyecto_id: e.target.value || null })} className="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-primary/20 bg-white">
                       <option value="">Elegir proyecto…</option>
                       {proyectos.map((p) => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                     </select>
-                    <select value={m.fuente_pago || ""} onChange={(e) => categorizar(m, { fuente_pago: e.target.value || null })} className="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-primary/20 bg-white">
+                    <select value={m.fuente_pago || ""} onChange={(e) => editarLocal(m, { fuente_pago: e.target.value || null })} className="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-primary/20 bg-white">
                       <option value="">Se pagó con…</option>
                       {FUENTES.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
                     </select>
