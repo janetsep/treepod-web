@@ -46,9 +46,9 @@ export default function News() {
                             <span className="w-2 h-2 bg-primary rounded-full"></span>
                             <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Todo lo que puedes hacer cerca</span>
                         </div>
-                        <h2 className="h2-display text-text-main leading-tight mb-6">Más allá del domo, todo un valle por descubrir</h2>
+                        <h2 className="h2-display text-text-main leading-tight mb-6">Panoramas en Valle Las Trancas</h2>
                         <p className="text-lg md:text-xl text-text-sub font-bold leading-relaxed">
-                            Descubre los secretos del bosque, la adrenalina de la montaña y los mejores planes que tenemos listos para ti esta temporada.
+                            Ski, termas, trekking y buena comida, todo a minutos del domo.
                         </p>
                     </div>
                 </div>

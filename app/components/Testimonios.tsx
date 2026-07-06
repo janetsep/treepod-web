@@ -7,10 +7,10 @@ export default function Testimonios() {
       <div className="container mx-auto px-6 text-center max-w-7xl">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-2.5 h-2.5 bg-primary rounded-full"></span>
-          <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Lo que dicen nuestros huéspedes</span>
+          <span className="text-primary text-[11px] md:text-xs font-black tracking-[0.3em] uppercase">Testimonios</span>
         </div>
 
-        <h2 className="h2-display mb-10 text-text-main">La experiencia habla por sí sola</h2>
+        <h2 className="h2-display mb-10 text-text-main">Lo que dicen nuestros huéspedes</h2>
 
         <div className="w-full relative min-h-[320px] md:min-h-[500px]">
           <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab" data-elfsight-app-lazy></div>

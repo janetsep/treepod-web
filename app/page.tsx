@@ -38,8 +38,8 @@ export default function Home() {
         image="/images/Galeria/Domo3noche.jpeg"
         alt="Domo TreePod iluminado de noche en el bosque nativo"
         eyebrow="La experiencia"
-        title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> lejos del ruido del mundo</>}
-        text="Domos cálidos y bien equipados, rodeados de naturaleza real. Sin ruido, sin frío, sin apuro."
+        title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> lejos del ruido</>}
+        text="Domos cálidos y bien equipados en medio del bosque. Sin ruido, sin frío, sin apuro."
         ctaText="Ver disponibilidad"
         ctaHref="/disponibilidad"
       />
@@ -53,7 +53,7 @@ export default function Home() {
           alt="Domos TreePod en invierno, a 12 minutos de la nieve"
           eyebrow="Invierno en Las Trancas"
           title={<>A 12 minutos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
-          text="Esquías o vas a las termas, y vuelves a tu propio refugio en el bosque — sin gente alrededor y con todo listo para ti."
+          text="Pasas el día en la nieve o en las termas y vuelves a tu propio refugio en el bosque, con todo listo."
           ctaText="Ver disponibilidad"
           ctaHref="/disponibilidad"
         />
