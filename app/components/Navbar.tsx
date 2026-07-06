@@ -48,7 +48,8 @@ export default function Navbar() {
         "/galeria",
         "/nosotros",
         "/paquetes",
-        "/disponibilidad",
+        // "/disponibilidad" ya no abre con foto oscura: su cabecera-documento es
+        // crema, así que el navbar va sólido desde el inicio.
     ]);
     const hasImmersiveHero = immersiveHeroRoutes.has(pathname || "");
     const isNavbarSolid = isScrolled || !hasImmersiveHero;
