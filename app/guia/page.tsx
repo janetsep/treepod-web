@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import { CheckCircle2, Download } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function GuiaPage() {
     return (
@@ -28,27 +28,23 @@ export default function GuiaPage() {
                                         Tu <span className="font-bold text-primary">Guía de Glamping en Las Trancas</span> está lista. Adentro encontrarás recomendaciones locales, qué llevar y lugares para visitar en el Valle Las Trancas.
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        Hemos enviado una copia de respaldo a tu correo electrónico.
+                                        Te la enviamos al correo que registraste. Si no la ves, revisa la carpeta de spam o promociones.
                                     </p>
                                 </div>
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <button className="flex grow sm:grow-0 min-w-[200px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-semibold leading-normal hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/20 transition-all shadow-md shadow-primary/10 active:scale-95">
-                                        <Download className="w-5 h-5" />
-                                        <span className="truncate">Descargar guía (PDF)</span>
-                                    </button>
-                                </div>
+                                {/* El botón "Descargar guía (PDF)" se quitó porque no existe un PDF publicado:
+                                    era un <button> sin acción. Cuando el PDF esté disponible, enlazarlo aquí. */}
                             </div>
 
                             {/* Right: Visual Asset (Guide Mockup) */}
                             <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-                                <div className="relative group cursor-pointer w-full max-w-[400px]">
+                                <div className="relative group w-full max-w-[400px]">
                                     {/* Decorative background blob */}
                                     <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                                     {/* Image Container */}
                                     <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-white/5 shadow-2xl ring-1 ring-white/10">
                                         <Image
-                                            alt="Digital tablet displaying the cover of the glamping guide"
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnSR28nfqcqP2Sjw9q3NtxobJy1Bdl6HV4oGMA-F9YOQnO9ZXvR6Zbv1n-7ufzrP6J-XFweULHe3r1BFoerrAcPSSGE772T5ykgFwePpdXEBUUzxDy4utbJVVn99Q7pFEntfsn56G4phKWhZb-ypegQf54-Tn30vJ0iLChOFGiABmjB_Mt1Tg0YPZNig5RkFZlL8m4bJRV7_dBW7f18Og7TN5JUb25J2-TlbYXhqV-8DtbkvBBuuB0RhoXBB-mEIEVpO3dxUQoU70"
+                                            alt="Bosque nativo de Valle Las Trancas, portada de la guía TreePod"
+                                            src="/images/Galeria/Las Trancas Bosque Nativo 2.jpeg"
                                             fill
                                             sizes="(max-width: 768px) 100vw, 400px"
                                             className="object-cover transition-transform duration-500 group-hover:scale-105"

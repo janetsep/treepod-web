@@ -17,7 +17,7 @@ export default function TreePodDomes() {
             icon: "check_circle",
             title: "A minutos de la nieve",
             benefit: "Despiertas en el bosque y en pocos minutos estás en las termas o las pistas de Nevados de Chillán.",
-            proof: "A pasos del centro de ski y las Termas de Chillán."
+            proof: "A 12 minutos del centro de ski y las Termas de Chillán."
         },
         {
             icon: "check_circle",

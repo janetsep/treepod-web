@@ -14,7 +14,7 @@ const blogPosts = [
         excerpt: 'Guía completa de actividades en Valle Las Trancas según la época del año. Desde ski en invierno hasta trekking en verano, descubre cuándo venir según tus intereses.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         category: 'Guías',
-        readTime: '6 min',
+        readTime: '4 min',
         publishDate: '2026-04-15',
         author: 'TreePod Team',
         tags: ['Valle Las Trancas', 'Actividades', 'Temporadas', 'Guía'],

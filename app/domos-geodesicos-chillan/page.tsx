@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Domos Geodésicos en Chillán | TreePod Las Trancas',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estructura de 6m, estufa a pellet, cocina equipada y WiFi Starlink, a 15 min de Nevados de Chillán.',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. 38 m² de interior, estufa a pellet, cocina equipada y WiFi Starlink, a 12 min de Nevados de Chillán.',
     keywords: [
         'domos chillan',
         'domos en chillan',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Domos Geodésicos en Chillán | Glamping TreePod',
-        description: 'Domos geodésicos de 6m en bosque nativo, con estufa a pellet y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        description: 'Domos geodésicos de 38 m² en bosque nativo, con estufa a pellet y WiFi Starlink. A 12 min de Nevados de Chillán.',
         images: ['/images/Galeria/noche-domo-iluminado-2-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -38,7 +38,7 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "TreePod - Domos Geodésicos en Chillán",
-    "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 15 minutos de Nevados de Chillán.",
+    "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/domos-geodesicos-chillan",
     "telephone": "+56984643307",
     "address": {
@@ -50,8 +50,8 @@ const jsonLd = {
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": -36.8972,
-        "longitude": -71.4741
+        "latitude": -36.9116,
+        "longitude": -71.5069
     },
     "priceRange": "$$",
     "aggregateRating": {
@@ -104,7 +104,7 @@ export default function DomosGeodesicosChillanPage() {
                     </div>
 
                     <p className="text-base md:text-xl text-white/95 font-bold mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-[0_4px_10px_rgba(0,0,0,1)] animate-fade-in-up delay-200">
-                        Estructura geodésica de 6 metros de diámetro con vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera.
+                        Estructura geodésica con 38 m² de interior y vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera.
                     </p>
 
                     <div className="flex flex-col gap-6 items-center justify-center w-full max-w-2xl mx-auto animate-fade-in-up delay-300">
@@ -145,7 +145,7 @@ export default function DomosGeodesicosChillanPage() {
                         {[
                             {
                                 icon: Ruler,
-                                title: "6 metros de diámetro, vista panorámica",
+                                title: "38 m² de interior, vista panorámica",
                                 desc: "La estructura geodésica permite ventanales que cubren gran parte del domo. Desde tu cama ves el bosque nativo y la cordillera de Ñuble."
                             },
                             {
@@ -165,7 +165,7 @@ export default function DomosGeodesicosChillanPage() {
                             },
                             {
                                 icon: Mountain,
-                                title: "A 15 minutos de Nevados de Chillán",
+                                title: "A 12 minutos de Nevados de Chillán",
                                 desc: "Ski, snowboard, termas y trekking a minutos de tu domo. La ubicación ideal en el km 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
@@ -208,7 +208,7 @@ export default function DomosGeodesicosChillanPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Estructura geodésica</p>
-                                <p className="text-xs opacity-80">6 metros de diámetro</p>
+                                <p className="text-xs opacity-80">38 m² + terraza privada</p>
                             </div>
                         </div>
 

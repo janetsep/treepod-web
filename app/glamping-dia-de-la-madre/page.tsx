@@ -20,6 +20,12 @@ export const metadata: Metadata = {
         'glamping ñuble',
         'alojamiento día de la madre chile',
     ],
+    // Landing de fecha pasada (Día de la Madre, 10 mayo 2026): noindex hasta
+    // reutilizarla para la próxima edición, para no invitar a reservar fechas vencidas.
+    robots: {
+        index: false,
+        follow: false,
+    },
     alternates: {
         canonical: '/glamping-dia-de-la-madre',
     },
@@ -174,7 +180,7 @@ export default function GlampingDiaDeLaMadrePage() {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900">Domo geodésico equipado</h3>
                             <p className="text-gray-600 leading-relaxed">
-                                Cama doble o dos camas individuales, ropa de cama de calidad, calefacción, baño privado
+                                Cama matrimonial y dos camas individuales, ropa de cama de calidad, calefacción, baño privado
                                 y vistas al bosque nativo de Ñuble.
                             </p>
                         </div>

@@ -473,7 +473,7 @@ function DisponibilidadContent() {
                         <div className="w-2.5 h-2.5 rounded-full bg-black/10 relative border border-black/10 overflow-hidden">
                           <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/20 rotate-45"></div>
                         </div>
-                        <span>Usado</span>
+                        <span>Ocupado</span>
                       </div>
                     </div>
                   </div>
@@ -750,7 +750,7 @@ function DisponibilidadContent() {
                     {/* Explicit Nights and Base Rate */}
                     <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
                       <div className="flex justify-between items-end mb-1">
-                        <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadia Total</span>
+                        <span className="text-xs font-bold text-primary uppercase tracking-widest">Estadía Total</span>
                         <span className="text-2xl font-display font-bold text-text-main">{resultado.noches} {resultado.noches === 1 ? 'Noche' : 'Noches'}</span>
                       </div>
                       <div className="space-y-3 mt-4">

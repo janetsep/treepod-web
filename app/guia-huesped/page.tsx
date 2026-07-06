@@ -23,9 +23,11 @@ export default function GuestGuidePage() {
             title: "Conexión en el Bosque",
             icon: "wifi",
             content: "Estar en la montaña no significa quedar incomunicado. Tenemos Starlink para que compartas tu estadía o trabajes si lo necesitas.",
+            // La clave del WiFi no se publica aquí: esta página es pública e indexable.
+            // Se entrega por WhatsApp junto al código de acceso, el día de la llegada.
             items: [
                 "Red: TreePod_Refugio",
-                "Clave: treepod2024",
+                "Clave: te la enviamos por WhatsApp junto a tu código de acceso",
                 "Cobertura en el domo y la terraza"
             ]
         },

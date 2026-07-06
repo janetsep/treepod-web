@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Info } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Stepper from '../components/Stepper';
@@ -112,7 +112,7 @@ function ConfirmacionContent() {
         return (
             <div className="min-h-screen flex items-center justify-center px-4 bg-background-dark">
                 <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 text-center border border-black/10">
-                    <div className="text-red-500 text-5xl mb-6">⚠️</div>
+                    <AlertTriangle className="w-14 h-14 text-red-500 mx-auto mb-6" />
                     <h1 className="text-2xl font-display font-bold mb-4 text-gray-900">Reserva no encontrada</h1>
                     <p className="text-gray-600 mb-8 leading-relaxed">No pudimos encontrar los detalles de tu reserva o ha ocurrido un error al procesar el pago.</p>
                     <button
@@ -271,7 +271,7 @@ function ConfirmacionContent() {
 
                         {/* Próximos pasos */}
                         <div className="bg-primary/5 border-l-4 border-primary p-6 mb-10 rounded-r-2xl">
-                            <h3 className="font-display font-black text-primary mb-4 uppercase tracking-widest text-xs">📧 Próximos Pasos</h3>
+                            <h3 className="font-display font-black text-primary mb-4 uppercase tracking-widest text-xs">Próximos pasos</h3>
                             <ul className="text-sm text-text-sub space-y-3 font-medium">
                                 <li className="flex items-center gap-3">
                                     <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>

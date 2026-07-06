@@ -132,8 +132,10 @@ export default function PaquetesPage() {
                                                 {extra.precio > 0 ? `$${extra.precio.toLocaleString("es-CL")}` : "Consultar"}
                                             </span>
                                         </div>
+                                        {/* "Consultar" y no "Reservar": este botón lleva al formulario de contacto,
+                                            no a un flujo de reserva. Los extras se agregan en /disponibilidad. */}
                                         <Link href="/contacto" className="bg-primary hover:bg-primary-dark text-white shadow-lg shadow-primary/20 transition-all px-8 py-3.5 rounded-full text-base font-semibold active:scale-95">
-                                            Reservar
+                                            Consultar
                                         </Link>
                                     </div>
                                 </div>

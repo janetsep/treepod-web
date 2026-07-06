@@ -206,7 +206,9 @@ function ReservaContent({ id }: { id: string }) {
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-display font-bold tracking-tight">¡Reserva <span className="text-gold italic-display">Confirmada</span>!</h1>
-            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #TP-{new Date(reserva.created_at).getFullYear()}-{reserva.id.split('-')[0].toUpperCase()}</p>
+            {/* Mismo formato de código que /confirmacion y el calendario del admin (últimos 5 del id),
+                para que el cliente reciba un único código en todas las pantallas. */}
+            <p className="text-sm font-semibold text-primary uppercase tracking-[0.2em] pt-2">Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}</p>
             <p className="text-text-sub font-normal leading-relaxed">
               Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estancia a <span className="font-bold text-text-main">{reserva.email}</span>.
             </p>

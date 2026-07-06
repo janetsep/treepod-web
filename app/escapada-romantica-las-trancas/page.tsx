@@ -208,7 +208,7 @@ export default function EscapadaRomanticaPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Ambiente íntimo</p>
-                                <p className="text-xs opacity-80">Cama king + vista al bosque</p>
+                                <p className="text-xs opacity-80">Cama matrimonial + vista al bosque</p>
                             </div>
                         </div>
 

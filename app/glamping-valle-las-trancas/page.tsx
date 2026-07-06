@@ -7,7 +7,7 @@ import TrackView from '../components/TrackView';
 
 export const metadata: Metadata = {
     title: 'Domos en Las Trancas | Glamping en Bosque Nativo — TreePod',
-    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, WiFi Starlink y bosque nativo, a 15 min de Nevados de Chillán. Reserva directo.',
+    description: 'Domos geodésicos en Valle Las Trancas, Chillán. Estufa a pellet, WiFi Starlink y bosque nativo, a 12 min de Nevados de Chillán. Reserva directo.',
     keywords: [
         'glamping valle las trancas',
         'glamping las trancas',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Domos en Las Trancas | Glamping TreePod',
-        description: 'Domos geodésicos en Valle Las Trancas. Estufa a pellet, bosque nativo y WiFi Starlink. A 15 min de Nevados de Chillán.',
+        description: 'Domos geodésicos en Valle Las Trancas. Estufa a pellet, bosque nativo y WiFi Starlink. A 12 min de Nevados de Chillán.',
         images: ['/images/Galeria/lastrancas-exterior-domo-14-2.jpg'],
         type: 'website',
         locale: 'es_CL',
@@ -45,7 +45,7 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "name": "TreePod Glamping - Valle Las Trancas",
-    "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 15 minutos de Nevados de Chillán.",
+    "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/glamping-valle-las-trancas",
     "telephone": "+56984643307",
     "address": {
@@ -57,8 +57,8 @@ const jsonLd = {
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": -36.8972,
-        "longitude": -71.4741
+        "latitude": -36.9116,
+        "longitude": -71.5069
     },
     "priceRange": "$$",
     "starRating": { "@type": "Rating", "ratingValue": "4.9" },
@@ -155,7 +155,7 @@ export default function GlampingValleLasTrancasPage() {
                         <h2 className="h2-display text-text-main mb-6">Todo lo que necesitas para una estadía perfecta <span className="italic-display text-primary">en Las Trancas</span></h2>
                         <div className="h-1.5 w-24 bg-primary mx-auto mb-8"></div>
                         <p className="text-lg text-text-sub font-bold">
-                            No es una cabaña tradicional. Es un domo geodésico de 6 metros con todo incluido.
+                            No es una cabaña tradicional. Es un domo geodésico de 38 m² con todo incluido.
                         </p>
                     </div>
 
@@ -178,7 +178,7 @@ export default function GlampingValleLasTrancasPage() {
                             },
                             {
                                 icon: Mountain,
-                                title: "A 15 minutos de Nevados de Chillán",
+                                title: "A 12 minutos de Nevados de Chillán",
                                 desc: "Ski en invierno, trekking en verano, termas todo el año. La ubicación perfecta en el kilómetro 72 de la Ruta N-55 hacia Nevados de Chillán."
                             },
                             {
@@ -231,7 +231,7 @@ export default function GlampingValleLasTrancasPage() {
                         <div className="relative aspect-[4/5] rounded-xl md:rounded-[2rem] overflow-hidden shadow-xl group">
                             <Image
                                 src="/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg"
-                                alt="Interior cálido del domo con cama king y estufa a pellet"
+                                alt="Interior cálido del domo con cama matrimonial y estufa a pellet"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -239,7 +239,7 @@ export default function GlampingValleLasTrancasPage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <p className="font-black text-sm">Interior equipado</p>
-                                <p className="text-xs opacity-80">Cama king + estufa a pellet</p>
+                                <p className="text-xs opacity-80">Cama matrimonial + estufa a pellet</p>
                             </div>
                         </div>
 
@@ -305,7 +305,7 @@ export default function GlampingValleLasTrancasPage() {
                                 {[
                                     "Tinaja privada de ciprés (servicio de temporada)",
                                     "Estufa a pellet automática y programable",
-                                    "Cama king con ropa de cama de calidad",
+                                    "Cama matrimonial y dos individuales, ropa de cama de calidad",
                                     "Cocina equipada con Nespresso",
                                     "Baño completo con agua caliente",
                                     "WiFi Starlink de alta velocidad",
@@ -328,7 +328,7 @@ export default function GlampingValleLasTrancasPage() {
                                     "Privacidad real, sin vecinos cercanos",
                                     "Check-in autónomo con clave digital",
                                     "Guía de experiencias locales",
-                                    "A 15 min de Nevados de Chillán",
+                                    "A 12 min de Nevados de Chillán",
                                     "Senderos de trekking desde el glamping",
                                     "Registro Sernatur verificado",
                                     "Atención directa por WhatsApp",
@@ -383,8 +383,8 @@ export default function GlampingValleLasTrancasPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {[
-                            { title: "15 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
-                            { title: "5.5 hrs", desc: "desde Santiago por ruta 5 Sur" },
+                            { title: "12 min", desc: "a Nevados de Chillán (ski, termas, trekking)" },
+                            { title: "6 a 7 hrs", desc: "desde Santiago por Ruta 5 Sur" },
                             { title: "1 hr", desc: "desde Chillán ciudad" },
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white p-5 md:p-8 rounded-xl md:rounded-[2rem] shadow-lg border border-black/5 text-center">

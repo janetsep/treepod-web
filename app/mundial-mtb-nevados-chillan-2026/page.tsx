@@ -9,6 +9,12 @@ import TrackView from '../components/TrackView';
 export const metadata: Metadata = {
     title: 'Alojamiento Mundial MTB 2026 | Glamping Domos TreePod Chillán',
     description: 'Domos geodésicos para 4 personas en Valle Las Trancas, a minutos de Nevados de Chillán. Base para tu equipo en el Mundial MTB 2026.',
+    // Landing de evento pasado (Mundial MTB, 26-29 marzo 2026): noindex hasta
+    // reutilizarla para una próxima edición, para no invitar a reservar fechas vencidas.
+    robots: {
+        index: false,
+        follow: false,
+    },
     alternates: {
         canonical: '/mundial-mtb-nevados-chillan-2026',
     },
