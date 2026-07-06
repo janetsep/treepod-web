@@ -77,6 +77,8 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const categoria = searchParams.get("categoria");
+  // ?reserva_ids=a,b,c → movimientos conciliados con esas reservas (ficha de cliente).
+  const reservaIds = searchParams.get("reserva_ids");
 
   let q = supabaseAdmin
     .from("sicra_cartola_movimientos")
@@ -84,6 +86,7 @@ export async function GET(request: Request) {
     .order("fecha", { ascending: false })
     .order("created_at", { ascending: false });
   if (categoria) q = q.eq("categoria", categoria);
+  if (reservaIds) q = q.in("reserva_id", reservaIds.split(",").filter(Boolean));
 
   const { data, error } = await q;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
