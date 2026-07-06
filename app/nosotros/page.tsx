@@ -152,7 +152,7 @@ export default function NosotrosPage() {
               </h2>
               <p className="text-text-sub text-lg leading-relaxed max-w-3xl mx-auto">
                 Operamos bajo los estándares del Servicio Nacional de Turismo de
-                Chile y estamos en proceso de certificación del Sello Impacta
+                Chile y contamos con la certificación del Sello Impacta
                 Sustentable, que valida nuestra gestión ambiental, social y
                 económica de forma independiente.
               </p>
