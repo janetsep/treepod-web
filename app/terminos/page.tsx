@@ -6,6 +6,14 @@ export const metadata = {
     alternates: {
         canonical: '/terminos',
     },
+    // openGraph propio: sin esto la página hereda og:title y og:url del home,
+    // mostrando datos equivocados al compartir el enlace.
+    openGraph: {
+        title: 'Términos y Condiciones | TreePod',
+        description: 'Políticas de reserva, cancelación y convivencia de TreePod, tu glamping en Valle Las Trancas.',
+        url: '/terminos',
+        images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
+    },
 };
 
 export default function TerminosPage() {

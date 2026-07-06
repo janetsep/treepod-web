@@ -8,7 +8,6 @@ import MicrosoftClarity from './components/MicrosoftClarity';
 import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
 import DebugGTM from './components/DebugGTM';
 import UTMCapture from './components/UTMCapture';
-import CanonicalURL from './components/CanonicalURL';
 import JsonLdSchemas from './components/JsonLdSchemas';
 
 
@@ -49,12 +48,9 @@ export const metadata: Metadata = {
     locale: 'es_CL',
     type: 'website',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Glamping en Valle Las Trancas | Domos TreePod',
-    description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán.',
-    images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
-  },
+  // Sin bloque twitter global: los metadatos twitter:* del root se heredaban en
+  // todas las páginas internas mostrando el título del home al compartir en X.
+  // Sin twitter:*, X/Twitter usa los og:* de cada página, que sí son correctos.
 };
 
 export default function RootLayout({

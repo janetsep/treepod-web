@@ -6,6 +6,14 @@ export const metadata = {
     alternates: {
         canonical: '/privacidad',
     },
+    // openGraph propio: sin esto la página hereda og:title y og:url del home,
+    // mostrando datos equivocados al compartir el enlace.
+    openGraph: {
+        title: 'Política de Privacidad | TreePod',
+        description: 'Información sobre cómo TreePod recopila, utiliza y protege tus datos personales.',
+        url: '/privacidad',
+        images: ['/images/hero/domo-treepod-camara-18-2.jpg'],
+    },
 };
 
 export default function PrivacidadPage() {

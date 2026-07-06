@@ -119,7 +119,8 @@ export default function DomoAmenities() {
                                     {item.icon === "paw" && <PawPrint className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "outdoor_grill" || item.title === "Cena Privada") && <Utensils className="text-primary w-6 h-6" strokeWidth={2.5} />}
                                     {(item.icon === "auto_awesome" || item.icon === "sparkles") && <Sparkles className="text-primary w-6 h-6" strokeWidth={2.5} />}
-                                    <h4 className="h4-display text-text-main">{item.title}</h4>
+                                    {/* h3 (no h4): la sección abre con h2, así no hay salto de jerarquía */}
+                                    <h3 className="h4-display text-text-main">{item.title}</h3>
                                 </div>
                                 <p className="text-xs sm:text-sm md:text-base text-text-sub leading-relaxed font-medium">
                                     {item.description}

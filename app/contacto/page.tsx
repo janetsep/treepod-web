@@ -35,7 +35,9 @@ export default function ContactoPage() {
                                         <Phone className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</h3>
+                                        {/* p en vez de h3: son rótulos de tarjetas, no encabezados;
+                                            con h3 la página saltaba de h1 a h3 antes del primer h2 */}
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Consultas</p>
                                         <a href="tel:+56984643307" className="text-xl font-black text-text-main hover:text-primary transition-colors">+56 9 8464 3307</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Atención todos los días</p>
                                     </div>
@@ -46,7 +48,7 @@ export default function ContactoPage() {
                                         <Mail className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</h3>
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Email Oficial</p>
                                         <a href="mailto:info@domostreepod.cl" className="text-xl font-black text-text-main hover:text-primary transition-colors">info@domostreepod.cl</a>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Respuesta en menos de 24h</p>
                                     </div>
@@ -57,7 +59,7 @@ export default function ContactoPage() {
                                         <MapPin className="text-primary group-hover:text-white w-6 h-6" strokeWidth={2.5} />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <h3 className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación</h3>
+                                        <p className="text-primary text-xs font-black uppercase tracking-[0.1em] mb-1 opacity-70">Ubicación</p>
                                         <p className="text-xl font-black text-text-main">Ruta N-55, Km 72</p>
                                         <p className="text-[11px] text-text-sub/50 font-bold uppercase tracking-wider">Valle Las Trancas, Ñuble</p>
                                     </div>

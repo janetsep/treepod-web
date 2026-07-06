@@ -37,7 +37,10 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
-    "name": "TreePod - Domos Geodésicos en Chillán",
+    // Mismo @id que el LodgingBusiness global (JsonLdSchemas.tsx): Google
+    // fusiona ambos bloques como una sola entidad en vez de ver dos negocios.
+    "@id": "https://domostreepod.cl/#lodging",
+    "name": "TreePod Glamping",
     "description": "Domos geodésicos habitables en Valle Las Trancas, Chillán, con estufa a pellet, cocina equipada y WiFi Starlink. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/domos-geodesicos-chillan",
     "telephone": "+56984643307",

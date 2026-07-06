@@ -17,6 +17,7 @@ import ValueBand from "./components/ValueBand";
 import ComoReservar from "./components/ComoReservar";
 import FAQ from "./components/FAQ";
 import CinematicSection from "./components/CinematicSection";
+import { FaqJsonLd } from "./components/JsonLdSchemas";
 
 import TrackView from "./components/TrackView";
 
@@ -29,6 +30,8 @@ export default function Home() {
   return (
     <main className="min-h-screen font-sans">
       <TrackView eventName="view_home" />
+      {/* FAQPage JSON-LD solo en el home: refleja las preguntas visibles de <FAQ /> */}
+      <FaqJsonLd />
       <Hero />
       <ValueBand />
 

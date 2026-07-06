@@ -161,7 +161,9 @@ export async function generateMetadata({ params }: Props) {
     const article = articleContent[slug];
     if (!article) return {};
     return {
-        title: `${article.title} | Blog TreePod`,
+        // Sufijo corto "| TreePod": con "| Blog TreePod" el title de
+        // como-llegar-... superaba los 60 caracteres y Google lo truncaba.
+        title: `${article.title} | TreePod`,
         description: article.metaDescription ?? article.excerpt,
         alternates: {
             canonical: `/blog/${slug}`,
@@ -225,9 +227,33 @@ export default async function BlogPost({ params }: Props) {
         );
     }
 
+    // JSON-LD BlogPosting con datos ya presentes en articleContent: describe el
+    // artículo (titular, fecha, imagen) que el LodgingBusiness global no cubre.
+    const blogPostingJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": article.title,
+        "description": article.metaDescription ?? article.excerpt,
+        "image": `https://domostreepod.cl${encodeURI(article.image)}`,
+        "datePublished": article.publishDate,
+        "inLanguage": "es-CL",
+        "mainEntityOfPage": `https://domostreepod.cl/blog/${slug}`,
+        "author": { "@type": "Organization", "name": "TreePod Glamping", "url": "https://domostreepod.cl" },
+        "publisher": {
+            "@type": "Organization",
+            "name": "TreePod Glamping",
+            "logo": { "@type": "ImageObject", "url": "https://domostreepod.cl/icon-192.png" },
+        },
+    };
+
     return (
         <div className="bg-white text-text-main min-h-screen">
             <TrackView eventName="view_blog_post" params={{ slug }} />
+
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+            />
 
             {/* CATEGORÍA + BREADCRUMB (estilo editorial Awasi) */}
             <section className="pt-32 pb-12 bg-white">

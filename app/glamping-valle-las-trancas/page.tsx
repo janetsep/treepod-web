@@ -30,11 +30,6 @@ export const metadata: Metadata = {
         type: 'website',
         locale: 'es_CL',
     },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Glamping en Valle Las Trancas | Domos TreePod',
-        description: 'Domos geodésicos en bosque nativo, con estufa a pellet y WiFi Starlink.',
-    },
 };
 
 const whatsappNumber = "56984643307";
@@ -44,7 +39,10 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
-    "name": "TreePod Glamping - Valle Las Trancas",
+    // Mismo @id que el LodgingBusiness global (JsonLdSchemas.tsx): Google
+    // fusiona ambos bloques como una sola entidad en vez de ver dos negocios.
+    "@id": "https://domostreepod.cl/#lodging",
+    "name": "TreePod Glamping",
     "description": "Domos geodésicos en Valle Las Trancas con estufa a pellet, cocina equipada y bosque nativo. A 12 minutos de Nevados de Chillán.",
     "url": "https://domostreepod.cl/glamping-valle-las-trancas",
     "telephone": "+56984643307",
@@ -61,7 +59,6 @@ const jsonLd = {
         "longitude": -71.5069
     },
     "priceRange": "$$",
-    "starRating": { "@type": "Rating", "ratingValue": "4.9" },
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",

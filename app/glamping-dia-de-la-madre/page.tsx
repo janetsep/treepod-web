@@ -62,7 +62,6 @@ const jsonLd = {
         "addressCountry": "CL"
     },
     "priceRange": "$$",
-    "starRating": { "@type": "Rating", "ratingValue": "4.9" },
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
