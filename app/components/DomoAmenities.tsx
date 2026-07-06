@@ -51,6 +51,10 @@ export default function DomoAmenities() {
             description: "Tienes un robot aspirador a tu disposición: lo activas cuando quieras y él barre por ti.",
             tag: "Tecnología",
             images: robotImages,
+            imageAlts: [
+                "Robot aspirador disponible en el domo TreePod",
+                "Interior del domo TreePod con robot aspirador"
+            ],
             size: "large"
         },
     ];
@@ -90,7 +94,7 @@ export default function DomoAmenities() {
                                             <div key={imgIdx} className="relative flex-1 h-full overflow-hidden first:border-r border-white/20">
                                                 <Image
                                                     src={img}
-                                                    alt={`${item.title} ${imgIdx}`}
+                                                    alt={item.imageAlts?.[imgIdx] || `${item.title} — foto ${imgIdx + 1}`}
                                                     fill
                                                     sizes="(max-width: 768px) 50vw, 38vw"
                                                     className={`object-cover object-center transition-transform duration-[2s] group-hover:scale-110`}

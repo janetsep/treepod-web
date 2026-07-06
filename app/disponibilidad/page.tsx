@@ -804,7 +804,7 @@ function DisponibilidadContent() {
                                 <div key={idx} className="flex justify-between items-center text-[11px] text-text-sub/80 border-b border-black/5 pb-2 last:border-0 last:pb-0">
                                   <span className="bg-primary/5 px-2 py-0.5 rounded-md font-bold text-primary/70">{data.name}</span>
                                   <span className="font-medium">
-                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price} = $${data.total}`}
+                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} x $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
                                   </span>
                                 </div>
                               ));
