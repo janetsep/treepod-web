@@ -9,16 +9,33 @@ import GeoArc from "./deco/GeoArc";
 export default function Hero() {
   return (
     <section className="relative min-h-[100dvh] overflow-hidden bg-[#1E1B16] text-white">
+      {/* Póster (imagen LCP): pinta al instante y coincide con el primer cuadro del
+          video, así no hay salto cuando el video empieza a reproducirse. */}
       <Image
-        src="/images/hero/IMG_8987.JPG"
-        alt="Domo TreePod en medio del bosque nativo de Valle Las Trancas"
+        src="/images/hero/hero-domo-poster.jpg"
+        alt="Domo geodésico TreePod sobre el bosque nativo de Valle Las Trancas"
         fill
         priority
         fetchPriority="high"
         quality={75}
         sizes="100vw"
-        className="object-cover object-center ken-burns"
+        className="object-cover object-center"
       />
+
+      {/* Video de fondo: material profesional real. Silenciado y en bucle para
+          autoplay en móvil (playsInline). Sin poster propio: mientras carga se ve
+          la imagen de arriba. aria-hidden: es decorativo, no aporta información. */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source src="/videos/hero-treepod.mp4" type="video/mp4" />
+      </video>
 
       {/* Scrim cálido (charcoal, nunca negro stock): solo el 55% inferior */}
       <div
