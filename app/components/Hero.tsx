@@ -23,8 +23,9 @@ export default function Hero() {
       />
 
       {/* Video de fondo: material profesional real. Silenciado y en bucle para
-          autoplay en móvil (playsInline). Sin poster propio: mientras carga se ve
-          la imagen de arriba. aria-hidden: es decorativo, no aporta información. */}
+          autoplay en móvil (playsInline). El poster propio = primer cuadro del
+          video, para que no haya parpadeo/corte al arrancar. aria-hidden:
+          decorativo. */}
       <video
         className="absolute inset-0 h-full w-full object-cover object-center"
         autoPlay
@@ -32,6 +33,7 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
+        poster="/images/hero/hero-domo-poster.jpg"
         aria-hidden="true"
       >
         <source src="/videos/hero-treepod.mp4" type="video/mp4" />
