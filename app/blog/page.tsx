@@ -24,8 +24,8 @@ const blogPosts = [
     {
         slug: 'lupinos-verano-las-trancas',
         title: 'Los Lupinos: el Morado del Verano en Las Trancas',
-        excerpt: 'A fines de la primavera el valle se llena de torres moradas y rosadas: los lupinos. Hermosos y fotogénicos, pero con una historia honesta que contar (no son nativos). Con fotos reales.',
-        image: '/images/blog/lupino-flor.jpg',
+        excerpt: 'A fines de la primavera el valle se llena de torres moradas y rosadas: los lupinos. Hermosos y fotogénicos, pero con una historia honesta que contar (no son nativos). Con foto y video reales.',
+        image: '/images/blog/lupinos-domo.jpg',
         category: 'Naturaleza',
         readTime: '3 min',
         publishDate: '2026-07-07',

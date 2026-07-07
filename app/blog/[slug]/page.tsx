@@ -558,6 +558,7 @@ Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es just
         videoPoster: '/images/blog/lupinos-poster.jpg',
         videoCaption: 'Los lupinos en flor en el bosque de TreePod, a fines de la primavera.',
         videoLandscape: true,
+        videoPosition: 'end',
         content: `
 A fines de la primavera pasa algo con el valle: entre los árboles y a orillas de los caminos brotan unas **torres de flores moradas y rosadas** que llegan casi a la altura de una persona. Son los **lupinos**, y por unas pocas semanas —más o menos entre **fines de noviembre y la primera quincena de diciembre**— pintan el bosque de color. Son de las flores más fotografiadas de Las Trancas, y aquí crecen justo alrededor de los domos y el invernadero.
 
@@ -568,10 +569,6 @@ Pero antes de enamorarte del todo, hay algo honesto que queremos contarte.
 Aunque parezcan parte de siempre del paisaje, los grandes lupinos morados **no son una planta nativa de Chile**. Son *Lupinus polyphyllus*, originarios de Norteamérica, que se introdujeron como planta ornamental y se **naturalizaron** en el sur. De hecho, están catalogados como una **especie invasora** en los bosques del centro-sur, porque pueden desplazar a la flora nativa.
 
 Te lo contamos por una razón simple: cuando en TreePod decimos "nativo" —como con el [carpintero negro](/blog/carpintero-negro-bosque-las-trancas), los [digüeñes](/blog/diguenes-hongo-bosque-las-trancas) o la [añañuca](/blog/ananuca-flor-roja-bosque-las-trancas)— es de verdad. Y los lupinos, por hermosos que sean, no lo son.
-
-![Un lupino rosado de cerca, en el bosque de TreePod](/images/blog/lupino-flor.jpg)
-
-*Un lupino rosado de cerca. Sus flores se apilan en una torre sobre el tallo.*
 
 ## Hermosos igual
 
@@ -755,8 +752,8 @@ export default async function BlogPost({ params }: Props) {
                 </div>
             </section>
 
-            {/* VIDEO VERTICAL (reel) — solo si el artículo lo trae. Material real propio. */}
-            {article.video && (
+            {/* VIDEO — arriba por defecto (reel/landscape). Con videoPosition:'end' va tras el texto. */}
+            {article.video && article.videoPosition !== 'end' && (
                 <section className="pt-10">
                     <div className={`mx-auto ${article.videoLandscape ? 'max-w-[860px] px-5 md:px-10' : 'max-w-[420px] px-5'}`}>
                         <figure>
@@ -841,6 +838,34 @@ export default async function BlogPost({ params }: Props) {
                     </div>
                 </div>
             </article>
+
+            {/* VIDEO al final (videoPosition:'end'): va tras el texto, no arriba. */}
+            {article.video && article.videoPosition === 'end' && (
+                <section className="pb-4 -mt-6 md:-mt-10">
+                    <div className={`mx-auto ${article.videoLandscape ? 'max-w-[860px] px-5 md:px-10' : 'max-w-[420px] px-5'}`}>
+                        <figure>
+                            <video
+                                className="w-full rounded-[2px] border border-[#1E1B16]/15 bg-[#1E1B16]"
+                                controls
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
+                                poster={article.videoPoster}
+                            >
+                                <source src={article.video} type="video/mp4" />
+                            </video>
+                            {article.videoCaption && (
+                                <figcaption className="mt-2 flex items-center gap-2">
+                                    <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                    <span className="caption-editorial">{article.videoCaption}</span>
+                                </figcaption>
+                            )}
+                        </figure>
+                    </div>
+                </section>
+            )}
 
             <GeoDivider left="84%" />
 
