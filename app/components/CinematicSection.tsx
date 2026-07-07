@@ -25,6 +25,9 @@ interface Props {
   folio?: string;
   /** Nota "dato" del valle bajo el texto (historia, geografía) */
   dato?: string;
+  /** Video de fondo (mp4) que se reproduce sobre la imagen. La imagen queda de
+      póster/fallback. Silenciado y en bucle para autoplay en móvil. */
+  videoSrc?: string;
 }
 
 // Pausa fotográfica a sangre completa: la foto manda, el texto se compone
@@ -49,6 +52,7 @@ export default function CinematicSection({
   eyebrowKicker = false,
   folio,
   dato,
+  videoSrc,
 }: Props) {
   const TitleTag = titleAs;
   return (
@@ -60,9 +64,24 @@ export default function CinematicSection({
         quality={75}
         priority={priority}
         sizes="100vw"
-        className="object-cover ken-burns-soft"
+        className={`object-cover ${videoSrc ? "" : "ken-burns-soft"}`}
         style={{ objectPosition: position }}
       />
+
+      {videoSrc && (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: position }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
       {/* Scrim cálido inferior: deja ver la foto y mantiene el texto legible */}
       <div
         className="absolute inset-0 bg-gradient-to-t from-[#1E1B16]/85 via-[#1E1B16]/25 to-transparent"

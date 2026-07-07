@@ -44,8 +44,9 @@ export default function ServicesPage() {
             <TrackView eventName="view_servicios" />
 
             <CinematicSection
-                image="/images/wellness/Tinaja1.jpg"
-                alt="Tinaja privada de ciprés bajo las estrellas en TreePod"
+                image="/images/wellness/servicios-poster.jpg"
+                videoSrc="/videos/hero-servicios.mp4"
+                alt="Quincho para asados y tinaja de ciprés en TreePod, Valle Las Trancas"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
                 text="Desayunos a la cama, quincho equipado para asados y tinaja privada en temporada."
@@ -53,7 +54,7 @@ export default function ServicesPage() {
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
-                photoCaption="Tinaja al aire libre, Valle Las Trancas"
+                photoCaption="Quincho y tinaja, Valle Las Trancas"
             />
 
             <GeoDivider left="22%" />
