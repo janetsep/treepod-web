@@ -550,12 +550,12 @@ Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es just
     },
     'lupinos-verano-las-trancas': {
         title: 'Los Lupinos: el Morado del Verano en Las Trancas',
-        excerpt: 'En verano el valle se llena de torres moradas y rosadas: los lupinos. Son hermosos y fotogénicos, pero hay algo honesto que contar sobre ellos.',
-        metaDescription: 'Los lupinos que pintan de morado el Valle Las Trancas en verano: hermosos, pero una especie introducida (no nativa). Qué son, cuándo florecen y por qué lo contamos.',
+        excerpt: 'A fines de la primavera el valle se llena de torres moradas y rosadas: los lupinos. Son hermosos y fotogénicos, pero hay algo honesto que contar sobre ellos.',
+        metaDescription: 'Los lupinos que pintan de morado el Valle Las Trancas a fines de noviembre y comienzos de diciembre: hermosos, pero una especie introducida (no nativa). Qué son, cuándo florecen y por qué lo contamos.',
         image: '/images/blog/lupinos-domo.jpg',
         imageAspect: '3 / 2',
         content: `
-En verano pasa algo con el valle: entre los árboles y a orillas de los caminos brotan unas **torres de flores moradas y rosadas** que llegan casi a la altura de una persona. Son los **lupinos**, y por unas semanas pintan el bosque de color. Son de las flores más fotografiadas de Las Trancas, y aquí crecen justo alrededor de los domos y el invernadero.
+A fines de la primavera pasa algo con el valle: entre los árboles y a orillas de los caminos brotan unas **torres de flores moradas y rosadas** que llegan casi a la altura de una persona. Son los **lupinos**, y por unas pocas semanas —más o menos entre **fines de noviembre y la primera quincena de diciembre**— pintan el bosque de color. Son de las flores más fotografiadas de Las Trancas, y aquí crecen justo alrededor de los domos y el invernadero.
 
 Pero antes de enamorarte del todo, hay algo honesto que queremos contarte.
 
@@ -571,9 +571,9 @@ Te lo contamos por una razón simple: cuando en TreePod decimos "nativo" —como
 
 ## Hermosos igual
 
-Nada de esto les quita lo bonitos. Los lupinos son leguminosas (parientes lejanos de las arvejas), y florecen en **pleno verano** en tonos que van del morado profundo al rosado y, a veces, al blanco. Con el sol de la tarde, sus torres encendidas entre el verde del bosque son una postal.
+Nada de esto les quita lo bonitos. Los lupinos son leguminosas (parientes lejanos de las arvejas), y florecen a **fines de la primavera** en tonos que van del morado profundo al rosado y, a veces, al blanco. Con el sol de la tarde, sus torres encendidas entre el verde del bosque son una postal.
 
-Si vienes en verano, los vas a ver por todas partes. Míralos, fotografíalos, disfrútalos. Solo que ahora sabes su historia completa: son visitantes que se quedaron, no habitantes originales del bosque.
+Si vienes a fines de noviembre o comienzos de diciembre, los vas a ver por todas partes. Míralos, fotografíalos, disfrútalos. Solo que ahora sabes su historia completa: son visitantes que se quedaron, no habitantes originales del bosque.
 
 [Reserva tu domo en el bosque →](/disponibilidad)
 
@@ -583,7 +583,7 @@ Si vienes en verano, los vas a ver por todas partes. Míralos, fotografíalos, d
 
 - Nombre científico: *Lupinus polyphyllus*. Familia Fabaceae (leguminosas).
 - Origen: Norteamérica. Introducida y naturalizada en el sur de Chile y Argentina; catalogada como especie invasora en los bosques del centro-sur.
-- Floración: verano.
+- Floración: fines de la primavera (aprox. fines de noviembre a la primera quincena de diciembre en Las Trancas).
 `,
         category: 'Naturaleza',
         readTime: '3 min',
