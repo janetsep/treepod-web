@@ -451,6 +451,7 @@ Ver una pareja de carpintero negro es un recordatorio de por qué hacemos las co
         excerpt: 'Racimos anaranjados que brotan en los robles del bosque en primavera. Qué son los digüeñes, cómo se comen y por qué crecen justo donde están los domos.',
         metaDescription: 'Los digüeñes (Cyttaria espinosae), el "pan de indio": hongo comestible que crece en los robles del bosque nativo de Valle Las Trancas. Qué son, cómo se comen y cuándo salen. Fotos reales en TreePod.',
         image: '/images/blog/diguenes-domo.jpg',
+        imageAspect: '4 / 3',
         content: `
 Si vienes a TreePod en primavera y miras las ramas de los robles, quizás los veas: unos racimos de bolitas color crema que cuelgan de los árboles. Son **digüeñes**, uno de los tesoros del bosque nativo del sur de Chile. Y sí, se comen.
 
@@ -634,13 +635,17 @@ export default async function BlogPost({ params }: Props) {
             <section className="relative w-full">
                 <div className="mx-auto max-w-[1280px] px-5 md:px-10">
                     <figure>
-                        <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-[2px]">
+                        <div
+                            className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-[2px]"
+                            style={article.imageAspect ? { aspectRatio: article.imageAspect } : undefined}
+                        >
                             <Image
                                 src={article.image}
                                 alt={article.title}
                                 fill
                                 priority
-                                className="object-cover object-center"
+                                className="object-cover"
+                                style={{ objectPosition: article.imagePosition || 'center' }}
                                 sizes="100vw"
                             />
                         </div>
