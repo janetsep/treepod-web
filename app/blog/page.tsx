@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'diguenes-hongo-bosque-las-trancas',
+        title: 'Los Digüeñes: el Hongo Comestible del Bosque de TreePod',
+        excerpt: 'Racimos color crema que brotan en los robles en primavera: qué son los digüeñes (el "pan de indio"), cómo se comen y por qué crecen justo donde están los domos. Con fotos reales.',
+        image: '/images/blog/diguene-fruto.jpg',
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07',
+        author: 'TreePod Team',
+        tags: ['Digüeñe', 'Hongo comestible', 'Bosque nativo', 'Naturaleza']
+    },
+    {
         slug: 'carpintero-negro-bosque-las-trancas',
         title: 'Una Pareja de Carpintero Negro en el Bosque de TreePod',
         excerpt: 'Filmamos algo poco común: una pareja de carpintero negro y, entre ellos, al macho alimentando a la hembra. Qué es esta ave, por qué una pareja importa tanto y cómo reconocerla. Con video real.',

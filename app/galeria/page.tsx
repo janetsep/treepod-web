@@ -20,6 +20,8 @@ interface GalleryImage {
 const GALLERY_IMAGES: GalleryImage[] = [
     // --- DESTACADAS (Domo & Landscape) ---
     { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos en el bosque de Las Trancas", aspect: "landscape" },
+    { src: "/images/real/domo-bajo-bosque.jpg", alt: "Domo geodésico a ras del bosque nativo, entre robles y lupinos", aspect: "portrait" },
+    { src: "/images/real/invernadero.jpg", alt: "Invernadero de vidrio con terraza en el bosque de TreePod", aspect: "landscape" },
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", aspect: "landscape" },
     { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", aspect: "portrait" },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },

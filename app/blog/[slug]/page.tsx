@@ -28,7 +28,8 @@ const availableArticles = [
     'senderos-cascadas-valle-las-trancas',
     'termas-chillan-por-el-dia-desde-las-trancas',
     'cueva-de-los-pincheira-visita',
-    'carpintero-negro-bosque-las-trancas'
+    'carpintero-negro-bosque-las-trancas',
+    'diguenes-hongo-bosque-las-trancas'
 ];
 
 const articleContent: Record<string, any> = {
@@ -414,13 +415,9 @@ El carpintero negro no vive en cualquier parte: necesita **bosque nativo maduro*
 
 Y una **pareja** es una señal todavía más fuerte que un individuo solo: significa que el bosque no es solo un lugar de paso, sino un sitio donde estas aves pueden vivir y criar. Que estén entre nuestros árboles es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —dominado por el **roble** (*Nothofagus obliqua*)— y de cuidarlo.
 
-## El bosque que los rodea: los digüeñes
+## No son los únicos que viven en estos árboles
 
-En los mismos robles del bosque crece otro habitante del Nothofagus: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible que va del color crema al anaranjado. Es bien específico: crece sobre el **roble** (*Nothofagus obliqua*), formando nudos en las ramas de donde brotan sus bolitas —crema con puntitos anaranjados— en primavera. (En el coigüe crece un pariente parecido, el "llao llao"; pero el digüeñe propiamente tal es del roble.) Es parte de la cocina tradicional del sur y una señal más de un bosque nativo vivo.
-
-![Digüeñes creciendo en una rama, con un domo de TreePod al fondo, en el bosque de Valle Las Trancas](/images/blog/diguenes-domo.jpg)
-
-*Digüeñes en el bosque de TreePod, con uno de los domos al fondo.*
+En los mismos robles donde trabajan los carpinteros brota otro habitante del bosque en primavera: el **digüeñe**, el hongo comestible que los antiguos llamaban "pan de indio". Le dedicamos su propia nota: [Los digüeñes, el hongo del bosque de TreePod](/blog/diguenes-hongo-bosque-las-trancas).
 
 ## Cómo reconocer al carpintero cuando estés aquí
 
@@ -448,6 +445,54 @@ Ver una pareja de carpintero negro es un recordatorio de por qué hacemos las co
         category: 'Naturaleza',
         readTime: '4 min',
         publishDate: '2026-07-06'
+    },
+    'diguenes-hongo-bosque-las-trancas': {
+        title: 'Los Digüeñes: el Hongo Comestible del Bosque de TreePod',
+        excerpt: 'Racimos anaranjados que brotan en los robles del bosque en primavera. Qué son los digüeñes, cómo se comen y por qué crecen justo donde están los domos.',
+        metaDescription: 'Los digüeñes (Cyttaria espinosae), el "pan de indio": hongo comestible que crece en los robles del bosque nativo de Valle Las Trancas. Qué son, cómo se comen y cuándo salen. Fotos reales en TreePod.',
+        image: '/images/blog/diguenes-domo.jpg',
+        content: `
+Si vienes a TreePod en primavera y miras las ramas de los robles, quizás los veas: unos racimos de bolitas color crema que cuelgan de los árboles. Son **digüeñes**, uno de los tesoros del bosque nativo del sur de Chile. Y sí, se comen.
+
+## Qué son
+
+El **digüeñe** (*Cyttaria espinosae*), también llamado **dihueñe** o **"pan de indio"**, es un hongo comestible que crece exclusivamente en los bosques de *Nothofagus* del centro-sur de Chile y Argentina. En nuestro bosque brota sobre el **roble** (*Nothofagus obliqua*), el árbol dominante del Valle Las Trancas.
+
+Su relación con el roble es antiquísima: el hongo y el árbol han evolucionado juntos durante millones de años. El digüeñe forma unos nudos o abultamientos en las ramas, y de ahí brotan sus bolitas —crema con puntitos anaranjados— entre la primavera y comienzos del verano. Es un parásito suave: no mata al árbol.
+
+![Primer plano de un digüeñe en la rama, en el bosque de TreePod](/images/blog/diguene-fruto.jpg)
+
+*Un digüeñe de cerca: bolitas color crema con poros anaranjados. Cuelgan de las ramas del roble en primavera.*
+
+## Cómo se comen
+
+El digüeñe es parte de la **cocina tradicional del sur de Chile** desde tiempos de los pueblos originarios. Se come **crudo**, y su textura es gelatinosa y su sabor suave, apenas dulzón. La forma más típica es en **ensalada de digüeñes**: cortados, con cebolla, cilantro, sal y limón.
+
+Como todo hongo silvestre, la regla de oro es simple: **solo se recolecta y se come lo que se conoce con certeza**. Si estás con nosotros y ves digüeñes en temporada, pregúntanos.
+
+## Cuándo salen
+
+Los digüeñes son de **primavera** (aproximadamente septiembre a noviembre, según el año y la altura). Es una ventana corta: brotan, maduran y caen en pocas semanas. Verlos es una de esas cosas que solo pasan si estás en el bosque en el momento justo.
+
+## Por qué crecen donde están los domos
+
+Los digüeñes no salen en cualquier bosque: necesitan robles nativos sanos. Que broten entre nuestros árboles —a metros de los domos— es una señal más de que el bosque del Valle Las Trancas está vivo. Es el mismo bosque donde también aparece el [carpintero negro](/blog/carpintero-negro-bosque-las-trancas), otra especie que solo vive donde el *Nothofagus* está bien.
+
+Dormir aquí es dormir dentro de ese bosque. Los digüeñes son solo uno de sus regalos de temporada.
+
+[Reserva tu domo en el bosque →](/disponibilidad)
+
+---
+
+### Sobre la especie
+
+- Nombre científico: *Cyttaria espinosae*. Nombres comunes: digüeñe, dihueñe, pan de indio.
+- Hospedero: roble (*Nothofagus obliqua*) y otros *Nothofagus* del centro-sur. En el coigüe crece un pariente, el "llao llao".
+- Temporada: primavera a inicios de verano.
+`,
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07'
     }
     // Agregar más artículos según necesidad
 };
