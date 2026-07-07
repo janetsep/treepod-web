@@ -416,7 +416,11 @@ Y una **pareja** es una señal todavía más fuerte que un individuo solo: signi
 
 ## El bosque que los rodea: los digüeñes
 
-En los mismos robles del bosque crece otro habitante del Nothofagus: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible de color anaranjado. Es bien específico: crece sobre el **roble** (*Nothofagus obliqua*), formando nudos en las ramas de donde brotan sus bolitas anaranjadas en primavera. (En el coigüe crece un pariente parecido, el "llao llao"; pero el digüeñe propiamente tal es del roble.) Es parte de la cocina tradicional del sur y una señal más de un bosque nativo vivo.
+En los mismos robles del bosque crece otro habitante del Nothofagus: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible que va del color crema al anaranjado. Es bien específico: crece sobre el **roble** (*Nothofagus obliqua*), formando nudos en las ramas de donde brotan sus bolitas —crema con puntitos anaranjados— en primavera. (En el coigüe crece un pariente parecido, el "llao llao"; pero el digüeñe propiamente tal es del roble.) Es parte de la cocina tradicional del sur y una señal más de un bosque nativo vivo.
+
+![Digüeñes creciendo en una rama, con un domo de TreePod al fondo, en el bosque de Valle Las Trancas](/images/blog/diguenes-domo.jpg)
+
+*Digüeñes en el bosque de TreePod, con uno de los domos al fondo.*
 
 ## Cómo reconocer al carpintero cuando estés aquí
 
