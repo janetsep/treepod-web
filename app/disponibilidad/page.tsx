@@ -906,31 +906,31 @@ function DisponibilidadContent() {
                       )}
                     </div>
 
-                    {/* Jerarquía invertida: lo que sale de la tarjeta HOY es el número
-                        dominante; el total de la estadía es la línea secundaria. */}
+                    {/* Total y abono de hoy con la MISMA jerarquía y tamaño, lado a lado,
+                        para que no se confunda el 50% con el total a pagar. */}
                     <div className="pt-5 border-t border-[#1E1B16]/15 space-y-4">
-                      <div>
-                        <div className="dato text-[#5B5348]">Abonas hoy (50%)</div>
-                        <div key={abonoHoy} className="font-display font-medium text-[clamp(2.2rem,4vw,3rem)] leading-none tabular-nums text-[#1E1B16] mt-2 animate-fade-in">
-                          ${abonoHoy.toLocaleString("es-CL")}
-                        </div>
-                        <p className="caption-editorial mt-2">Para confirmar tu estadía · IVA incluido</p>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex items-baseline gap-3 text-[13px]">
-                          <span className="text-[#5B5348]">Total estadía</span>
-                          <DottedLeader />
-                          <span className="font-semibold tabular-nums text-[#1E1B16]">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <div className="dato text-[#5B5348]">Total de la estadía</div>
+                          <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
                             ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
-                          </span>
+                          </div>
+                          <p className="caption-editorial mt-2">Valor total · IVA incluido</p>
                         </div>
-                        <div className="flex items-baseline gap-3 text-[13px]">
-                          <span className="text-[#5B5348]">Saldo al check-in (50%)</span>
-                          <DottedLeader />
-                          <span className="tabular-nums text-[#1E1B16]">
+                        <div>
+                          <div className="dato text-[#008CBF]">Hoy pagas (50%)</div>
+                          <div key={abonoHoy} className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#008CBF] mt-2 animate-fade-in">
                             ${abonoHoy.toLocaleString("es-CL")}
-                          </span>
+                          </div>
+                          <p className="caption-editorial mt-2">Para confirmar tu reserva</p>
                         </div>
+                      </div>
+                      <div className="flex items-baseline gap-3 text-[13px]">
+                        <span className="text-[#5B5348]">Saldo a pagar en el check-in</span>
+                        <DottedLeader />
+                        <span className="tabular-nums text-[#1E1B16]">
+                          ${((calcularTotalConServicios() || 0) - abonoHoy).toLocaleString("es-CL")}
+                        </span>
                       </div>
                     </div>
 

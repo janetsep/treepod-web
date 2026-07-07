@@ -400,32 +400,34 @@ function ReservaContent({ id }: { id: string }) {
                           <span>Incluido</span>
                         </div>
 
-                        {/* Jerarquía invertida: lo que sale de la tarjeta HOY es el número
-                            dominante; el total de la estadía es la línea secundaria. */}
+                        {/* Total y abono de hoy con la MISMA jerarquía: se muestran lado a
+                            lado y del mismo tamaño para que no se confunda el 50% con el total. */}
                         <div className="pt-5 border-t border-[#1E1B16]/15 mt-2 space-y-4">
-                          <div>
-                            <span className="dato text-[#5B5348]">Abonas hoy (50%)</span>
-                            <div className="font-display font-medium text-[clamp(2.2rem,4vw,3rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
-                              ${Math.round(total * 0.5).toLocaleString("es-CL")}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <span className="dato text-[#5B5348]">Total de la estadía</span>
+                              <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
+                                ${total.toLocaleString("es-CL")}
+                              </div>
+                              <p className="caption-editorial mt-2">Valor total a pagar</p>
                             </div>
-                            <p className="caption-editorial mt-2">Para confirmar y garantizar tu reserva inmediata</p>
+                            <div>
+                              <span className="dato text-[#008CBF]">Hoy pagas (50%)</span>
+                              <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#008CBF] mt-2">
+                                ${Math.round(total * 0.5).toLocaleString("es-CL")}
+                              </div>
+                              <p className="caption-editorial mt-2">Para confirmar tu reserva</p>
+                            </div>
                           </div>
 
-                          <div className="space-y-1.5">
-                            <div className="flex items-baseline gap-3 text-[13px]">
-                              <span className="text-[#5B5348]">Total Estadía</span>
-                              <DottedLeader />
-                              <span className="font-semibold tabular-nums text-[#1E1B16]">${total.toLocaleString("es-CL")}</span>
-                            </div>
-                            <div className="flex items-baseline gap-3 text-[13px]">
-                              <span className="text-[#5B5348]">Saldo a pagar en check-in (50%)</span>
-                              <DottedLeader />
-                              <span className="tabular-nums text-[#1E1B16]">${Math.round(total * 0.5).toLocaleString("es-CL")}</span>
-                            </div>
+                          <div className="flex items-baseline gap-3 text-[13px]">
+                            <span className="text-[#5B5348]">Saldo a pagar en el check-in</span>
+                            <DottedLeader />
+                            <span className="tabular-nums text-[#1E1B16]">${(total - Math.round(total * 0.5)).toLocaleString("es-CL")}</span>
                           </div>
 
                           <p className="text-[12px] text-[#5B5348] leading-relaxed border border-[#1E1B16]/12 rounded-[2px] px-4 py-3">
-                            Pagas el 50% hoy vía Webpay. El saldo restante se cancela directamente al inicio de tu estadía.
+                            Hoy pagas la mitad vía Webpay para confirmar tu reserva. El saldo restante se cancela al inicio de tu estadía.
                           </p>
                         </div>
                       </>

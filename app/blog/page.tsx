@@ -23,8 +23,8 @@ function formatFechaPublicacion(dateString: string) {
 const blogPosts = [
     {
         slug: 'ananuca-flor-roja-bosque-las-trancas',
-        title: 'La Añañuca: la Flor Roja del Verano en el Bosque de TreePod',
-        excerpt: 'En verano brotan del suelo unas flores rojas en forma de estrella: las añañucas. Qué son, cuándo aparecen y la leyenda que les dio el nombre. Con fotos reales.',
+        title: 'La Añañuca: la Flor del Verano en el Bosque de TreePod',
+        excerpt: 'En verano brotan del suelo unas flores en forma de estrella: las añañucas. Qué son, de qué colores vienen, cuándo aparecen y la leyenda que les dio el nombre. Con fotos reales.',
         image: '/images/blog/ananuca-flor.jpg',
         category: 'Naturaleza',
         readTime: '3 min',

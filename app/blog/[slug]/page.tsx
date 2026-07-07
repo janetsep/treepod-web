@@ -497,8 +497,8 @@ Dormir aquí es dormir dentro de ese bosque. Los digüeñes son solo uno de sus 
         publishDate: '2026-07-07'
     },
     'ananuca-flor-roja-bosque-las-trancas': {
-        title: 'La Añañuca: la Flor Roja del Verano en el Bosque de TreePod',
-        excerpt: 'En verano, entre los árboles, brotan del suelo unas flores rojas en forma de estrella: las añañucas. Qué son, cuándo aparecen y la leyenda que les dio el nombre.',
+        title: 'La Añañuca: la Flor del Verano en el Bosque de TreePod',
+        excerpt: 'En verano, entre los árboles, brotan del suelo unas flores en forma de estrella: las añañucas. Qué son, de qué colores vienen, cuándo aparecen y la leyenda que les dio el nombre.',
         metaDescription: 'La añañuca, flor roja nativa de Chile que brota en verano en el bosque de Valle Las Trancas (Nevados de Chillán). Qué es, cuándo florece y la leyenda de la Añañuca. Fotos reales en TreePod.',
         image: '/images/blog/ananuca-flor.jpg',
         imageAspect: '3 / 2',
