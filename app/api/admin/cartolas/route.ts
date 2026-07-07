@@ -237,7 +237,7 @@ export async function PATCH(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-  const { id, categoria, proyecto_id, fuente_pago, nota, reserva_id } = await request.json();
+  const { id, categoria, proyecto_id, fuente_pago, nota, reserva_id, fecha } = await request.json();
   if (!id || !categoria) return NextResponse.json({ error: "id y categoria requeridos" }, { status: 400 });
 
   const { data: mov } = await supabaseAdmin
@@ -280,6 +280,8 @@ export async function PATCH(request: Request) {
       gasto_id: nuevoGastoId,
       fuente_pago: fuente_pago || null,
       nota: nota || null,
+      // Fecha de pago editable (para conciliar ingresos sin fecha del import). Solo se toca si viene.
+      ...(fecha !== undefined ? { fecha: fecha || null } : {}),
     })
     .eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
