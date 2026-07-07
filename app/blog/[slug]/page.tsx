@@ -389,7 +389,7 @@ Cueva por la mañana, almuerzo en el valle y termas por la tarde: un día comple
         videoPoster: '/images/blog/carpintero-poster.jpg',
         videoCaption: 'Pareja de carpintero negro: el macho (cabeza roja) y la hembra (penacho negro). Bosque de TreePod, Valle Las Trancas',
         content: `
-Una mañana, entre los robles y coigües de nuestro bosque, aparecieron dos: una **pareja de carpintero negro**. Alcanzamos a grabarlos, y en el video quedó una escena poco común de ver y más difícil aún de filmar: el **macho dándole de comer a la hembra**. No es un ave cualquiera, y no es una imagen cualquiera.
+Una mañana, entre los robles de nuestro bosque, aparecieron dos: una **pareja de carpintero negro**. Alcanzamos a grabarlos, y en el video quedó una escena poco común de ver y más difícil aún de filmar: el **macho dándole de comer a la hembra**. No es un ave cualquiera, y no es una imagen cualquiera.
 
 ## Quién es
 
@@ -412,11 +412,11 @@ Que ocurra aquí dice dos cosas: que hay una **pareja establecida** y que el bos
 
 El carpintero negro no vive en cualquier parte: necesita **bosque nativo maduro**, con árboles grandes y troncos viejos donde encontrar las larvas de las que se alimenta y donde excavar sus nidos. Por eso los especialistas lo consideran un **indicador de bosque sano**: donde hay carpintero negro, hay un ecosistema que funciona.
 
-Y una **pareja** es una señal todavía más fuerte que un individuo solo: significa que el bosque no es solo un lugar de paso, sino un sitio donde estas aves pueden vivir y criar. Que estén entre nuestros árboles es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —robles, coigües, ñirres— y de cuidarlo.
+Y una **pareja** es una señal todavía más fuerte que un individuo solo: significa que el bosque no es solo un lugar de paso, sino un sitio donde estas aves pueden vivir y criar. Que estén entre nuestros árboles es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —dominado por el **roble** (*Nothofagus obliqua*)— y de cuidarlo.
 
 ## El bosque que los rodea: los digüeñes
 
-En los mismos troncos donde trabajan los carpinteros crece otro habitante del bosque nativo: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible de color anaranjado que aparece en los robles y coigües, sobre todo en primavera. Es parte de la cocina tradicional del sur y una señal más de un bosque de Nothofagus vivo. Si caminas por aquí en la temporada, es fácil verlos en las ramas.
+En los mismos robles del bosque crece otro habitante del Nothofagus: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible de color anaranjado. Es bien específico: crece sobre el **roble** (*Nothofagus obliqua*), formando nudos en las ramas de donde brotan sus bolitas anaranjadas en primavera. (En el coigüe crece un pariente parecido, el "llao llao"; pero el digüeñe propiamente tal es del roble.) Es parte de la cocina tradicional del sur y una señal más de un bosque nativo vivo.
 
 ## Cómo reconocer al carpintero cuando estés aquí
 
