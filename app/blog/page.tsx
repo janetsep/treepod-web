@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'carpintero-negro-bosque-las-trancas',
+        title: 'El Carpintero Negro del Bosque de Las Trancas',
+        excerpt: 'Filmamos al ave insignia del bosque nativo en nuestros árboles: el carpintero negro de cresta roja. Qué es, por qué su presencia indica un bosque sano y cómo reconocerlo. Con video real.',
+        image: '/images/blog/carpintero-poster.jpg',
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-06',
+        author: 'TreePod Team',
+        tags: ['Carpintero negro', 'Fauna', 'Bosque nativo', 'Naturaleza']
+    },
+    {
         slug: 'senderos-cascadas-valle-las-trancas',
         title: 'Senderos y Cascadas del Valle Las Trancas',
         excerpt: 'Velo de la Novia para familias, Shangri-La y Garganta del Diablo entre bosque, y el clásico trekking a la Laguna del Huemul. Las caminatas del valle, a minutos de tu domo.',
@@ -132,7 +143,8 @@ const categories = [
     'Guías',
     'Logística',
     'Historia',
-    'Termas'
+    'Termas',
+    'Naturaleza'
 ];
 
 export default function BlogPage() {

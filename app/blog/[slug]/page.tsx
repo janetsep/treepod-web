@@ -27,7 +27,8 @@ const availableArticles = [
     'historia-valle-las-trancas-volcan-termas-pincheira',
     'senderos-cascadas-valle-las-trancas',
     'termas-chillan-por-el-dia-desde-las-trancas',
-    'cueva-de-los-pincheira-visita'
+    'cueva-de-los-pincheira-visita',
+    'carpintero-negro-bosque-las-trancas'
 ];
 
 const articleContent: Record<string, any> = {
@@ -378,6 +379,61 @@ Cueva por la mañana, almuerzo en el valle y termas por la tarde: un día comple
         category: 'Guías',
         readTime: '4 min',
         publishDate: '2026-07-06'
+    },
+    'carpintero-negro-bosque-las-trancas': {
+        title: 'El Carpintero Negro del Bosque de Las Trancas',
+        excerpt: 'Filmamos al ave insignia del bosque nativo en nuestros árboles. Qué es, por qué su presencia importa y cómo reconocerlo.',
+        metaDescription: 'El carpintero negro (Campephilus magellanicus) en el bosque nativo de Valle Las Trancas: qué es, por qué su presencia indica un bosque sano, y cómo reconocer al macho de cresta roja. Video real.',
+        image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
+        video: '/videos/carpintero-negro.mp4',
+        videoPoster: '/images/blog/carpintero-poster.jpg',
+        videoCaption: 'Carpintero negro (macho) en el bosque de TreePod, Valle Las Trancas',
+        content: `
+Una mañana, entre los robles y coigües de nuestro bosque, apareció él: un **carpintero negro** golpeando el tronco con la cabeza roja encendida. Alcanzamos a grabarlo. No es un ave cualquiera: es una de las señales más claras de que el bosque que rodea a TreePod está vivo y sano.
+
+## Quién es
+
+El **carpintero negro** (*Campephilus magellanicus*) es el **carpintero más grande de Sudamérica**: mide alrededor de 40 centímetros. Vive solo en los bosques templados del sur de Chile y Argentina, y es una especie protegida.
+
+Reconocerlo es fácil:
+
+- El **macho** tiene toda la cabeza de un **rojo intenso**, con un cuerpo negro brillante.
+- La **hembra** es negra, con un **penacho curvado** hacia adelante y un poco de rojo solo en la base del pico.
+
+El que ves en el video es un macho, por su cabeza roja.
+
+## Por qué su presencia importa
+
+El carpintero negro no vive en cualquier parte: necesita **bosque nativo maduro**, con árboles grandes y troncos viejos donde encontrar las larvas de las que se alimenta y donde hacer sus nidos. Por eso los especialistas lo consideran un **indicador de bosque sano**: donde hay carpintero negro, hay un ecosistema que funciona.
+
+Que aparezca entre nuestros árboles no es casualidad. Es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —robles, coigües, ñirres— y de cuidarlo.
+
+## Cómo reconocerlo cuando estés aquí
+
+- **El sonido primero:** su golpeteo fuerte y pausado en los troncos se escucha antes de verlo.
+- **Mira hacia arriba:** suele trabajar en los troncos altos y las ramas gruesas.
+- **La mancha roja:** contra el verde del bosque, la cabeza del macho es inconfundible.
+- **Paciencia y silencio:** si lo escuchas, acércate despacio y sin ruido.
+
+No podemos prometerte que lo verás —es un ave silvestre y libre, va y viene—, pero está por aquí. Y parte de la gracia de dormir en el bosque es justamente eso: nunca sabes qué vas a encontrar al abrir la cortina.
+
+## Un bosque que vale la pena cuidar
+
+Ver un carpintero negro es un recordatorio de por qué hacemos las cosas como las hacemos: menos intervención, más bosque. Si te interesa la naturaleza del valle, te va a gustar nuestra [guía de senderos y cascadas](/blog/senderos-cascadas-valle-las-trancas).
+
+[Reserva tu domo en el bosque →](/disponibilidad)
+
+---
+
+### Sobre la especie
+
+- Nombre científico: *Campephilus magellanicus*. Nombres comunes: carpintero negro, carpintero magallánico.
+- Distribución: bosques templados de Chile y Argentina. Especie protegida en Chile.
+- Referencia: [Aves de Chile](https://www.avesdechile.cl), Ministerio del Medio Ambiente.
+`,
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-06'
     }
     // Agregar más artículos según necesidad
 };
@@ -536,6 +592,34 @@ export default async function BlogPost({ params }: Props) {
                     </figure>
                 </div>
             </section>
+
+            {/* VIDEO VERTICAL (reel) — solo si el artículo lo trae. Material real propio. */}
+            {article.video && (
+                <section className="pt-10">
+                    <div className="mx-auto max-w-[420px] px-5">
+                        <figure>
+                            <video
+                                className="w-full rounded-[2px] border border-[#1E1B16]/15 bg-[#1E1B16]"
+                                controls
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
+                                poster={article.videoPoster}
+                            >
+                                <source src={article.video} type="video/mp4" />
+                            </video>
+                            {article.videoCaption && (
+                                <figcaption className="mt-2 flex items-center gap-2">
+                                    <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                    <span className="caption-editorial">{article.videoCaption}</span>
+                                </figcaption>
+                            )}
+                        </figure>
+                    </div>
+                </section>
+            )}
 
             {/* CONTENIDO — narrow column editorial */}
             <article className="py-16 md:py-24">
