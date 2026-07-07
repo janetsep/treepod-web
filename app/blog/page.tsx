@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'lupinos-verano-las-trancas',
+        title: 'Los Lupinos: el Morado del Verano en Las Trancas',
+        excerpt: 'En verano el valle se llena de torres moradas y rosadas: los lupinos. Hermosos y fotogénicos, pero con una historia honesta que contar (no son nativos). Con fotos reales.',
+        image: '/images/blog/lupino-flor.jpg',
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07',
+        author: 'TreePod Team',
+        tags: ['Lupinos', 'Flora', 'Verano', 'Naturaleza']
+    },
+    {
         slug: 'ananuca-flor-roja-bosque-las-trancas',
         title: 'La Añañuca: la Flor del Verano en el Bosque de TreePod',
         excerpt: 'En verano brotan del suelo unas flores en forma de estrella: las añañucas. Qué son, de qué colores vienen, cuándo aparecen y la leyenda que les dio el nombre. Con fotos reales.',

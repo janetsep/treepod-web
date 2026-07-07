@@ -30,7 +30,8 @@ const availableArticles = [
     'cueva-de-los-pincheira-visita',
     'carpintero-negro-bosque-las-trancas',
     'diguenes-hongo-bosque-las-trancas',
-    'ananuca-flor-roja-bosque-las-trancas'
+    'ananuca-flor-roja-bosque-las-trancas',
+    'lupinos-verano-las-trancas'
 ];
 
 const articleContent: Record<string, any> = {
@@ -542,6 +543,47 @@ Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es just
 - "Añañuca" es el nombre común de varias flores bulbosas nativas (géneros *Rhodophiala* y *Phycella*, familia Amaryllidaceae).
 - En los Nevados de Chillán crecen especies cordilleranas de añañuca, entre las más de 600 plantas del bosque nativo.
 - Floración: verano. Luego sobrevive como bulbo bajo tierra.
+`,
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07'
+    },
+    'lupinos-verano-las-trancas': {
+        title: 'Los Lupinos: el Morado del Verano en Las Trancas',
+        excerpt: 'En verano el valle se llena de torres moradas y rosadas: los lupinos. Son hermosos y fotogénicos, pero hay algo honesto que contar sobre ellos.',
+        metaDescription: 'Los lupinos que pintan de morado el Valle Las Trancas en verano: hermosos, pero una especie introducida (no nativa). Qué son, cuándo florecen y por qué lo contamos.',
+        image: '/images/blog/lupinos-domo.jpg',
+        imageAspect: '3 / 2',
+        content: `
+En verano pasa algo con el valle: entre los árboles y a orillas de los caminos brotan unas **torres de flores moradas y rosadas** que llegan casi a la altura de una persona. Son los **lupinos**, y por unas semanas pintan el bosque de color. Son de las flores más fotografiadas de Las Trancas, y aquí crecen justo alrededor de los domos y el invernadero.
+
+Pero antes de enamorarte del todo, hay algo honesto que queremos contarte.
+
+## No son nativos (y lo decimos)
+
+Aunque parezcan parte de siempre del paisaje, los grandes lupinos morados **no son una planta nativa de Chile**. Son *Lupinus polyphyllus*, originarios de Norteamérica, que se introdujeron como planta ornamental y se **naturalizaron** en el sur. De hecho, están catalogados como una **especie invasora** en los bosques del centro-sur, porque pueden desplazar a la flora nativa.
+
+Te lo contamos por una razón simple: cuando en TreePod decimos "nativo" —como con el [carpintero negro](/blog/carpintero-negro-bosque-las-trancas), los [digüeñes](/blog/diguenes-hongo-bosque-las-trancas) o la [añañuca](/blog/ananuca-flor-roja-bosque-las-trancas)— es de verdad. Y los lupinos, por hermosos que sean, no lo son.
+
+![Un lupino rosado de cerca, en el bosque de TreePod](/images/blog/lupino-flor.jpg)
+
+*Un lupino rosado de cerca. Sus flores se apilan en una torre sobre el tallo.*
+
+## Hermosos igual
+
+Nada de esto les quita lo bonitos. Los lupinos son leguminosas (parientes lejanos de las arvejas), y florecen en **pleno verano** en tonos que van del morado profundo al rosado y, a veces, al blanco. Con el sol de la tarde, sus torres encendidas entre el verde del bosque son una postal.
+
+Si vienes en verano, los vas a ver por todas partes. Míralos, fotografíalos, disfrútalos. Solo que ahora sabes su historia completa: son visitantes que se quedaron, no habitantes originales del bosque.
+
+[Reserva tu domo en el bosque →](/disponibilidad)
+
+---
+
+### Sobre la especie
+
+- Nombre científico: *Lupinus polyphyllus*. Familia Fabaceae (leguminosas).
+- Origen: Norteamérica. Introducida y naturalizada en el sur de Chile y Argentina; catalogada como especie invasora en los bosques del centro-sur.
+- Floración: verano.
 `,
         category: 'Naturaleza',
         readTime: '3 min',
