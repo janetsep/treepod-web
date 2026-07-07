@@ -114,6 +114,15 @@ export default function ProyectosPanel() {
   const [showNewGasto, setShowNewGasto] = useState(false);
   const [newG, setNewG] = useState({ fecha: new Date().toLocaleDateString("en-CA"), concepto: "", monto: "", proveedor: "", numero_documento: "", tipo: "material", nota: "", fuente_pago: "" });
 
+  // Pago dividido entre varios proyectos (un solo pago, ej. constructor: electricidad + mano de obra)
+  const [showSplit, setShowSplit] = useState(false);
+  const [splitComun, setSplitComun] = useState({ fecha: new Date().toLocaleDateString("en-CA"), proveedor: "", numero_documento: "", fuente_pago: "" });
+  const [splitLineas, setSplitLineas] = useState<{ proyecto_id: string; concepto: string; tipo: string; monto: string }[]>([
+    { proyecto_id: "", concepto: "", tipo: "material", monto: "" },
+    { proyecto_id: "", concepto: "", tipo: "mano_obra", monto: "" },
+  ]);
+  const [guardandoSplit, setGuardandoSplit] = useState(false);
+
   // Edit project state
   const [editingProyecto, setEditingProyecto] = useState<string | null>(null);
   const [editP, setEditP] = useState({ nombre: "", descripcion: "", presupuesto: "", categoria: "" });
@@ -190,6 +199,37 @@ export default function ProyectosPanel() {
       setShowNewGasto(false);
       loadGastos(proyectoId);
       loadProyectos();
+    }
+  }
+
+  // Guarda un solo pago repartido entre varios proyectos (una fila por línea válida).
+  async function crearPagoDividido() {
+    const reparto = splitLineas
+      .map((l) => ({ proyecto_id: l.proyecto_id, concepto: l.concepto.trim(), tipo: l.tipo, monto: Math.round(Number(l.monto)) }))
+      .filter((l) => l.proyecto_id && l.concepto && l.monto > 0);
+    if (reparto.length === 0) { alert("Agrega al menos un proyecto con concepto y monto."); return; }
+    setGuardandoSplit(true);
+    const res = await adminFetch("/api/admin/proyectos/gastos", {
+      method: "POST",
+      body: JSON.stringify({
+        reparto,
+        concepto: reparto[0].concepto, // respaldo por si alguna línea no trae concepto
+        fecha: splitComun.fecha,
+        proveedor: splitComun.proveedor.trim() || null,
+        numero_documento: splitComun.numero_documento.trim() || null,
+        fuente_pago: splitComun.fuente_pago || null,
+      }),
+    });
+    setGuardandoSplit(false);
+    if (res.ok) {
+      setShowSplit(false);
+      setSplitComun({ fecha: new Date().toLocaleDateString("en-CA"), proveedor: "", numero_documento: "", fuente_pago: "" });
+      setSplitLineas([{ proyecto_id: "", concepto: "", tipo: "material", monto: "" }, { proyecto_id: "", concepto: "", tipo: "mano_obra", monto: "" }]);
+      loadProyectos();
+      if (expanded) loadGastos(expanded);
+    } else {
+      const d = await res.json().catch(() => ({}));
+      alert(d.error || "No se pudo guardar el pago dividido.");
     }
   }
 
@@ -346,12 +386,21 @@ export default function ProyectosPanel() {
           <h2 className="text-2xl font-display font-black text-gray-900">Proyectos de Inversión</h2>
           <p className="text-xs text-gray-700 mt-1">Seguimiento de gastos por proyecto y concepto</p>
         </div>
-        <button
-          onClick={() => setShowNewProyecto(!showNewProyecto)}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all"
-        >
-          <Plus className="w-4 h-4" /> Nuevo Proyecto
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowSplit(!showSplit)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-800 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+            title="Un solo pago que se reparte entre varios proyectos"
+          >
+            <Plus className="w-4 h-4" /> Pago dividido
+          </button>
+          <button
+            onClick={() => setShowNewProyecto(!showNewProyecto)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all"
+          >
+            <Plus className="w-4 h-4" /> Nuevo Proyecto
+          </button>
+        </div>
       </div>
 
       {/* Total general de TODOS los proyectos. "Costo estimado" usa el presupuesto si
@@ -425,6 +474,62 @@ export default function ProyectosPanel() {
           <div className="flex gap-3">
             <button onClick={crearProyecto} className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-all">Crear</button>
             <button onClick={() => setShowNewProyecto(false)} className="px-5 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Cancelar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Pago dividido entre varios proyectos */}
+      {showSplit && (
+        <div className="bg-white rounded-2xl border-2 border-gray-900 p-6 space-y-4">
+          <div>
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Pago dividido entre proyectos</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Un solo pago (ej. al constructor) repartido en varios proyectos/conceptos: electricidad, mano de obra, etc.</p>
+          </div>
+          {/* Datos comunes del pago */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Fecha</label>
+              <input type="date" value={splitComun.fecha} onChange={(e) => setSplitComun({ ...splitComun, fecha: e.target.value })} className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1" />
+            </div>
+            <input placeholder="Proveedor (ej. Constructor Juan)" value={splitComun.proveedor} onChange={(e) => setSplitComun({ ...splitComun, proveedor: e.target.value })} className="border border-gray-200 rounded-xl px-3 py-2 text-sm mt-5" />
+            <input placeholder="N° documento" value={splitComun.numero_documento} onChange={(e) => setSplitComun({ ...splitComun, numero_documento: e.target.value })} className="border border-gray-200 rounded-xl px-3 py-2 text-sm mt-5" />
+            <select value={splitComun.fuente_pago} onChange={(e) => setSplitComun({ ...splitComun, fuente_pago: e.target.value })} className="border border-gray-200 rounded-xl px-3 py-2 text-sm mt-5 bg-white">
+              <option value="">Fuente de pago…</option>
+              {["ganancias", "ahorros", "prestamo", "fondo_concursable"].map((f) => <option key={f} value={f}>{FUENTE_LABEL[f]}</option>)}
+            </select>
+          </div>
+
+          {/* Líneas del reparto */}
+          <div className="space-y-2">
+            {splitLineas.map((l, i) => (
+              <div key={i} className="grid grid-cols-12 gap-2 items-center">
+                <select value={l.proyecto_id} onChange={(e) => setSplitLineas((ls) => ls.map((x, j) => j === i ? { ...x, proyecto_id: e.target.value } : x))} className="col-span-4 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                  <option value="">Proyecto…</option>
+                  {proyectos.map((p) => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                </select>
+                <input placeholder="Concepto (Electricidad, Mano de obra…)" value={l.concepto} onChange={(e) => setSplitLineas((ls) => ls.map((x, j) => j === i ? { ...x, concepto: e.target.value } : x))} className="col-span-4 border border-gray-200 rounded-lg px-2 py-2 text-sm" />
+                <select value={l.tipo} onChange={(e) => setSplitLineas((ls) => ls.map((x, j) => j === i ? { ...x, tipo: e.target.value } : x))} className="col-span-2 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                  <option value="material">Material</option>
+                  <option value="mano_obra">Mano de obra</option>
+                  <option value="servicio">Servicio</option>
+                  <option value="otro">Otro</option>
+                </select>
+                <input type="number" placeholder="Monto" value={l.monto} onChange={(e) => setSplitLineas((ls) => ls.map((x, j) => j === i ? { ...x, monto: e.target.value } : x))} className="col-span-1 border border-gray-200 rounded-lg px-2 py-2 text-sm" />
+                <button onClick={() => setSplitLineas((ls) => ls.length > 1 ? ls.filter((_, j) => j !== i) : ls)} className="col-span-1 text-rose-500 hover:text-rose-700 text-lg" title="Quitar línea">×</button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <button onClick={() => setSplitLineas((ls) => [...ls, { proyecto_id: "", concepto: "", tipo: "material", monto: "" }])} className="text-xs font-bold text-primary hover:underline">+ Agregar proyecto</button>
+            <div className="text-sm font-black text-gray-900">
+              Total del pago: {fmt(splitLineas.reduce((s, l) => s + (Math.round(Number(l.monto)) || 0), 0))}
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button onClick={crearPagoDividido} disabled={guardandoSplit} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-black disabled:opacity-50 transition-all">{guardandoSplit ? "Guardando…" : "Guardar pago dividido"}</button>
+            <button onClick={() => setShowSplit(false)} className="px-5 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-200 transition-all">Cancelar</button>
           </div>
         </div>
       )}
