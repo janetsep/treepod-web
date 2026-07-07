@@ -29,7 +29,8 @@ const availableArticles = [
     'termas-chillan-por-el-dia-desde-las-trancas',
     'cueva-de-los-pincheira-visita',
     'carpintero-negro-bosque-las-trancas',
-    'diguenes-hongo-bosque-las-trancas'
+    'diguenes-hongo-bosque-las-trancas',
+    'ananuca-flor-roja-bosque-las-trancas'
 ];
 
 const articleContent: Record<string, any> = {
@@ -490,6 +491,52 @@ Dormir aquí es dormir dentro de ese bosque. Los digüeñes son solo uno de sus 
 - Nombre científico: *Cyttaria espinosae*. Nombres comunes: digüeñe, dihueñe, pan de indio.
 - Hospedero: roble (*Nothofagus obliqua*) y otros *Nothofagus* del centro-sur. En el coigüe crece un pariente, el "llao llao".
 - Temporada: primavera a inicios de verano.
+`,
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07'
+    },
+    'ananuca-flor-roja-bosque-las-trancas': {
+        title: 'La Añañuca: la Flor Roja del Verano en el Bosque de TreePod',
+        excerpt: 'En verano, entre los árboles, brotan del suelo unas flores rojas en forma de estrella: las añañucas. Qué son, cuándo aparecen y la leyenda que les dio el nombre.',
+        metaDescription: 'La añañuca, flor roja nativa de Chile que brota en verano en el bosque de Valle Las Trancas (Nevados de Chillán). Qué es, cuándo florece y la leyenda de la Añañuca. Fotos reales en TreePod.',
+        image: '/images/blog/ananuca-flor.jpg',
+        imageAspect: '3 / 2',
+        imagePosition: 'center 35%',
+        content: `
+Un día de verano, entre los árboles del bosque, aparecen de la nada: unas flores rojas en forma de estrella que brotan directamente del suelo, sin apenas hojas. Son **añañucas**, una de las flores más queridas de Chile, y por unas semanas encienden de rojo el suelo del bosque.
+
+## Qué es la añañuca
+
+La **añañuca** es una flor bulbosa nativa de Chile, de la familia de las amarilis (parientes de esa flor). Bajo el nombre "añañuca" se agrupan varias especies —de los géneros *Rhodophiala* y *Phycella*—, desde el norte hasta la cordillera del sur. En la zona de los **Nevados de Chillán**, donde estamos, la añañuca es una de las cientos de especies del bosque nativo.
+
+Lo más característico es su ritmo: florece en **pleno verano**, con esas trompetas rojas sobre un tallo desnudo. Y después, tan rápido como apareció, se retira: la parte de arriba se seca y la planta sobrevive bajo tierra como un **bulbo**, esperando el próximo verano para volver a brotar.
+
+![La añañuca completa, brotando del suelo del bosque de TreePod](/images/blog/ananuca-planta.jpg)
+
+*La añañuca brota directamente del suelo, con su tallo desnudo y sus flores rojas en estrella.*
+
+## La leyenda de la Añañuca
+
+Su nombre viene de una de las leyendas más conocidas de Chile. Cuenta la historia —originaria del **norte del país**— que Añañuca era una joven muy hermosa que se enamoró de un forastero. Él partió y no volvió, y ella murió de pena esperándolo. Al día siguiente, su tumba amaneció cubierta de flores rojas. Desde entonces, esas flores llevan su nombre.
+
+Es una leyenda del norte, pero la flor tiene parientes a lo largo de todo Chile, incluida nuestra cordillera. Verlas florecer en el bosque es una de esas pequeñas sorpresas del verano.
+
+## Cuándo y dónde verlas
+
+Las añañucas son flores de **verano**: aparecen por unas pocas semanas y luego desaparecen. Si vienes en esa temporada, mantén los ojos en el suelo del bosque: brotan entre la hojarasca, a veces solas, a veces en pequeños grupos.
+
+Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es justamente verlas donde crecen. Son parte del mismo bosque vivo donde también aparecen el [carpintero negro](/blog/carpintero-negro-bosque-las-trancas) y los [digüeñes](/blog/diguenes-hongo-bosque-las-trancas).
+
+[Reserva tu domo en el bosque →](/disponibilidad)
+
+---
+
+### Sobre la especie
+
+- "Añañuca" es el nombre común de varias flores bulbosas nativas (géneros *Rhodophiala* y *Phycella*, familia Amaryllidaceae).
+- En los Nevados de Chillán crecen especies cordilleranas de añañuca, entre las más de 600 plantas del bosque nativo.
+- Floración: verano. Luego sobrevive como bulbo bajo tierra.
 `,
         category: 'Naturaleza',
         readTime: '3 min',

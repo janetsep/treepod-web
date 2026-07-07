@@ -22,6 +22,17 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'ananuca-flor-roja-bosque-las-trancas',
+        title: 'La Añañuca: la Flor Roja del Verano en el Bosque de TreePod',
+        excerpt: 'En verano brotan del suelo unas flores rojas en forma de estrella: las añañucas. Qué son, cuándo aparecen y la leyenda que les dio el nombre. Con fotos reales.',
+        image: '/images/blog/ananuca-flor.jpg',
+        category: 'Naturaleza',
+        readTime: '3 min',
+        publishDate: '2026-07-07',
+        author: 'TreePod Team',
+        tags: ['Añañuca', 'Flor nativa', 'Bosque nativo', 'Naturaleza']
+    },
+    {
         slug: 'diguenes-hongo-bosque-las-trancas',
         title: 'Los Digüeñes: el Hongo Comestible del Bosque de TreePod',
         excerpt: 'Racimos color crema que brotan en los robles en primavera: qué son los digüeñes (el "pan de indio"), cómo se comen y por qué crecen justo donde están los domos. Con fotos reales.',
