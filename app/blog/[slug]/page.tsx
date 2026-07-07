@@ -502,7 +502,6 @@ Dormir aquí es dormir dentro de ese bosque. Los digüeñes son solo uno de sus 
         metaDescription: 'La añañuca, flor roja nativa de Chile que brota en verano en el bosque de Valle Las Trancas (Nevados de Chillán). Qué es, cuándo florece y la leyenda de la Añañuca. Fotos reales en TreePod.',
         image: '/images/blog/ananuca-flor.jpg',
         imageAspect: '3 / 2',
-        imagePosition: 'center 35%',
         content: `
 Un día de verano, entre los árboles del bosque, aparecen de la nada: unas flores rojas en forma de estrella que brotan directamente del suelo, sin apenas hojas. Son **añañucas**, una de las flores más queridas de Chile, y por unas semanas encienden de rojo el suelo del bosque.
 
@@ -510,11 +509,17 @@ Un día de verano, entre los árboles del bosque, aparecen de la nada: unas flor
 
 La **añañuca** es una flor bulbosa nativa de Chile, de la familia de las amarilis (parientes de esa flor). Bajo el nombre "añañuca" se agrupan varias especies —de los géneros *Rhodophiala* y *Phycella*—, desde el norte hasta la cordillera del sur. En la zona de los **Nevados de Chillán**, donde estamos, la añañuca es una de las cientos de especies del bosque nativo.
 
-Lo más característico es su ritmo: florece en **pleno verano**, con esas trompetas rojas sobre un tallo desnudo. Y después, tan rápido como apareció, se retira: la parte de arriba se seca y la planta sobrevive bajo tierra como un **bulbo**, esperando el próximo verano para volver a brotar.
+Lo más característico es su ritmo: florece en **pleno verano**, sobre un tallo desnudo. Y después, tan rápido como apareció, se retira: la parte de arriba se seca y la planta sobrevive bajo tierra como un **bulbo**, esperando el próximo verano para volver a brotar.
+
+Aunque la más conocida es la roja, la añañuca **no es solo roja**: según la especie va del rojo intenso al **rosado, el salmón y casi el blanco**. En un mismo sector del bosque puedes encontrar más de un tono.
 
 ![La añañuca completa, brotando del suelo del bosque de TreePod](/images/blog/ananuca-planta.jpg)
 
-*La añañuca brota directamente del suelo, con su tallo desnudo y sus flores rojas en estrella.*
+*La añañuca brota directamente del suelo, con su tallo desnudo y sus flores en estrella.*
+
+![Una añañuca de tono más claro, casi salmón](/images/blog/ananuca-clara.jpg)
+
+*No todas son rojas: esta variante más clara, casi salmón, en el mismo bosque.*
 
 ## La leyenda de la Añañuca
 
