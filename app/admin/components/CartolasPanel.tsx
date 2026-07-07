@@ -26,6 +26,8 @@ const CATEGORIAS = [
   { value: "proyecto", label: "Proyecto", color: "bg-purple-100 text-purple-700" },
   { value: "operacion", label: "Operación normal", color: "bg-blue-100 text-blue-700" },
   { value: "ingreso", label: "Ingreso", color: "bg-emerald-100 text-emerald-700" },
+  { value: "reversa_ingreso", label: "Reversa de ingreso", color: "bg-rose-100 text-rose-800" },
+  { value: "traspaso", label: "Traspaso entre cuentas", color: "bg-sky-100 text-sky-700" },
   { value: "prestamo", label: "Préstamo", color: "bg-rose-100 text-rose-700" },
   { value: "terceros", label: "Terceros (no es de Migryk)", color: "bg-amber-100 text-amber-700" },
 ];
@@ -253,7 +255,7 @@ export default function CartolasPanel() {
     setMovimientos((ms) => ms.map((x) => (x.id === m.id ? nuevo : x)));
     const res = await adminFetch("/api/admin/cartolas", {
       method: "PATCH",
-      body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, reserva_id: nuevo.reserva_id, fuente_pago: nuevo.fuente_pago }),
+      body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, reserva_id: nuevo.reserva_id, fuente_pago: nuevo.fuente_pago, fecha: nuevo.fecha }),
     });
     try {
       const d = await res.json();
@@ -282,7 +284,7 @@ export default function CartolasPanel() {
     for (const m of aGrabar) {
       const res = await adminFetch("/api/admin/cartolas", {
         method: "PATCH",
-        body: JSON.stringify({ id: m.id, categoria: m.categoria, proyecto_id: m.proyecto_id, reserva_id: m.reserva_id, fuente_pago: m.fuente_pago }),
+        body: JSON.stringify({ id: m.id, categoria: m.categoria, proyecto_id: m.proyecto_id, reserva_id: m.reserva_id, fuente_pago: m.fuente_pago, fecha: m.fecha }),
       });
       try { const d = await res.json(); propagadosTotal += d.propagados || 0; } catch { }
     }
@@ -559,7 +561,13 @@ export default function CartolasPanel() {
             <div key={m.id} className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 shrink-0">{fmtFecha(m.fecha)}</span>
+                  <input
+                    type="date"
+                    value={m.fecha || ""}
+                    onChange={(e) => categorizar(m, { fecha: e.target.value } as Partial<Movimiento>)}
+                    title="Fecha de pago (editable) — necesaria para conciliar"
+                    className={`text-xs shrink-0 border rounded px-1 py-0.5 ${m.fecha ? "text-gray-500 border-gray-200" : "text-amber-700 border-amber-300 bg-amber-50 font-semibold"}`}
+                  />
                   <span className="text-sm font-bold text-gray-900 truncate">{m.descripcion}</span>
                 </div>
                 {m.categoria === "ingreso" && m.reservas && (

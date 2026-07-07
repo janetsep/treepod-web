@@ -76,9 +76,10 @@ export async function GET(request: Request) {
   const stockCritico = (productos || []).filter((p: any) => {
     const tasa  = Number(p.cantidad_por_hn) || 0;
     const stock = Number(p.stock_actual) || 0;
-    const factor = Number(p.contenido_por_unidad) || 1;
     if (tasa === 0) return false;
-    return (stock * factor) / (tasa * 2) < 3;
+    // stock_actual ya está en unidades de consumo (igual que cantidad_por_hn), así que
+    // NO se multiplica por el factor de compra. Cobertura en días ≈ stock / (tasa × 2 huéspedes).
+    return stock / (tasa * 2) < 3;
   });
 
   const { count: proyectosActivos } = await supabaseAdmin

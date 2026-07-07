@@ -522,7 +522,7 @@ export async function PUT(request: Request) {
     for (const [pid, delta] of stockDelta) {
       const prod = prodMap.get(pid);
       if (!prod) continue;
-      const nuevoStock = Math.max(0, Number(prod.stock_actual) - delta);
+      const nuevoStock = Number(prod.stock_actual) - delta;
       await supabaseAdmin.from("sicra_productos").update({ stock_actual: nuevoStock }).eq("id", pid);
     }
   }

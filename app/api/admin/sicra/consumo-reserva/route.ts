@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       .from("sicra_productos").select("stock_actual").eq("id", producto_id).single();
     if (prod) {
       await supabaseAdmin.from("sicra_productos")
-        .update({ stock_actual: Math.max(0, Number(prod.stock_actual) - Number(cantidad)) })
+        .update({ stock_actual: Number(prod.stock_actual) - Number(cantidad) })
         .eq("id", producto_id);
     }
   }
@@ -132,7 +132,7 @@ export async function PATCH(request: Request) {
           .from("sicra_productos").select("stock_actual").eq("id", f.producto_id).single();
         if (prod) {
           await supabaseAdmin.from("sicra_productos")
-            .update({ stock_actual: Math.max(0, Number(prod.stock_actual) - delta) })
+            .update({ stock_actual: Number(prod.stock_actual) - delta })
             .eq("id", f.producto_id);
         }
       }
@@ -160,7 +160,7 @@ export async function PATCH(request: Request) {
       .from("sicra_productos").select("stock_actual").eq("id", actual.producto_id).single();
     if (prod) {
       await supabaseAdmin.from("sicra_productos")
-        .update({ stock_actual: Math.max(0, Number(prod.stock_actual) - delta) })
+        .update({ stock_actual: Number(prod.stock_actual) - delta })
         .eq("id", actual.producto_id);
     }
   }

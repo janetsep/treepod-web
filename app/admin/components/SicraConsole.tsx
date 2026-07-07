@@ -13,13 +13,14 @@ import {
 
 type Seccion =
   | "hoy" | "boletas" | "inventario" | "recetas" | "consumo"
-  | "rentabilidad" | "proyectos" | "tendencia" | "pedidos";
+  | "rentabilidad" | "proyectos" | "tendencia" | "pedidos" | "comprar";
 
 const SECCIONES: [Seccion, string][] = [
   ["hoy", "Hoy"],
   ["pedidos", "Pedidos WA"],
   ["boletas", "Boletas"],
   ["inventario", "Inventario"],
+  ["comprar", "Qué comprar"],
   ["recetas", "Recetas"],
   ["consumo", "Consumo"],
   ["rentabilidad", "Rentabilidad"],
@@ -179,6 +180,140 @@ const labelDate = (iso: string) => {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+// ─── QUÉ COMPRAR (recomendador: demanda por ocupación vs stock + mejor precio) ──
+function QueComprar() {
+  const [dias, setDias] = useState(14);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [refrescando, setRefrescando] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  const cargar = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await adminFetch(`/api/admin/sicra/sugerencias-compra?dias=${dias}`);
+      const d = await res.json();
+      setData(res.ok ? d : null);
+    } catch {
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [dias]);
+
+  useEffect(() => { cargar(); }, [cargar]);
+
+  const refrescarPrecios = async () => {
+    setRefrescando(true);
+    setMsg("Buscando precios en Líder / Santa Isabel...");
+    try {
+      const res = await adminFetch(`/api/admin/sicra/precios-cron?limite=25`);
+      const d = await res.json();
+      setMsg(res.ok ? `Precios actualizados: ${d.guardados} observaciones guardadas.` : "No se pudo actualizar.");
+      await cargar();
+    } catch {
+      setMsg("Error al actualizar precios.");
+    } finally {
+      setRefrescando(false);
+      setTimeout(() => setMsg(""), 6000);
+    }
+  };
+
+  const pesos = (n: number | null) => (n == null ? "—" : `$${Math.round(n).toLocaleString("es-CL")}`);
+  const cant = (n: number) => Number(n).toLocaleString("es-CL", { maximumFractionDigits: 2 });
+  const SUPER_LABEL: Record<string, string> = {
+    lider_supermercado: "Líder", lider: "Líder", santaisabel: "Santa Isabel", jumbo: "Jumbo",
+  };
+  const nombreSuper = (s: string) => SUPER_LABEL[s] || s;
+
+  const sugs: any[] = data?.sugerencias || [];
+  const ocup = data?.ocupacion;
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white border border-gray-200 rounded-lg p-3 flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <ShoppingCart size={16} className="text-emerald-600" />
+          <span className="font-semibold text-gray-800 text-sm">Qué comprar</span>
+          <span className="text-xs text-gray-500">— según la ocupación de los próximos</span>
+          <select value={dias} onChange={(e) => setDias(Number(e.target.value))} className="text-xs border border-gray-300 rounded px-1.5 py-1">
+            <option value={7}>7 días</option>
+            <option value={14}>14 días</option>
+            <option value={21}>21 días</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          {msg && <span className="text-[11px] text-gray-500">{msg}</span>}
+          <button onClick={refrescarPrecios} disabled={refrescando} className="flex items-center gap-1 px-2.5 py-1.5 bg-gray-900 hover:bg-black disabled:opacity-50 text-white rounded text-[11px] font-medium">
+            <RefreshCw size={12} className={refrescando ? "animate-spin" : ""} /> {refrescando ? "Buscando..." : "Actualizar precios"}
+          </button>
+        </div>
+      </div>
+
+      {ocup && (
+        <div className="text-[11px] text-gray-600 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
+          Ocupación próxima: <b>{cant(ocup.huesped_noches_proximos)}</b> huésped-noches ·
+          histórica: <b>{cant(ocup.huesped_noches_historicos)}</b> · factor <b>{ocup.factor_proyeccion}</b>
+        </div>
+      )}
+
+      {(data?.avisos || []).length > 0 && (
+        <ul className="text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 space-y-0.5">
+          {data.avisos.map((a: string, i: number) => (
+            <li key={i} className="flex gap-1"><AlertTriangle size={11} className="mt-0.5 shrink-0" /> {a}</li>
+          ))}
+        </ul>
+      )}
+
+      {loading ? (
+        <p className="text-zinc-700 text-sm">Calculando sugerencias...</p>
+      ) : sugs.length === 0 ? (
+        <p className="text-sm text-gray-500">Nada por comprar para esta ventana (o falta historial de consumo).</p>
+      ) : (
+        <div className="bg-white border border-gray-200 rounded-lg overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-[10px] uppercase tracking-wide text-gray-500 border-b border-gray-100">
+              <tr>
+                <th className="text-left font-semibold px-3 py-2">Insumo</th>
+                <th className="text-right font-semibold px-3 py-2">Stock</th>
+                <th className="text-right font-semibold px-3 py-2">Necesita</th>
+                <th className="text-right font-semibold px-3 py-2">Falta comprar</th>
+                <th className="text-left font-semibold px-3 py-2">Dónde conviene</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {sugs.map((s: any) => (
+                <tr key={s.producto_id} className="hover:bg-gray-50/60">
+                  <td className="px-3 py-2 font-medium text-gray-900">
+                    {s.nombre}
+                    {!s.tiene_ean && <span className="ml-1.5 text-[9px] font-bold text-rose-600 bg-rose-50 px-1 py-0.5 rounded">sin EAN</span>}
+                    {s.categoria && <span className="block text-[10px] text-gray-400">{s.categoria}</span>}
+                  </td>
+                  <td className="px-3 py-2 text-right text-gray-600 whitespace-nowrap">{cant(s.stock_actual)} {s.unidad}</td>
+                  <td className="px-3 py-2 text-right text-gray-600 whitespace-nowrap">{cant(s.necesidad_estimada)}</td>
+                  <td className="px-3 py-2 text-right font-black text-rose-600 whitespace-nowrap">{cant(s.falta_comprar)} {s.unidad}</td>
+                  <td className="px-3 py-2">
+                    {s.mejor_precio ? (
+                      <a href={s.mejor_precio.url || "#"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5">
+                        <span className="font-semibold text-gray-800">{nombreSuper(s.mejor_precio.supermercado)}</span>
+                        <span className="font-bold text-emerald-700">{pesos(s.mejor_precio.precio)}</span>
+                        {s.mejor_precio.en_oferta && <span className="text-[9px] font-black text-white bg-emerald-600 px-1 py-0.5 rounded">OFERTA</span>}
+                        {s.mejor_precio.referencial && <span className="text-[9px] text-gray-400" title="Precio referencial de Knasta">ref.</span>}
+                      </a>
+                    ) : (
+                      <span className="text-[11px] text-gray-400">sin precio — pulsa "Actualizar precios"</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SicraConsole() {
   const [seccion, setSeccion] = useState<Seccion>("hoy");
 
@@ -204,6 +339,7 @@ export default function SicraConsole() {
       {seccion === "pedidos" && <Pedidos />}
       {seccion === "boletas" && <Boletas />}
       {seccion === "inventario" && <Inventario />}
+      {seccion === "comprar" && <QueComprar />}
       {seccion === "recetas" && <Recetas />}
       {seccion === "consumo" && <ConsumoSection />}
       {seccion === "rentabilidad" && <Rentabilidad />}
