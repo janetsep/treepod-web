@@ -554,6 +554,10 @@ Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es just
         metaDescription: 'Los lupinos que pintan de morado el Valle Las Trancas a fines de noviembre y comienzos de diciembre: hermosos, pero una especie introducida (no nativa). Qué son, cuándo florecen y por qué lo contamos.',
         image: '/images/blog/lupinos-domo.jpg',
         imageAspect: '3 / 2',
+        video: '/videos/lupinos.mp4',
+        videoPoster: '/images/blog/lupinos-poster.jpg',
+        videoCaption: 'Los lupinos en flor en el bosque de TreePod, a fines de la primavera.',
+        videoLandscape: true,
         content: `
 A fines de la primavera pasa algo con el valle: entre los árboles y a orillas de los caminos brotan unas **torres de flores moradas y rosadas** que llegan casi a la altura de una persona. Son los **lupinos**, y por unas pocas semanas —más o menos entre **fines de noviembre y la primera quincena de diciembre**— pintan el bosque de color. Son de las flores más fotografiadas de Las Trancas, y aquí crecen justo alrededor de los domos y el invernadero.
 
@@ -754,7 +758,7 @@ export default async function BlogPost({ params }: Props) {
             {/* VIDEO VERTICAL (reel) — solo si el artículo lo trae. Material real propio. */}
             {article.video && (
                 <section className="pt-10">
-                    <div className="mx-auto max-w-[420px] px-5">
+                    <div className={`mx-auto ${article.videoLandscape ? 'max-w-[860px] px-5 md:px-10' : 'max-w-[420px] px-5'}`}>
                         <figure>
                             <video
                                 className="w-full rounded-[2px] border border-[#1E1B16]/15 bg-[#1E1B16]"
