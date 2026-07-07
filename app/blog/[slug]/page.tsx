@@ -381,45 +381,55 @@ Cueva por la mañana, almuerzo en el valle y termas por la tarde: un día comple
         publishDate: '2026-07-06'
     },
     'carpintero-negro-bosque-las-trancas': {
-        title: 'El Carpintero Negro del Bosque de Las Trancas',
-        excerpt: 'Filmamos al ave insignia del bosque nativo en nuestros árboles. Qué es, por qué su presencia importa y cómo reconocerlo.',
-        metaDescription: 'El carpintero negro (Campephilus magellanicus) en el bosque nativo de Valle Las Trancas: qué es, por qué su presencia indica un bosque sano, y cómo reconocer al macho de cresta roja. Video real.',
+        title: 'Una Pareja de Carpintero Negro en el Bosque de TreePod',
+        excerpt: 'Filmamos algo poco común: una pareja de carpintero negro y, entre ellos, al macho alimentando a la hembra. Qué es esta ave, por qué una pareja importa tanto y cómo reconocerla.',
+        metaDescription: 'Pareja de carpintero negro (Campephilus magellanicus) en el bosque nativo de Valle Las Trancas: el macho alimenta a la hembra, una escena de cortejo rara de filmar. Qué es el ave, por qué indica un bosque sano y cómo reconocer al macho y a la hembra. Video real.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         video: '/videos/carpintero-negro.mp4',
         videoPoster: '/images/blog/carpintero-poster.jpg',
-        videoCaption: 'Carpintero negro (macho) en el bosque de TreePod, Valle Las Trancas',
+        videoCaption: 'Pareja de carpintero negro: el macho (cabeza roja) y la hembra (penacho negro). Bosque de TreePod, Valle Las Trancas',
         content: `
-Una mañana, entre los robles y coigües de nuestro bosque, apareció él: un **carpintero negro** golpeando el tronco con la cabeza roja encendida. Alcanzamos a grabarlo. No es un ave cualquiera: es una de las señales más claras de que el bosque que rodea a TreePod está vivo y sano.
+Una mañana, entre los robles y coigües de nuestro bosque, aparecieron dos: una **pareja de carpintero negro**. Alcanzamos a grabarlos, y en el video quedó una escena poco común de ver y más difícil aún de filmar: el **macho dándole de comer a la hembra**. No es un ave cualquiera, y no es una imagen cualquiera.
 
 ## Quién es
 
 El **carpintero negro** (*Campephilus magellanicus*) es el **carpintero más grande de Sudamérica**: mide alrededor de 40 centímetros. Vive solo en los bosques templados del sur de Chile y Argentina, y es una especie protegida.
 
-Reconocerlo es fácil:
+Macho y hembra se distinguen a simple vista:
 
-- El **macho** tiene toda la cabeza de un **rojo intenso**, con un cuerpo negro brillante.
+- El **macho** tiene toda la cabeza de un **rojo intenso**, con el cuerpo negro brillante.
 - La **hembra** es negra, con un **penacho curvado** hacia adelante y un poco de rojo solo en la base del pico.
 
-El que ves en el video es un macho, por su cabeza roja.
+En el video están los dos: el de la cabeza roja es el macho; la del penacho negro que se inclina hacia él es la hembra.
 
-## Por qué su presencia importa
+## Lo raro: el macho alimentando a la hembra
 
-El carpintero negro no vive en cualquier parte: necesita **bosque nativo maduro**, con árboles grandes y troncos viejos donde encontrar las larvas de las que se alimenta y donde hacer sus nidos. Por eso los especialistas lo consideran un **indicador de bosque sano**: donde hay carpintero negro, hay un ecosistema que funciona.
+Lo que se ve en el video —el macho pasándole alimento a la hembra pico a pico— es **alimentación de cortejo**. Es parte del vínculo de pareja de estas aves y de la época de reproducción. No es fácil de presenciar y menos de grabar, porque son aves esquivas que se mueven alto entre los árboles.
 
-Que aparezca entre nuestros árboles no es casualidad. Es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —robles, coigües, ñirres— y de cuidarlo.
+Que ocurra aquí dice dos cosas: que hay una **pareja establecida** y que el bosque les da lo que necesitan para quedarse.
 
-## Cómo reconocerlo cuando estés aquí
+## Por qué una pareja importa tanto
+
+El carpintero negro no vive en cualquier parte: necesita **bosque nativo maduro**, con árboles grandes y troncos viejos donde encontrar las larvas de las que se alimenta y donde excavar sus nidos. Por eso los especialistas lo consideran un **indicador de bosque sano**: donde hay carpintero negro, hay un ecosistema que funciona.
+
+Y una **pareja** es una señal todavía más fuerte que un individuo solo: significa que el bosque no es solo un lugar de paso, sino un sitio donde estas aves pueden vivir y criar. Que estén entre nuestros árboles es la consecuencia de estar insertos en el bosque nativo del Valle Las Trancas —robles, coigües, ñirres— y de cuidarlo.
+
+## El bosque que los rodea: los digüeñes
+
+En los mismos troncos donde trabajan los carpinteros crece otro habitante del bosque nativo: el **digüeñe** (también dihueñe o "pan de indio"), un hongo comestible de color anaranjado que aparece en los robles y coigües, sobre todo en primavera. Es parte de la cocina tradicional del sur y una señal más de un bosque de Nothofagus vivo. Si caminas por aquí en la temporada, es fácil verlos en las ramas.
+
+## Cómo reconocer al carpintero cuando estés aquí
 
 - **El sonido primero:** su golpeteo fuerte y pausado en los troncos se escucha antes de verlo.
 - **Mira hacia arriba:** suele trabajar en los troncos altos y las ramas gruesas.
-- **La mancha roja:** contra el verde del bosque, la cabeza del macho es inconfundible.
+- **La mancha roja:** contra el verde del bosque, la cabeza del macho es inconfundible; la hembra, más discreta, lleva el penacho negro curvado.
 - **Paciencia y silencio:** si lo escuchas, acércate despacio y sin ruido.
 
-No podemos prometerte que lo verás —es un ave silvestre y libre, va y viene—, pero está por aquí. Y parte de la gracia de dormir en el bosque es justamente eso: nunca sabes qué vas a encontrar al abrir la cortina.
+No podemos prometerte que los verás —son aves silvestres y libres, van y vienen—, pero están por aquí. Y parte de la gracia de dormir en el bosque es justamente eso: nunca sabes qué vas a encontrar al abrir la cortina.
 
 ## Un bosque que vale la pena cuidar
 
-Ver un carpintero negro es un recordatorio de por qué hacemos las cosas como las hacemos: menos intervención, más bosque. Si te interesa la naturaleza del valle, te va a gustar nuestra [guía de senderos y cascadas](/blog/senderos-cascadas-valle-las-trancas).
+Ver una pareja de carpintero negro es un recordatorio de por qué hacemos las cosas como las hacemos: menos intervención, más bosque. Si te interesa la naturaleza del valle, te va a gustar nuestra [guía de senderos y cascadas](/blog/senderos-cascadas-valle-las-trancas).
 
 [Reserva tu domo en el bosque →](/disponibilidad)
 
@@ -432,7 +442,7 @@ Ver un carpintero negro es un recordatorio de por qué hacemos las cosas como la
 - Referencia: [Aves de Chile](https://www.avesdechile.cl), Ministerio del Medio Ambiente.
 `,
         category: 'Naturaleza',
-        readTime: '3 min',
+        readTime: '4 min',
         publishDate: '2026-07-06'
     }
     // Agregar más artículos según necesidad

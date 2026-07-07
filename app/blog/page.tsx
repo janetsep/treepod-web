@@ -23,8 +23,8 @@ function formatFechaPublicacion(dateString: string) {
 const blogPosts = [
     {
         slug: 'carpintero-negro-bosque-las-trancas',
-        title: 'El Carpintero Negro del Bosque de Las Trancas',
-        excerpt: 'Filmamos al ave insignia del bosque nativo en nuestros árboles: el carpintero negro de cresta roja. Qué es, por qué su presencia indica un bosque sano y cómo reconocerlo. Con video real.',
+        title: 'Una Pareja de Carpintero Negro en el Bosque de TreePod',
+        excerpt: 'Filmamos algo poco común: una pareja de carpintero negro y, entre ellos, al macho alimentando a la hembra. Qué es esta ave, por qué una pareja importa tanto y cómo reconocerla. Con video real.',
         image: '/images/blog/carpintero-poster.jpg',
         category: 'Naturaleza',
         readTime: '3 min',
