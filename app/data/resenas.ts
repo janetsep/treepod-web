@@ -115,3 +115,22 @@ export const RESENAS: Resena[] = [
         texto: "Lindo lugar, los domos muy bien mantenidos, buena calefacción.",
     },
 ];
+
+// Distinciones verificadas (solo con respaldo público comprobable)
+export const DISTINCIONES = [
+    {
+        titulo: "Sello Impacta Sustentable 2025",
+        detalle: "Sercotec + FEN U. de Chile — categoría Travesía",
+        url: "https://www.instagram.com/reel/DYmt_uVASu6/",
+    },
+    {
+        titulo: "Favorito entre huéspedes y Superhost",
+        detalle: "Airbnb",
+        url: "https://www.airbnb.cl/rooms/37213792",
+    },
+    {
+        titulo: "Registro Nacional de Sernatur",
+        detalle: "Servicio turístico registrado N° 36805",
+        url: "https://serviciosturisticos.sernatur.cl/",
+    },
+];

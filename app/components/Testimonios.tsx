@@ -1,6 +1,6 @@
 import SectionFolio from "./SectionFolio";
 import TriBullet from "./deco/TriBullet";
-import { RESENAS, RESUMEN, type Resena } from "../data/resenas";
+import { RESENAS, RESUMEN, DISTINCIONES, type Resena } from "../data/resenas";
 
 // Artículo 02 — el dato real como titular: "4,9" gigante en Fraunces con la marca
 // de kilómetro al costado. Reseñas PROPIAS (reemplaza Elfsight): citas reales de
@@ -98,6 +98,23 @@ export default function Testimonios() {
                     <span className="text-sm text-[#5B5348] text-right">
                       <strong className="text-[#1E1B16]">{p.rating}</strong>
                     </span>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[#008CBF] mt-10 mb-3">Distinciones</p>
+              <ul className="space-y-3 max-w-xs">
+                {DISTINCIONES.map((d) => (
+                  <li key={d.titulo} className="border-b border-[#1E1B16]/10 pb-3">
+                    <a
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
+                    >
+                      {d.titulo}
+                    </a>
+                    <p className="text-xs text-[#5B5348] mt-1">{d.detalle}</p>
                   </li>
                 ))}
               </ul>
