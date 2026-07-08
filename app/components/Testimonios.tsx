@@ -20,14 +20,32 @@ function TarjetaResena({ r }: { r: Resena }) {
     <figure className="break-inside-avoid mb-5 rounded-[2px] border border-[#1E1B16]/10 bg-white p-6 md:p-7">
       <div className="flex items-center justify-between mb-3">
         <Estrellas n={r.rating} />
-        <span className="text-[11px] uppercase tracking-[0.18em] text-[#5B5348]">{r.plataforma}</span>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          className="text-[11px] uppercase tracking-[0.18em] text-[#5B5348] underline decoration-[#00ADEF]/50 underline-offset-4 hover:text-[#008CBF] hover:decoration-[#00ADEF]"
+          title={`Ver esta reseña en ${r.plataforma}`}
+        >
+          {r.plataforma}
+        </a>
       </div>
       <blockquote className="text-[#1E1B16] text-[15px] leading-relaxed">“{r.texto}”</blockquote>
-      <figcaption className="mt-4 flex items-center gap-2">
-        <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-        <span className="text-sm text-[#5B5348]">
-          <strong className="text-[#1E1B16] font-semibold">{r.autor}</strong> · {r.fecha}
+      <figcaption className="mt-4 flex items-center justify-between gap-2">
+        <span className="flex items-center gap-2">
+          <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+          <span className="text-sm text-[#5B5348]">
+            <strong className="text-[#1E1B16] font-semibold">{r.autor}</strong> · {r.fecha}
+          </span>
         </span>
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          className="text-xs text-[#008CBF] hover:underline whitespace-nowrap"
+        >
+          Verificar →
+        </a>
       </figcaption>
     </figure>
   );

@@ -10,6 +10,7 @@ export interface Resena {
     fecha: string; // como se muestra, p. ej. "enero 2026"
     rating: number; // 1 a 5
     texto: string;
+    url: string; // link directo a la reseña original en la plataforma
     destacada?: boolean;
 }
 
@@ -43,6 +44,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "TripAdvisor",
         autor: "Lidia y Andrés",
+        url: "https://www.tripadvisor.cl/ShowUserReviews-g11848562-d16665666-r1044794415",
         fecha: "enero 2026",
         rating: 5,
         destacada: true,
@@ -51,6 +53,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Lorenzo García",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2toUk1FZDVkMjFTVTNrMVZtOXVWR2RqVWpsWE5IYxAB!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CAIQACodChtycF9oOkhRMEd5d21SU3k1Vm9uVGdjUjlXNHc%7C%7C?hl=es",
         fecha: "noviembre 2025",
         rating: 5,
         destacada: true,
@@ -59,6 +62,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Daniel Sarmiento",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21rek0wdGhPRWhqWlZsVlNXUktTM0EwZG5kTVpuYxAB!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CAIQACodChtycF9oOmkzM0thOEhjZVlVSWRKS3A0dndMZnc%7C%7C?hl=es",
         fecha: "julio 2025",
         rating: 5,
         texto: "Excelente estadía. El servicio es increíble, los domos cómodos y el paraje está rodeado de un precioso bosque. El servicio por parte de don Jaime fue excelente. Volvería sin duda.",
@@ -66,6 +70,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Paulina Moya",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChZDSUhNMG9nS0VJQ0FnSURPNjZQZkFREAE!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CIHM0ogKEICAgIDO66PfAQ%7C%7C?hl=es",
         fecha: "julio 2022",
         rating: 5,
         destacada: true,
@@ -74,6 +79,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Víctor Pasmiño",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUMxeGRhUW93RRAB!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CIHM0ogKEICAgIC1xdaQowE%7C%7C?hl=es",
         fecha: "enero 2024",
         rating: 5,
         texto: "Una experiencia inolvidable, lo recomiendo al 100%. Tiene todas las comodidades de un hotel en un ambiente mágico. El lugar estaba en óptimas condiciones, muy limpio, ambiente tranquilo y don Jaime fue muy amable, nos recomendó panoramas y senderos, atento en todo momento.",
@@ -81,6 +87,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Damien Dauge",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR0dHNidjFBRRAB!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CIHM0ogKEICAgIDttsbv1AE%7C%7C?hl=es",
         fecha: "febrero 2024",
         rating: 5,
         texto: "Séjour incroyable. Dès notre arrivée nous nous sommes sentis comme chez nous avec des hôtes d'une gentillesse rare. Les petits déjeuners sont très bons, les pizzas sont excellentes. L'emplacement est parfait pour faire les dizaines de balades aux alentours.",
@@ -88,6 +95,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "TripAdvisor",
         autor: "Matías",
+        url: "https://www.tripadvisor.cl/ShowUserReviews-g11848562-d16665666-r797767433",
         fecha: "julio 2021",
         rating: 5,
         texto: "Llegamos y el domo estaba calentito, muy equipado, todo muy limpio. El encargado nos dio tips sobre qué hacer durante el día y mantuvo el contacto por WhatsApp en todo momento. El desayuno exquisito y contundente, perfecto para ir con energía a la nieve. Calidad/precio garantizado.",
@@ -95,6 +103,7 @@ export const RESENAS: Resena[] = [
     {
         plataforma: "Google",
         autor: "Eleonora",
+        url: "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xkQlNtUnRka0phVm1Jek5XdDFVVmxVT1ZaMlVuYxAB!2m1!1s0x0:0x9c0adea24d6d2b38!3m1!1s2@1:CAIQACodChtycF9oOldBSmRtdkJaVmIzNWt1UVlUOVZ2Unc%7C%7C?hl=es",
         fecha: "julio 2025",
         rating: 5,
         texto: "Lindo lugar, los domos muy bien mantenidos, buena calefacción.",
