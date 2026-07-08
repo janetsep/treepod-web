@@ -1,6 +1,6 @@
 import SectionFolio from "./SectionFolio";
 import TriBullet from "./deco/TriBullet";
-import { RESENAS, RESUMEN, DISTINCIONES, type Resena } from "../data/resenas";
+import { RESENAS, RESUMEN, DISTINCIONES, DISTINCION_PRINCIPAL, type Resena } from "../data/resenas";
 
 // Artículo 02 — el dato real como titular: "4,9" gigante en Fraunces con la marca
 // de kilómetro al costado. Reseñas PROPIAS (reemplaza Elfsight): citas reales de
@@ -103,6 +103,28 @@ export default function Testimonios() {
               </ul>
 
               <p className="text-[11px] uppercase tracking-[0.22em] text-[#008CBF] mt-10 mb-3">Distinciones</p>
+
+              {/* Distinción principal: tarjeta destacada, no un ítem más de la lista */}
+              <a
+                href={DISTINCION_PRINCIPAL.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="block max-w-xs mb-5 rounded-[2px] border-2 border-[#00ADEF] bg-white p-5 hover:bg-[#E8F6FC] transition-colors"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={DISTINCION_PRINCIPAL.logo}
+                  alt="Sernatur"
+                  className="h-9 w-auto object-contain mb-3"
+                  loading="lazy"
+                />
+                <p className="font-display font-medium text-xl leading-snug text-[#1E1B16]">
+                  {DISTINCION_PRINCIPAL.titulo}
+                </p>
+                <p className="text-sm font-semibold text-[#008CBF] mt-1">{DISTINCION_PRINCIPAL.subtitulo}</p>
+                <p className="text-xs text-[#5B5348] mt-2">{DISTINCION_PRINCIPAL.detalle}</p>
+                <p className="text-xs text-[#008CBF] mt-3">Ver anuncio oficial →</p>
+              </a>
               <ul className="space-y-3 max-w-xs">
                 {DISTINCIONES.map((d) => (
                   <li key={d.titulo} className="border-b border-[#1E1B16]/10 pb-3">

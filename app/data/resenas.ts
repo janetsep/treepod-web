@@ -117,13 +117,16 @@ export const RESENAS: Resena[] = [
 ];
 
 // Distinciones verificadas (solo con respaldo público comprobable)
+// Distinción principal: se muestra destacada, separada de la lista
+export const DISTINCION_PRINCIPAL = {
+    titulo: "Más Valor Turístico 2024",
+    subtitulo: "Ganador regional, Región de Ñuble",
+    detalle: "Concurso nacional de Sernatur que premia la innovación turística",
+    logo: "/images/distinciones/sernatur.svg",
+    url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
+};
+
 export const DISTINCIONES = [
-    {
-        titulo: "Más Valor Turístico 2024 — Ganador regional Ñuble",
-        detalle: "Concurso nacional de Sernatur a la innovación turística",
-        logo: "/images/distinciones/sernatur.svg",
-        url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
-    },
     {
         titulo: "Ponle Energía a tu Pyme",
         detalle: "Ministerio de Energía — eficiencia energética (2024)",
