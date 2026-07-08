@@ -1,3 +1,4 @@
+import { ResenasGrid } from "../components/Testimonios";
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Script from 'next/script';
@@ -340,18 +341,8 @@ export default function GlampingValleLasTrancasPage() {
                         </div>
                     </div>
 
-                    <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center rounded-[2px] border border-[#1E1B16]/10">
-                        <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <span className="caption-editorial opacity-60">Cargando reseñas…</span>
-                        </div>
-                    </div>
+                    <ResenasGrid />
 
-                    <Script
-                        src="https://elfsightcdn.com/platform.js"
-                        strategy="afterInteractive"
-                        defer
-                    />
                 </div>
             </section>
 

@@ -1,11 +1,49 @@
 import SectionFolio from "./SectionFolio";
 import TriBullet from "./deco/TriBullet";
+import { RESENAS, RESUMEN, type Resena } from "../data/resenas";
 
 // Artículo 02 — el dato real como titular: "4,9" gigante en Fraunces con la marca
-// de kilómetro al costado. Reseñas DINÁMICAS con Elfsight (se actualizan solas
-// desde Google): el widget NO se toca. platform.js se carga una sola vez de forma
-// global (layout.tsx, lazyOnload) y data-elfsight-app-lazy difiere el widget hasta
-// que entra en viewport.
+// de kilómetro al costado. Reseñas PROPIAS (reemplaza Elfsight): citas reales de
+// huéspedes desde app/data/resenas.ts. Texto renderizado en el HTML → indexable
+// por Google, cero JS externo, costo cero.
+
+function Estrellas({ n }: { n: number }) {
+  return (
+    <span className="text-[#00ADEF] tracking-[0.15em] text-sm" aria-label={`${n} de 5 estrellas`}>
+      {"★".repeat(n)}
+    </span>
+  );
+}
+
+function TarjetaResena({ r }: { r: Resena }) {
+  return (
+    <figure className="break-inside-avoid mb-5 rounded-[2px] border border-[#1E1B16]/10 bg-white p-6 md:p-7">
+      <div className="flex items-center justify-between mb-3">
+        <Estrellas n={r.rating} />
+        <span className="text-[11px] uppercase tracking-[0.18em] text-[#5B5348]">{r.plataforma}</span>
+      </div>
+      <blockquote className="text-[#1E1B16] text-[15px] leading-relaxed">“{r.texto}”</blockquote>
+      <figcaption className="mt-4 flex items-center gap-2">
+        <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+        <span className="text-sm text-[#5B5348]">
+          <strong className="text-[#1E1B16] font-semibold">{r.autor}</strong> · {r.fecha}
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
+// Solo la grilla de tarjetas destacadas (para landings que ya tienen su propio encabezado)
+export function ResenasGrid() {
+  return (
+    <div className="grid gap-5 md:grid-cols-3 text-left">
+      {RESENAS.filter((r) => r.destacada).map((r, i) => (
+        <TarjetaResena key={i} r={r} />
+      ))}
+    </div>
+  );
+}
+
 export default function Testimonios() {
   return (
     <section className="bg-[#F7F3EC] py-14 md:py-20" id="testimonios">
@@ -19,16 +57,36 @@ export default function Testimonios() {
               <div className="flex items-start gap-3" aria-hidden="true">
                 <TriBullet className="w-4 h-3.5 text-[#00ADEF] shrink-0 mt-5" />
                 <span className="font-display font-medium text-[clamp(5rem,10vw,9rem)] leading-none tabular-nums text-[#1E1B16]">
-                  4,9
+                  {RESUMEN.rating}
                 </span>
               </div>
-              <p className="caption-editorial mt-3">209 reseñas en todas las plataformas</p>
+              <p className="caption-editorial mt-3">{RESUMEN.totalTexto}</p>
+
+              <ul className="mt-8 space-y-2 max-w-xs">
+                {RESUMEN.plataformas.map((p) => (
+                  <li key={p.nombre} className="flex items-baseline justify-between gap-3 border-b border-[#1E1B16]/10 pb-2">
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
+                    >
+                      {p.nombre}
+                    </a>
+                    <span className="text-sm text-[#5B5348] text-right">
+                      <strong className="text-[#1E1B16]">{p.rating}</strong>
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
           <div className="col-span-12 lg:col-span-8">
-            <div className="w-full relative min-h-[320px] md:min-h-[500px]">
-              <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab" data-elfsight-app-lazy></div>
+            <div className="columns-1 md:columns-2 gap-5">
+              {RESENAS.map((r, i) => (
+                <TarjetaResena key={i} r={r} />
+              ))}
             </div>
           </div>
         </div>

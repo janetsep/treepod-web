@@ -1,5 +1,5 @@
+import { ResenasGrid } from "./Testimonios";
 import Image from "next/image";
-import Script from "next/script";
 import type { AnalyticsEventName } from "../lib/analytics";
 import TrackedLink from "./TrackedLink";
 import TrackView from "./TrackView";
@@ -242,13 +242,7 @@ export default function SeasonalLanding({
                                 </div>
                             </div>
 
-                            <div className="w-full relative min-h-[250px] md:min-h-[400px] flex items-center justify-center rounded-[2px] border border-[#1E1B16]/10 bg-white">
-                                <div className="elfsight-app-58776635-7259-470b-9077-f838d052ebab w-full"></div>
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span className="caption-editorial opacity-60">Cargando reseñas…</span>
-                                </div>
-                            </div>
-                            <Script src="https://elfsightcdn.com/platform.js" strategy="afterInteractive" defer />
+                            <ResenasGrid />
 
                             <div className="mt-14">
                                 <TrackedLink

@@ -109,9 +109,6 @@ export default function RootLayout({
           />
         </noscript>
 
-        {/* Scripts Globales de Terceros */}
-        <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
-
         {/* UTM Capture — captura parámetros de campaña al llegar al sitio */}
         <Suspense fallback={null}>
           <UTMCapture />
