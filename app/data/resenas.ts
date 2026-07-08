@@ -119,18 +119,33 @@ export const RESENAS: Resena[] = [
 // Distinciones verificadas (solo con respaldo público comprobable)
 export const DISTINCIONES = [
     {
+        titulo: "Más Valor Turístico 2024 — Ganador regional Ñuble",
+        detalle: "Concurso nacional de Sernatur a la innovación turística",
+        logo: "/images/distinciones/sernatur.svg",
+        url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
+    },
+    {
+        titulo: "Ponle Energía a tu Pyme",
+        detalle: "Ministerio de Energía — eficiencia energética (2024)",
+        logo: "/images/distinciones/energia.png",
+        url: "https://energia.gob.cl/noticias/nuble/seremi-de-energia-nuble-visito-emprendimientos-beneficiados-por-ponle-energia-tu-pyme-en-pinto",
+    },
+    {
         titulo: "Sello Impacta Sustentable 2025",
         detalle: "Sercotec + FEN U. de Chile — categoría Travesía",
+        logo: "/images/distinciones/sercotec.svg",
         url: "https://www.instagram.com/reel/DYmt_uVASu6/",
     },
     {
         titulo: "Favorito entre huéspedes y Superhost",
         detalle: "Airbnb",
+        logo: null,
         url: "https://www.airbnb.cl/rooms/37213792",
     },
     {
         titulo: "Registro Nacional de Sernatur",
         detalle: "Servicio turístico registrado N° 36805",
+        logo: null,
         url: "https://serviciosturisticos.sernatur.cl/",
     },
 ];

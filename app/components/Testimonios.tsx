@@ -106,15 +106,29 @@ export default function Testimonios() {
               <ul className="space-y-3 max-w-xs">
                 {DISTINCIONES.map((d) => (
                   <li key={d.titulo} className="border-b border-[#1E1B16]/10 pb-3">
-                    <a
-                      href={d.url}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
-                    >
-                      {d.titulo}
-                    </a>
-                    <p className="text-xs text-[#5B5348] mt-1">{d.detalle}</p>
+                    <div className="flex items-start gap-3">
+                      {d.logo && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={d.logo}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-8 w-auto max-w-[72px] object-contain shrink-0 mt-0.5"
+                          loading="lazy"
+                        />
+                      )}
+                      <div>
+                        <a
+                          href={d.url}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
+                        >
+                          {d.titulo}
+                        </a>
+                        <p className="text-xs text-[#5B5348] mt-1">{d.detalle}</p>
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>
