@@ -83,14 +83,18 @@ export default function Testimonios() {
               <ul className="mt-8 space-y-2 max-w-xs">
                 {RESUMEN.plataformas.map((p) => (
                   <li key={p.nombre} className="flex items-baseline justify-between gap-3 border-b border-[#1E1B16]/10 pb-2">
-                    <a
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
-                    >
-                      {p.nombre}
-                    </a>
+                    {p.url ? (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-[#1E1B16] underline decoration-[#00ADEF]/50 underline-offset-4 hover:decoration-[#00ADEF]"
+                      >
+                        {p.nombre}
+                      </a>
+                    ) : (
+                      <span className="text-sm font-semibold text-[#1E1B16]">{p.nombre}</span>
+                    )}
                     <span className="text-sm text-[#5B5348] text-right">
                       <strong className="text-[#1E1B16]">{p.rating}</strong>
                     </span>

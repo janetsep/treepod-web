@@ -32,6 +32,12 @@ export const RESUMEN = {
             url: "https://www.airbnb.cl/rooms/37213792",
         },
         {
+            nombre: "Booking.com",
+            rating: "9,6",
+            detalle: "76 opiniones (ficha pausada temporalmente)",
+            url: null,
+        },
+        {
             nombre: "TripAdvisor",
             rating: "5,0",
             detalle: "N° 2 de alojamientos especiales en Las Trancas",
