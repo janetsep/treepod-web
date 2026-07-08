@@ -122,7 +122,7 @@ export const DISTINCION_PRINCIPAL = {
     titulo: "Más Valor Turístico 2024",
     subtitulo: "Ganador regional, Región de Ñuble",
     detalle: "Concurso nacional de Sernatur que premia la innovación turística",
-    logo: "/images/distinciones/sernatur.svg",
+    logo: "/images/distinciones/sernatur-color.jpg",
     url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
 };
 

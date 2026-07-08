@@ -115,7 +115,7 @@ export default function Testimonios() {
                 <img
                   src={DISTINCION_PRINCIPAL.logo}
                   alt="Sernatur"
-                  className="h-9 w-auto object-contain mb-3"
+                  className="h-14 w-auto object-contain mb-3"
                   loading="lazy"
                 />
                 <p className="font-display font-medium text-xl leading-snug text-[#1E1B16]">
