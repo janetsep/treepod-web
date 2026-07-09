@@ -479,7 +479,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-4">
                         <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-14 w-14 object-contain" />
                         <div>
-                            <h1 className="text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
+                            <h1 className="text-xl md:text-3xl font-display font-black text-gray-900 tracking-tight">TreePod Admin Portal</h1>
                             <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.2em] mt-1">Sincronización total con domostreepod.cl</p>
                         </div>
                     </div>
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
                         {adminRole !== 'viewer' && (
                             <button
                                 onClick={openNewReserva}
-                                className="px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-[1.2rem] text-sm font-black shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1 active:scale-95"
+                                className="px-4 md:px-6 py-2.5 md:py-3 bg-gray-900 hover:bg-black text-white rounded-[1.2rem] text-xs md:text-sm font-black shadow-xl shadow-black/10 flex items-center gap-2 transition-all hover:-translate-y-1 active:scale-95"
                             >
                                 <Plus className="w-4 h-4" />
                                 Nueva Reserva
@@ -504,42 +504,42 @@ export default function AdminDashboard() {
                 <div className="flex gap-2 bg-gray-200/50 p-1.5 rounded-[1.8rem] w-fit overflow-x-auto max-w-full">
                     <button
                         onClick={() => setView('reservas')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'reservas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'reservas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <LayoutDashboard className="w-4 h-4" />
                         Dashboard
                     </button>
                     <button
                         onClick={() => setView('tarifas')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'tarifas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'tarifas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <TrendingUp className="w-4 h-4" />
                         Tarifas y Precios
                     </button>
                     <button
                         onClick={() => setView('servicios')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'servicios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'servicios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Settings className="w-4 h-4" />
                         Servicios / Extras
                     </button>
                     <button
                         onClick={() => setView('clientes')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'clientes' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'clientes' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <UserCircle className="w-4 h-4" />
                         CRM / Clientes
                     </button>
                     <button
                         onClick={() => { setView('historial'); setCurrentPage(1); }}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Clock className="w-4 h-4" />
                         Historial
                     </button>
                     <button
                         onClick={() => setView('papelera')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <Trash2 className="w-4 h-4" />
                         Papelera
@@ -547,7 +547,7 @@ export default function AdminDashboard() {
                     {['admin', 'superadmin'].includes(adminRole || '') && (
                         <button
                             onClick={() => setView('usuarios')}
-                            className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'usuarios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'usuarios' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                         >
                             <Users className="w-4 h-4" />
                             Accesos
@@ -555,28 +555,28 @@ export default function AdminDashboard() {
                     )}
                     <button
                         onClick={() => setView('sicra')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'sicra' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'sicra' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <ShoppingCart className="w-4 h-4" />
                         ALMA
                     </button>
                     <button
                         onClick={() => setView('proyectos')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'proyectos' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'proyectos' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <FolderOpen className="w-4 h-4" />
                         Proyectos
                     </button>
                     <button
                         onClick={() => setView('cartolas')}
-                        className={`flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all ${view === 'cartolas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'cartolas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
                         <CreditCard className="w-4 h-4" />
                         Cartolas
                     </button>
                     <Link
                         href="/admin/dashboard"
-                        className="flex items-center gap-2 px-8 py-3.5 rounded-[1.3rem] text-xs font-black uppercase tracking-widest transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"
+                        className="flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"
                     >
                         <BarChart3 className="w-4 h-4" />
                         Estadísticas
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
                             {expandedCalendar && (
-                                <div className="p-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="p-4 md:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
                                     {loading ? (
                                         <div className="h-40 flex items-center justify-center text-gray-700 animate-pulse font-bold italic">Cargando disponibilidad...</div>
                                     ) : (
@@ -817,7 +817,7 @@ export default function AdminDashboard() {
                                     <table className="w-full text-left">
                                         <thead className="bg-gray-50/50 text-gray-700 uppercase text-[10px] font-black tracking-[0.2em]">
                                             <tr>
-                                                <th className="px-8 py-5 w-[50px]">
+                                                <th className="px-3 md:px-8 py-3 md:py-5 w-[50px]">
                                                     <input
                                                         type="checkbox"
                                                         className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
@@ -896,7 +896,7 @@ export default function AdminDashboard() {
 
                                                 return (
                                                     <tr key={reserva.id} className={`hover:bg-gray-50/50 transition-colors group ${selectedIds.includes(reserva.id) ? 'bg-primary/[0.03]' : ''}`}>
-                                                        <td className="px-8 py-5">
+                                                        <td className="px-3 md:px-8 py-3 md:py-5">
                                                             <input
                                                                 type="checkbox"
                                                                 className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
