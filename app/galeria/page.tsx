@@ -25,9 +25,9 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", aspect: "landscape" },
     { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", aspect: "portrait" },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo a ras de bosque bajo el cielo estrellado", aspect: "portrait", objectPosition: "center 30%" },
+    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo entre los robles al anochecer, con las primeras estrellas", aspect: "portrait", objectPosition: "center 30%" },
     { src: "/images/Galeria/domoinvierno.jpeg", alt: "Domo a ras de suelo con su terraza, nevado en invierno", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8984.JPG", alt: "Acceso natural al refugio", aspect: "landscape" },
+    { src: "/images/Galeria/IMG_8984.JPG", alt: "Cielo estrellado sobre las copas del bosque", aspect: "landscape" },
 
     // --- EXPERIENCIA & WELLNESS ---
     { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", aspect: "landscape" },
@@ -37,25 +37,25 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Domo a ras de suelo y piscina, en pleno invierno", aspect: "landscape" },
 
     // --- INTERIORES REALES ---
-    { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Dormitorio principal con vistas panorámicas", aspect: "landscape" },
-    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Interior acogedor del domo", aspect: "portrait" },
-    { src: "/images/interiors/interior-domo-acogedor-66-2.jpg", alt: "Detalles del interior del domo", aspect: "landscape" },
-    { src: "/images/interiors/interior-domo-acogedor-76-2.jpg", alt: "Equipamiento del domo TreePod", aspect: "portrait" },
-    { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Rincón de lectura y descanso", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Cama principal bajo la cúpula del domo, con el bosque alrededor", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Kitchenette del domo: cafetera Nespresso y amenidades TreePod", aspect: "portrait" },
+    { src: "/images/interiors/interior-domo-acogedor-66-2.jpg", alt: "Copas de vino y pan en la kitchenette del domo", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-76-2.jpg", alt: "Ventana del domo hacia el bosque, con esquís a un costado", aspect: "portrait" },
+    { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Cama del domo con mesa de comedor y terraza al fondo", aspect: "landscape" },
 
     // --- ATMOSFERA & NOCHE ---
     { src: "/images/Galeria/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
     { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
-    { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo iluminado bajo el cielo estrellado", aspect: "square" },
+    { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo entre los árboles al caer la noche", aspect: "square" },
     { src: "/images/Galeria/domo3noche1.jpeg", alt: "Cielo nocturno sobre los Nevados de Chillán", aspect: "landscape" },
-    { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Tu llegada al refugio en el bosque", aspect: "portrait" },
+    { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Río de montaña en el valle, Región de Ñuble", aspect: "portrait" },
 
     // --- NATURALEZA ---
-    { src: "/images/Galeria/Las Trancas Bosque Nativo.jpeg", alt: "Inmersión total en el bosque nativo", aspect: "landscape" },
-    { src: "/images/Galeria/Las Trancas Bosque Nativo 2.jpeg", alt: "Detalle de la flora silvestre", aspect: "portrait" },
+    { src: "/images/Galeria/Las Trancas Bosque Nativo.jpeg", alt: "Bosque nativo con troncos caídos, Valle Las Trancas", aspect: "landscape" },
+    { src: "/images/Galeria/Las Trancas Bosque Nativo 2.jpeg", alt: "Estero entre troncos caídos en el bosque nativo", aspect: "portrait" },
     { src: "/images/real/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", aspect: "landscape" },
     { src: "/images/real/NOdomoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/Galeria/noche-domo-iluminado-2-2.jpg", alt: "Serenidad nocturna en TreePod", aspect: "portrait" },
+    { src: "/images/Galeria/noche-domo-iluminado-2-2.jpg", alt: "Cielo estrellado y Vía Láctea sobre el bosque", aspect: "portrait" },
 ];
 
 export default function GaleriaPage() {

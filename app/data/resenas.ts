@@ -122,7 +122,7 @@ export const DISTINCION_PRINCIPAL = {
     titulo: "Más Valor Turístico 2024",
     subtitulo: "Ganador regional, Región de Ñuble",
     detalle: "Concurso nacional de Sernatur que premia la innovación turística",
-    logo: "/images/distinciones/sernatur-color.jpg",
+    logo: "/images/distinciones/mas-valor-turistico.png",
     url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
 };
 
@@ -138,19 +138,19 @@ export const DISTINCIONES = [
     {
         titulo: "Ponle Energía a tu Pyme",
         detalle: "Ministerio de Energía — eficiencia energética (2024)",
-        logo: "/images/distinciones/energia.png",
+        logo: "/images/distinciones/ponle-energia.png",
         url: "https://energia.gob.cl/noticias/nuble/seremi-de-energia-nuble-visito-emprendimientos-beneficiados-por-ponle-energia-tu-pyme-en-pinto",
     },
     {
         titulo: "Sello Impacta Sustentable 2025",
         detalle: "Sercotec + FEN U. de Chile — categoría Travesía",
-        logo: "/images/distinciones/sercotec.svg",
+        logo: "/images/distinciones/sello-impacta.png",
         url: "https://www.instagram.com/reel/DYmt_uVASu6/",
     },
     {
         titulo: "Registro Nacional de Sernatur",
         detalle: "Servicio turístico registrado N° 36805",
-        logo: null,
+        logo: "/images/distinciones/sernatur-color.jpg",
         url: "https://serviciosturisticos.sernatur.cl/",
     },
 ];
