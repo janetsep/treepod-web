@@ -126,6 +126,14 @@ export const DISTINCION_PRINCIPAL = {
     url: "https://www.sernatur.cl/empresas-de-nuble-recibieron-reconocimientos-mas-valor-turistico-codigo-esnna-y-sellos-r-de-registro-sernatur/",
 };
 
+// Superhost Airbnb: tarjeta propia con la medalla oficial animada
+export const DISTINCION_SUPERHOST = {
+    titulo: "Somos Superanfitriones",
+    detalle: "Airbnb — Superhost y Favorito entre huéspedes",
+    medalla: "/images/distinciones/superhost.jpg",
+    url: "https://www.airbnb.cl/e/superhost",
+};
+
 export const DISTINCIONES = [
     {
         titulo: "Ponle Energía a tu Pyme",
@@ -138,12 +146,6 @@ export const DISTINCIONES = [
         detalle: "Sercotec + FEN U. de Chile — categoría Travesía",
         logo: "/images/distinciones/sercotec.svg",
         url: "https://www.instagram.com/reel/DYmt_uVASu6/",
-    },
-    {
-        titulo: "Favorito entre huéspedes y Superhost",
-        detalle: "Airbnb",
-        logo: null,
-        url: "https://www.airbnb.cl/rooms/37213792",
     },
     {
         titulo: "Registro Nacional de Sernatur",

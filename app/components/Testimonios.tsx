@@ -1,6 +1,6 @@
 import SectionFolio from "./SectionFolio";
 import TriBullet from "./deco/TriBullet";
-import { RESENAS, RESUMEN, DISTINCIONES, DISTINCION_PRINCIPAL, type Resena } from "../data/resenas";
+import { RESENAS, RESUMEN, DISTINCIONES, DISTINCION_PRINCIPAL, DISTINCION_SUPERHOST, type Resena } from "../data/resenas";
 
 // Artículo 02 — el dato real como titular: "4,9" gigante en Fraunces con la marca
 // de kilómetro al costado. Reseñas PROPIAS (reemplaza Elfsight): citas reales de
@@ -124,6 +124,31 @@ export default function Testimonios() {
                 <p className="text-sm font-semibold text-[#008CBF] mt-1">{DISTINCION_PRINCIPAL.subtitulo}</p>
                 <p className="text-xs text-[#5B5348] mt-2">{DISTINCION_PRINCIPAL.detalle}</p>
                 <p className="text-xs text-[#008CBF] mt-3">Ver anuncio oficial →</p>
+              </a>
+
+              {/* Superhost Airbnb: medalla oficial con flotado y destello (ver globals.css) */}
+              <a
+                href={DISTINCION_SUPERHOST.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="flex items-center gap-4 max-w-xs mb-5 rounded-[2px] border border-[#1E1B16]/10 bg-white p-5 hover:bg-[#FFF5F6] transition-colors"
+              >
+                <span className="medalla-superhost block w-16 shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={DISTINCION_SUPERHOST.medalla}
+                    alt="Medalla Superhost de Airbnb"
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                </span>
+                <span>
+                  <span className="font-display font-medium text-lg leading-snug text-[#1E1B16] block">
+                    {DISTINCION_SUPERHOST.titulo}
+                  </span>
+                  <span className="text-xs text-[#5B5348] mt-1 block">{DISTINCION_SUPERHOST.detalle}</span>
+                  <span className="text-xs text-[#008CBF] mt-2 block">Qué significa ser Superhost →</span>
+                </span>
               </a>
               <ul className="space-y-3 max-w-xs">
                 {DISTINCIONES.map((d) => (
