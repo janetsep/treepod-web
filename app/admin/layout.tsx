@@ -99,6 +99,12 @@ export default function AdminLayout({
 
     return (
         <div className="min-h-screen bg-white">
+            {/* PWA: permite instalar el panel como app en el teléfono (React hoistea estos tags al <head>) */}
+            <link rel="manifest" href="/manifest-admin.json" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+            <meta name="apple-mobile-web-app-title" content="TreePod" />
+            <meta name="theme-color" content="#00ADEF" />
             {authorized && pathname !== "/admin/login" && (
                 <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
