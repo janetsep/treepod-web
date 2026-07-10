@@ -560,15 +560,16 @@ Hay dos formas de conocer la nieve en Chile: mirarla desde la ventana de un hote
 
 ## Por qué el invierno es la mejor temporada para el glamping
 
-En verano el glamping es bosque, piscina y estrellas. En invierno se transforma: el bosque amanece blanco, el domo se convierte en un refugio tibio y el plan del día es la nieve de **Nevados de Chillán**, a unos 12 minutos en auto.
+En verano el glamping es bosque, piscina y estrellas. En invierno se transforma: el domo se convierte en un refugio tibio y, cuando la nieve llega al valle, el bosque amanece blanco y el plan del día es **Nevados de Chillán**, a unos 12 minutos en auto.
+
+Un consejo honesto antes de reservar por la nieve: la fecha y cantidad de nieve varía cada año. Antes de tu viaje revisa el parte de nieve del centro de ski o escríbenos y te contamos cómo está el valle esa semana, sin adornos.
 
 La gracia del domo en invierno es simple: su forma geodésica distribuye el calor de manera uniforme, así que no existen las esquinas heladas de una cabaña tradicional.
 
-## Qué se siente despertar en un domo nevado
+## Qué se siente el invierno dentro del domo
 
-- La estufa a pellet es **automática y funciona las 24 horas**: te acuestas y te levantas con el domo temperado, sin cargar leña ni humo.
-- Todas las camas tienen **calientacamas**. Es el detalle que más mencionan las reseñas de invierno: "llegamos y el domo estaba calentito... hasta con las camas tibias".
-- Las panorámicas del domo dan directo al bosque: desayunar mirando los robles nevados es el momento de la estadía.
+- La estufa a pellet es **automática y funciona las 24 horas**: mantiene el domo completo temperado, de la cama al baño, sin cargar leña ni humo. Es lo que más mencionan las reseñas de invierno: "llegamos y el domo estaba calentito".
+- Las panorámicas del domo dan directo al bosque: tomar el café de la mañana mirando los robles es el momento de la estadía.
 
 ## Ski, termas y el plan de cada día
 
@@ -591,7 +592,7 @@ Si prefieres no manejar: tren o bus Santiago–Chillán y desde ahí bus rural o
 
 ## Qué incluye el domo en invierno
 
-Cama king con calientacamas (y dos camas de 1 plaza en el segundo nivel), estufa a pellet automática, baño privado, cocina equipada con cafetera Nespresso, WiFi Starlink — sí, internet de verdad en la montaña — y estacionamiento en la parcela. Check-in desde las 16:00, check-out hasta las 12:00.
+Cama king (y dos camas de 1 plaza en el segundo nivel), estufa a pellet automática que mantiene el domo completo temperado, baño privado, cocina equipada con cafetera Nespresso, WiFi Starlink — sí, internet de verdad en la montaña — y estacionamiento en la parcela. El desayuno con productos del valle es un adicional opcional que se coordina con horario al reservar. Check-in desde las 16:00, check-out hasta las 12:00.
 
 ## Qué llevar
 
@@ -621,20 +622,20 @@ El plan romántico de siempre — hotel, cena, spa — está bien. Pero no sorpr
 
 En un hotel, la naturaleza es el paisaje del pasillo. En el domo, es la habitación: las panorámicas dan al bosque, el techo deja pasar la luz del amanecer y en la noche —sin televisores de por medio— el plan es mirar las estrellas y escuchar el bosque.
 
-Cada domo es un refugio privado para dos (con capacidad hasta 4): cama king con calientacamas, estufa a pellet automática, baño privado y cocina equipada con cafetera Nespresso. Nadie al otro lado de la pared.
+Cada domo es un refugio privado para dos (con capacidad hasta 4): cama king, estufa a pellet automática que mantiene el domo completo temperado, baño privado y cocina equipada con cafetera Nespresso. Nadie al otro lado de la pared.
 
 ## Los momentos que hacen la escapada
 
 - **El amanecer desde la cama**: la luz entra por la cúpula y el bosque aparece de a poco. Nadie se levanta temprano en vacaciones, hasta que amanece así.
 - **La tinaja de ciprés para dos** (servicio de temporada, con reserva): agua caliente mineralizada de vertientes del río Chillán, al aire libre, rodeados de robles. No opera en invierno; en primavera y verano es el momento estrella de la estadía.
-- **Desayuno en el domo**: productos locales del valle, pan amasado y la calma de no tener horario de buffet.
-- **El asado en la terraza**: pídenos la parrilla y cierra el día con un asado entre los árboles.
+- **Desayuno en el domo** (adicional opcional): productos locales del valle servidos en tu domo, coordinando el horario al reservar.
+- **El asado en el domo**: pídenos la parrilla, te la llevamos al domo y cierras el día con un asado entre los árboles.
 
 ## Qué hacer los dos días
 
 Depende de la temporada, y esa es la gracia del valle:
 
-- **Invierno**: nieve en Nevados de Chillán (a 12 minutos) y piscinas termales.
+- **Invierno**: Nevados de Chillán a 12 minutos (con nieve según la temporada — pregúntanos cómo está el valle) y piscinas termales.
 - **Primavera y verano**: senderos y cascadas — el [Velo de la Novia, Shangri-La y la Laguna del Huemul](/blog/senderos-cascadas-valle-las-trancas) —, piscina de montaña en el glamping y atardeceres largos.
 - **Otoño**: el bosque completo se pone dorado y hay menos gente. La escapada más tranquila del año.
 
