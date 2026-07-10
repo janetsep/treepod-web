@@ -51,6 +51,12 @@ const nextConfig: NextConfig = {
         destination: 'https://domostreepod.cl/:path*',
         permanent: true,
       },
+      // Link corto para pedir reseñas por WhatsApp/tarjeta (campaña UGC)
+      {
+        source: '/resena',
+        destination: 'https://search.google.com/local/writereview?placeid=ChIJLeBk77CVbpYROCttTaLeCpw',
+        permanent: false,
+      },
       // Existing redirects
       {
         source: '/domos-2',
