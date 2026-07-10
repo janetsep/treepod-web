@@ -588,10 +588,21 @@ function DisponibilidadContent() {
                     <div key={s.id} className="flex flex-col gap-2">
                       <div
                         onClick={() => { if (entrada && salida) toggleServicio(s.id); }}
-                        className={`group relative flex gap-4 p-4 bg-white rounded-[2px] border border-[#1E1B16]/12 transition-colors cursor-pointer ${
-                          seleccionado ? 'border-l-4 border-l-[#00ADEF]' : 'hover:border-[#1E1B16]/30'
+                        className={`group relative flex gap-4 p-4 rounded-[2px] border transition-colors cursor-pointer ${
+                          seleccionado ? 'border-[#00ADEF] border-2 bg-[#F0FAFE]' : 'bg-white border-[#1E1B16]/12 hover:border-[#1E1B16]/30'
                         } ${!(entrada && salida) ? 'cursor-not-allowed grayscale' : ''}`}
+                        role="checkbox"
+                        aria-checked={seleccionado}
                       >
+                        {/* Casillero explícito: vacío = no agregado, visto cyan = agregado */}
+                        <span
+                          aria-hidden="true"
+                          className={`absolute top-3 right-3 w-6 h-6 rounded-[2px] border-2 flex items-center justify-center text-white text-[14px] font-bold leading-none transition-colors ${
+                            seleccionado ? 'bg-[#00ADEF] border-[#00ADEF]' : 'bg-white border-[#1E1B16]/30'
+                          }`}
+                        >
+                          {seleccionado ? '✓' : ''}
+                        </span>
                         <div className="relative w-24 h-24 rounded-[2px] overflow-hidden shrink-0">
                           <Image
                             src={displayImage}
@@ -601,7 +612,7 @@ function DisponibilidadContent() {
                             className={`object-cover transition-transform duration-700 group-hover:scale-[1.03] ${isDinner ? 'object-[center_75%]' : ''}`}
                           />
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 pr-7">
                           <div className="flex items-baseline gap-3">
                             <h3 className="font-display font-medium text-lg leading-tight text-[#1E1B16]">
                               {displayNombre}
@@ -629,10 +640,13 @@ function DisponibilidadContent() {
                                 × {currentNoches} {currentNoches === 1 ? 'noche' : 'noches'}
                               </span>
                             )}
-                            {seleccionado && (
-                              <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#1E1B16]">
-                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                                Agregado
+                            {seleccionado ? (
+                              <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-white bg-[#00ADEF] px-2 py-0.5 rounded-[2px]">
+                                ✓ Agregado — tocar para quitar
+                              </span>
+                            ) : (
+                              <span className="ml-auto inline-flex items-center text-[10px] font-semibold uppercase tracking-[0.1em] text-[#008CBF]">
+                                + Agregar
                               </span>
                             )}
                           </div>
