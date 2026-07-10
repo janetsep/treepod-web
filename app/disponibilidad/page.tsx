@@ -909,17 +909,17 @@ function DisponibilidadContent() {
                     {/* Total y abono de hoy con la MISMA jerarquía y tamaño, lado a lado,
                         para que no se confunda el 50% con el total a pagar. */}
                     <div className="pt-5 border-t border-[#1E1B16]/15 space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                        <div className="min-w-0">
                           <div className="dato text-[#5B5348]">Total de la estadía</div>
-                          <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
+                          <div className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
                             ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                           </div>
                           <p className="caption-editorial mt-2">Valor total · IVA incluido</p>
                         </div>
                         <div>
                           <div className="dato text-[#008CBF]">Hoy pagas (50%)</div>
-                          <div key={abonoHoy} className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#008CBF] mt-2 animate-fade-in">
+                          <div key={abonoHoy} className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#008CBF] mt-2 animate-fade-in">
                             ${abonoHoy.toLocaleString("es-CL")}
                           </div>
                           <p className="caption-editorial mt-2">Para confirmar tu reserva</p>

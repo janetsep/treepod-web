@@ -403,17 +403,17 @@ function ReservaContent({ id }: { id: string }) {
                         {/* Total y abono de hoy con la MISMA jerarquía: se muestran lado a
                             lado y del mismo tamaño para que no se confunda el 50% con el total. */}
                         <div className="pt-5 border-t border-[#1E1B16]/15 mt-2 space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <div className="min-w-0">
                               <span className="dato text-[#5B5348]">Total de la estadía</span>
-                              <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
+                              <div className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
                                 ${total.toLocaleString("es-CL")}
                               </div>
                               <p className="caption-editorial mt-2">Valor total a pagar</p>
                             </div>
                             <div>
                               <span className="dato text-[#008CBF]">Hoy pagas (50%)</span>
-                              <div className="font-display font-medium text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tabular-nums text-[#008CBF] mt-2">
+                              <div className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#008CBF] mt-2">
                                 ${Math.round(total * 0.5).toLocaleString("es-CL")}
                               </div>
                               <p className="caption-editorial mt-2">Para confirmar tu reserva</p>
