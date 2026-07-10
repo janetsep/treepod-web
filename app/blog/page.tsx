@@ -22,6 +22,28 @@ function formatFechaPublicacion(dateString: string) {
 // `comingSoon: true` marca artículos sin contenido desarrollado todavía
 const blogPosts = [
     {
+        slug: 'glamping-invierno-chile-las-trancas',
+        title: 'Glamping en Invierno en Chile: Despertar en un Domo con Nieve',
+        excerpt: 'Cómo es pasar el invierno en un domo geodésico en Las Trancas: calefacción automática las 24 horas, camas tibias y la nieve de Nevados de Chillán a 12 minutos. Con guía práctica para llegar seguro.',
+        image: '/images/Galeria/domoinvierno.jpeg',
+        category: 'Guías',
+        readTime: '5 min',
+        publishDate: '2026-07-10',
+        author: 'TreePod Team',
+        tags: ['Invierno', 'Nieve', 'Glamping', 'Nevados de Chillán']
+    },
+    {
+        slug: 'escapada-romantica-glamping-chile',
+        title: 'Escapada Romántica en Chile: un Domo en el Bosque para Dos',
+        excerpt: 'Por qué un domo geodésico en Las Trancas le gana al hotel de siempre: el amanecer desde la cama, tinaja de temporada para dos y cero logística. Ideas para un fin de semana distinto.',
+        image: '/images/Galeria/Domo3noche.jpeg',
+        category: 'Guías',
+        readTime: '4 min',
+        publishDate: '2026-07-10',
+        author: 'TreePod Team',
+        tags: ['Escapada romántica', 'Parejas', 'Glamping', 'Valle Las Trancas']
+    },
+    {
         slug: 'lupinos-verano-las-trancas',
         title: 'Los Lupinos: el Morado del Verano en Las Trancas',
         excerpt: 'A fines de la primavera el valle se llena de torres moradas y rosadas: los lupinos. Hermosos y fotogénicos, pero con una historia honesta que contar (no son nativos). Con foto y video reales.',

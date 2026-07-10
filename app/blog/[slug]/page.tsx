@@ -31,7 +31,9 @@ const availableArticles = [
     'carpintero-negro-bosque-las-trancas',
     'diguenes-hongo-bosque-las-trancas',
     'ananuca-flor-roja-bosque-las-trancas',
-    'lupinos-verano-las-trancas'
+    'lupinos-verano-las-trancas',
+    'glamping-invierno-chile-las-trancas',
+    'escapada-romantica-glamping-chile'
 ];
 
 const articleContent: Record<string, any> = {
@@ -547,6 +549,108 @@ Como todo en el bosque nativo, no las cortes ni las arranques: su gracia es just
         category: 'Naturaleza',
         readTime: '3 min',
         publishDate: '2026-07-07'
+    },
+    'glamping-invierno-chile-las-trancas': {
+        title: 'Glamping en Invierno en Chile: Despertar en un Domo con Nieve',
+        excerpt: 'Cómo es pasar el invierno en un domo geodésico en Las Trancas: calefacción automática, camas tibias y la nieve a 12 minutos.',
+        metaDescription: 'Glamping en invierno en Chile: domos geodésicos calefaccionados en Valle Las Trancas, a 12 minutos de Nevados de Chillán. Qué incluye, cómo llegar con nieve y qué llevar.',
+        image: '/images/Galeria/domoinvierno.jpeg',
+        content: `
+Hay dos formas de conocer la nieve en Chile: mirarla desde la ventana de un hotel, o dormir dentro de ella — en un domo geodésico calefaccionado, en medio de un bosque nativo nevado. Esta guía es para lo segundo.
+
+## Por qué el invierno es la mejor temporada para el glamping
+
+En verano el glamping es bosque, piscina y estrellas. En invierno se transforma: el bosque amanece blanco, el domo se convierte en un refugio tibio y el plan del día es la nieve de **Nevados de Chillán**, a unos 12 minutos en auto.
+
+La gracia del domo en invierno es simple: su forma geodésica distribuye el calor de manera uniforme, así que no existen las esquinas heladas de una cabaña tradicional.
+
+## Qué se siente despertar en un domo nevado
+
+- La estufa a pellet es **automática y funciona las 24 horas**: te acuestas y te levantas con el domo temperado, sin cargar leña ni humo.
+- Todas las camas tienen **calientacamas**. Es el detalle que más mencionan las reseñas de invierno: "llegamos y el domo estaba calentito... hasta con las camas tibias".
+- Las panorámicas del domo dan directo al bosque: desayunar mirando los robles nevados es el momento de la estadía.
+
+## Ski, termas y el plan de cada día
+
+- **Nevados de Chillán**: temporada usualmente de junio a septiembre. Ahí está "Tres Marías", la pista más larga de Sudamérica (13 km). Arriendo de equipos y escuela en el mismo centro.
+- **Termas de Chillán**: piscinas termales de origen volcánico, un panorama perfecto para el día después del ski.
+- **El valle**: restaurantes de montaña y cafeterías a minutos del glamping. Te dejamos recomendaciones al llegar.
+
+Una aclaración honesta: nuestra **tinaja de exterior es un servicio de temporada y no opera en invierno** (vuelve en primavera). Si vienes por la combinación tinaja + nieve, escríbenos antes para confirmar fechas de temporada.
+
+## ¿Es seguro llegar en invierno con auto?
+
+Sí, con preparación:
+
+1. La ruta N-55 desde Chillán está pavimentada hasta el valle.
+2. Con nieve o escarcha es **obligatorio portar cadenas** — Carabineros lo fiscaliza en la subida.
+3. En fines de semana de alta demanda rigen horarios de tránsito hacia el centro de ski: subida en la mañana y bajada en la tarde. Al glamping (KM 72 del valle) se llega sin ese tránsito.
+4. Nuestro acceso interior de ~750 metros desde la ruta se mantiene transitable; si llegas más tarde de lo previsto, avísanos y te esperamos.
+
+Si prefieres no manejar: tren o bus Santiago–Chillán y desde ahí bus rural o transfer al valle. Los detalles están en nuestra [guía para llegar desde Santiago](/blog/como-llegar-valle-las-trancas-desde-santiago).
+
+## Qué incluye el domo en invierno
+
+Cama king con calientacamas (y dos camas de 1 plaza en el segundo nivel), estufa a pellet automática, baño privado, cocina equipada con cafetera Nespresso, WiFi Starlink — sí, internet de verdad en la montaña — y estacionamiento en la parcela. Check-in desde las 16:00, check-out hasta las 12:00.
+
+## Qué llevar
+
+- Ropa en capas y una capa exterior impermeable
+- Botas o zapatos con suela para nieve
+- Lentes de sol (la nieve refleja fuerte)
+- Cadenas para el auto
+- Traje de baño si vas a las termas
+
+---
+
+Reserva directo y paga solo el 50% de abono; el saldo se paga en el check-in. [Ver disponibilidad de invierno](/disponibilidad).
+`,
+        category: 'Guías',
+        readTime: '5 min',
+        publishDate: '2026-07-10'
+    },
+    'escapada-romantica-glamping-chile': {
+        title: 'Escapada Romántica en Chile: un Domo en el Bosque para Dos',
+        excerpt: 'Por qué un domo geodésico en Las Trancas le gana al hotel de siempre: cielo desde la cama, bosque privado y cero logística.',
+        metaDescription: 'Escapada romántica en Chile: glamping para dos en un domo geodésico en Valle Las Trancas. Tinaja de temporada, desayuno en el bosque y cielo estrellado desde la cama.',
+        image: '/images/Galeria/Domo3noche.jpeg',
+        content: `
+El plan romántico de siempre — hotel, cena, spa — está bien. Pero no sorprende a nadie. Si lo que buscas es un fin de semana que se recuerde, cambia la habitación por un domo geodésico en un bosque nativo de la cordillera.
+
+## Por qué un domo y no un hotel
+
+En un hotel, la naturaleza es el paisaje del pasillo. En el domo, es la habitación: las panorámicas dan al bosque, el techo deja pasar la luz del amanecer y en la noche —sin televisores de por medio— el plan es mirar las estrellas y escuchar el bosque.
+
+Cada domo es un refugio privado para dos (con capacidad hasta 4): cama king con calientacamas, estufa a pellet automática, baño privado y cocina equipada con cafetera Nespresso. Nadie al otro lado de la pared.
+
+## Los momentos que hacen la escapada
+
+- **El amanecer desde la cama**: la luz entra por la cúpula y el bosque aparece de a poco. Nadie se levanta temprano en vacaciones, hasta que amanece así.
+- **La tinaja de ciprés para dos** (servicio de temporada, con reserva): agua caliente mineralizada de vertientes del río Chillán, al aire libre, rodeados de robles. No opera en invierno; en primavera y verano es el momento estrella de la estadía.
+- **Desayuno en el domo**: productos locales del valle, pan amasado y la calma de no tener horario de buffet.
+- **El asado en la terraza**: pídenos la parrilla y cierra el día con un asado entre los árboles.
+
+## Qué hacer los dos días
+
+Depende de la temporada, y esa es la gracia del valle:
+
+- **Invierno**: nieve en Nevados de Chillán (a 12 minutos) y piscinas termales.
+- **Primavera y verano**: senderos y cascadas — el [Velo de la Novia, Shangri-La y la Laguna del Huemul](/blog/senderos-cascadas-valle-las-trancas) —, piscina de montaña en el glamping y atardeceres largos.
+- **Otoño**: el bosque completo se pone dorado y hay menos gente. La escapada más tranquila del año.
+
+Y para el hambre: el valle tiene una ruta gastronómica de montaña real, con restaurantes a minutos del glamping. Te recomendamos nuestros favoritos al llegar.
+
+## Cómo funciona la reserva
+
+Se reserva directo en el sitio pagando el 50% de abono; el saldo se paga en el check-in. Check-in desde las 16:00, check-out hasta las 12:00. Estamos a ~1 hora de Chillán y ~5 horas de Santiago por la Ruta 5 Sur ([cómo llegar, paso a paso](/blog/como-llegar-valle-las-trancas-desde-santiago)).
+
+---
+
+Regálense un fin de semana distinto: [ver disponibilidad para dos](/disponibilidad).
+`,
+        category: 'Guías',
+        readTime: '4 min',
+        publishDate: '2026-07-10'
     },
     'lupinos-verano-las-trancas': {
         title: 'Los Lupinos: el Morado del Verano en Las Trancas',
