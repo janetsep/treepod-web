@@ -53,6 +53,11 @@ const nextConfig: NextConfig = {
       },
       // Link corto para pedir reseñas por WhatsApp/tarjeta (campaña UGC)
       {
+        source: '/opinion',
+        destination: 'https://search.google.com/local/writereview?placeid=ChIJLeBk77CVbpYROCttTaLeCpw',
+        permanent: false,
+      },
+      {
         source: '/resena',
         destination: 'https://search.google.com/local/writereview?placeid=ChIJLeBk77CVbpYROCttTaLeCpw',
         permanent: false,
