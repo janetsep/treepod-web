@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sendWhatsAppAlert } from "@/lib/whatsapp-alert";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { vincularClienteAReserva } from "@/lib/crm-cliente";
 
 export async function POST(req: Request) {
   try {
@@ -274,6 +275,15 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+
+    // CRM: vincular o crear el cliente apenas nace la reserva (no bloqueante).
+    await vincularClienteAReserva(data.id, {
+      nombre,
+      apellido,
+      email,
+      telefono,
+      fuente: "web",
+    });
 
     // 4. Insertar servicios si existen
     if (servicios && servicios.length > 0) {

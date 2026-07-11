@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { vincularClienteAReserva } from "@/lib/crm-cliente";
 
 export async function POST(request: Request) {
     try {
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
         const adminEmail = admin.email;
 
         const body = await request.json();
-        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, noches_por_servicio, precios_por_servicio, enviar_confirmacion, acompanantes, tipo_documento, metodo_pago, folio_dte, sincronizar_calendario } = body;
+        const { id, fecha_inicio, fecha_fin, domo_id, nombre, apellido, email, telefono, rut, adultos, total, monto_pagado, estado, fuente, mensaje, comprobante_url, servicios_seleccionados, servicios_cortesia, noches_por_servicio, precios_por_servicio, enviar_confirmacion, acompanantes, tipo_documento, metodo_pago, folio_dte, sincronizar_calendario } = body;
         const folioTrim = (folio_dte ?? "").toString().trim();
         const nochesPorServicio: Record<string, number> = noches_por_servicio || {};
         const preciosPorServicio: Record<string, number> = precios_por_servicio || {};
@@ -287,20 +288,15 @@ export async function POST(request: Request) {
             }).catch(err => console.error('Error enviando notificación:', err));
         }
 
-        // Opcional: Crear/Actualizar Cliente en CRM
-        if (email) {
-            const { data: client } = await supabaseAdmin.from("clientes").upsert({
-                email, 
-                nombre, 
-                apellido, 
-                telefono, 
-                updated_at: new Date().toISOString()
-            }, { onConflict: "email" }).select("id").single();
-
-            if (client?.id) {
-                await supabaseAdmin.from("reservas").update({ cliente_id: client.id }).eq("id", id || result.data.id);
-            }
-        }
+        // CRM: toda reserva guardada queda vinculada a un cliente (con o sin email).
+        await vincularClienteAReserva(id || result.data.id, {
+            nombre,
+            apellido,
+            email,
+            telefono,
+            rut,
+            fuente: fuente || "manual_admin",
+        });
 
         return NextResponse.json({ ok: true, data: result.data });
 

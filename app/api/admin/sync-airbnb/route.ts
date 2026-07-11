@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
+import { vincularClienteAReserva } from "@/lib/crm-cliente";
 
 // ─── Parser iCal mínimo (sin dependencias externas) ───────────────────────────
 
@@ -284,6 +285,14 @@ export async function GET(request: NextRequest) {
               );
             } else {
               (domoResult.creadas as number)++;
+              // CRM: crear/vincular cliente Airbnb (sin email real; fusionable después).
+              if (nuevaReserva?.id) {
+                await vincularClienteAReserva(nuevaReserva.id, {
+                  nombre,
+                  apellido,
+                  fuente: "airbnb",
+                });
+              }
               // 📅 Sincronizar la nueva reserva de Airbnb con Google Calendar (idempotente, no bloqueante)
               if (nuevaReserva?.id) {
                 await NotificationService.syncReservaToCalendar({
