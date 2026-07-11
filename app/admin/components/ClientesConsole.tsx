@@ -213,7 +213,11 @@ export default function ClientesConsole() {
                                                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                                                         <div className="text-xs font-bold text-gray-900">
                                                                             Estadía {fmtFecha(r.fecha_inicio)} → {fmtFecha(r.fecha_fin)}
-                                                                            <span className="text-gray-500 font-medium ml-2">Total ${Number(r.total || 0).toLocaleString("es-CL")} · Pagado ${Number(r.monto_pagado || 0).toLocaleString("es-CL")}</span>
+                                                                            <span className="text-gray-500 font-medium ml-2">
+                                                                                Total ${Number(r.total || 0).toLocaleString("es-CL")} · Pagado ${Number(r.monto_pagado || 0).toLocaleString("es-CL")}
+                                                                                {r.pagado_at && <> el {fmtFecha(r.pagado_at)}</>}
+                                                                                {r.metodo_pago && <> ({r.metodo_pago})</>}
+                                                                            </span>
                                                                         </div>
                                                                         {movs.length > 0 ? (
                                                                             <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Conciliado ${conciliado.toLocaleString("es-CL")}</span>

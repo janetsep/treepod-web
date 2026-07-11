@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabaseAdmin
     .from("clientes")
-    .select("*, reservas(id, fecha_inicio, fecha_fin, total, monto_pagado, estado, created_at)")
+    .select("*, reservas(id, fecha_inicio, fecha_fin, total, monto_pagado, pagado_at, metodo_pago, estado, created_at)")
     .order("nombre");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ clientes: data || [] });
