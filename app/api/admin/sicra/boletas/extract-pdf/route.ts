@@ -24,6 +24,7 @@ export async function POST(request: Request) {
     // Import dinámico del build legacy (compatible con Node). El worker se
     // importa explícitamente: en Vercel el bundler no rastrea el import
     // dinámico interno de pdf.worker.mjs y el "fake worker" falla sin esto.
+    // @ts-expect-error pdf.worker.mjs no expone tipos; solo registra globalThis.pdfjsWorker
     await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
     const pdfjs: any = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const doc = await pdfjs.getDocument({ data: bytes, useSystemFonts: true, isEvalSupported: false }).promise;
