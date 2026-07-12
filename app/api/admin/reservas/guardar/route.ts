@@ -25,14 +25,44 @@ export async function POST(request: Request) {
         const cortesiaSet = new Set<string>(Array.isArray(servicios_cortesia) ? servicios_cortesia : []);
 
         // Validación básica
-        if (!fecha_inicio || !fecha_fin || !domo_id) {
-            return NextResponse.json({ error: "Faltan datos obligatorios (Fechas, Domo)" }, { status: 400 });
+        if (!fecha_inicio || !fecha_fin) {
+            return NextResponse.json({ error: "Faltan datos obligatorios (Fechas)" }, { status: 400 });
+        }
+
+        // Asignación automática de domo cuando el administrador no elige uno.
+        // Prioridad de negocio: Domo 4 → Domo 3 → Domo 1 → Domo 2. Un domo ya
+        // reservado en fechas que se traslapan no se considera disponible.
+        let domoAsignado = domo_id || null;
+        let domoFueAutomatico = false;
+        if (!domoAsignado) {
+            const PRIORIDAD = ["Domo 4", "Domo 3", "Domo 1", "Domo 2"];
+            const { data: domos } = await supabaseAdmin
+                .from("domos").select("id, nombre").eq("activo", true);
+            const { data: ocupadas } = await supabaseAdmin
+                .from("reservas")
+                .select("id, domo_id")
+                .is("deleted_at", null)
+                .not("domo_id", "is", null)
+                .not("estado", "in", "(cancelada,cancelado,expirada)")
+                .lt("fecha_inicio", fecha_fin)
+                .gt("fecha_fin", fecha_inicio);
+            const ocupados = new Set(
+                (ocupadas || []).filter(r => r.id !== id).map(r => r.domo_id)
+            );
+            for (const nombreDomo of PRIORIDAD) {
+                const d = (domos || []).find(x => x.nombre === nombreDomo);
+                if (d && !ocupados.has(d.id)) { domoAsignado = d.id; break; }
+            }
+            if (!domoAsignado) {
+                return NextResponse.json({ error: "No hay domos disponibles para esas fechas. Elige el domo manualmente o cambia las fechas." }, { status: 409 });
+            }
+            domoFueAutomatico = true;
         }
 
         const reservaData = {
             fecha_inicio,
             fecha_fin,
-            domo_id,
+            domo_id: domoAsignado,
             nombre,
             apellido,
             email,
@@ -71,7 +101,7 @@ export async function POST(request: Request) {
                     { campo: "total",         label: "Total",           viejo: () => `$${oldReserva.total}`,                           nuevo: () => `$${total}`,                              diferente: Number(oldReserva.total) !== Number(total) },
                     { campo: "monto_pagado",  label: "Monto pagado",    viejo: () => `$${oldReserva.monto_pagado}`,                    nuevo: () => `$${monto_pagado}`,                       diferente: Number(oldReserva.monto_pagado) !== Number(monto_pagado) },
                     { campo: "estado",        label: "Estado",          viejo: () => oldReserva.estado,                                nuevo: () => estado || 'pendiente',                    diferente: oldReserva.estado !== (estado || 'pendiente') },
-                    { campo: "domo_id",       label: "Domo",            viejo: () => oldReserva.domo_id,                               nuevo: () => domo_id,                                  diferente: oldReserva.domo_id !== domo_id },
+                    { campo: "domo_id",       label: "Domo",            viejo: () => oldReserva.domo_id,                               nuevo: () => domoAsignado,                             diferente: oldReserva.domo_id !== domoAsignado },
                     { campo: "nombre",        label: "Nombre",          viejo: () => `${oldReserva.nombre} ${oldReserva.apellido}`,    nuevo: () => `${nombre} ${apellido}`,                  diferente: oldReserva.nombre !== nombre || oldReserva.apellido !== apellido },
                 ];
 
@@ -230,7 +260,7 @@ export async function POST(request: Request) {
         const { data: domoData } = await supabaseAdmin
             .from("domos")
             .select("nombre")
-            .eq("id", domo_id)
+            .eq("id", domoAsignado)
             .single();
 
         // Obtener nombres de servicios para el correo/ICS/calendario
@@ -298,7 +328,7 @@ export async function POST(request: Request) {
             fuente: fuente || "manual_admin",
         });
 
-        return NextResponse.json({ ok: true, data: result.data });
+        return NextResponse.json({ ok: true, data: result.data, domo_id: domoAsignado, domo_automatico: domoFueAutomatico, domo_nombre: domoData?.nombre || null });
 
     } catch (e: any) {
         return NextResponse.json({ error: e.message || "Error desconocido" }, { status: 500 });

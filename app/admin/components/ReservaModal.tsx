@@ -183,7 +183,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                 setFormData({
                     fecha_inicio: new Date().toLocaleDateString('en-CA'),
                     fecha_fin: "",
-                    domo_id: domos[0]?.id || "",
+                    domo_id: "",
                     nombre: "",
                     apellido: "",
                     email: "",
@@ -520,13 +520,12 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Domo Asignado</label>
                                 <select
-                                    required
                                     disabled={isViewer}
                                     value={formData.domo_id}
                                     onChange={(e) => setFormData({ ...formData, domo_id: e.target.value })}
                                     className={selectClasses}
                                 >
-                                    <option value="" disabled>Seleccione...</option>
+                                    <option value="">Automático (4 → 3 → 1 → 2)</option>
                                     {domos.map(d => (
                                         <option key={d.id} value={d.id}>{d.nombre}</option>
                                     ))}
