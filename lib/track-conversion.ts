@@ -38,7 +38,9 @@ export async function recordConversion(data: ConversionRecord) {
                 transaction_id: data.transaction_id,
                 reserva_id: data.reserva_id,
                 value: data.value,
+                valor_conversion: data.value,
                 currency: data.currency,
+                moneda: data.currency,
                 conversion_type: data.conversion_type,
                 source: data.source || 'unknown',
                 utm_source: data.utm_source,
@@ -49,7 +51,6 @@ export async function recordConversion(data: ConversionRecord) {
                 user_agent: data.user_agent,
                 ip_address: data.ip_address,
                 conversion_timestamp: data.conversion_timestamp || new Date().toISOString(),
-                created_at: new Date().toISOString(),
             })
             .select()
             .single();
