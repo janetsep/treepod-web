@@ -95,10 +95,20 @@ export async function GET(request: Request) {
   const { data: bolHist } = await supabaseAdmin
     .from("sicra_boletas").select("fecha, total").gte("fecha", hace6m);
 
-  const porMes: Record<string, { reservas: number; personas: number; noches: number; ingreso: number; gasto_boletas: number }> = {};
+  // Gasto operacional real desde la cartola bancaria: todos los cargos menos
+  // los que no son gasto de operación (retiros de socios, movimientos con León,
+  // depósitos a plazo/captaciones y traspasos internos).
+  const { data: cargosHist } = await supabaseAdmin
+    .from("sicra_cartola_movimientos")
+    .select("fecha, monto, descripcion")
+    .eq("tipo", "cargo")
+    .gte("fecha", hace6m);
+  const NO_OPERACIONAL = /JANET\s+(MARIEL\s+)?SEPULVEDA|SEPULVEDA\s+CORREA\s+JANET|JAIME\s+(ANTONIO\s+)?ECHEVERRIA|ECHEVERRIA\s+MIGRYK|LEON\s+EXPERIENCE|DEPOSITO\s+A?\s*PLAZO|CAPTACION|GALLEGUILLOS/i;
+
+  const porMes: Record<string, { reservas: number; personas: number; noches: number; ingreso: number; gasto_boletas: number; gasto_banco: number }> = {};
   for (const r of resHist || []) {
     const mes = (r as any).fecha_inicio.substring(0, 7);
-    if (!porMes[mes]) porMes[mes] = { reservas: 0, personas: 0, noches: 0, ingreso: 0, gasto_boletas: 0 };
+    if (!porMes[mes]) porMes[mes] = { reservas: 0, personas: 0, noches: 0, ingreso: 0, gasto_boletas: 0, gasto_banco: 0 };
     const n = Math.round(
       (new Date((r as any).fecha_fin).getTime() - new Date((r as any).fecha_inicio).getTime()) / 86400000
     );
@@ -109,8 +119,14 @@ export async function GET(request: Request) {
   }
   for (const b of bolHist || []) {
     const mes = (b as any).fecha.substring(0, 7);
-    if (!porMes[mes]) porMes[mes] = { reservas: 0, personas: 0, noches: 0, ingreso: 0, gasto_boletas: 0 };
+    if (!porMes[mes]) porMes[mes] = { reservas: 0, personas: 0, noches: 0, ingreso: 0, gasto_boletas: 0, gasto_banco: 0 };
     porMes[mes].gasto_boletas += Number((b as any).total) || 0;
+  }
+  for (const c of cargosHist || []) {
+    if (NO_OPERACIONAL.test((c as any).descripcion || "")) continue;
+    const mes = (c as any).fecha.substring(0, 7);
+    if (!porMes[mes]) porMes[mes] = { reservas: 0, personas: 0, noches: 0, ingreso: 0, gasto_boletas: 0, gasto_banco: 0 };
+    porMes[mes].gasto_banco += Number((c as any).monto) || 0;
   }
   const MESES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
   const tendencia = Object.keys(porMes).sort().map(m => {

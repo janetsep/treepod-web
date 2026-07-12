@@ -3112,7 +3112,7 @@ function Tendencia() {
 
   const tendencia: any[] = data.tendencia;
   const maxIngreso = Math.max(...tendencia.map((m) => m.ingreso), 1);
-  const maxGasto = Math.max(...tendencia.map((m) => m.gasto_boletas), 1);
+  const maxGasto = Math.max(...tendencia.map((m) => Math.max(m.gasto_boletas || 0, m.gasto_banco || 0)), 1);
   const maxVal = Math.max(maxIngreso, maxGasto);
 
   return (
@@ -3133,8 +3133,13 @@ function Tendencia() {
                 />
                 <div
                   className="flex-1 bg-red-600/60 rounded-t"
+                  style={{ height: `${((m.gasto_banco || 0) / maxVal) * 100}%`, minHeight: "2px" }}
+                  title={`Gasto banco: ${fmt(m.gasto_banco || 0)}`}
+                />
+                <div
+                  className="flex-1 bg-amber-500/60 rounded-t"
                   style={{ height: `${(m.gasto_boletas / maxVal) * 100}%`, minHeight: "2px" }}
-                  title={`Gasto: ${fmt(m.gasto_boletas)}`}
+                  title={`Boletas: ${fmt(m.gasto_boletas)}`}
                 />
               </div>
               <span className="text-zinc-900 text-xs truncate w-full text-center">{m.label}</span>
@@ -3143,7 +3148,8 @@ function Tendencia() {
         </div>
         <div className="flex gap-4 mt-2 text-xs text-zinc-700">
           <span className="flex items-center gap-1"><span className="w-3 h-3 bg-emerald-600/70 rounded inline-block" /> Ingresos</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-3 bg-red-600/60 rounded inline-block" /> Boletas</span>
+          <span className="flex items-center gap-1"><span className="w-3 h-3 bg-red-600/60 rounded inline-block" /> Gasto banco (operacional)</span>
+          <span className="flex items-center gap-1"><span className="w-3 h-3 bg-amber-500/60 rounded inline-block" /> Boletas</span>
         </div>
       </div>
 
@@ -3156,20 +3162,22 @@ function Tendencia() {
             <th className="text-right p-2 text-zinc-700">Reservas</th>
             <th className="text-right p-2 text-zinc-700">Noches</th>
             <th className="text-right p-2 text-zinc-700">Ingresos</th>
-            <th className="text-right p-2 text-zinc-700">Gasto boletas</th>
-            <th className="text-right p-2 text-zinc-700">Margen</th>
+            <th className="text-right p-2 text-zinc-700">Gasto banco</th>
+            <th className="text-right p-2 text-zinc-700">Boletas</th>
+            <th className="text-right p-2 text-zinc-700">Margen real</th>
           </tr>
         </thead>
         <tbody>
           {tendencia.map((m) => {
-            const margen = m.ingreso - m.gasto_boletas;
+            const margen = m.ingreso - (m.gasto_banco || 0);
             return (
               <tr key={m.mes} className="border-t border-gray-200">
                 <td className="p-2 text-gray-900 font-medium">{m.label}</td>
                 <td className="p-2 text-right text-zinc-700">{m.reservas}</td>
                 <td className="p-2 text-right text-zinc-700">{m.noches}</td>
                 <td className="p-2 text-right text-emerald-600">{fmt(m.ingreso)}</td>
-                <td className="p-2 text-right text-red-600">{fmt(m.gasto_boletas)}</td>
+                <td className="p-2 text-right text-red-600">{fmt(m.gasto_banco || 0)}</td>
+                <td className="p-2 text-right text-amber-600">{fmt(m.gasto_boletas)}</td>
                 <td className={`p-2 text-right font-medium ${margen >= 0 ? "text-emerald-600" : "text-red-600"}`}>
                   {fmt(margen)}
                 </td>
