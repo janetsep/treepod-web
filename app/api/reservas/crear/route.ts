@@ -166,7 +166,13 @@ export async function POST(req: Request) {
       ...(ocupadosBloq || []).map((b: any) => b.domo_id)
     ]);
 
-    const domoDisponible = domosComp.find((d: any) => !idOcupados.has(d.id));
+    // Prioridad de negocio para asignación: Domo 4 → 3 → 1 → 2 (misma regla que el admin)
+    const PRIORIDAD_DOMOS = ["Domo 4", "Domo 3", "Domo 1", "Domo 2"];
+    const ordenados = [...domosComp].sort((a: any, b: any) => {
+      const ia = PRIORIDAD_DOMOS.indexOf(a.nombre), ib = PRIORIDAD_DOMOS.indexOf(b.nombre);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+    const domoDisponible = ordenados.find((d: any) => !idOcupados.has(d.id));
 
     if (!domoDisponible) {
       return NextResponse.json({ error: "Lo sentimos, ya no quedan domos disponibles para estas fechas" }, { status: 409 });
