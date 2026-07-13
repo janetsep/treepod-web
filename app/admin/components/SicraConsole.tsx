@@ -3204,6 +3204,7 @@ function Tendencia() {
                 <th className="text-right p-2 text-zinc-700">Inversión</th>
                 <th className="text-right p-2 text-zinc-700">Retiros socios</th>
                 <th className="text-right p-2 text-zinc-700">Impuestos</th>
+                <th className="text-right p-2 text-zinc-700">DAP neto</th>
                 <th className="text-right p-2 text-zinc-700">Por clasificar</th>
               </tr>
             </thead>
@@ -3217,6 +3218,7 @@ function Tendencia() {
                   <td className="p-2 text-right text-zinc-700">{fmt(s.inversion_capex || 0)}</td>
                   <td className="p-2 text-right text-zinc-700">{fmt(s.retiros_socios || 0)}</td>
                   <td className="p-2 text-right text-zinc-700">{fmt(s.impuestos || 0)}</td>
+                  <td className="p-2 text-right text-zinc-500">{fmt(s.dap_neto || 0)}</td>
                   <td className="p-2 text-right text-amber-600">{s.pendientes_clasificar || 0}</td>
                 </tr>
               ))}
