@@ -134,8 +134,16 @@ export async function GET(request: Request) {
     return { mes: m, label: `${MESES[mm]} ${m.slice(2,4)}`, ...porMes[m] };
   });
 
+  // Conciliación contable semanal (últimas 16 semanas) desde la vista
+  const { data: semanalRaw } = await supabaseAdmin
+    .from("contabilidad_semanal")
+    .select("*")
+    .order("semana", { ascending: false })
+    .limit(16);
+
   return NextResponse.json({
     hoy,
+    semanal: (semanalRaw || []).reverse(),
     llegadas, salidas, en_casa, proximas, todas,
     kpis: {
       reservas_proximas: vigentes.length,

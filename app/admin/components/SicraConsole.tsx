@@ -3187,6 +3187,44 @@ function Tendencia() {
         </tbody>
       </table>
       </div>
+
+      {/* Conciliación contable semanal (desde cartola bancaria clasificada) */}
+      {Array.isArray(data.semanal) && data.semanal.length > 0 && (
+        <div className="overflow-x-auto">
+          <h3 className="text-sm font-medium text-zinc-600 mb-3 flex items-center gap-2">
+            <Receipt size={14} /> Conciliación semanal (cartola clasificada)
+          </h3>
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-white">
+                <th className="text-left p-2 text-zinc-700">Semana del</th>
+                <th className="text-right p-2 text-zinc-700">Ventas</th>
+                <th className="text-right p-2 text-zinc-700">Gasto operación</th>
+                <th className="text-right p-2 text-zinc-700">Resultado</th>
+                <th className="text-right p-2 text-zinc-700">Inversión</th>
+                <th className="text-right p-2 text-zinc-700">Retiros socios</th>
+                <th className="text-right p-2 text-zinc-700">Impuestos</th>
+                <th className="text-right p-2 text-zinc-700">Por clasificar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...data.semanal].reverse().map((s: any) => (
+                <tr key={s.semana} className="border-t border-gray-200">
+                  <td className="p-2 text-gray-900 font-medium">{s.semana?.split("-").reverse().join("-")}</td>
+                  <td className="p-2 text-right text-emerald-600">{fmt(s.ingresos_ventas || 0)}</td>
+                  <td className="p-2 text-right text-red-600">{fmt(s.gastos_operacion || 0)}</td>
+                  <td className={`p-2 text-right font-medium ${(s.resultado_operacional || 0) >= 0 ? "text-emerald-600" : "text-red-600"}`}>{fmt(s.resultado_operacional || 0)}</td>
+                  <td className="p-2 text-right text-zinc-700">{fmt(s.inversion_capex || 0)}</td>
+                  <td className="p-2 text-right text-zinc-700">{fmt(s.retiros_socios || 0)}</td>
+                  <td className="p-2 text-right text-zinc-700">{fmt(s.impuestos || 0)}</td>
+                  <td className="p-2 text-right text-amber-600">{s.pendientes_clasificar || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="text-[10px] text-zinc-500 mt-2">Resultado = ventas cobradas − gastos de operación (excluye inversión, retiros de socios y movimientos León). Gestión interna; la contabilidad oficial es la del contador.</p>
+        </div>
+      )}
     </div>
   );
 }
