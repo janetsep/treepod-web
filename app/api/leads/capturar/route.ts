@@ -13,24 +13,26 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         const email = String(body.email || "").trim().toLowerCase();
+        const esGuia = body.utm_content === "guia-las-trancas";
         const fecha_inicio = body.fecha_inicio || null;
         const fecha_fin = body.fecha_fin || null;
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !fecha_inicio || !fecha_fin) {
+        // El lead magnet (guía) no tiene fechas; el checkout sí las exige.
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || (!esGuia && (!fecha_inicio || !fecha_fin))) {
             return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
         }
 
-        // Dedupe: mismo email + mismas fechas en las últimas 24h no crea otra fila.
+        // Dedupe: mismo email + mismas fechas (o misma guía) en las últimas 24h no crea otra fila.
         const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        const { data: existente } = await supabaseAdmin
+        let dedupeQuery = supabaseAdmin
             .from("leads_checkout")
             .select("id")
             .eq("email", email)
-            .eq("fecha_inicio", fecha_inicio)
-            .eq("fecha_fin", fecha_fin)
-            .gte("created_at", hace24h)
-            .limit(1)
-            .maybeSingle();
+            .gte("created_at", hace24h);
+        dedupeQuery = esGuia
+            ? dedupeQuery.eq("utm_content", "guia-las-trancas")
+            : dedupeQuery.eq("fecha_inicio", fecha_inicio).eq("fecha_fin", fecha_fin);
+        const { data: existente } = await dedupeQuery.limit(1).maybeSingle();
 
         if (existente) {
             return NextResponse.json({ success: true, dedupe: true });
