@@ -58,7 +58,7 @@ function DisponibilidadContent() {
   const [reserving, setReserving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Disponibilidad REAL por domo para el rango elegido (null = aún no verificado)
-  const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null }>({ checking: false, disponible: null });
+  const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null; domosLibres: number | null }>({ checking: false, disponible: null, domosLibres: null });
   const router = useRouter();
   const [initialCalcDone, setInitialCalcDone] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
@@ -173,24 +173,57 @@ function DisponibilidadContent() {
   // Verificar disponibilidad REAL (un domo libre toda la estadía) al cambiar fechas/huéspedes
   useEffect(() => {
     if (!entrada || !salida || salida <= entrada) {
-      setDisponibilidad({ checking: false, disponible: null });
+      setDisponibilidad({ checking: false, disponible: null, domosLibres: null });
       return;
     }
     let cancelado = false;
-    setDisponibilidad({ checking: true, disponible: null });
+    setDisponibilidad({ checking: true, disponible: null, domosLibres: null });
     const timer = setTimeout(async () => {
       try {
         const params = new URLSearchParams({ from: entrada, to: salida, adultos: adultos.toString() });
         const res = await fetch(`/api/public/disponibilidad/rango?${params}`);
         const data = await res.json();
         if (cancelado) return;
-        setDisponibilidad({ checking: false, disponible: res.ok ? !!data.disponible : null });
+        setDisponibilidad({
+          checking: false,
+          disponible: res.ok ? !!data.disponible : null,
+          domosLibres: res.ok && typeof data.domosLibres === "number" ? data.domosLibres : null,
+        });
       } catch (e) {
-        if (!cancelado) setDisponibilidad({ checking: false, disponible: null });
+        if (!cancelado) setDisponibilidad({ checking: false, disponible: null, domosLibres: null });
       }
     }, 400);
     return () => { cancelado = true; clearTimeout(timer); };
   }, [entrada, salida, adultos]);
+
+  // Captura de lead pre-pago: apenas hay un email válido con fechas, se guarda el
+  // contacto en leads_checkout. Si la persona no completa el pago, deja de ser un
+  // desconocido irrecuperable. Un envío por combinación email+fechas.
+  const leadCapturadoRef = useRef<string>("");
+  useEffect(() => {
+    const emailLimpio = email.trim().toLowerCase();
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio);
+    if (!emailValido || !entrada || !salida || salida <= entrada) return;
+    const clave = `${emailLimpio}|${entrada}|${salida}`;
+    if (leadCapturadoRef.current === clave) return;
+    const timer = setTimeout(() => {
+      leadCapturadoRef.current = clave;
+      const utms = getStoredUTMs();
+      fetch("/api/leads/capturar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailLimpio,
+          fecha_inicio: entrada,
+          fecha_fin: salida,
+          total: calcularTotalConServicios() || null,
+          landing_page: typeof window !== "undefined" ? window.location.pathname + window.location.search : null,
+          ...utms,
+        }),
+      }).catch(() => { /* fire-and-forget: nunca interrumpe la reserva */ });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [email, entrada, salida]);
 
   const calcularPrecio = async () => {
     setLoading(true);
@@ -947,6 +980,22 @@ function DisponibilidadContent() {
                         </span>
                       </div>
                     </div>
+
+                    {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
+                        1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
+                    {disponibilidad.disponible === true &&
+                      disponibilidad.domosLibres !== null &&
+                      disponibilidad.domosLibres > 0 &&
+                      disponibilidad.domosLibres <= 2 && (
+                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-[2px] text-sm font-medium animate-fade-in">
+                          <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0" />
+                          <span>
+                            {disponibilidad.domosLibres === 1
+                              ? "Queda solo 1 domo libre para estas fechas."
+                              : `Quedan solo ${disponibilidad.domosLibres} domos libres para estas fechas.`}
+                          </span>
+                        </div>
+                      )}
 
                     {/* Client Data Form */}
                     <div ref={datosRef} className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2">

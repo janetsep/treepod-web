@@ -296,9 +296,24 @@ function ReservaContent({ id }: { id: string }) {
           {/* Aviso cuando el huésped canceló o abortó el pago en Webpay y vuelve al checkout.
               Sin esto, ?error=webpay_abort / ?error=missing_token no mostraban ningún mensaje. */}
           {(errorParam === "webpay_abort" || errorParam === "missing_token") && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-[2px] text-sm font-medium flex items-start gap-3 animate-fade-in">
-              <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0 mt-1.5" />
-              <span>El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras.</span>
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-[2px] text-sm font-medium animate-fade-in space-y-3">
+              <div className="flex items-start gap-3">
+                <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0 mt-1.5" />
+                <span>El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras.</span>
+              </div>
+              {/* Rescate: quien falla pagando (tarjeta extranjera, tope de débito) necesita
+                  un humano AHORA, no rendirse tras el tercer intento. */}
+              <a
+                href={`https://wa.me/56984643307?text=${encodeURIComponent(
+                  `Hola TreePod, tuve un problema pagando mi reserva ${reserva.id.slice(-5)} (${formatDate(reserva.fecha_inicio)} al ${formatDate(reserva.fecha_fin)}). ¿Me pueden ayudar a completarla?`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent("click_whatsapp_rescate_pago")}
+                className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1fb958] text-white font-semibold text-sm px-4 py-2.5 rounded-[2px] transition-colors"
+              >
+                ¿Problemas para pagar? Escríbenos por WhatsApp
+              </a>
             </div>
           )}
 
