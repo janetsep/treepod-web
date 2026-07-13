@@ -14,6 +14,7 @@ import { getStoredUTMs } from "../components/UTMCapture";
  */
 export default function AlertaNievePage() {
   const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [listo, setListo] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +34,7 @@ export default function AlertaNievePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: emailLimpio,
+          telefono: telefono.trim() || null,
           ...getStoredUTMs(),
           utm_content: "alerta-nieve",
           landing_page: "/alerta-nieve",
@@ -97,6 +99,13 @@ export default function AlertaNievePage() {
               placeholder="tu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="border border-[#1E1B16]/20 rounded-[2px] px-4 py-3 bg-white w-full mb-4"
+            />
+            <input
+              type="tel"
+              placeholder="WhatsApp (opcional): +56 9 …"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
               className="border border-[#1E1B16]/20 rounded-[2px] px-4 py-3 bg-white w-full mb-4"
             />
             {error && <p className="text-red-700 text-sm font-medium mb-3">{error}</p>}

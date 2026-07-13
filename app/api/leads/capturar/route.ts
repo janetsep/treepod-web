@@ -39,8 +39,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: true, dedupe: true });
         }
 
+        const telefono = String(body.telefono || "").trim() || null;
+
         const { error } = await supabaseAdmin.from("leads_checkout").insert({
             email,
+            telefono,
             fecha_inicio,
             fecha_fin,
             total: body.total ?? null,
