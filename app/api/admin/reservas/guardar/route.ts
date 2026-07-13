@@ -34,6 +34,13 @@ export async function POST(request: Request) {
         // reservado en fechas que se traslapan no se considera disponible.
         let domoAsignado = domo_id || null;
         let domoFueAutomatico = false;
+        // En EDICIONES sin domo explícito se conserva el domo ya asignado:
+        // una asignación manual previa nunca se pisa con el automático.
+        if (!domoAsignado && id) {
+            const { data: actual } = await supabaseAdmin
+                .from("reservas").select("domo_id").eq("id", id).single();
+            if (actual?.domo_id) domoAsignado = actual.domo_id;
+        }
         if (!domoAsignado) {
             const PRIORIDAD = ["Domo 4", "Domo 3", "Domo 1", "Domo 2"];
             const { data: domos } = await supabaseAdmin
