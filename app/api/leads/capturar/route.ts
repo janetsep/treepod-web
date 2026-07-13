@@ -13,7 +13,8 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         const email = String(body.email || "").trim().toLowerCase();
-        const esGuia = body.utm_content === "guia-las-trancas";
+        // Leads sin fechas: lead magnets (guía, alerta de nieve).
+        const esGuia = ["guia-las-trancas", "alerta-nieve"].includes(body.utm_content);
         const fecha_inicio = body.fecha_inicio || null;
         const fecha_fin = body.fecha_fin || null;
 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
             .eq("email", email)
             .gte("created_at", hace24h);
         dedupeQuery = esGuia
-            ? dedupeQuery.eq("utm_content", "guia-las-trancas")
+            ? dedupeQuery.eq("utm_content", body.utm_content)
             : dedupeQuery.eq("fecha_inicio", fecha_inicio).eq("fecha_fin", fecha_fin);
         const { data: existente } = await dedupeQuery.limit(1).maybeSingle();
 

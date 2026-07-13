@@ -80,7 +80,8 @@ export type AnalyticsEventName =
   | "cta_dia_madre_final_reserva"
   | "view_nosotros"
   | "click_whatsapp_rescate_pago"
-  | "lead_guia_las_trancas";
+  | "lead_guia_las_trancas"
+  | "lead_alerta_nieve";
 
 declare global {
   interface Window {
