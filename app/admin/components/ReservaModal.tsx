@@ -502,7 +502,19 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     required
                                     readOnly={isViewer}
                                     value={formData.fecha_inicio}
-                                    onChange={(e) => setFormData({ ...formData, fecha_inicio: e.target.value })}
+                                    onChange={(e) => {
+                                        const entrada = e.target.value;
+                                        // La salida sigue a la entrada: si quedó vacía o antes de la
+                                        // nueva entrada, se propone el día siguiente (así el calendario
+                                        // de salida abre en el mes correcto, no en el mes actual).
+                                        let salida = formData.fecha_fin;
+                                        if (entrada && (!salida || salida <= entrada)) {
+                                            const d = new Date(entrada + "T12:00:00");
+                                            d.setDate(d.getDate() + 1);
+                                            salida = d.toLocaleDateString("en-CA");
+                                        }
+                                        setFormData({ ...formData, fecha_inicio: entrada, fecha_fin: salida });
+                                    }}
                                     className={inputClasses}
                                 />
                             </div>
@@ -512,6 +524,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     type="date"
                                     required
                                     readOnly={isViewer}
+                                    min={formData.fecha_inicio || undefined}
                                     value={formData.fecha_fin}
                                     onChange={(e) => setFormData({ ...formData, fecha_fin: e.target.value })}
                                     className={inputClasses}
