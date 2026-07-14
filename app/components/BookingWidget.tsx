@@ -48,8 +48,15 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                   min={hoy}
                   value={entrada}
                   onChange={(e) => {
-                    setEntrada(e.target.value);
-                    if (salida && e.target.value && salida <= e.target.value) setSalida("");
+                    const nueva = e.target.value;
+                    setEntrada(nueva);
+                    // La salida sigue a la llegada: si quedó vacía o antes, se propone
+                    // el día siguiente (así su calendario abre en el mes correcto).
+                    if (nueva && (!salida || salida <= nueva)) {
+                      const d = new Date(nueva + "T12:00:00");
+                      d.setDate(d.getDate() + 1);
+                      setSalida(d.toLocaleDateString("en-CA"));
+                    }
                   }}
                   className={`${dateField} ${!entrada ? "text-transparent" : ""}`}
                 />

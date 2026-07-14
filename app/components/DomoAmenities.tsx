@@ -10,6 +10,9 @@ const robotImages = [
   "/images/EquipamientoParaTuEstadia/domo-treepod-camara-6-2.jpg",
   "/images/EquipamientoParaTuEstadia/domo-treepod-camara-5-2.jpg",
 ];
+// Dónde está el robot dentro de cada foto: en la 1ª (trapeadora blanca) queda a la
+// derecha del encuadre, así que el recorte se ancla ahí para que no se corte en móvil.
+const robotImagePositions = ["object-[72%_60%]", "object-[45%_55%]"];
 
 const amenities: {
   title: string;
@@ -123,7 +126,7 @@ export default function DomoAmenities() {
                             alt={item.imageAlts?.[imgIdx] || `${item.title} — foto ${imgIdx + 1}`}
                             fill
                             sizes="(max-width: 768px) 50vw, 13vw"
-                            className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                            className={`object-cover ${robotImagePositions[imgIdx] || "object-center"} transition-transform duration-700 group-hover:scale-[1.03]`}
                           />
                         </div>
                       ))}
