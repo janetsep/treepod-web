@@ -56,9 +56,12 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
 
-    // Show the full month being viewed (1st to last day)
-    const startDate = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0); // last day of month
+    // Vista rodante: 30 días desde el ancla. Por defecto el ancla es HOY,
+    // así la ocupación se ve de hoy hacia adelante sin tener que navegar.
+    const DIAS_VISTA = 30;
+    const startDate = new Date(viewDate);
+    const endDate = new Date(viewDate);
+    endDate.setDate(endDate.getDate() + DIAS_VISTA - 1);
 
     const dates: Date[] = [];
     const currentDate = new Date(startDate);
@@ -69,16 +72,15 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
 
     const todayComparison = today;
 
-    const goPrevMonth = () => setViewDate(new Date(year, month - 1, 1));
-    const goNextMonth = () => setViewDate(new Date(year, month + 1, 1));
+    const goPrevMonth = () => { const d = new Date(viewDate); d.setDate(d.getDate() - DIAS_VISTA); setViewDate(d); };
+    const goNextMonth = () => { const d = new Date(viewDate); d.setDate(d.getDate() + DIAS_VISTA); setViewDate(d); };
     const goToday = () => {
         const d = new Date();
         d.setHours(0, 0, 0, 0);
         setViewDate(d);
     };
 
-    const isViewingCurrentMonth =
-        year === today.getFullYear() && month === today.getMonth();
+    const isViewingCurrentMonth = viewDate.getTime() === today.getTime();
 
 
     const dateToStr = (date: Date) =>
@@ -114,7 +116,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                     </button>
                     <div className="min-w-[180px] text-center">
                         <span className="text-sm font-black text-gray-800 uppercase tracking-wider">
-                            {MONTH_NAMES[month]} {year}
+                            {startDate.getDate()} {MONTH_NAMES[startDate.getMonth()].slice(0,3)} — {endDate.getDate()} {MONTH_NAMES[endDate.getMonth()].slice(0,3)} {endDate.getFullYear()}
                         </span>
                     </div>
                     <button
