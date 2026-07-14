@@ -504,15 +504,9 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     value={formData.fecha_inicio}
                                     onChange={(e) => {
                                         const entrada = e.target.value;
-                                        // La salida sigue a la entrada: si quedó vacía o antes de la
-                                        // nueva entrada, se propone el día siguiente (así el calendario
-                                        // de salida abre en el mes correcto, no en el mes actual).
-                                        let salida = formData.fecha_fin;
-                                        if (entrada && (!salida || salida <= entrada)) {
-                                            const d = new Date(entrada + "T12:00:00");
-                                            d.setDate(d.getDate() + 1);
-                                            salida = d.toLocaleDateString("en-CA");
-                                        }
+                                        // Si la salida quedó antes o igual a la nueva entrada, se limpia.
+                                        // No se marca una noche automáticamente; el min ancla el calendario.
+                                        const salida = (formData.fecha_fin && entrada && formData.fecha_fin <= entrada) ? "" : formData.fecha_fin;
                                         setFormData({ ...formData, fecha_inicio: entrada, fecha_fin: salida });
                                     }}
                                     className={inputClasses}
