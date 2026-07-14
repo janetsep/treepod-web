@@ -61,7 +61,7 @@ const EXPERIENCIAS: Array<{ titulo: string; texto: string }> = [
   {
     titulo: "Una noche en el bosque nativo",
     texto:
-      "La experiencia que nadie te cuenta: el silencio del bosque de noche, el cielo cordillerano estrellado y despertar entre robles. Es lo que nosotros ofrecemos en Domos TreePod (km 72): domos geodésicos calefaccionados en pleno bosque, con tinaja de agua caliente bajo los árboles.",
+      "La experiencia que nadie te cuenta: el silencio del bosque de noche, el cielo cordillerano estrellado y despertar entre robles. Es lo que nosotros ofrecemos en Domos TreePod (km 72): domos geodésicos calefaccionados en pleno bosque nativo, con tinaja de ciprés en temporada (primavera a otoño).",
   },
 ];
 

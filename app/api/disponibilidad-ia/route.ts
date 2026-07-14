@@ -80,7 +80,7 @@ export async function POST(request: Request) {
             disponible: true,
             domos: disponibles.map((d: any) => d.nombre),
             cotizacion: precioData ? precioData[0] : null,
-            politicas: "Entrada 16:00, Salida 12:00. Incluye tinaja exclusiva.",
+            politicas: "Entrada 16:00, Salida 12:00. Tinaja privada solo en temporada (no opera en invierno).",
             whatsapp_cta: "https://wa.me/56989208256"
         });
 
