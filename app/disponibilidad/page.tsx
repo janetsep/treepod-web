@@ -83,7 +83,10 @@ function DisponibilidadContent() {
   useEffect(() => {
     if (resultado && resultsRef.current && !isMundialEvent && !isSemanaSantaEvent) {
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 'start' (no 'center'): en el móvil, centrar dejaba el formulario de datos
+        // arriba y parecía pedir datos antes de mostrar la disponibilidad. Con 'start'
+        // el resultado (¿hay cupo?) queda visible primero.
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
   }, [resultado, isMundialEvent, isSemanaSantaEvent]);
@@ -101,18 +104,21 @@ function DisponibilidadContent() {
     }
   }, [isMundialEvent, isSemanaSantaEvent]);
 
-  // Prevent past dates and ensure logical range
+  // Prevent past dates and ensure logical range.
+  // Todas las fechas se manejan como texto YYYY-MM-DD en horario local: evita el
+  // corrimiento de un día que producía new Date("YYYY-MM-DD") (que parsea en UTC).
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    if (entrada && entrada < today) {
-      setEntrada(today);
+    const hoyLocal = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
+    if (entrada && entrada < hoyLocal) {
+      setEntrada(hoyLocal);
     }
 
-    // Si la salida es igual o anterior a la entrada, la movemos automáticamente al día siguiente
+    // Solo corregir cuando AMBAS fechas existen y la salida quedó antes/igual a la
+    // entrada. No disparar cuando la salida está vacía (selección de rango en curso).
     if (entrada && salida && salida <= entrada) {
-      const nextDay = new Date(entrada);
-      nextDay.setDate(nextDay.getDate() + 1);
-      setSalida(nextDay.toISOString().split('T')[0]);
+      const d = new Date(entrada + 'T12:00:00'); // mediodía local: inmune a UTC
+      d.setDate(d.getDate() + 1);
+      setSalida(d.toLocaleDateString('en-CA'));
     }
   }, [entrada, salida]);
 
