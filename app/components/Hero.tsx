@@ -11,15 +11,26 @@ export default function Hero() {
     <section className="relative min-h-[100dvh] overflow-hidden bg-[#1E1B16] text-white">
       {/* Póster (imagen LCP): pinta al instante y coincide con el primer cuadro del
           video, así no hay salto cuando el video empieza a reproducirse. */}
+      {/* Póster LCP en dos versiones: vertical en móvil, panorámica en escritorio,
+          para que el primer cuadro coincida con el video que sí se reproduce. */}
       <Image
-        src="/images/hero/hero-domo-poster.jpg"
+        src="/images/hero/hero-domo-poster-mobile.jpg"
         alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
         fill
         priority
         fetchPriority="high"
         quality={75}
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-center md:hidden"
+      />
+      <Image
+        src="/images/hero/hero-domo-poster.jpg"
+        alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
+        fill
+        priority
+        quality={75}
+        sizes="100vw"
+        className="object-cover object-center hidden md:block"
       />
 
       {/* Video de fondo: material profesional real. Silenciado y en bucle para
@@ -29,8 +40,23 @@ export default function Hero() {
           Alterna los DOS tipos de domo (elevado y a piso): mostrar solo los
           elevados generaba una expectativa que no todos los huéspedes reciben
           — un huésped reclamó por eso (jul-2026). Ver [[galeria-honesta]]. */}
+      {/* Móvil: versión VERTICAL con cada domo recentrado. El video horizontal, al
+          recortarse a pantalla vertical, dejaba solo cielo/follaje y los domos
+          quedaban fuera de cuadro. En pantallas ≥ md se usa el corte panorámico. */}
       <video
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="absolute inset-0 h-full w-full object-cover object-center md:hidden"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/images/hero/hero-domo-poster-mobile.jpg"
+        aria-hidden="true"
+      >
+        <source src="/videos/hero-treepod-mobile.mp4" type="video/mp4" />
+      </video>
+      <video
+        className="absolute inset-0 h-full w-full object-cover object-center hidden md:block"
         autoPlay
         muted
         loop
