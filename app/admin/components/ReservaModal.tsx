@@ -10,6 +10,16 @@ interface Domo {
     nombre: string;
 }
 
+// Tipo constructivo real de cada domo (confirmado por Janet, 2026-07-14).
+// Los elevados van sobre pilares y tienen escalera; los a piso no tienen
+// escaleras (mejores para familias, mascotas y movilidad reducida).
+const TIPO_DOMO: Record<string, string> = {
+    "Domo 1": "a piso",
+    "Domo 2": "a piso",
+    "Domo 3": "elevado",
+    "Domo 4": "elevado",
+};
+
 interface Servicio {
     id: string;
     nombre: string;
@@ -527,14 +537,15 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Domo Asignado</label>
                                 <select
+                                    required
                                     disabled={isViewer}
                                     value={formData.domo_id}
                                     onChange={(e) => setFormData({ ...formData, domo_id: e.target.value })}
                                     className={selectClasses}
                                 >
-                                    <option value="">Automático (4 → 3 → 1 → 2)</option>
+                                    <option value="" disabled>Seleccione...</option>
                                     {domos.map(d => (
-                                        <option key={d.id} value={d.id}>{d.nombre}</option>
+                                        <option key={d.id} value={d.id}>{d.nombre}{TIPO_DOMO[d.nombre] ? ` — ${TIPO_DOMO[d.nombre]}` : ""}</option>
                                     ))}
                                 </select>
                             </div>

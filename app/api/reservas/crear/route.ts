@@ -166,7 +166,10 @@ export async function POST(req: Request) {
       ...(ocupadosBloq || []).map((b: any) => b.domo_id)
     ]);
 
-    // Prioridad de negocio para asignación: Domo 4 → 3 → 1 → 2 (misma regla que el admin)
+    // Prioridad de asignación para reservas del sitio: Domo 4 → 3 → 1 → 2.
+    // Los domos 3 y 4 son elevados y el 1 y 2 a piso: mientras el huésped no pueda
+    // elegir el tipo, se entregan primero los elevados (que es lo que muestra el
+    // sitio). En el administrador la elección es siempre manual.
     const PRIORIDAD_DOMOS = ["Domo 4", "Domo 3", "Domo 1", "Domo 2"];
     const ordenados = [...domosComp].sort((a: any, b: any) => {
       const ia = PRIORIDAD_DOMOS.indexOf(a.nombre), ib = PRIORIDAD_DOMOS.indexOf(b.nombre);

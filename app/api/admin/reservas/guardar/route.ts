@@ -29,41 +29,19 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Faltan datos obligatorios (Fechas)" }, { status: 400 });
         }
 
-        // Asignación automática de domo cuando el administrador no elige uno.
-        // Prioridad de negocio: Domo 4 → Domo 3 → Domo 1 → Domo 2. Un domo ya
-        // reservado en fechas que se traslapan no se considera disponible.
+        // El domo lo elige SIEMPRE el administrador (decisión de Janet, 2026-07-14):
+        // los domos 1 y 2 son a piso y el 3 y 4 elevados, así que la asignación no
+        // puede ser automática mientras el huésped no pueda elegir el tipo.
+        // En ediciones sin domo explícito se conserva el que la reserva ya tenía.
         let domoAsignado = domo_id || null;
-        let domoFueAutomatico = false;
-        // En EDICIONES sin domo explícito se conserva el domo ya asignado:
-        // una asignación manual previa nunca se pisa con el automático.
+        const domoFueAutomatico = false;
         if (!domoAsignado && id) {
             const { data: actual } = await supabaseAdmin
                 .from("reservas").select("domo_id").eq("id", id).single();
             if (actual?.domo_id) domoAsignado = actual.domo_id;
         }
         if (!domoAsignado) {
-            const PRIORIDAD = ["Domo 4", "Domo 3", "Domo 1", "Domo 2"];
-            const { data: domos } = await supabaseAdmin
-                .from("domos").select("id, nombre").eq("activo", true);
-            const { data: ocupadas } = await supabaseAdmin
-                .from("reservas")
-                .select("id, domo_id")
-                .is("deleted_at", null)
-                .not("domo_id", "is", null)
-                .not("estado", "in", "(cancelada,cancelado,expirada)")
-                .lt("fecha_inicio", fecha_fin)
-                .gt("fecha_fin", fecha_inicio);
-            const ocupados = new Set(
-                (ocupadas || []).filter(r => r.id !== id).map(r => r.domo_id)
-            );
-            for (const nombreDomo of PRIORIDAD) {
-                const d = (domos || []).find(x => x.nombre === nombreDomo);
-                if (d && !ocupados.has(d.id)) { domoAsignado = d.id; break; }
-            }
-            if (!domoAsignado) {
-                return NextResponse.json({ error: "No hay domos disponibles para esas fechas. Elige el domo manualmente o cambia las fechas." }, { status: 409 });
-            }
-            domoFueAutomatico = true;
+            return NextResponse.json({ error: "Falta elegir el domo." }, { status: 400 });
         }
 
         const reservaData = {

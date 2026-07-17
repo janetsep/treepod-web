@@ -13,7 +13,7 @@ export default function Hero() {
           video, así no hay salto cuando el video empieza a reproducirse. */}
       <Image
         src="/images/hero/hero-domo-poster.jpg"
-        alt="Domo geodésico TreePod sobre el bosque nativo de Valle Las Trancas"
+        alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
         fill
         priority
         fetchPriority="high"
@@ -25,7 +25,10 @@ export default function Hero() {
       {/* Video de fondo: material profesional real. Silenciado y en bucle para
           autoplay en móvil (playsInline). El poster propio = primer cuadro del
           video, para que no haya parpadeo/corte al arrancar. aria-hidden:
-          decorativo. */}
+          decorativo.
+          Alterna los DOS tipos de domo (elevado y a piso): mostrar solo los
+          elevados generaba una expectativa que no todos los huéspedes reciben
+          — un huésped reclamó por eso (jul-2026). Ver [[galeria-honesta]]. */}
       <video
         className="absolute inset-0 h-full w-full object-cover object-center"
         autoPlay
