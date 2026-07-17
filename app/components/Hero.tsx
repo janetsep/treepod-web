@@ -14,7 +14,7 @@ export default function Hero() {
       {/* Póster LCP en dos versiones: vertical en móvil, panorámica en escritorio,
           para que el primer cuadro coincida con el video que sí se reproduce. */}
       <Image
-        src="/images/hero/hero-domo-poster-mobile.jpg"
+        src="/images/hero/hero-domo-poster-mobile-v2.jpg"
         alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
         fill
         priority
@@ -24,7 +24,7 @@ export default function Hero() {
         className="object-cover object-center md:hidden"
       />
       <Image
-        src="/images/hero/hero-domo-poster.jpg"
+        src="/images/hero/hero-domo-poster-v4.jpg"
         alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
         fill
         priority
@@ -50,10 +50,10 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster="/images/hero/hero-domo-poster-mobile.jpg"
+        poster="/images/hero/hero-domo-poster-mobile-v2.jpg"
         aria-hidden="true"
       >
-        <source src="/videos/hero-treepod-mobile.mp4" type="video/mp4" />
+        <source src="/videos/hero-treepod-mobile-v2.mp4" type="video/mp4" />
       </video>
       <video
         className="absolute inset-0 h-full w-full object-cover object-center hidden md:block"
@@ -62,10 +62,10 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster="/images/hero/hero-domo-poster.jpg"
+        poster="/images/hero/hero-domo-poster-v4.jpg"
         aria-hidden="true"
       >
-        <source src="/videos/hero-treepod.mp4" type="video/mp4" />
+        <source src="/videos/hero-treepod-v4.mp4" type="video/mp4" />
       </video>
 
       {/* Scrim cálido (charcoal, nunca negro stock): solo el 55% inferior */}
