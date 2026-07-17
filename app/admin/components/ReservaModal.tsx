@@ -145,6 +145,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
     const [loadingServicios, setLoadingServicios] = useState(false);
     const [savedReservaData, setSavedReservaData] = useState<{ id: string; nombre: string; domoId: string } | null>(null);
     const [tarifaSugerida, setTarifaSugerida] = useState<{ precio_noche: number; total_hospedaje: number; temporada: string; es_fallback: boolean } | null>(null);
+    // Domos ocupados en el rango elegido: se ofrecen solo los libres.
+    const [domosOcupados, setDomosOcupados] = useState<string[]>([]);
     // Salidas (= aseos) ya programadas para la fecha de ENTRADA de esta reserva.
     // Si hay 2 o más, por capacidad de aseo el ingreso debería ser desde las 18:00 (requiere tu aprobación).
     const [aseosDia, setAseosDia] = useState<{ aseos: number; salidas: { cliente: string; domo: string }[] }>({ aseos: 0, salidas: [] });
@@ -256,6 +258,32 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
             }
         }
     }, [isOpen, reservaToEdit, domos]);
+
+    // Consultar qué domos están ocupados en el rango elegido (excluyendo la reserva
+    // que se edita), para ofrecer solo los libres en el selector.
+    useEffect(() => {
+        if (!isOpen) { setDomosOcupados([]); return; }
+        const { fecha_inicio, fecha_fin } = formData;
+        if (!fecha_inicio || !fecha_fin || fecha_fin <= fecha_inicio) { setDomosOcupados([]); return; }
+        let cancelado = false;
+        const timer = setTimeout(async () => {
+            try {
+                const params = new URLSearchParams({ desde: fecha_inicio, hasta: fecha_fin });
+                if (reservaToEdit?.id) params.set("excluir", reservaToEdit.id);
+                const res = await adminFetch(`/api/admin/reservas/domos-ocupados?${params}`);
+                const data = await res.json();
+                if (!cancelado) {
+                    const ocupados: string[] = Array.isArray(data.ocupados) ? data.ocupados : [];
+                    setDomosOcupados(ocupados);
+                    // Si el domo elegido quedó ocupado por el cambio de fechas, se limpia.
+                    setFormData(prev => ocupados.includes(prev.domo_id) ? { ...prev, domo_id: "" } : prev);
+                }
+            } catch {
+                if (!cancelado) setDomosOcupados([]);
+            }
+        }, 350);
+        return () => { cancelado = true; clearTimeout(timer); };
+    }, [isOpen, formData.fecha_inicio, formData.fecha_fin, reservaToEdit?.id]);
 
     // Buscar tarifa sugerida cuando cambia adultos, fecha_inicio o fecha_fin
     useEffect(() => {
@@ -544,10 +572,27 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                     className={selectClasses}
                                 >
                                     <option value="" disabled>Seleccione...</option>
-                                    {domos.map(d => (
-                                        <option key={d.id} value={d.id}>{d.nombre}{TIPO_DOMO[d.nombre] ? ` — ${TIPO_DOMO[d.nombre]}` : ""}</option>
-                                    ))}
+                                    {domos.map(d => {
+                                        const ocupado = domosOcupados.includes(d.id);
+                                        const tipo = TIPO_DOMO[d.nombre] ? ` — ${TIPO_DOMO[d.nombre]}` : "";
+                                        return (
+                                            <option key={d.id} value={d.id} disabled={ocupado}>
+                                                {d.nombre}{tipo}{ocupado ? " (ocupado en estas fechas)" : ""}
+                                            </option>
+                                        );
+                                    })}
                                 </select>
+                                {formData.fecha_inicio && formData.fecha_fin && (
+                                    domos.length - domosOcupados.length > 0 ? (
+                                        <p className="text-[11px] font-semibold text-emerald-700 pl-1">
+                                            {domos.length - domosOcupados.length} de {domos.length} disponibles en estas fechas
+                                        </p>
+                                    ) : (
+                                        <p className="text-[11px] font-semibold text-red-600 pl-1">
+                                            No hay domos disponibles en estas fechas
+                                        </p>
+                                    )
+                                )}
                             </div>
                         </div>
 
