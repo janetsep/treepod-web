@@ -14,7 +14,7 @@ export default function Hero() {
       {/* Póster LCP en dos versiones: vertical en móvil, panorámica en escritorio,
           para que el primer cuadro coincida con el video que sí se reproduce. */}
       <Image
-        src="/images/hero/hero-domo-poster-mobile-v2.jpg"
+        src="/images/hero/hero-domo-poster-mobile-v3.jpg"
         alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
         fill
         priority
@@ -50,10 +50,10 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster="/images/hero/hero-domo-poster-mobile-v2.jpg"
+        poster="/images/hero/hero-domo-poster-mobile-v3.jpg"
         aria-hidden="true"
       >
-        <source src="/videos/hero-treepod-mobile-v2.mp4" type="video/mp4" />
+        <source src="/videos/hero-treepod-mobile-v3.mp4" type="video/mp4" />
       </video>
       <video
         className="absolute inset-0 h-full w-full object-cover object-center hidden md:block"
