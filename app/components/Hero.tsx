@@ -115,6 +115,12 @@ export default function Hero() {
               Domos geodésicos cálidos en pleno bosque, a minutos de las termas y la nieve. Llegas y
               todo está listo.
             </p>
+            {/* Diferenciador n° 1 según las reseñas: la atención de los dueños.
+                100% veraz: Janet y Jaime son los anfitriones y viven el proyecto. */}
+            <p className="text-white/85 text-[14px] mt-3 max-w-xl drop-shadow-[0_2px_12px_rgba(30,27,22,0.7)]">
+              Atendido por sus dueños, Janet y Jaime — por eso las 209 reseñas hablan de los
+              detalles.
+            </p>
             {/* Fila de confianza: sin repetir lo que ya dice la nota de la ficha */}
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80 text-[12px] font-medium">
               <span>Mejor precio directo</span>

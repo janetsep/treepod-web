@@ -1107,6 +1107,10 @@ function DisponibilidadContent() {
                       <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
                       Pago 100% seguro · Webpay Plus
                     </p>
+                    <p className="text-[11px] text-gray-600 text-center pt-1 leading-snug">
+                      Desayuno y otros extras se pueden agregar después de reservar, por WhatsApp o
+                      correo.
+                    </p>
                   </div>
                 )}
               </div>
