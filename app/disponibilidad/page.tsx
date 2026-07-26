@@ -73,6 +73,15 @@ function DisponibilidadContent() {
   // Solo UI: al intentar reservar con datos incompletos, marca en rojo los campos
   // vacíos y lleva la vista al formulario. Cero lógica de reserva.
   const [intentoEnvio, setIntentoEnvio] = useState(false);
+  // Precio "desde" real de la temporada vigente: ancla la expectativa antes de
+  // pedirle nada al visitante. Si el endpoint falla, simplemente no se muestra.
+  const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("/api/public/tarifa-desde")
+      .then((r) => r.json())
+      .then((d) => { if (typeof d.desde === "number") setTarifaDesde(d.desde); })
+      .catch(() => {});
+  }, []);
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLDivElement>(null);
@@ -458,7 +467,7 @@ function DisponibilidadContent() {
           sin priority: el único de cada página es la portada del hero en la home). */}
       <header className="bg-[#F7F3EC] border-b border-[#1E1B16]/15 pt-28 md:pt-32 pb-8">
         <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-          <SectionFolio num={`Paso ${resultado ? 2 : 1} de 3`} label="Reserva directa" />
+          <SectionFolio num={`Paso ${resultado ? 2 : 1} de 2`} label="Reserva directa" />
           <h1 className="display-lg text-[#1E1B16] max-w-3xl">
             Reserva tu{" "}
             <span className="italic whitespace-nowrap">
@@ -470,6 +479,12 @@ function DisponibilidadContent() {
           {/* Fila de confianza tipo masthead: el "50% hoy" es el reductor de
               fricción n° 1 y se ve también en mobile. */}
           <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
+            {tarifaDesde && (
+              <>
+                <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche</span>
+                <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
+              </>
+            )}
             <span>4,9 · 209 reseñas</span>
             <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
             <span>Mejor precio directo, sin comisiones</span>
@@ -483,7 +498,7 @@ function DisponibilidadContent() {
         <Stepper activeStep={resultado ? 2 : 1} />
 
         <p className="dato text-[#5B5348] mb-8">
-          {entrada && salida ? "Elige tus extras y confirma" : "Selecciona tus fechas en el calendario"}
+          {entrada && salida ? "Revisa tu resumen y confirma" : "Selecciona tus fechas en el calendario"}
         </p>
 
         {/* TRES COLUMNAS: ESTADÍA — EXTRAS — RESUMEN */}
@@ -571,8 +586,13 @@ function DisponibilidadContent() {
             </div>
           )}
 
-          {/* COL 2: 02 — Extras */}
-          {!isMundialEvent && (
+          {/* COL 2: 02 — Extras.
+              OCULTO en el checkout (decisión 19-jul-2026): cada campo extra en el
+              flujo de pago mata conversión móvil, y los extras se venden mejor
+              después de confirmar (WhatsApp/correo). La lógica queda intacta:
+              sin selección, el total es solo alojamiento, que todos los flujos
+              ya soportan. Para reactivar: quitar el `false &&`. */}
+          {false && !isMundialEvent && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
                 <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
@@ -758,7 +778,7 @@ function DisponibilidadContent() {
           {/* COL 3: 03 — Resumen (ficha de reserva) */}
           <aside className={`lg:sticky lg:top-28 z-20 pb-24 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
             <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
-              <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
+              <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
               <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">
                 {isMundialEvent ? "Resumen Mundial MTB 2026" : "Resumen"}
               </h2>
@@ -1090,6 +1110,29 @@ function DisponibilidadContent() {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Canal alternativo: la mayoría de las reservas reales llega por
+                WhatsApp. Este botón captura al visitante que no quiere pagar
+                en línea, con las fechas y huéspedes ya elegidos en el mensaje. */}
+            <div className="bg-white rounded-[2px] border border-[#1E1B16]/15 p-5">
+              <p className="dato text-[#5B5348] mb-3">¿Prefieres reservar por WhatsApp?</p>
+              <a
+                href={`https://wa.me/56984643307?text=${encodeURIComponent(
+                  entrada && salida
+                    ? `Hola, quiero reservar en TreePod del ${entrada} al ${salida} para ${adultos} ${adultos === 1 ? "persona" : "personas"}.`
+                    : "Hola, quiero consultar disponibilidad en TreePod."
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent("click_whatsapp_reserva")}
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb958] text-[#1E1B16] font-semibold text-[15px] px-6 py-3 rounded-[2px] transition-colors"
+              >
+                Escríbenos por WhatsApp
+              </a>
+              <p className="text-[11px] text-gray-600 mt-2 leading-snug">
+                Te respondemos rápido al +56 9 8464 3307 y confirmamos tu reserva por ese medio.
+              </p>
             </div>
           </aside>
         </div>

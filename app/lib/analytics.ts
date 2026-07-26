@@ -81,7 +81,8 @@ export type AnalyticsEventName =
   | "view_nosotros"
   | "click_whatsapp_rescate_pago"
   | "lead_guia_las_trancas"
-  | "lead_alerta_nieve";
+  | "lead_alerta_nieve"
+  | "click_whatsapp_reserva";
 
 declare global {
   interface Window {

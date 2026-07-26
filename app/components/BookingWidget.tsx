@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TriBullet from "./deco/TriBullet";
 
 // "Ficha de reserva" del home. Convierte el home de folleto en herramienta de
@@ -13,6 +13,15 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   const [entrada, setEntrada] = useState("");
   const [salida, setSalida] = useState("");
   const [adultos, setAdultos] = useState(2);
+  // Precio "desde" real de la temporada vigente (tarifas de la base): ancla la
+  // expectativa antes de pedir fechas. Si el endpoint falla, simplemente no se muestra.
+  const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("/api/public/tarifa-desde")
+      .then((r) => r.json())
+      .then((d) => { if (typeof d.desde === "number") setTarifaDesde(d.desde); })
+      .catch(() => {});
+  }, []);
 
   const buscar = () => {
     const p = new URLSearchParams();
@@ -35,6 +44,11 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
           <div className="flex items-center gap-2 mb-4">
             <TriBullet />
             <span className="dato text-[#5B5348]">Reserva directa</span>
+            {tarifaDesde && (
+              <span className="text-[13px] font-semibold text-[#1E1B16] whitespace-nowrap">
+                desde ${tarifaDesde.toLocaleString("es-CL")} / noche
+              </span>
+            )}
             <span className="flex-1 h-px bg-[#1E1B16]/10" aria-hidden="true" />
           </div>
 
