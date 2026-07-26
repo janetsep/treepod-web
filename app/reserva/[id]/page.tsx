@@ -450,6 +450,19 @@ function ReservaContent({ id }: { id: string }) {
                   })()}
                 </div>
               </section>
+
+              {/* Teaser de extras: se anuncia como sorpresa post-confirmación, no como
+                  paso del checkout. Cero fricción aquí; el enlace real va en el correo. */}
+              {reserva.estado === "pendiente_pago" && (!reserva.reserva_servicios || reserva.reserva_servicios.length === 0) && (
+                <aside className="bg-white p-5 md:p-6 rounded-[2px] border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF]">
+                  <p className="dato text-[#5B5348] mb-2">Un secreto para después</p>
+                  <p className="text-sm text-[#5B5348] leading-relaxed">
+                    <span className="font-semibold text-[#1E1B16]">Desayuno con pan recién hecho servido en tu domo, cena privada entre los árboles…</span>{" "}
+                    No elijas nada todavía: al confirmar tu reserva te llegará un enlace para agregar
+                    los extras con calma, y se pagan recién en el check-in.
+                  </p>
+                </aside>
+              )}
             </div>
 
             {/* Columna 2: Datos y Pago */}
