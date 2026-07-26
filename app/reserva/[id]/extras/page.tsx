@@ -166,10 +166,15 @@ export default function ExtrasPage({ params }: { params: Promise<{ id: string }>
                       <div className="text-right shrink-0">
                         <p className="font-semibold text-[15px] whitespace-nowrap">{fmtCLP(costo(s))}</p>
                         <p className="text-[11px] text-[#5B5348] whitespace-nowrap">
-                          {s.multiplicador_personas ? `${datos.reserva.adultos} pers.` : ""}
-                          {(s.multiplicador_noches || s.nombre.toLowerCase().includes("desayuno")) && !s.nombre.toLowerCase().includes("cena")
-                            ? ` × ${datos.reserva.noches} ${datos.reserva.noches === 1 ? "noche" : "noches"}`
-                            : ""}
+                          {(() => {
+                            const n = s.nombre.toLowerCase();
+                            const esCena = n.includes("cena") || n.includes("romántico") || n.includes("almuerzo");
+                            const multNoches = (s.multiplicador_noches || n.includes("desayuno")) && !esCena;
+                            const partes = [];
+                            if (s.multiplicador_personas) partes.push(`${datos.reserva.adultos} pers.`);
+                            if (multNoches) partes.push(`${datos.reserva.noches} ${datos.reserva.noches === 1 ? "noche" : "noches"}`);
+                            return partes.join(" × ");
+                          })()}
                         </p>
                       </div>
                     </div>
