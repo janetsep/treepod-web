@@ -9,7 +9,7 @@ export async function GET() {
   const hoy = new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
   const { data, error } = await supabaseAdmin
     .from("temporadas")
-    .select("id, nombre, fecha_inicio, fecha_fin, tarifas(precio_noche)")
+    .select("id, nombre, fecha_inicio, fecha_fin, tarifas(precio_noche, adultos, noches_min)")
     .lte("fecha_inicio", hoy)
     .gte("fecha_fin", hoy)
     .limit(1)
@@ -17,7 +17,12 @@ export async function GET() {
 
   if (error || !data) return NextResponse.json({ desde: null });
 
-  const precios = (data.tarifas || []).map((t: any) => Number(t.precio_noche)).filter((n: number) => n > 0);
+  // Referencia comercial: tarifa base de 2 personas para estadías de 2 noches o
+  // más (la de 1 persona es más baja y confunde como "desde").
+  const precios = (data.tarifas || [])
+    .filter((t: any) => Number(t.adultos) === 2 && Number(t.noches_min) >= 2)
+    .map((t: any) => Number(t.precio_noche))
+    .filter((n: number) => n > 0);
   const desde = precios.length ? Math.min(...precios) : null;
   return NextResponse.json({ desde, temporada: data.nombre });
 }
