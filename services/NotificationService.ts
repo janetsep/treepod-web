@@ -98,6 +98,13 @@ export const NotificationService = {
                         Revisa nuestras <a href="https://domostreepod.cl/terminos" style="color: #00ADEF; text-decoration: underline;">políticas de cancelación y condiciones</a>.
                     </p>
 
+                    ${reservaId ? `
+                    <div style="background: #f5f5f5; padding: 20px 24px; border-radius: 12px; margin: 0 0 28px 0; border: 1px solid #e5e5e5; text-align: center;">
+                        <h4 style="margin: 0 0 8px 0; color: #00ADEF; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">Completa tu estadía</h4>
+                        <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 16px 0;">¿Quieres agregar desayuno u otros extras? Sin pago adicional en línea: se suman al saldo que pagas en el check-in.</p>
+                        <a href="https://domostreepod.cl/reserva/${reservaId}/extras" style="color: #fff; background-color: #00ADEF; padding: 12px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 14px;">Agregar extras a mi reserva</a>
+                    </div>` : ''}
+
                     <h3 style="font-size: 17px; margin: 0 0 8px 0; color: #1e293b;">Cómo llegar</h3>
                     <p style="line-height: 1.6; color: #555; font-size: 14px; margin: 0 0 20px 0;">Sigue esta ruta directa en Google Maps para llegar sin problemas a nuestro acceso:</p>
                     <div style="text-align: center; margin: 0 0 28px 0;">
