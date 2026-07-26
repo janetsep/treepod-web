@@ -45,8 +45,13 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             <TriBullet />
             <span className="dato text-[#5B5348]">Reserva directa</span>
             {tarifaDesde && (
-              <span className="text-[13px] font-semibold text-[#1E1B16] whitespace-nowrap">
-                desde ${tarifaDesde.toLocaleString("es-CL")} / noche
+              <span className="text-right leading-tight">
+                <span className="block text-[13px] font-semibold text-[#1E1B16] whitespace-nowrap">
+                  desde ${tarifaDesde.toLocaleString("es-CL")} / noche
+                </span>
+                <span className="block text-[10px] text-[#5B5348] whitespace-nowrap">
+                  2 noches o más · 1 noche tiene otra tarifa
+                </span>
               </span>
             )}
             <span className="flex-1 h-px bg-[#1E1B16]/10" aria-hidden="true" />
