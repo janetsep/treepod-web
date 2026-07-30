@@ -55,6 +55,10 @@ export async function POST(req: Request) {
             utm_term: body.utm_term || null,
             landing_page: body.landing_page || null,
             session_id: body.session_id || null,
+            // Con esto, una reserva que después se cierra por WhatsApp todavía se
+            // puede atribuir al anuncio que la originó (conversión offline).
+            gclid: body.gclid || null,
+            fbclid: body.fbclid || null,
         });
 
         if (error) {

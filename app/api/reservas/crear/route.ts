@@ -29,6 +29,8 @@ export async function POST(req: Request) {
       utm_campaign,
       utm_content,
       utm_term,
+      gclid,
+      fbclid,
     } = body as {
       entrada?: string;
       salida?: string;
@@ -47,6 +49,8 @@ export async function POST(req: Request) {
       utm_campaign?: string;
       utm_content?: string;
       utm_term?: string;
+      gclid?: string;
+      fbclid?: string;
     };
 
     if (!entrada || !salida || !adultos || !total) {
@@ -248,6 +252,11 @@ export async function POST(req: Request) {
       utm_campaign: utm_campaign || null,
       utm_content: utm_content || null,
       utm_term: utm_term || null,
+      // Identificadores de clic: habilitan subir la reserva como conversión offline
+      // a Google Ads / Meta aunque el cierre haya ocurrido después y por otro canal.
+      gclid: gclid || null,
+      fbclid: fbclid || null,
+      click_id_captured_at: gclid || fbclid ? new Date().toISOString() : null,
     };
 
     let { data, error } = await supabaseAdmin

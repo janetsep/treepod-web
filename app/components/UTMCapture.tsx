@@ -9,6 +9,11 @@ export interface UTMParams {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  // Identificadores de clic del anuncio. Sin ellos no se pueden subir
+  // conversiones offline a Google Ads / Meta: las reservas que cierran por
+  // WhatsApp quedan invisibles para el algoritmo.
+  gclid?: string;
+  fbclid?: string;
 }
 
 const STORAGE_KEY = 'treepod_utms';
@@ -59,14 +64,24 @@ export default function UTMCapture() {
       if (value) incoming[key as keyof UTMParams] = value;
     });
 
-    if (Object.keys(incoming).length === 0) return;
+    // El etiquetado automático de Google Ads agrega SOLO gclid, sin utm_*: por eso
+    // hasta ahora el 95% de las reservas llegaba sin ninguna atribución.
+    const gclid = searchParams.get('gclid') || undefined;
+    const fbclid = searchParams.get('fbclid') || undefined;
+
+    if (Object.keys(incoming).length === 0 && !gclid && !fbclid) return;
+
     const existing = getStoredUTMs();
-    if (Object.keys(existing).length > 0) return;
+    // Los utm mantienen el primer contacto (no se pisan). El id de clic, en cambio,
+    // se actualiza siempre: la conversión se atribuye al último clic del anuncio.
+    const merged: UTMParams = Object.keys(existing).length > 0 ? { ...existing } : { ...existing, ...incoming };
+    if (gclid) merged.gclid = gclid;
+    if (fbclid) merged.fbclid = fbclid;
 
     try {
-      setWithExpiry(STORAGE_KEY, JSON.stringify(incoming));
+      setWithExpiry(STORAGE_KEY, JSON.stringify(merged));
       if (window.dataLayer) {
-        window.dataLayer.push({ event: 'utm_captured', ...incoming, source: 'glamping_ecosystem' });
+        window.dataLayer.push({ event: 'utm_captured', ...merged, source: 'glamping_ecosystem' });
       }
     } catch {}
   }, [searchParams]);
