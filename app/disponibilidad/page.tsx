@@ -481,7 +481,7 @@ function DisponibilidadContent() {
           <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
             {tarifaDesde && (
               <>
-                <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche (2 noches o más)</span>
+                <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche · 2 personas, 2 noches o más</span>
                 <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
               </>
             )}

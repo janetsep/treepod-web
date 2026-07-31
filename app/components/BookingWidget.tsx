@@ -50,7 +50,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                   desde ${tarifaDesde.toLocaleString("es-CL")} / noche
                 </span>
                 <span className="block text-[10px] text-[#5B5348] whitespace-nowrap">
-                  2 noches o más · 1 noche tiene otra tarifa
+                  2 personas · 2 noches o más
                 </span>
               </span>
             )}

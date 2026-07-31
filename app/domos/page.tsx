@@ -117,8 +117,52 @@ export default function DomosPage() {
                     </figure>
                 </div>
 
-                {/* Artículo 02 — spreads asimétricos foto + texto */}
-                <SectionFolio num="N° 02" label="Dentro del domo" />
+                {/* Cómo se llega: la pasarela. Responde sin palabras la pregunta que
+                    más aparece por WhatsApp ("¿hay que subir escaleras?") y explica
+                    por qué los domos elevados están sobre pilares. */}
+                <SectionFolio num="N° 02" label="Cómo se llega" />
+                <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-8 items-center mb-24 md:mb-32">
+                    <div className="col-span-12 md:col-span-7">
+                        <figure>
+                            <div className="relative overflow-hidden rounded-[2px] bg-[#1E1B16]">
+                                <video
+                                    className="w-full h-auto block"
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="none"
+                                    poster="/images/hero/poster-pasarela.jpg"
+                                    aria-label="Recorrido por las pasarelas de madera hasta la entrada de un domo"
+                                >
+                                    <source src="/videos/pasarela-domos.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                            <figcaption className="mt-2 flex items-center gap-2">
+                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                <span className="caption-editorial">Fig. 02 — De la pasarela a la puerta del domo</span>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div className="col-span-12 md:col-span-5 md:pl-4">
+                        <h2 className="display-md text-[#1E1B16]">
+                            El bosque <span className="italic">sigue debajo</span>
+                        </h2>
+                        <p className="text-[#5B5348] leading-relaxed mt-5">
+                            Pasarelas de madera cruzan el bosque y la roca volcánica hasta cada domo.
+                            Los domos 3 y 4 están montados sobre pilares: se sube por escalera a la
+                            terraza y el bosque sigue creciendo debajo, sin talar.
+                        </p>
+                        <p className="text-[#5B5348] leading-relaxed mt-4">
+                            Los domos 1 y 2 son a piso, sin escaleras, y se llega en auto casi hasta
+                            la puerta. Si viajas con niños pequeños, adultos mayores o alguien con
+                            movilidad reducida, esos son los tuyos.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Artículo 03 — spreads asimétricos foto + texto */}
+                <SectionFolio num="N° 03" label="Dentro del domo" />
                 <div className="space-y-24 md:space-y-32">
 
                     {/* Block A: Dormitorio / Descanso */}
@@ -235,7 +279,7 @@ export default function DomosPage() {
 
                 {/* Artículo 03 — Ficha técnica como índice numerado, sin iconos */}
                 <div className="mt-24 md:mt-32">
-                    <SectionFolio num="N° 03" label="Ficha técnica" />
+                    <SectionFolio num="N° 04" label="Ficha técnica" />
                     <div className="border-t border-[#1E1B16]/12">
                         {fichaTecnica.map((item, i) => (
                             <div key={item.titulo} className="border-b border-[#1E1B16]/12 py-5 md:py-6 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-2 items-baseline">
