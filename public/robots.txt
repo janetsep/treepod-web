@@ -8,6 +8,106 @@ Disallow: /landing
 Disallow: /pago
 Disallow: /reserva
 
+# GPTBot
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# OAI-SearchBot
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# ChatGPT-User
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# PerplexityBot
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# Perplexity-User
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# Claude-User
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# Google-Extended
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# Applebot-Extended
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
+# CCBot
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /confirmacion
+Disallow: /landing
+Disallow: /pago
+Disallow: /reserva
+
 # Host
 Host: https://domostreepod.cl
 

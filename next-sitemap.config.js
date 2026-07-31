@@ -19,6 +19,7 @@ module.exports = {
         '/glamping-dia-de-la-madre',
         '/finde-largo-dia-trabajo-las-trancas',
         '/mundial-mtb-nevados-chillan-2026',
+        '/guia-las-trancas/contenido', // entrega del lead magnet, noindex
     ],
     robotsTxtOptions: {
         policies: [
@@ -27,6 +28,15 @@ module.exports = {
                 allow: '/',
                 disallow: ['/admin', '/admin/', '/confirmacion', '/landing', '/pago', '/reserva'],
             },
+            // Crawlers de asistentes de IA: acceso explícito. Cuando alguien le pregunta
+            // a ChatGPT, Perplexity, Claude o Gemini "dónde alojar en Las Trancas", estos
+            // bots deben poder leer el sitio y citar datos correctos (ver /llms.txt).
+            ...['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Perplexity-User',
+                'ClaudeBot', 'Claude-User', 'Google-Extended', 'Applebot-Extended', 'CCBot'].map((userAgent) => ({
+                    userAgent,
+                    allow: '/',
+                    disallow: ['/admin', '/admin/', '/confirmacion', '/landing', '/pago', '/reserva'],
+                })),
         ],
         additionalSitemaps: [],
     },

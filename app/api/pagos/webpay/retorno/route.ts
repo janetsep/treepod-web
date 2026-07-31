@@ -55,6 +55,33 @@ async function commitTransaction(token: string): Promise<WebpayCommitResponse> {
   return JSON.parse(responseText) as WebpayCommitResponse;
 }
 
+/**
+ * Guarda POR QUÉ falló el intento de pago y cuántas veces ha fallado esta reserva.
+ *
+ * Sin esto solo se veía "expirada"/"rechazado" sin causa: no se podía distinguir un
+ * tope de tarjeta de un rechazo a tarjeta extranjera o de un abandono voluntario.
+ * Nunca interrumpe el flujo del huésped: cualquier error se traga.
+ */
+async function registrarFalloPago(reservaId: string | null, motivo: string) {
+  if (!reservaId) return;
+  try {
+    const { data } = await supabaseAdmin
+      .from("reservas")
+      .select("pago_intentos")
+      .eq("id", reservaId)
+      .maybeSingle();
+    await supabaseAdmin
+      .from("reservas")
+      .update({
+        pago_ultimo_error: `${motivo} · ${new Date().toISOString()}`,
+        pago_intentos: (Number(data?.pago_intentos) || 0) + 1,
+      })
+      .eq("id", reservaId);
+  } catch (e) {
+    console.error("⚠️ No se pudo registrar el fallo de pago:", e);
+  }
+}
+
 function getBaseUrl(req: Request) {
   // En producción, siempre usar NEXT_PUBLIC_BASE_URL para que Transbank retorne al dominio correcto
   if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL) {
@@ -99,6 +126,7 @@ async function handleReturn(req: Request) {
     const tbkToken = formData.get("TBK_TOKEN");
     if (!token && typeof tbkToken === "string" && tbkToken) {
       console.log("⚠️ Retorno con TBK_TOKEN (aborto/falla)", { tbkToken, reservaId });
+      await registrarFalloPago(reservaId, "abortado_por_usuario");
       const target = reservaId ? `/reserva/${reservaId}?error=webpay_abort` : "/disponibilidad?error=webpay_abort";
       return NextResponse.redirect(new URL(target, baseUrl), 303);
     }
@@ -108,6 +136,7 @@ async function handleReturn(req: Request) {
     const tbkToken = requestUrl.searchParams.get("TBK_TOKEN");
     if (!token && tbkToken) {
       console.log("⚠️ Retorno con TBK_TOKEN (aborto/falla)", { tbkToken, reservaId });
+      await registrarFalloPago(reservaId, "abortado_por_usuario");
       const target = reservaId ? `/reserva/${reservaId}?error=webpay_abort` : "/disponibilidad?error=webpay_abort";
       return NextResponse.redirect(new URL(target, baseUrl), 303);
     }
@@ -197,6 +226,15 @@ async function handleReturn(req: Request) {
     if (dbUpdateError) {
       console.error("❌ CRÍTICO: Webpay cobró pero falló update en Supabase:", dbUpdateError);
       // Ojo: Si ya cobró, ¡el cliente confía en que pagó!
+    }
+
+    // Rechazo del emisor: guardar el código real de Transbank (response_code) para
+    // saber si es tope de tarjeta, tarjeta extranjera, fondos, etc.
+    if (!isApproved) {
+      await registrarFalloPago(
+        reserva.id,
+        `rechazado_transbank_code_${commit.response_code ?? "desconocido"}_status_${commit.status ?? "sin_status"}`
+      );
     }
 
     // Si el pago es exitoso, registrar en finanzas via FinanceService

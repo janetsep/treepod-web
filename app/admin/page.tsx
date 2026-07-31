@@ -9,6 +9,7 @@ import ReservaModal from "./components/ReservaModal";
 import TarifasConsole from "./components/TarifasConsole";
 import UsersConsole from "./components/UsersConsole";
 import ClientesConsole from "./components/ClientesConsole";
+import LeadsConsole from "./components/LeadsConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
 import SicraConsole from "./components/SicraConsole";
@@ -18,7 +19,7 @@ import ClimaWidget from "./components/ClimaWidget";
 import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail, MailCheck, FolderOpen, Receipt } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'historial' | 'papelera' | 'sicra' | 'proyectos' | 'cartolas'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'leads' | 'historial' | 'papelera' | 'sicra' | 'proyectos' | 'cartolas'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -531,6 +532,13 @@ export default function AdminDashboard() {
                         CRM / Clientes
                     </button>
                     <button
+                        onClick={() => setView('leads')}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'leads' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                    >
+                        <MailCheck className="w-4 h-4" />
+                        Leads
+                    </button>
+                    <button
                         onClick={() => { setView('historial'); setCurrentPage(1); }}
                         className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'historial' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
@@ -597,6 +605,8 @@ export default function AdminDashboard() {
                     <UsersConsole />
                 ) : view === 'clientes' ? (
                     <ClientesConsole />
+                ) : view === 'leads' ? (
+                    <LeadsConsole />
                 ) : view === 'papelera' ? (
                     <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
