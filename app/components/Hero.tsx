@@ -1,72 +1,18 @@
-import Image from "next/image";
 import BookingWidget from "./BookingWidget";
 import GeoArc from "./deco/GeoArc";
+import HeroCarousel from "./HeroCarousel";
 
-// Portada de revista: UNA foto fija (una revista tiene una portada; además es el
-// único priority de la página → mejor LCP que el carrusel de 6 fotos anterior),
-// masthead con los datos reales del lugar, titular abajo-izquierda a sangre y la
-// ficha de reserva como recorte de papel a la derecha.
+// Portada de revista: carrusel de 3 fotos reales con fundido lento (ver
+// HeroCarousel: solo la primera carga con prioridad, así el LCP sigue siendo el
+// de una sola imagen), masthead con los datos reales del lugar, titular
+// abajo-izquierda a sangre y la ficha de reserva como recorte de papel a la derecha.
 export default function Hero() {
   return (
     <section className="relative min-h-[100dvh] overflow-hidden bg-[#1E1B16] text-white">
-      {/* Póster (imagen LCP): pinta al instante y coincide con el primer cuadro del
-          video, así no hay salto cuando el video empieza a reproducirse. */}
-      {/* Póster LCP en dos versiones: vertical en móvil, panorámica en escritorio,
-          para que el primer cuadro coincida con el video que sí se reproduce. */}
-      <Image
-        src="/images/hero/hero-domo-poster-mobile-v6.jpg"
-        alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
-        fill
-        priority
-        fetchPriority="high"
-        quality={75}
-        sizes="100vw"
-        className="object-cover object-center md:hidden"
-      />
-      <Image
-        src="/images/hero/hero-domo-poster-v6.jpg"
-        alt="Domos geodésicos TreePod en el bosque nativo de Valle Las Trancas"
-        fill
-        priority
-        quality={75}
-        sizes="100vw"
-        className="object-cover object-center hidden md:block"
-      />
-
-      {/* Video de fondo: material profesional real. Silenciado y en bucle para
-          autoplay en móvil (playsInline). El poster propio = primer cuadro del
-          video, para que no haya parpadeo/corte al arrancar. aria-hidden:
-          decorativo.
-          Alterna los DOS tipos de domo (elevado y a piso): mostrar solo los
-          elevados generaba una expectativa que no todos los huéspedes reciben
-          — un huésped reclamó por eso (jul-2026). Ver [[galeria-honesta]]. */}
-      {/* Móvil: versión VERTICAL con cada domo recentrado. El video horizontal, al
-          recortarse a pantalla vertical, dejaba solo cielo/follaje y los domos
-          quedaban fuera de cuadro. En pantallas ≥ md se usa el corte panorámico. */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover object-center md:hidden"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/hero/hero-domo-poster-mobile-v6.jpg"
-        aria-hidden="true"
-      >
-        <source src="/videos/hero-treepod-mobile-v6.mp4" type="video/mp4" />
-      </video>
-      <video
-        className="absolute inset-0 h-full w-full object-cover object-center hidden md:block"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/hero/hero-domo-poster-v6.jpg"
-        aria-hidden="true"
-      >
-        <source src="/videos/hero-treepod-v6.mp4" type="video/mp4" />
-      </video>
+      {/* Portada: carrusel de 3 fotos reales con fundido lento. Solo la primera
+          carga con prioridad (LCP); las otras se montan después del primer
+          pintado. Reemplaza al video, que pesaba 4,5 MB y no convencía. */}
+      <HeroCarousel />
 
       {/* Scrim cálido (charcoal, nunca negro stock): solo el 55% inferior */}
       <div
