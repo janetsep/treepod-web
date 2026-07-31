@@ -82,7 +82,14 @@ export type AnalyticsEventName =
   | "click_whatsapp_rescate_pago"
   | "lead_guia_las_trancas"
   | "lead_alerta_nieve"
-  | "click_whatsapp_reserva";
+  | "click_whatsapp_reserva"
+  | "view_fiestas_patrias_page"
+  | "click_reservar_fiestas_patrias"
+  | "click_reservar_fiestas_patrias_galeria"
+  | "click_reservar_fiestas_patrias_testimonios"
+  | "click_reservar_fiestas_patrias_final"
+  | "begin_checkout_fiestas_patrias"
+  | "click_whatsapp_fiestas_patrias";
 
 declare global {
   interface Window {
