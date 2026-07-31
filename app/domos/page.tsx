@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getDomoPriceForNights } from "@/lib/pricing";
 import { useEffect, useState } from "react";
 import CinematicSection from "../components/CinematicSection";
 import SectionFolio from "../components/SectionFolio";
@@ -53,10 +52,17 @@ export default function DomosPage() {
             });
         }
 
-        // Cargar precios
+        // Precio "desde": el MISMO que muestra la portada (tarifa base de 2 personas
+        // por 2 noches o más). Antes esta barra mostraba la tarifa de 1 noche, que es
+        // más alta, y las dos páginas se contradecían.
         async function loadPrices() {
-            const rawPrice1Night = await getDomoPriceForNights(1);
-            setPrice1Night(rawPrice1Night ? new Intl.NumberFormat('es-CL').format(rawPrice1Night) : null);
+            try {
+                const r = await fetch("/api/public/tarifa-desde");
+                const d = await r.json();
+                setPrice1Night(typeof d.desde === "number" ? new Intl.NumberFormat('es-CL').format(d.desde) : null);
+            } catch {
+                setPrice1Night(null);
+            }
         }
         loadPrices();
     }, []);
@@ -140,23 +146,22 @@ export default function DomosPage() {
                             </div>
                             <figcaption className="mt-2 flex items-center gap-2">
                                 <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-                                <span className="caption-editorial">Fig. 02 — De la pasarela a la puerta del domo</span>
+                                <span className="caption-editorial">Fig. 02 — Las pasarelas de madera del bosque</span>
                             </figcaption>
                         </figure>
                     </div>
                     <div className="col-span-12 md:col-span-5 md:pl-4">
                         <h2 className="display-md text-[#1E1B16]">
-                            El bosque <span className="italic">sigue debajo</span>
+                            Pasarelas entre <span className="italic">los robles</span>
                         </h2>
                         <p className="text-[#5B5348] leading-relaxed mt-5">
-                            Pasarelas de madera cruzan el bosque y la roca volcánica hasta cada domo.
-                            Los domos 3 y 4 están montados sobre pilares: se sube por escalera a la
-                            terraza y el bosque sigue creciendo debajo, sin talar.
+                            Dejas el auto y caminas por pasarelas de madera que cruzan el bosque y la
+                            roca volcánica hasta cerca de tu domo.
                         </p>
                         <p className="text-[#5B5348] leading-relaxed mt-4">
-                            Los domos 1 y 2 son a piso, sin escaleras, y se llega en auto casi hasta
-                            la puerta. Si viajas con niños pequeños, adultos mayores o alguien con
-                            movilidad reducida, esos son los tuyos.
+                            Los domos 3 y 4 están en alto, sobre pilares: se sube por una escalera
+                            hasta la terraza y el estacionamiento queda justo abajo. Los domos 1 y 2
+                            están a nivel del suelo, con unos peldaños hasta la terraza.
                         </p>
                     </div>
                 </div>
@@ -310,7 +315,7 @@ export default function DomosPage() {
                             </span>
                         </div>
                         <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
-                            / noche · 2 personas
+                            / noche · 2 personas · 2 noches o más
                         </div>
                     </div>
 
