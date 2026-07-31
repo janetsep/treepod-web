@@ -219,7 +219,9 @@ function DisponibilidadContent() {
     const emailLimpio = email.trim().toLowerCase();
     const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio);
     if (!emailValido || !entrada || !salida || salida <= entrada) return;
-    const clave = `${emailLimpio}|${entrada}|${salida}`;
+    // El teléfono suele escribirse después del email: incluirlo en la clave permite
+    // un segundo envío que completa el registro (la API lo deduplica y actualiza).
+    const clave = `${emailLimpio}|${entrada}|${salida}|${telefono.trim() ? "tel" : "sin-tel"}`;
     if (leadCapturadoRef.current === clave) return;
     const timer = setTimeout(() => {
       leadCapturadoRef.current = clave;
@@ -229,6 +231,7 @@ function DisponibilidadContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: emailLimpio,
+          telefono: telefono.trim() || null,
           fecha_inicio: entrada,
           fecha_fin: salida,
           total: calcularTotalConServicios() || null,
@@ -238,7 +241,7 @@ function DisponibilidadContent() {
       }).catch(() => { /* fire-and-forget: nunca interrumpe la reserva */ });
     }, 1500);
     return () => clearTimeout(timer);
-  }, [email, entrada, salida]);
+  }, [email, telefono, entrada, salida]);
 
   const calcularPrecio = async () => {
     setLoading(true);

@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
         let dedupeQuery = supabaseAdmin
             .from("leads_checkout")
-            .select("id")
+            .select("id, telefono")
             .eq("email", email)
             .gte("created_at", hace24h);
         dedupeQuery = esGuia
@@ -35,15 +35,24 @@ export async function POST(req: Request) {
             : dedupeQuery.eq("fecha_inicio", fecha_inicio).eq("fecha_fin", fecha_fin);
         const { data: existente } = await dedupeQuery.limit(1).maybeSingle();
 
+        const telefonoEntrante = String(body.telefono || "").trim() || null;
+
         if (existente) {
+            // El teléfono llega después del email: completar el registro existente
+            // en vez de crear otro. WhatsApp es el canal que más convierte.
+            if (telefonoEntrante && !existente.telefono) {
+                await supabaseAdmin
+                    .from("leads_checkout")
+                    .update({ telefono: telefonoEntrante })
+                    .eq("id", existente.id);
+                return NextResponse.json({ success: true, actualizado: "telefono" });
+            }
             return NextResponse.json({ success: true, dedupe: true });
         }
 
-        const telefono = String(body.telefono || "").trim() || null;
-
         const { error } = await supabaseAdmin.from("leads_checkout").insert({
             email,
-            telefono,
+            telefono: telefonoEntrante,
             fecha_inicio,
             fecha_fin,
             total: body.total ?? null,
