@@ -10,14 +10,29 @@ export async function GET(request: Request) {
   const inicioMesActual = hoy.substring(0, 7) + "-01";
   const en30 = new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0];
   const en14 = new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0];
+  // Un mes hacia atrás: al cerrar el mes todavía hay que cargarle consumos a las
+  // estadías recién terminadas, y antes desaparecían del selector el día 1.
+  const inicioMesAnterior = new Date(Date.UTC(Number(hoy.slice(0, 4)), Number(hoy.slice(5, 7)) - 2, 1))
+    .toISOString().split("T")[0];
 
-  // Reservas: mes actual completo + futuras (para asignar consumos a pasadas recientes)
-  const { data: reservas } = await supabaseAdmin
+  // Reservas: mes anterior + mes actual + futuras (para asignar consumos).
+  // Se incluyen "bloqueado" y "suspendido" SOLO cuando tienen nombre de huésped:
+  // son estadías reales (cortesías, invitados, traslados) que sí gastan insumos,
+  // aseo y luz. Los bloqueos sin nombre son mantención o cierre de temporada y
+  // quedan fuera a propósito. Antes solo entraba "pagado" y compañía, así que
+  // esas estadías no se podían costear ni aparecían en el gasto del mes.
+  const { data: reservasRaw } = await supabaseAdmin
     .from("reservas")
     .select("id, fecha_inicio, fecha_fin, nombre, apellido, adultos, total, estado, domos(nombre)")
-    .in("estado", ["pagado", "confirmado", "pendiente", "pending_transfer_confirmation"])
-    .gte("fecha_inicio", inicioMesActual)
+    .is("deleted_at", null)
+    .in("estado", ["pagado", "confirmado", "pendiente", "pending_transfer_confirmation", "bloqueado", "suspendido"])
+    .gte("fecha_inicio", inicioMesAnterior)
     .order("fecha_inicio");
+
+  const conNombre = (r: any) => `${r.nombre || ""}${r.apellido || ""}`.trim().length > 0;
+  const reservas = (reservasRaw || []).filter(
+    (r: any) => !["bloqueado", "suspendido"].includes(r.estado) || conNombre(r)
+  );
 
   const reservaIds = (reservas || []).map((r: any) => r.id);
   let svcMap: Record<string, string[]> = {};

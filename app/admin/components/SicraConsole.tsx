@@ -3071,7 +3071,20 @@ function Rentabilidad() {
                     const margen = f.ingreso > 0 ? Math.round((f.utilidad / f.ingreso) * 100) : null;
                     return (
                       <tr key={f.reserva_id} className="border-t border-gray-200 hover:bg-gray-50">
-                        <td className="p-2 text-gray-900">{f.cliente}<div className="text-[9px] text-gray-500">{f.domo}</div></td>
+                        <td className="p-2 text-gray-900">
+                          {f.cliente}
+                          <div className="text-[9px] text-gray-500">
+                            {f.domo}
+                            {/* Las estadías sin cobro (cortesías, invitados, cambios de fecha)
+                                entran igual porque gastan insumos, aseo y luz. Se marcan para
+                                que no parezcan una reserva pagada con utilidad negativa. */}
+                            {f.estado !== "pagado" && (
+                              <span className="ml-1 px-1 py-px rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                                {f.estado === "bloqueado" ? "sin cobro" : f.estado}
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="p-2 text-gray-700">{labelDate(f.checkin)} → {labelDate(f.checkout)}<div className="text-[9px] text-gray-500">{f.noches}N</div></td>
                         <td className="p-2 text-right text-blue-700">{fmt(f.ingreso)}</td>
                         <td className="p-2 text-right text-gray-600">{f.insumos > 0 ? fmt(f.insumos) : "—"}</td>

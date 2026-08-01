@@ -15,16 +15,25 @@ export async function GET(request: Request) {
   const [y, m] = mes.split("-").map(Number);
   const finMes = new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
 
-  // Solo reservas pagadas que solapan con el mes, sin registros en papelera
-  const { data: reservas, error } = await supabaseAdmin
+  // Estadías que solapan con el mes, sin registros en papelera.
+  // Además de las pagadas se incluyen las "bloqueado"/"suspendido" CON nombre de
+  // huésped: son estadías reales (cortesías, invitados, cambios de fecha) que
+  // igual consumen insumos, aseo y luz, y por lo tanto tienen que verse en el
+  // gasto del mes aunque su ingreso sea cero. Los bloqueos sin nombre son
+  // mantención o cierre de temporada y quedan fuera.
+  const { data: reservasRaw, error } = await supabaseAdmin
     .from("reservas")
     .select("id, fecha_inicio, fecha_fin, nombre, apellido, adultos, total, estado, domos(nombre)")
     .is("deleted_at", null)
-    .eq("estado", "pagado")
+    .in("estado", ["pagado", "bloqueado", "suspendido"])
     .lt("fecha_inicio", finMes)   // empieza antes de que acabe el mes
     .gte("fecha_fin", inicio)     // termina después de que empiece el mes
     .order("fecha_inicio");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  const reservas = (reservasRaw || []).filter(
+    (r: any) => r.estado === "pagado" || `${r.nombre || ""}${r.apellido || ""}`.trim().length > 0
+  );
 
   const ids = (reservas || []).map((r: any) => r.id);
 
