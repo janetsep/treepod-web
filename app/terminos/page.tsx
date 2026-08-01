@@ -69,7 +69,7 @@ export default function TerminosPage() {
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">4. Respeto por el Espacio y Convivencia</h2>
                     <p>TreePod es un entorno inserto en la naturaleza, enfocado en el descanso respetuoso del entorno.</p>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
-                        <li>Te pedimos mantener un volumen de voz y música acorde a un ambiente sereno. Especialmente en las noches (a partir de las 22:00 hrs), debes velar por no alterar el descanso de los demás ni afectar la fauna local circundante con estruendos excesivos.</li>
+                        <li>Te pedimos mantener un volumen de voz y música acorde a un ambiente sereno. El horario de silencio es de 21:00 a 08:00 hrs (el mismo que informamos en Airbnb), y durante esas horas debes velar por no alterar el descanso de los demás ni afectar la fauna local circundante con estruendos excesivos.</li>
                         <li>El cuidado estructural y limpieza interior moderada del domo es de responsabilidad del huésped durante su estadía. Todo cobro por rotura, daño o destrucción de implementos e infraestructura por dolo o descuido inexcusable recaerá sobre el titular de la reserva.</li>
                         <li>En relación al consumo, te instamos a promover prácticas sostenibles del uso del agua y la energía, recordando que estamos en un entorno cordillerano.</li>
                     </ul>
