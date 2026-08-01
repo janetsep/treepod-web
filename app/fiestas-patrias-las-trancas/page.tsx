@@ -46,7 +46,7 @@ export default function FiestasPatriasPage() {
                 position: "center 40%",
                 eyebrow: "Fiestas Patrias 2026 · Valle Las Trancas",
                 title: <>Este 18 celebra en el bosque, no en el taco</>,
-                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, con la parrilla en tu propia terraza y el valle a 12 minutos de Nevados de Chillán.",
+                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, con la parrilla en tu propio domo y el valle a 12 minutos de Nevados de Chillán.",
                 priceLine: "Desde $175.000 la noche para 4 personas",
                 priceSub: "Tarifa de invierno, estadías de 2 noches o más. Se reserva con el 50%.",
                 stat: "17–21",
@@ -73,11 +73,11 @@ export default function FiestasPatriasPage() {
                 items: [
                     {
                         title: "La parrilla llega a tu domo",
-                        desc: "Te llevamos la parrilla a tu terraza privada para que hagas tu asado del 18 sin compartir espacio con nadie. Tú pones la carne y el vino; el bosque pone el resto.",
+                        desc: "Te llevamos la parrilla hasta tu domo para que hagas tu asado del 18 sin compartir espacio con nadie. Tú pones la carne y el vino; el bosque pone el resto.",
                     },
                     {
-                        title: "Cuatro domos y nada más",
-                        desc: "No somos un complejo con cien cabañas. Son cuatro domos separados entre los árboles, así que el 18 aquí suena a bosque y no a fonda del vecino.",
+                        title: "Solo cuatro domos en todo el terreno",
+                        desc: "No somos un complejo con cien cabañas. Son cuatro domos separados entre los árboles: el 18 se escucha el bosque y no la música del vecino.",
                     },
                     {
                         title: "Calor asegurado aunque afuera esté helado",
@@ -89,7 +89,7 @@ export default function FiestasPatriasPage() {
                     },
                     {
                         title: "Cocina equipada y WiFi Starlink",
-                        desc: "Cocina completa para los días largos, y conexión estable de verdad en un valle donde casi nadie tiene señal.",
+                        desc: "Cocina completa para los días largos, y conexión estable en un valle donde casi nadie tiene señal.",
                     },
                 ],
             }}

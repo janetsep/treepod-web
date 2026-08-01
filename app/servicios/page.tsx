@@ -28,12 +28,12 @@ export default function ServicesPage() {
         {
             title: "Desayunos y asados en el bosque",
             subtitle: "Sabor cordillerano",
-            description: "Despierta con un desayuno cordillerano servido a la habitación, o usa el quincho equipado para preparar un asado al aire libre. Comes bien sin moverte del bosque.",
+            description: "Despierta con un desayuno cordillerano servido en tu domo, o pídenos la parrilla y la llevamos hasta tu domo para tu asado. Comes bien sin moverte del bosque.",
             image: "/images/real/comidatreepod.jpg",
             secondaryImage: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
-            caption: "Desayuno cordillerano y quincho",
-            features: ["Desayuno a la habitación", "Quincho equipado para asados", "Productos del valle (costo adicional)"],
+            caption: "Desayuno cordillerano en tu domo",
+            features: ["Desayuno servido en tu domo", "Parrilla que llevamos a tu domo", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
         }
@@ -46,15 +46,15 @@ export default function ServicesPage() {
             <CinematicSection
                 image="/images/wellness/servicios-poster.jpg"
                 videoSrc="/videos/hero-servicios.mp4"
-                alt="Quincho para asados y tinaja de ciprés en TreePod, Valle Las Trancas"
+                alt="Servicios de TreePod: desayuno servido y tinaja de ciprés, Valle Las Trancas"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
-                text="Desayunos a la cama, quincho equipado para asados y tinaja privada en temporada."
+                text="Desayunos servidos en tu domo, parrilla a domicilio y tinaja privada en temporada."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
-                photoCaption="Quincho y tinaja, Valle Las Trancas"
+                photoCaption="Servicios TreePod, Valle Las Trancas"
             />
 
             <GeoDivider left="22%" />

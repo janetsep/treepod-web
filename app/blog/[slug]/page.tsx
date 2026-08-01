@@ -83,7 +83,7 @@ Días largos y temperaturas agradables para recorrer el valle a pie.
 El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
 ### Descanso junto a la estufa
-Las noches frescas son perfectas para un asado en el quincho o un libro junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
+Las noches frescas son perfectas para un asado con la parrilla en tu domo o un libro junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
 
 ## Resumen rápido
 

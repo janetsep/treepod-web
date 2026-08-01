@@ -28,7 +28,7 @@ const fichaTecnica = [
     },
     {
         titulo: "Áreas Comunes",
-        detalle: "Quincho listo para tus asados y un Invernadero Nativo para explorar.",
+        detalle: "Invernadero nativo para explorar y cosechar. El quincho abre en septiembre de 2026.",
     },
     {
         titulo: "Calor 24/7",

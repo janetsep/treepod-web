@@ -33,7 +33,7 @@ const facts: Array<[string, string, string]> = [
     ["De carro até o Nevados de Chillán", "12 min", "Esquie de manhã, curta as termas à tarde e volte para um domo aquecido no meio do bosque."],
     ["Estufa a pellet automática", "sem lenha", "A estufa é programável e se alimenta sozinha. O domo fica aquecido a noite toda, mesmo nevando lá fora."],
     ["Wi-Fi Starlink via satélite", "alta velocidade", "Internet de verdade na montanha: suba as fotos do powder ou faça aquela call de trabalho."],
-    ["Cozinha no domo + quincho", "incluído", "Cozinha completa, cafeteira Nespresso e um quincho (churrasqueira chilena coberta) no bosque."],
+    ["Cozinha no domo + churrasqueira", "incluído", "Cozinha completa, cafeteira Nespresso e churrasqueira que levamos até o seu domo."],
     ["Estacionamento ao lado do domo", "grátis", "Carregue e descarregue o equipamento de esqui a poucos passos da porta."],
     ["Capacidade por domo", "até 4", "Cama de casal mais um mezanino. Temos 4 domos no total."],
 ];

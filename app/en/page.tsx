@@ -34,7 +34,7 @@ const facts: Array<[string, string, string]> = [
     ["Drive to Nevados de Chillán ski resort", "12 min", "Ski in the morning, thermal baths in the afternoon, and come back to a warm dome in the forest."],
     ["Automatic pellet stove", "no wood", "The stove is programmable and refills itself. Your dome stays warm through the night, even when it snows outside."],
     ["Starlink satellite Wi-Fi", "high speed", "Real internet in the mountains: upload your powder photos or take a work call."],
-    ["Kitchen in your dome + barbecue area", "included", "Full kitchen, Nespresso coffee machine, and a shared quincho (Chilean barbecue hut) in the forest."],
+    ["Kitchen in your dome + barbecue", "included", "Full kitchen, Nespresso coffee machine, and a barbecue grill we bring to your dome."],
     ["Parking next to your dome", "free", "Load and unload your ski gear a few steps from the door."],
     ["Capacity per dome", "up to 4", "One queen bed plus a loft. We have 4 domes in total."],
 ];
