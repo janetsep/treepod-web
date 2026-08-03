@@ -19,6 +19,15 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     const [loading, setLoading] = useState(true);
     const [monthsToShow, setMonthsToShow] = useState(1);
     const [month, setMonth] = useState<Date | undefined>(defaultMonth || startOfToday());
+
+    // Si la fecha llega después del primer render (por ejemplo, la entrada viene en
+    // la URL y el estado se hidrata luego), hay que saltar a ese mes igual. Se
+    // compara por año-mes para no pelear con la navegación manual del huésped.
+    const mesObjetivo = defaultMonth ? `${defaultMonth.getFullYear()}-${defaultMonth.getMonth()}` : null;
+    useEffect(() => {
+        if (defaultMonth) setMonth(defaultMonth);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mesObjetivo]);
     // Regla de negocio: el sistema solo acepta reservas para HOY si son antes de las
     // 14:00 (hora de Chile). Pasadas las 14:00, la fecha mínima de entrada es mañana.
     const [minSelectable, setMinSelectable] = useState<Date>(startOfToday());

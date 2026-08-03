@@ -559,6 +559,11 @@ function DisponibilidadContent() {
                     </div>
                   </div>
                   <AvailabilityCalendar
+                    // Sin esto el calendario abría SIEMPRE en el mes actual, aunque
+                    // el enlace trajera fechas de otro mes: quien llegaba desde la
+                    // campaña de Fiestas Patrias veía agosto y no encontraba el 18
+                    // de septiembre.
+                    defaultMonth={entrada ? new Date(entrada + 'T12:00:00') : undefined}
                     selectedRange={{
                       from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
                       to: salida ? new Date(salida + 'T12:00:00') : undefined
