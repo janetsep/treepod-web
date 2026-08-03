@@ -62,6 +62,11 @@ export async function GET(request: Request) {
       domo: (r.domos as any)?.nombre || "",
       cliente: `${r.nombre || ""} ${r.apellido || ""}`.trim(),
       total: Number(r.total) || 0,
+      estado: r.estado,
+      // Estadía real pero sin cobro (cortesía, invitado, cambio de fecha). Llega
+      // gente y hay que prepararle el domo, pero NO es una reserva vendida: se
+      // separa para que no infle los indicadores comerciales.
+      sin_cobro: ["bloqueado", "suspendido"].includes(r.estado),
       desayuno: svcs.some((s: string) => s.includes("desayuno")),
       cena: svcs.some((s: string) => s.includes("cena") || s.includes("romántico")),
       tinaja: svcs.some((s: string) => s.includes("tinaja")),
@@ -75,8 +80,12 @@ export async function GET(request: Request) {
   const todas    = (reservas || []).map(mapR);
 
   const vigentes = todas.filter(r => r.checkout >= hoy);
+  // Los huésped-noches SÍ incluyen las estadías sin cobro: esa gente igual come,
+  // ensucia y gasta luz, y es lo que manda para comprar insumos.
   const hnProximas       = vigentes.reduce((s, r) => s + r.noches * r.huespedes, 0);
   const ingresosProximos = vigentes.reduce((s, r) => s + r.total, 0);
+  // El conteo comercial, en cambio, solo cuenta las reservas que se vendieron.
+  const vigentesVendidas = vigentes.filter(r => !r.sin_cobro);
 
   const inicioMes = hoy.substring(0, 7) + "-01";
   const { data: boletasMes } = await supabaseAdmin
@@ -161,7 +170,8 @@ export async function GET(request: Request) {
     semanal: (semanalRaw || []).reverse(),
     llegadas, salidas, en_casa, proximas, todas,
     kpis: {
-      reservas_proximas: vigentes.length,
+      reservas_proximas: vigentesVendidas.length,
+      sin_cobro_proximas: vigentes.length - vigentesVendidas.length,
       hn_proximas: hnProximas,
       ingresos_proximos: Math.round(ingresosProximos),
       gasto_boletas_mes: Math.round(gastoBoletas),
