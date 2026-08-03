@@ -8,9 +8,10 @@ import { trackEvent } from "../lib/analytics";
 // venta del año. La landing existía sin ninguna puerta de entrada: esta franja y
 // el enlace del menú son esa puerta.
 //
-// Va en rojo bandera y no en el charcoal de la marca a propósito: es la única
-// pieza del sitio que debe interrumpir la lectura. La versión anterior en tono
-// oscuro se confundía con el resto de la página y pasaba desapercibida.
+// El color patrio va en las LETRAS, no en el fondo: el fondo rojo a sangre
+// completa peleaba con la portada. Sobre el charcoal de la marca, el azul y el
+// rojo de bandera no alcanzan contraste AA, así que se usan sus versiones
+// aclaradas (#6FA8FF y #FF7466) — se leen igual de patrias y sí se pueden leer.
 //
 // Se apaga sola el 22 de septiembre: no hay que acordarse de sacarla.
 const FIN = new Date("2026-09-22T00:00:00-03:00");
@@ -42,29 +43,31 @@ export default function AvisoFiestasPatrias() {
       <Link
         href="/fiestas-patrias-las-trancas"
         onClick={() => trackEvent("click_franja_fiestas_patrias")}
-        className="group block bg-[#D52B1E] text-white hover:bg-[#c0241a] transition-colors"
+        className="group block bg-[#1E1B16] hover:bg-[#282318] transition-colors"
       >
         <div className="mx-auto max-w-[1280px] px-5 md:px-10 py-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
-          <BanderaChile className="w-8 h-[21px] rounded-sm shadow-[0_1px_6px_rgba(0,0,0,0.35)] shrink-0" />
+          <BanderaChile className="w-8 h-[21px] rounded-sm shadow-[0_1px_6px_rgba(0,0,0,0.5)] shrink-0" />
 
-          <span className="font-display text-[22px] md:text-[26px] leading-none font-semibold tracking-tight">
-            18 de Septiembre
+          <span className="font-display text-[24px] md:text-[30px] leading-none font-semibold tracking-tight">
+            <span className="text-[#6FA8FF]">18</span>{" "}
+            <span className="text-white">de</span>{" "}
+            <span className="text-[#FF7466]">Septiembre</span>
           </span>
 
-          <span className="hidden md:inline text-white/40 text-[20px] leading-none">/</span>
+          <span className="hidden md:inline text-white/25 text-[20px] leading-none">/</span>
 
-          <span className="text-[14px] md:text-[16px] text-white/95">
+          <span className="text-[14px] md:text-[16px] text-white/90">
             El 18 y el 19 caen viernes y sábado: cuatro días en el bosque, del 17 al 21.
           </span>
 
-          <span className="inline-flex items-center gap-2 bg-white text-[#D52B1E] font-semibold text-[13px] md:text-[14px] px-5 py-2 rounded-[2px] shadow-sm group-hover:bg-[#FFF6D9] transition-colors">
+          <span className="inline-flex items-center gap-2 bg-[#00ADEF] text-[#1E1B16] font-semibold text-[13px] md:text-[14px] px-5 py-2 rounded-[2px] group-hover:bg-[#0098d4] transition-colors">
             Ver disponibilidad
             <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
               &rarr;
             </span>
           </span>
 
-          <BanderaChile className="w-8 h-[21px] rounded-sm shadow-[0_1px_6px_rgba(0,0,0,0.35)] shrink-0" />
+          <BanderaChile className="w-8 h-[21px] rounded-sm shadow-[0_1px_6px_rgba(0,0,0,0.5)] shrink-0" />
         </div>
       </Link>
 
