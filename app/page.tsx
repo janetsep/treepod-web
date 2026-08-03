@@ -15,6 +15,7 @@ import Ubicacion from "./components/Ubicacion";
 import ValueBand from "./components/ValueBand";
 import ComoReservar from "./components/ComoReservar";
 import FAQ from "./components/FAQ";
+import AvisoFiestasPatrias from "./components/AvisoFiestasPatrias";
 import CinematicSection from "./components/CinematicSection";
 import GeoDivider from "./components/deco/GeoDivider";
 import { FaqJsonLd } from "./components/JsonLdSchemas";
@@ -36,6 +37,7 @@ export default function Home() {
       {/* FAQPage JSON-LD solo en el home: refleja las preguntas visibles de <FAQ /> */}
       <FaqJsonLd />
       <Hero />
+      <AvisoFiestasPatrias />
       <GeoDivider left="8%" />
       <ValueBand />
 

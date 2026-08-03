@@ -89,7 +89,8 @@ export type AnalyticsEventName =
   | "click_reservar_fiestas_patrias_testimonios"
   | "click_reservar_fiestas_patrias_final"
   | "begin_checkout_fiestas_patrias"
-  | "click_whatsapp_fiestas_patrias";
+  | "click_whatsapp_fiestas_patrias"
+  | "click_franja_fiestas_patrias";
 
 declare global {
   interface Window {
