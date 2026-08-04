@@ -46,7 +46,7 @@ export default function FiestasPatriasPage() {
                 position: "center 40%",
                 eyebrow: "Fiestas Patrias 2026 · Valle Las Trancas",
                 title: <>Este 18 celebra en el bosque, no en el taco</>,
-                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, tu propia parrilla en la terraza y el valle a 12 minutos de Nevados de Chillán.",
+                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, la parrilla que te llevamos hasta ahí y el valle a 12 minutos de Nevados de Chillán.",
                 priceLine: "Desde $175.000 la noche para 4 personas",
                 priceSub: "Tarifa de invierno, estadías de 2 noches o más. Se reserva con el 50%.",
                 stat: "17–21",
@@ -76,7 +76,7 @@ export default function FiestasPatriasPage() {
                         // lleva tres meses sin terminarse y no se anuncia lo que no
                         // se puede cumplir. Volver a sumarlo solo con la obra recibida
                         // y una foto real.
-                        title: "Tu asado del 18 en tu propia terraza",
+                        title: "Tu asado del 18 sin compartirlo con nadie",
                         desc: "Te llevamos la parrilla hasta tu domo para que hagas tu asado del 18 sin compartir espacio con nadie. Tú pones la carne y el vino; el bosque pone el resto.",
                     },
                     {
