@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import TriBullet from "./deco/TriBullet";
 
+const imageBlurDataURL =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
+
 interface Props {
   image: string;
   alt: string;
@@ -63,6 +66,8 @@ export default function CinematicSection({
         fill
         quality={75}
         priority={priority}
+        placeholder="blur"
+        blurDataURL={imageBlurDataURL}
         sizes="100vw"
         className={`object-cover ${videoSrc ? "" : "ken-burns-soft"}`}
         style={{ objectPosition: position }}

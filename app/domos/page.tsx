@@ -8,6 +8,11 @@ import SectionFolio from "../components/SectionFolio";
 import TriBullet from "../components/deco/TriBullet";
 import GeoDivider from "../components/deco/GeoDivider";
 
+// Evita espacios vacíos mientras Next.js descarga y optimiza las fotografías.
+// Es una miniatura SVG local de menos de 200 bytes, sin una petición adicional.
+const imageBlurDataURL =
+    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
+
 // Ficha técnica como índice de revista: numeral, título y dato — sin iconos en cajitas.
 const fichaTecnica = [
     {
@@ -43,8 +48,9 @@ export default function DomosPage() {
     useEffect(() => {
         // Disparar evento view_item_list a GA4
         if (typeof window !== 'undefined') {
-            (window as any).dataLayer = (window as any).dataLayer || [];
-            (window as any).dataLayer.push({
+            const analyticsWindow = window as Window & { dataLayer?: Array<Record<string, unknown>> };
+            analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
+            analyticsWindow.dataLayer.push({
                 event: 'view_item_list',
                 item_list_name: 'Domos Disponibles',
                 items: [{
@@ -113,6 +119,8 @@ export default function DomosPage() {
                                     src="/images/concept/concept-bg-real.png"
                                     alt="Croquis Arquitectónico Domo"
                                     fill
+                                    placeholder="blur"
+                                    blurDataURL={imageBlurDataURL}
                                     sizes="(max-width: 1024px) 100vw, 33vw"
                                     className="object-contain mix-blend-multiply"
                                 />
@@ -181,6 +189,8 @@ export default function DomosPage() {
                                         src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg"
                                         alt="Interior del domo TreePod, cama con vista panorámica al bosque"
                                         fill
+                                        placeholder="blur"
+                                        blurDataURL={imageBlurDataURL}
                                         sizes="(max-width: 768px) 100vw, 50vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
@@ -190,6 +200,8 @@ export default function DomosPage() {
                                         src="/images/interiors/interior-domo-acogedor-21-4.jpg"
                                         alt="Detalle interior de descanso"
                                         fill
+                                        placeholder="blur"
+                                        blurDataURL={imageBlurDataURL}
                                         sizes="(max-width: 768px) 50vw, 25vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
@@ -199,6 +211,8 @@ export default function DomosPage() {
                                         src="/images/interiors/interior-domo-acogedor-89-2.jpg"
                                         alt="Interior acogedor del domo TreePod"
                                         fill
+                                        placeholder="blur"
+                                        blurDataURL={imageBlurDataURL}
                                         sizes="(max-width: 768px) 50vw, 25vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
@@ -261,6 +275,8 @@ export default function DomosPage() {
                                         src="/images/EquipamientoParaTuEstadia/Cocina.jpg"
                                         alt="Cocina y Kitchenette Real en Domo TreePod"
                                         fill
+                                        placeholder="blur"
+                                        blurDataURL={imageBlurDataURL}
                                         sizes="(max-width: 768px) 50vw, 35vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
@@ -270,6 +286,8 @@ export default function DomosPage() {
                                         src="/images/interiors/CafeteraNespresso.jpg"
                                         alt="Cafetera Nespresso en el domo"
                                         fill
+                                        placeholder="blur"
+                                        blurDataURL={imageBlurDataURL}
                                         sizes="(max-width: 768px) 50vw, 35vw"
                                         className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
