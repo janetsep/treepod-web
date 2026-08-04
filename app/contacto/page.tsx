@@ -238,6 +238,56 @@ export default function ContactoPage() {
                         </div>
                     </div>
                 </div>
+
+                <section className="mt-20 md:mt-28 border-t border-[#1E1B16]/15 pt-14 md:pt-20">
+                    <SectionFolio num="N° 02" label="Elige tu canal" note="Estamos en Valle Las Trancas" />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+                        <div className="col-span-12 lg:col-span-5">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Una respuesta clara para{" "}
+                                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                    planificar tu viaje
+                                </span>
+                            </h2>
+                            <p className="lead text-[#5B5348] mt-6 max-w-xl">
+                                Estamos en la Ruta N-55, kilómetro 72, en Valle Las Trancas. Puedes contactarnos para resolver dudas sobre disponibilidad, servicios, celebraciones o tu llegada a TreePod.
+                            </p>
+                        </div>
+
+                        <div className="col-span-12 lg:col-span-7 grid sm:grid-cols-2 gap-x-8 gap-y-8">
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">WhatsApp para una consulta directa</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    Es el canal más simple si ya tienes fechas o necesitas resolver una pregunta concreta. Incluye entrada, salida, número de huéspedes y el motivo de tu consulta para que podamos orientarte con mayor precisión.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">Formulario para solicitudes detalladas</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    Utiliza el formulario cuando necesites explicar una celebración, una reserva especial o una solicitud con varios antecedentes. Recibirás la respuesta en el correo que indiques; normalmente respondemos dentro del día.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">Antes de viajar a la montaña</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    El check-in comienza a las 16:00. Coordinamos la llegada por WhatsApp y, durante el invierno, recomendamos revisar el estado de la ruta y portar cadenas. Así podrás preparar el trayecto antes de salir.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">Reservas y disponibilidad en línea</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    Si ya decidiste las fechas, revisa el calendario de reserva directa. Allí puedes indicar cuántas personas viajan, conocer el valor de la estadía y confirmar el domo mediante Webpay Plus.
+                                </p>
+                                <a href="/disponibilidad" className={`${btnPrimary} mt-5`}>
+                                    Ver disponibilidad
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
 

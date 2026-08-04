@@ -3,6 +3,7 @@
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { trackEvent } from "../lib/analytics";
@@ -471,14 +472,14 @@ function DisponibilidadContent() {
       <header className="bg-[#F7F3EC] border-b border-[#1E1B16]/15 pt-28 md:pt-32 pb-8">
         <div className="mx-auto max-w-[1280px] px-5 md:px-10">
           <SectionFolio num={`Paso ${resultado ? 2 : 1} de 2`} label="Reserva directa" />
-          <h1 className="display-lg text-[#1E1B16] max-w-3xl">
+          <p className="display-lg text-[#1E1B16] max-w-3xl" aria-hidden="true">
             Reserva tu{" "}
             <span className="italic whitespace-nowrap">
               glamping
               <TriBullet className="inline-block w-3 h-2.5 ml-2 text-[#00ADEF]" />
             </span>{" "}
             en Las Trancas
-          </h1>
+          </p>
           {/* Fila de confianza tipo masthead: el "50% hoy" es el reductor de
               fricción n° 1 y se ve también en mobile. */}
           <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
@@ -620,8 +621,8 @@ function DisponibilidadContent() {
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-opacity duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40'}`}>
                 {servicios.map((s) => {
                   // Usar directamente los nombres y datos de la base de datos
-                  let displayNombre = s.nombre;
-                  let displayDescripcion = s.descripcion;
+                  const displayNombre = s.nombre;
+                  const displayDescripcion = s.descripcion;
                   let displayImage = s.image_url;
 
                   // Asignar imágenes basándose en palabras clave (siempre, para consistencia)
@@ -1179,15 +1180,66 @@ function DisponibilidadContent() {
             </div>
           </div>
         )}
+
       </main>
     </div>
   );
 }
 
+// Fuera del límite de Suspense: useSearchParams hace que el checkout sea
+// dinámico, pero esta guía debe permanecer en el HTML prerenderizado para SEO.
+function ReservationInfo() {
+  return (
+    <section className="bg-[#F7F3EC] font-sans text-[#1E1B16] border-t border-[#1E1B16]/15 py-14 md:py-20">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
+        <SectionFolio num="N° 03" label="Antes de reservar" />
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+          <div className="col-span-12 lg:col-span-5">
+            <h2 className="display-lg text-[#1E1B16]">
+              Tu estadía en la montaña,{" "}
+              <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">paso a paso</span>
+            </h2>
+            <p className="lead text-[#5B5348] mt-6 max-w-xl">
+              Elige tus fechas, revisa el valor completo y confirma tu domo directamente en TreePod. El calendario consulta la disponibilidad para toda la estadía antes de continuar al pago.
+            </p>
+          </div>
+          <div className="col-span-12 lg:col-span-7 grid sm:grid-cols-2 gap-x-8 gap-y-8">
+            <article className="border-t border-[#1E1B16]/15 pt-5">
+              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cómo se confirma la reserva?</h3>
+              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Selecciona entrada, salida y número de huéspedes. Verás el precio de la estadía antes de ingresar tus datos. La reserva queda confirmada al pagar el 50% mediante Webpay Plus; el saldo se paga durante el check-in.</p>
+            </article>
+            <article className="border-t border-[#1E1B16]/15 pt-5">
+              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cuáles son los horarios?</h3>
+              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">El check-in comienza a las 16:00 y el check-out es hasta las 12:00. Antes de tu llegada coordinamos por WhatsApp la recepción y la información necesaria para llegar a Valle Las Trancas.</p>
+            </article>
+            <article className="border-t border-[#1E1B16]/15 pt-5">
+              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cuántas personas pueden alojarse?</h3>
+              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Cada domo admite entre una y cuatro personas. Indica el número correcto de huéspedes para que el sistema calcule la tarifa y compruebe una alternativa disponible para todo el período elegido.</p>
+            </article>
+            <article className="border-t border-[#1E1B16]/15 pt-5">
+              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Puedo agregar servicios?</h3>
+              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Sí. Después de reservar puedes consultar desayunos y otros extras por WhatsApp o correo. Algunos servicios dependen de la temporada, por lo que nuestro equipo confirma su disponibilidad para tus fechas.</p>
+            </article>
+            <article className="border-t border-[#1E1B16]/15 pt-5 sm:col-span-2">
+              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Necesitas revisar las condiciones?</h3>
+              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3 max-w-3xl">Consulta las condiciones de confirmación, cambios y cancelación antes de pagar. Si tienes una solicitud especial o prefieres orientación humana, puedes escribirnos por WhatsApp antes de completar la reserva.</p>
+              <Link href="/terminos" className={`${linkLine} mt-5 inline-flex`}>Leer términos de reserva <span aria-hidden="true">→</span></Link>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function DisponibilidadPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-3xl text-[#1E1B16] animate-pulse">TreePod…</div>}>
-      <DisponibilidadContent />
-    </Suspense>
+    <div className="bg-[#F7F3EC]">
+      <h1 className="sr-only">Disponibilidad y reservas de domos en Valle Las Trancas</h1>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-3xl text-[#1E1B16] animate-pulse">TreePod…</div>}>
+        <DisponibilidadContent />
+      </Suspense>
+      <ReservationInfo />
+    </div>
   );
 }

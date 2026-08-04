@@ -37,7 +37,7 @@ export default function PaquetesPage() {
                 if (error) throw error;
                 if (data) {
                     // Assign categories based on name for visual organization
-                    const withCategories = data.map((s: any) => {
+                    const withCategories = data.map((s: Servicio) => {
                         let displayImage = s.image_url;
                         if (s.nombre.toLowerCase().includes('desayuno')) displayImage = "/images/Galeria/Desayuno.jpg";
                         if (s.nombre.toLowerCase().includes('tinaja')) displayImage = "/images/wellness/Tinaja1.jpg";
@@ -170,6 +170,53 @@ export default function PaquetesPage() {
                         ))}
                     </div>
                 )}
+
+                <section className="mt-20 md:mt-28 border-t border-[#1E1B16]/15 pt-14 md:pt-20">
+                    <SectionFolio num="N° 02" label="Cómo elegir tus extras" />
+                    <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
+                        <div className="col-span-12 lg:col-span-5">
+                            <h2 className="display-lg text-[#1E1B16]">
+                                Personaliza solo lo que{" "}
+                                <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
+                                    haga sentido para ti
+                                </span>
+                            </h2>
+                            <p className="lead text-[#5B5348] mt-6 max-w-xl">
+                                Los extras complementan la estadía, pero no son necesarios para disfrutar tu domo. Revisa cada alternativa y consulta disponibilidad para las fechas de tu viaje.
+                            </p>
+                        </div>
+
+                        <div className="col-span-12 lg:col-span-7 space-y-8">
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cuándo puedo solicitar un servicio?</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    Puedes consultar antes de reservar o después de confirmar tu estadía. Para ayudarte con una respuesta precisa, indícanos las fechas, el número de huéspedes y el servicio que te interesa. El equipo confirmará si está disponible para ese período.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cómo se interpreta el precio?</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    La ficha de cada extra muestra su valor vigente y señala cuando se calcula por persona o por noche. Si aparece “Consultar”, escríbenos para recibir el detalle antes de decidir. Así puedes conocer el alcance y el valor antes de incorporarlo a tu experiencia.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Todos los servicios funcionan durante el año?</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    No necesariamente. La tinaja privada es un servicio de temporada y otras alternativas pueden depender de disponibilidad operativa. Por eso confirmamos cada solicitud para las fechas concretas de tu estadía en Valle Las Trancas.
+                                </p>
+                            </article>
+
+                            <article className="border-t border-[#1E1B16]/15 pt-5">
+                                <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cómo preparo una celebración?</h3>
+                                <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
+                                    Si tu viaje tiene un motivo especial, cuéntanos qué quieres celebrar y para cuántas personas. Revisaremos contigo las alternativas disponibles sin añadir elementos que no necesites ni prometer servicios que no estén confirmados.
+                                </p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <GeoDivider left="76%" />
