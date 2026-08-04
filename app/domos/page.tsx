@@ -198,8 +198,8 @@ export default function DomosPage() {
                                 </div>
                                 <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-[2px]">
                                     <Image
-                                        src="/images/interiors/interior-domo-acogedor-78-2.jpg"
-                                        alt="Dos copas de vino sobre la cama del domo con el bosque al fondo"
+                                        src="/images/EquipamientoParaTuEstadia/interior-domo-acogedor-75-2.jpg"
+                                        alt="Vista amplia del interior del domo con camas en dos niveles y ventanal al bosque"
                                         fill
                                         placeholder="blur"
                                         blurDataURL={imageBlurDataURL}
