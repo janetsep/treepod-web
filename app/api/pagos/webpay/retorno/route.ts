@@ -256,17 +256,25 @@ async function handleReturn(req: Request) {
         });
         console.log("💰 Movimiento financiero registrado exitosamente via FinanceService");
 
+        // Valor economico de la venta para GA4, Meta y Google Ads: el TOTAL de la
+        // reserva, no el abono. Webpay cobra el 50% por diseno (regla del negocio,
+        // ver montoEsperado mas arriba), pero si se le manda ese 50% a las
+        // plataformas, cada venta les parece valer la mitad de lo que vale y
+        // optimizan a la baja. Lo que se le cobra al cliente NO cambia: cambia
+        // solo la cifra con la que los anuncios deciden a quien mostrarse.
+        const valorVenta = Number(reserva.total) || commit.amount || 0;
+
         // 🎯 Lógica de Medición de Servidor (GA4 Measurement Protocol)
         // Se ejecuta ANTES del redirect para asegurar que el dato se envíe si el usuario cierra la pestaña
         try {
           await trackServerPurchase({
             transaction_id: token || reserva.id,
-            value: commit.amount || 0,
+            value: valorVenta,
             currency: 'CLP',
             items: [{
               item_id: 'reserva_treepod',
               item_name: 'Reserva TreePod',
-              price: commit.amount || 0,
+              price: valorVenta,
               quantity: 1
             }]
           });
@@ -282,7 +290,7 @@ async function handleReturn(req: Request) {
 
           await trackMetaConversion({
             transaction_id: token || reserva.id,
-            value: commit.amount || 0,
+            value: valorVenta,
             currency: 'CLP',
             content_name: 'Reserva TreePod',
             content_ids: ['reserva_treepod'],
@@ -308,7 +316,7 @@ async function handleReturn(req: Request) {
           await recordConversion({
             transaction_id: token || reserva.id,
             reserva_id: reserva.id,
-            value: commit.amount || 0,
+            value: valorVenta,
             currency: 'CLP',
             conversion_type: 'purchase',
             source: utmParams.utm_source || 'direct',
