@@ -10,7 +10,7 @@ import SeasonalLanding from '../components/SeasonalLanding';
 
 export const metadata: Metadata = {
     title: 'Fiestas Patrias 2026 en Las Trancas | Domos TreePod, Ñuble',
-    description: 'Pasa el 18 de septiembre en el bosque nativo de Valle Las Trancas. Domos geodésicos cálidos para 2 a 4 personas y quincho nuevo. Fin de semana largo del 17 al 21 de septiembre 2026.',
+    description: 'Pasa el 18 de septiembre en el bosque nativo de Valle Las Trancas. Domos geodésicos cálidos para 2 a 4 personas. Fin de semana largo del 17 al 21 de septiembre 2026.',
     keywords: ['fiestas patrias las trancas', 'donde alojar 18 de septiembre ñuble', '18 de septiembre valle las trancas', 'fin de semana largo septiembre 2026', 'glamping fiestas patrias', 'domos 18 de septiembre chillán', 'escapada fiestas patrias sur de chile', 'alojamiento 18 septiembre nevados de chillán'],
     alternates: {
         canonical: '/fiestas-patrias-las-trancas',
@@ -46,7 +46,7 @@ export default function FiestasPatriasPage() {
                 position: "center 40%",
                 eyebrow: "Fiestas Patrias 2026 · Valle Las Trancas",
                 title: <>Este 18 celebra en el bosque, no en el taco</>,
-                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, nuestro quincho nuevo recién estrenado y el valle a 12 minutos de Nevados de Chillán.",
+                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, tu propia parrilla en la terraza y el valle a 12 minutos de Nevados de Chillán.",
                 priceLine: "Desde $175.000 la noche para 4 personas",
                 priceSub: "Tarifa de invierno, estadías de 2 noches o más. Se reserva con el 50%.",
                 stat: "17–21",
@@ -72,11 +72,11 @@ export default function FiestasPatriasPage() {
                 lead: "Jueves 17, viernes 18, sábado 19 y domingo 20: el finde largo más grande del año",
                 items: [
                     {
-                        title: "Estrenamos quincho para este 18",
-                        desc: "Es obra nueva y la inauguramos en septiembre: un quincho techado para juntarse a comer, justo para el fin de semana largo. Si vienen varios domos, es el lugar donde se arma la mesa larga.",
-                    },
-                    {
-                        title: "O la parrilla en tu propio domo",
+                        // El quincho salió de esta landing: a agosto de 2026 la obra
+                        // lleva tres meses sin terminarse y no se anuncia lo que no
+                        // se puede cumplir. Volver a sumarlo solo con la obra recibida
+                        // y una foto real.
+                        title: "Tu asado del 18 en tu propia terraza",
                         desc: "Te llevamos la parrilla hasta tu domo para que hagas tu asado del 18 sin compartir espacio con nadie. Tú pones la carne y el vino; el bosque pone el resto.",
                     },
                     {

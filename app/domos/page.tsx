@@ -28,7 +28,9 @@ const fichaTecnica = [
     },
     {
         titulo: "Áreas Comunes",
-        detalle: "Invernadero nativo para explorar y cosechar. El quincho abre en septiembre de 2026.",
+        // Sin fecha de apertura del quincho: la obra lleva tres meses de atraso y
+        // prometer un mes que después no se cumple es peor que no anunciarlo.
+        detalle: "Invernadero nativo para explorar y cosechar.",
     },
     {
         titulo: "Calor 24/7",
