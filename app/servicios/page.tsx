@@ -26,12 +26,11 @@ export default function ServicesPage() {
             href: "/disponibilidad"
         },
         {
-            title: "Desayunos y asados en el bosque",
+            title: "Desayuno en tu domo y parrilla a domicilio",
             subtitle: "Sabor cordillerano",
-            description: "Despierta con un desayuno cordillerano servido en tu domo, o pídenos la parrilla y la llevamos hasta tu domo para tu asado. Comes bien sin moverte del bosque.",
-            image: "/images/real/comidatreepod.jpg",
-            secondaryImage: "/images/Galeria/Desayuno.jpg",
-            alt: "Desayuno artesanal y Gastronomía servida en Domo TreePod",
+            description: "Despierta con un desayuno cordillerano servido en tu domo. Si prefieres preparar un asado, pídenos la parrilla y la llevamos hasta tu terraza para que disfrutes a tu ritmo.",
+            image: "/images/Galeria/Desayuno.jpg",
+            alt: "Desayuno cordillerano servido en un domo de TreePod",
             caption: "Desayuno cordillerano en tu domo",
             features: ["Desayuno servido en tu domo", "Parrilla que llevamos a tu domo", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
@@ -44,9 +43,8 @@ export default function ServicesPage() {
             <TrackView eventName="view_servicios" />
 
             <CinematicSection
-                image="/images/wellness/servicios-poster.jpg"
-                videoSrc="/videos/hero-servicios.mp4"
-                alt="Servicios de TreePod: desayuno servido y tinaja de ciprés, Valle Las Trancas"
+                image="/images/wellness/Tinaja3.jpeg"
+                alt="Tinaja privada de ciprés entre el bosque nativo de TreePod"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
                 text="Desayunos servidos en tu domo, parrilla a domicilio y tinaja privada en temporada."
@@ -54,7 +52,7 @@ export default function ServicesPage() {
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
-                photoCaption="Servicios TreePod, Valle Las Trancas"
+                photoCaption="Tinaja privada entre robles, Valle Las Trancas"
             />
 
             <GeoDivider left="22%" />
@@ -85,50 +83,21 @@ export default function ServicesPage() {
                             <article key={index} className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-center">
                                 {/* Foto protagonista con pie de foto, sin marcos girados ni gradientes */}
                                 <div className={`col-span-12 lg:col-span-7 ${reverse ? "lg:order-2" : ""}`}>
-                                    {service.secondaryImage ? (
-                                        <figure>
-                                            <div className="grid grid-cols-2 gap-2 aspect-[4/3]">
-                                                <div className="relative overflow-hidden rounded-[2px] group">
-                                                    <Image
-                                                        alt={service.alt}
-                                                        src={service.secondaryImage}
-                                                        fill
-                                                        sizes="(max-width: 1024px) 50vw, 30vw"
-                                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                                                    />
-                                                </div>
-                                                <div className="relative overflow-hidden rounded-[2px] group">
-                                                    <Image
-                                                        alt="Asados y celebraciones en TreePod"
-                                                        src={service.image}
-                                                        fill
-                                                        sizes="(max-width: 1024px) 50vw, 30vw"
-                                                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <figcaption className="mt-2 flex items-center gap-2">
-                                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-                                                <span className="caption-editorial">{service.caption}</span>
-                                            </figcaption>
-                                        </figure>
-                                    ) : (
-                                        <figure>
-                                            <div className="relative overflow-hidden rounded-[2px] aspect-[4/3] group">
-                                                <Image
-                                                    alt={service.alt}
-                                                    src={service.image}
-                                                    fill
-                                                    sizes="(max-width: 1024px) 100vw, 60vw"
-                                                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                                                />
-                                            </div>
-                                            <figcaption className="mt-2 flex items-center gap-2">
-                                                <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-                                                <span className="caption-editorial">{service.caption}</span>
-                                            </figcaption>
-                                        </figure>
-                                    )}
+                                    <figure>
+                                        <div className="relative overflow-hidden rounded-[2px] aspect-[4/3] group">
+                                            <Image
+                                                alt={service.alt}
+                                                src={service.image}
+                                                fill
+                                                sizes="(max-width: 1024px) 100vw, 60vw"
+                                                className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                                            />
+                                        </div>
+                                        <figcaption className="mt-2 flex items-center gap-2">
+                                            <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
+                                            <span className="caption-editorial">{service.caption}</span>
+                                        </figcaption>
+                                    </figure>
                                 </div>
 
                                 {/* Texto: folio + titular + lista de filetes + CTA */}
