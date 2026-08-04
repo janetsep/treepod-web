@@ -3,6 +3,9 @@ import Link from "next/link";
 import SectionFolio from "./SectionFolio";
 import { btnPrimary } from "./deco/cta";
 
+const imageBlurDataURL =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
+
 // Artículo 01 — spread de revista: foto vertical sangrando al borde izquierdo,
 // titular que muerde la foto sobre bloque blanco y una segunda foto pequeña
 // desalineada a propósito. Los párrafos son el copy vigente, intacto.
@@ -17,16 +20,18 @@ export default function TreePodDomes() {
           <figure className="col-span-12 lg:col-span-7">
             <div className="relative aspect-[4/5] lg:aspect-auto lg:h-[78vh] overflow-hidden lg:ml-[calc(50%-50vw)]">
               <Image
-                alt="Domo TreePod entre los árboles"
-                className="object-cover object-center"
-                src="/images/Santuario1.jpeg"
+                alt="Domo geodésico bajo TreePod integrado en el bosque nativo"
+                className="object-cover object-[center_65%]"
+                src="/images/real/domo-bajo-bosque.jpg"
                 fill
+                placeholder="blur"
+                blurDataURL={imageBlurDataURL}
                 sizes="(max-width: 1024px) 100vw, 55vw"
               />
             </div>
             <figcaption className="mt-2 flex items-center gap-2">
               <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-              <span className="caption-editorial">Domo TreePod entre los árboles</span>
+              <span className="caption-editorial">Domo bajo TreePod entre robles y lupinos</span>
             </figcaption>
           </figure>
 
