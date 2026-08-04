@@ -282,7 +282,7 @@ export default function ContactoPage() {
                                     Si ya decidiste las fechas, revisa el calendario de reserva directa. Allí puedes indicar cuántas personas viajan, conocer el valor de la estadía y confirmar el domo mediante Webpay Plus.
                                 </p>
                                 <a href="/disponibilidad" className={`${btnPrimary} mt-5`}>
-                                    Ver disponibilidad
+                                    Ver disponibilidad y precio
                                 </a>
                             </article>
                         </div>

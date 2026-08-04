@@ -22,7 +22,7 @@ export default function ServicesPage() {
             alt: "Tinaja privada de ciprés al aire libre en TreePod",
             caption: "Tinaja de temporada, al aire libre",
             features: ["Disponible desde primavera (no opera en invierno)", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
-            buttonText: "Ver disponibilidad",
+            buttonText: "Ver disponibilidad y precio",
             href: "/disponibilidad"
         },
         {
@@ -48,7 +48,7 @@ export default function ServicesPage() {
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
                 text="Desayunos servidos en tu domo, parrilla a domicilio y tinaja privada en temporada."
-                ctaText="Ver disponibilidad"
+                ctaText="Ver disponibilidad y precio"
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"

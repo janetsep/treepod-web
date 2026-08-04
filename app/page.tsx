@@ -47,7 +47,7 @@ export default function Home() {
         eyebrow="La experiencia"
         title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> en el bosque nativo</>}
         text="Domos cálidos y bien equipados en medio del bosque. Sin frío y sin apuro."
-        ctaText="Ver disponibilidad"
+        ctaText="Ver disponibilidad y precio"
         ctaHref="/disponibilidad"
         photoCaption="Domo de noche, Valle Las Trancas"
       />
@@ -66,7 +66,7 @@ export default function Home() {
           title={<>A 12 minutos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
           text="Pasas el día en la nieve o en las termas y vuelves a tu propio refugio en el bosque, con todo listo."
           dato="Nevados de Chillán no es un solo volcán: son 17 centros eruptivos con unos 650.000 años de actividad."
-          ctaText="Ver disponibilidad"
+          ctaText="Ver disponibilidad y precio"
           ctaHref="/disponibilidad"
           stat="12"
           statCaption="minutos a Nevados de Chillán"

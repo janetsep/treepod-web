@@ -84,7 +84,7 @@ export default function DomosPage() {
                 eyebrow="Los domos"
                 title={<>Domos geodésicos equipados,<br className="hidden md:block" /> inmersos en el bosque nativo</>}
                 text="Duerme en medio del bosque nativo, sin renunciar a ninguna comodidad."
-                ctaText="Ver disponibilidad"
+                ctaText="Ver disponibilidad y precio"
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
@@ -344,7 +344,7 @@ export default function DomosPage() {
                         href="/disponibilidad"
                         className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5 whitespace-nowrap"
                     >
-                        Reservar ahora <span aria-hidden="true">→</span>
+                        Ver disponibilidad y precio <span aria-hidden="true">→</span>
                     </Link>
                 </div>
             </div>

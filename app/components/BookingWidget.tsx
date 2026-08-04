@@ -126,13 +126,13 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
               onClick={buscar}
               className="col-span-2 relative z-0 inline-flex items-center justify-center gap-2.5 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-[15px] px-7 py-3.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1.5 after:translate-y-1.5 after:-z-10 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5"
             >
-              Ver disponibilidad
+              Ver disponibilidad y precio
             </button>
           </div>
 
           <p className="text-[11px] text-gray-600 mt-3 leading-snug">
-            Reserva directa con el mejor precio. Confirmas pagando el 50%; el saldo se paga en el
-            check-in.
+            Elige tus fechas, revisa el precio al instante y confirma tu domo con el 50%. El saldo se
+            paga en el check-in.
           </p>
         </div>
       </div>
