@@ -37,9 +37,6 @@ export default function AvisoFiestasPatrias() {
 
   return (
     <div className="relative">
-      {/* Guirnalda tricolor: dos hilos finos que enmarcan la franja */}
-      <div className="h-[3px] w-full bg-[linear-gradient(90deg,#0039A6_0_33.33%,#FFFFFF_33.33%_66.66%,#D52B1E_66.66%_100%)] bg-[length:60px_100%]" />
-
       <Link
         href="/fiestas-patrias-las-trancas"
         onClick={() => trackEvent("click_franja_fiestas_patrias")}
@@ -70,8 +67,6 @@ export default function AvisoFiestasPatrias() {
           <BanderaChile className="w-8 h-[21px] rounded-sm shadow-[0_1px_6px_rgba(0,0,0,0.5)] shrink-0" />
         </div>
       </Link>
-
-      <div className="h-[3px] w-full bg-[linear-gradient(90deg,#D52B1E_0_33.33%,#FFFFFF_33.33%_66.66%,#0039A6_66.66%_100%)] bg-[length:60px_100%]" />
     </div>
   );
 }

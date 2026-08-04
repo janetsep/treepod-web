@@ -56,6 +56,20 @@ export default function Navbar() {
 
     // "18 de Septiembre" es un enlace de temporada: se retira después del 21 de
     // septiembre de 2026, cuando la landing deje de tener sentido.
+    const FIESTAS_HREF = "/fiestas-patrias-las-trancas";
+
+    // El enlace del 18 va con los colores de la bandera para que destaque entre
+    // los demás. Sobre el navbar sólido se usan los tonos exactos; sobre foto
+    // (navbar transparente) se aclaran, porque el azul #0039A6 desaparece contra
+    // una imagen oscura.
+    const EtiquetaFiestas = ({ solido }: { solido: boolean }) => (
+        <>
+            <span className={solido ? "text-[#0039A6]" : "text-[#8FC0FF]"}>18</span>
+            <span className={solido ? "text-text-main" : "text-white"}> de </span>
+            <span className={solido ? "text-[#D52B1E]" : "text-[#FF8A7E]"}>Septiembre</span>
+        </>
+    );
+
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "18 de Septiembre", href: "/fiestas-patrias-las-trancas" },
@@ -101,7 +115,9 @@ export default function Navbar() {
                                     : (isNavbarSolid ? 'text-text-main' : 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]')
                                     }`}
                             >
-                                {link.name}
+                                {link.href === FIESTAS_HREF
+                                    ? <EtiquetaFiestas solido={isNavbarSolid} />
+                                    : link.name}
                             </Link>
                         ))}
                     </div>
@@ -164,7 +180,10 @@ export default function Navbar() {
                                     className={`text-2xl font-black tracking-[0.14em] uppercase transition-colors ${pathname === link.href ? 'text-primary' : 'text-text-main'
                                         }`}
                                 >
-                                    {link.name}
+                                    {/* El menú móvil siempre abre sobre fondo blanco */}
+                                    {link.href === FIESTAS_HREF
+                                        ? <EtiquetaFiestas solido />
+                                        : link.name}
                                 </Link>
                             ))}
                             <div className="pt-8 border-t border-black/10 w-full mt-4">
