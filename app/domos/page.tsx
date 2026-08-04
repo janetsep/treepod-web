@@ -29,7 +29,7 @@ const fichaTecnica = [
     },
     {
         titulo: "Seguridad y Acceso",
-        detalle: "Estacionamiento privado y acceso seguro por pasarelas de madera.",
+        detalle: "Estacionamiento privado. El camino principal conecta los domos delanteros y las pasarelas de madera conducen a los domos posteriores.",
     },
     {
         titulo: "Áreas Comunes",
@@ -165,8 +165,9 @@ export default function DomosPage() {
                             Pasarelas entre <span className="italic">los robles</span>
                         </h2>
                         <p className="text-[#5B5348] leading-relaxed mt-5">
-                            Dejas el auto y caminas por pasarelas de madera que cruzan el bosque y la
-                            roca volcánica hasta cerca de tu domo.
+                            Desde el estacionamiento, el camino principal conduce a los domos delanteros.
+                            Para llegar a los domos posteriores, el recorrido continúa por pasarelas de
+                            madera que cruzan el bosque y la roca volcánica.
                         </p>
                         <p className="text-[#5B5348] leading-relaxed mt-4">
                             Los domos 3 y 4 están en alto, sobre pilares: se sube por una escalera
