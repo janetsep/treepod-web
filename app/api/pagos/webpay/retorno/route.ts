@@ -407,6 +407,11 @@ async function handleReturn(req: Request) {
     const redirectUrl = new URL('/confirmacion', baseUrl);
     redirectUrl.searchParams.set('reserva_id', reserva.id);
     redirectUrl.searchParams.set('amount', String(commit.amount || reserva.total));
+    // "amount" es lo que se le COBRO (el 50%) y es lo que ve el cliente en pantalla.
+    // "valor_venta" es el total de la reserva y es lo unico que deben usar GA4, Meta
+    // y Google Ads como valor de la venta: si se les manda el abono, cada venta les
+    // parece valer la mitad y pujan a la baja.
+    redirectUrl.searchParams.set('valor_venta', String(Number(reserva.total) || commit.amount || 0));
     redirectUrl.searchParams.set('transaction_id', token);
     redirectUrl.searchParams.set('status', isApproved ? 'SUCCESS' : 'FAILURE');
 

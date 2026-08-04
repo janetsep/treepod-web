@@ -68,17 +68,24 @@ function ConfirmacionContent() {
                                 transactionId
                             });
 
+                            // Valor de la VENTA para GA4/Meta/Google Ads: el total de la
+                            // reserva, no el 50% que cobra Webpay. "amount" se sigue usando
+                            // para mostrarle al cliente lo que pago; no se toca.
+                            const valorVenta = parseFloat(
+                                searchParams.get('valor_venta') || String(data.total ?? amount)
+                            );
+
                             (window as any).dataLayer = (window as any).dataLayer || [];
                             (window as any).dataLayer.push({
                                 event: 'purchase',
                                 transaction_id: transactionId || data.id,
-                                value: parseFloat(amount),
+                                value: valorVenta,
                                 currency: 'CLP',
                                 items: [{
                                     item_id: data.id,
                                     item_name: `Reserva ${domoName}`,
                                     category: 'Glamping',
-                                    price: parseFloat(amount),
+                                    price: valorVenta,
                                     quantity: 1
                                 }]
                             });
@@ -87,7 +94,7 @@ function ConfirmacionContent() {
                             // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
                             if ((window as any).fbq) {
                                 (window as any).fbq('track', 'Purchase', {
-                                    value: parseFloat(amount),
+                                    value: valorVenta,
                                     currency: 'CLP',
                                     content_name: `Reserva ${domoName}`,
                                     content_ids: [data.id],
