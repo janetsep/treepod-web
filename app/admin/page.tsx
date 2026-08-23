@@ -12,6 +12,7 @@ import ClientesConsole from "./components/ClientesConsole";
 import LeadsConsole from "./components/LeadsConsole";
 import ServiciosConsole from "./components/ServiciosConsole";
 import PapeleraConsole from "./components/PapeleraConsole";
+import CaidasConsole from "./components/CaidasConsole";
 import SicraConsole from "./components/SicraConsole";
 import ProyectosPanel from "./components/ProyectosPanel";
 import CartolasPanel from "./components/CartolasPanel";
@@ -19,7 +20,7 @@ import ClimaWidget from "./components/ClimaWidget";
 import { Plus, BarChart3, ChevronDown, Calendar, RefreshCw, Pencil, CheckCircle2, XCircle, TrendingUp, LayoutDashboard, Trash2, Search, Users, Globe, MessageCircle, Home, CreditCard, UserCircle, Settings, Clock, ShoppingCart, Mail, MailCheck, FolderOpen, Receipt } from "lucide-react";
 
 export default function AdminDashboard() {
-    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'leads' | 'historial' | 'papelera' | 'sicra' | 'proyectos' | 'cartolas'>('reservas');
+    const [view, setView] = useState<'reservas' | 'tarifas' | 'servicios' | 'usuarios' | 'clientes' | 'leads' | 'historial' | 'papelera' | 'caidas' | 'sicra' | 'proyectos' | 'cartolas'>('reservas');
     const [reservas, setReservas] = useState<any[]>([]);
     const [domos, setDomos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -546,6 +547,12 @@ export default function AdminDashboard() {
                         Historial
                     </button>
                     <button
+                        onClick={() => setView('caidas')}
+                        className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'caidas' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
+                    >
+                        Se cayeron
+                    </button>
+                    <button
                         onClick={() => setView('papelera')}
                         className={`flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all ${view === 'papelera' ? 'bg-white text-gray-900 shadow-xl shadow-black/5' : 'text-gray-700 hover:text-gray-600'}`}
                     >
@@ -607,6 +614,8 @@ export default function AdminDashboard() {
                     <ClientesConsole />
                 ) : view === 'leads' ? (
                     <LeadsConsole />
+                ) : view === 'caidas' ? (
+                    <CaidasConsole />
                 ) : view === 'papelera' ? (
                     <PapeleraConsole adminEmail={adminEmail} />
                 ) : (
