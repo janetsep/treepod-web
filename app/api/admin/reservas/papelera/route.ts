@@ -3,8 +3,13 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
 
 // GET: Listar reservas en papelera
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        // Sin esto el endpoint devolvia nombre, correo y telefono de todos los
+        // clientes a cualquiera que supiera la URL.
+        const admin = await getVerifiedAdmin(request);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
         const { data, error } = await supabaseAdmin
             .from("reservas")
             .select(`*, domos (nombre), clientes (id, nombre, apellido, email, telefono)`)

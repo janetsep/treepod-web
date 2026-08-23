@@ -14,8 +14,11 @@ async function requireWriter(req: Request) {
     return null;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
+    const admin = await getVerifiedAdmin(request);
+    if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
         const { data: servicios, error } = await supabaseAdmin
             .from("servicios")
             .select("*")
@@ -32,6 +35,9 @@ export async function GET() {
 
 export async function PUT(req: Request) {
     try {
+        const admin = await getVerifiedAdmin(req);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
         const denied = await requireWriter(req);
         if (denied) return denied;
         const body = await req.json();
@@ -53,6 +59,9 @@ export async function PUT(req: Request) {
 
 export async function POST(req: Request) {
     try {
+        const admin = await getVerifiedAdmin(req);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
         const denied = await requireWriter(req);
         if (denied) return denied;
         const body = await req.json();
@@ -73,6 +82,9 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
+        const admin = await getVerifiedAdmin(req);
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
         const denied = await requireWriter(req);
         if (denied) return denied;
         const { id } = await req.json();
