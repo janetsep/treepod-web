@@ -12,11 +12,15 @@ interface GuestData {
     nombre: string;
     apellido: string;
     email: string;
+    // El telefono se pide aqui, despues del pago. Antes se exigia en el
+    // checkout y era parte de las cuatro barreras que nadie completaba.
+    telefono: string;
 }
 
 interface GuestFormProps {
     reservaId: string;
-    initialData?: Partial<GuestData>;
+    // La reserva trae telefono como string | null desde la base, no solo undefined.
+    initialData?: Partial<Record<keyof GuestData, string | null>>;
     onSave: (data: GuestData) => void;
 }
 
@@ -25,6 +29,7 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
         nombre: initialData?.nombre || "",
         apellido: initialData?.apellido || "",
         email: initialData?.email || "",
+        telefono: initialData?.telefono || "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -100,7 +105,7 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
                         placeholder="Pérez"
                     />
                 </div>
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                     <label className="dato text-[#5B5348] block">Email</label>
                     <input
                         type="email"
@@ -110,6 +115,20 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
                         className={inputFicha}
                         placeholder="juan@ejemplo.com"
                     />
+                </div>
+                <div className="space-y-2">
+                    <label className="dato text-[#5B5348] block">Teléfono</label>
+                    <input
+                        type="tel"
+                        required
+                        value={formData.telefono}
+                        onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                        className={inputFicha}
+                        placeholder="+56 9 1234 5678"
+                    />
+                    <p className="text-[12px] text-[#5B5348] leading-snug">
+                        Por aquí coordinamos tu llegada.
+                    </p>
                 </div>
             </div>
 

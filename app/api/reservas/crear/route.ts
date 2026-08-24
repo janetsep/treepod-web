@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       utm_term,
       gclid,
       fbclid,
+      ga_client_id,
     } = body as {
       entrada?: string;
       salida?: string;
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
       utm_term?: string;
       gclid?: string;
       fbclid?: string;
+      ga_client_id?: string;
     };
 
     if (!entrada || !salida || !adultos || !total) {
@@ -90,9 +92,12 @@ export async function POST(req: Request) {
       }
     }
 
-    // Validate client data (critical for Transbank flow)
-    if (!nombre?.trim() || !apellido?.trim() || !email?.trim() || !telefono?.trim()) {
-      return NextResponse.json({ error: "Datos del cliente incompletos. Nombre, apellido, email y teléfono son obligatorios." }, { status: 400 });
+    // Antes de pagar se exige UN solo dato: el correo. Con el se confirma la
+    // reserva y se puede recuperar a quien no termine. El nombre y el telefono
+    // se completan despues del pago (GuestForm en /reserva/[id]), donde ya no
+    // hay riesgo de abandono.
+    if (!email?.trim()) {
+      return NextResponse.json({ error: "Necesitamos tu correo para confirmar la reserva." }, { status: 400 });
     }
 
     // Basic email validation
@@ -242,10 +247,10 @@ export async function POST(req: Request) {
       expires_at: expiresAt,
       fuente: "WEB_NEW_PRICING",
       // Client data (critical for Transbank return flow)
-      nombre: nombre.trim(),
-      apellido: apellido.trim(),
+      nombre: nombre?.trim() || null,
+      apellido: apellido?.trim() || null,
       email: email.trim().toLowerCase(),
-      telefono: telefono.trim(),
+      telefono: telefono?.trim() || null,
       // UTM Attribution — NUEVO
       utm_source: utm_source || null,
       utm_medium: utm_medium || null,
@@ -257,6 +262,7 @@ export async function POST(req: Request) {
       gclid: gclid || null,
       fbclid: fbclid || null,
       click_id_captured_at: gclid || fbclid ? new Date().toISOString() : null,
+      ga_client_id: ga_client_id || null,
     };
 
     let { data, error } = await supabaseAdmin
@@ -273,9 +279,12 @@ export async function POST(req: Request) {
     // Fallback en caso de que las columnas de descuento aún no existan en la DB
     if (error && (error.message.includes("column") || error.code === '42703')) {
       console.warn("⚠️ Las columnas de descuento no existen en la tabla 'reservas'. Reintentando inserción básica.");
+      // Mantener el checkout operativo si el deploy de aplicación se adelanta a
+      // la migración de ga_client_id. En ese caso solo se pierde esa atribución.
+      const { ga_client_id: _gaClientId, ...compatiblePayload } = insertPayload;
       const retry = await supabaseAdmin
         .from("reservas")
-        .insert(insertPayload)
+        .insert(compatiblePayload)
         .select("id")
         .single();
       data = retry.data;
@@ -336,7 +345,7 @@ export async function POST(req: Request) {
       if (aseos >= 2) {
         await sendWhatsAppAlert(
           `TreePod · Aviso de aseo\n` +
-          `Nueva reserva web: ${nombre} ${apellido}\n` +
+          `Nueva reserva web: ${[nombre, apellido].filter(Boolean).join(' ').trim() || email}\n` +
           `Entrada ${entrada} · Domo ${domoDisponible.nombre || domoDisponible.id}\n` +
           `Ese dia ya hay ${aseos} salidas/aseos. Por capacidad, evalua ingreso desde las 18:00. Revisa en el panel.`
         );
@@ -373,7 +382,11 @@ export async function POST(req: Request) {
       await supabaseAdmin.from("reserva_cobros").insert(cobros);
     }
 
-    return NextResponse.json({ id: data.id });
+    return NextResponse.json({
+      id: data.id,
+      domo_id: domoDisponible.id,
+      domo_nombre: domoDisponible.nombre,
+    });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Error desconocido";
     return NextResponse.json(

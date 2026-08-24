@@ -11,6 +11,7 @@ export async function POST(req: Request) {
             nombre,
             apellido,
             email,
+            telefono,
             utm_source,
             utm_medium,
             utm_campaign,
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
         } = body;
 
         // Validation
-        if (!reservaId || !nombre || !apellido || !email) {
+        if (!reservaId || !nombre || !apellido || !email || !telefono) {
             return NextResponse.json(
                 { error: "Todos los campos son obligatorios" },
                 { status: 400 }
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
                 email,
                 nombre,
                 apellido,
+                telefono,
                 updated_at: new Date().toISOString()
             };
 
@@ -64,6 +66,7 @@ export async function POST(req: Request) {
             nombre,
             apellido,
             email,
+            telefono,
             is_vip_booking: isVip,
             updated_at: new Date().toISOString(),
         };

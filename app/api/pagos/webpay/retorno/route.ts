@@ -4,7 +4,7 @@ import { FinanceService } from "@/services/FinanceService";
 import { NotificationService } from "@/services/NotificationService";
 import { trackServerPurchase } from "@/lib/server-analytics";
 import { trackMetaConversion } from "@/lib/meta-capi";
-import { recordConversion, extractUTMParams, extractClientInfo } from "@/lib/track-conversion";
+import { recordConversion, extractClientInfo } from "@/lib/track-conversion";
 
 // SIN credenciales de respaldo: si faltan variables de entorno, el commit debe fallar
 // ruidosamente — nunca confirmar pagos contra el ambiente de prueba por accidente.
@@ -160,7 +160,9 @@ async function handleReturn(req: Request) {
     // Buscar por reserva_id (clave confiable de la return_url); /crear sobrescribe payment_intent_id en cada intento.
     const reservaQuery = supabaseAdmin
       .from("reservas")
-      .select("id, total, domo_id, nombre, apellido, email, fecha_inicio, fecha_fin, adultos, estado, numero_transaccion, monto_pagado");
+      // `*` mantiene compatibilidad durante un despliegue escalonado: si la
+      // migración de ga_client_id aún no corrió, PostgREST no rechaza la consulta.
+      .select("*, domos(nombre)");
 
     const { data: reserva, error: reservaError } = await (
       reservaId
@@ -219,6 +221,20 @@ async function handleReturn(req: Request) {
         estado: isApproved ? "pagado" : "rechazado",
         monto_pagado: isApproved ? commit.amount ?? null : 0,
         numero_transaccion: isApproved ? token : null,
+        // Lo que Webpay devuelve y hasta ahora se botaba. El codigo de
+        // autorizacion y los ultimos 4 digitos son lo unico que permite cruzar
+        // un cargo de la cartola con su reserva. Transbank NO entrega el nombre
+        // del titular: ese dato sigue viniendo del formulario post-pago.
+        pago_detalle: {
+          tarjeta_final: commit.card_detail?.card_number ?? null,
+          codigo_autorizacion: commit.authorization_code ?? null,
+          tipo_pago: commit.payment_type_code ?? null,
+          cuotas: commit.installments_number ?? null,
+          fecha_contable: commit.accounting_date ?? null,
+          monto_cobrado: commit.amount ?? null,
+          codigo_respuesta: commit.response_code ?? null,
+          orden_compra: commit.buy_order ?? null,
+        },
         updated_at: new Date().toISOString(),
       })
       .eq("id", reserva.id);
@@ -271,9 +287,15 @@ async function handleReturn(req: Request) {
             transaction_id: token || reserva.id,
             value: valorVenta,
             currency: 'CLP',
+            client_id: reserva.ga_client_id || undefined,
+            check_in: reserva.fecha_inicio,
+            check_out: reserva.fecha_fin,
+            guests: reserva.adultos,
+            dome_id: reserva.domo_id,
+            dome_name: reserva.domos?.nombre,
             items: [{
-              item_id: 'reserva_treepod',
-              item_name: 'Reserva TreePod',
+              item_id: reserva.domo_id || 'reserva_treepod',
+              item_name: reserva.domos?.nombre || 'Reserva TreePod',
               price: valorVenta,
               quantity: 1
             }]
@@ -286,8 +308,6 @@ async function handleReturn(req: Request) {
         // Envía conversión directamente a Meta para que pueda optimizar las campañas
         try {
           const clientInfo = extractClientInfo(Object.fromEntries(req.headers));
-          const utmParams = extractUTMParams(Object.fromEntries(req.headers));
-
           await trackMetaConversion({
             transaction_id: token || reserva.id,
             value: valorVenta,
@@ -299,8 +319,7 @@ async function handleReturn(req: Request) {
             first_name: reserva.nombre,
             last_name: reserva.apellido,
             event_source_url: `${baseUrl}/confirmacion`,
-            ...clientInfo,
-            ...utmParams
+            ...clientInfo
           });
           console.log("🎯 Meta CAPI: Conversión enviada para optimización de anuncios");
         } catch (metaError) {
@@ -311,20 +330,18 @@ async function handleReturn(req: Request) {
         // Esto permite análisis histórico y atribución
         try {
           const clientInfo = extractClientInfo(Object.fromEntries(req.headers));
-          const utmParams = extractUTMParams(Object.fromEntries(req.headers));
-
           await recordConversion({
             transaction_id: token || reserva.id,
             reserva_id: reserva.id,
             value: valorVenta,
             currency: 'CLP',
             conversion_type: 'purchase',
-            source: utmParams.utm_source || 'direct',
-            utm_source: utmParams.utm_source,
-            utm_medium: utmParams.utm_medium,
-            utm_campaign: utmParams.utm_campaign,
-            utm_content: utmParams.utm_content,
-            utm_term: utmParams.utm_term,
+            source: reserva.utm_source || 'direct',
+            utm_source: reserva.utm_source || undefined,
+            utm_medium: reserva.utm_medium || undefined,
+            utm_campaign: reserva.utm_campaign || undefined,
+            utm_content: reserva.utm_content || undefined,
+            utm_term: reserva.utm_term || undefined,
             user_agent: clientInfo.user_agent,
             ip_address: clientInfo.ip_address,
             conversion_timestamp: new Date().toISOString()

@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PagarButton from "../../components/PagarButton";
 import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
-import { TrackingService } from "@/services/TrackingService";
 import { trackEvent } from "../../lib/analytics";
 import Stepper from "../../components/Stepper";
 import SectionFolio from "../../components/SectionFolio";
@@ -41,6 +40,7 @@ interface Reserva {
   nombre: string;
   apellido: string;
   email: string;
+  telefono?: string | null;
   rut: string;
   adultos: number;
   domo_id?: string;
@@ -119,27 +119,6 @@ function ReservaContent({ id }: { id: string }) {
       if (timer) clearInterval(timer);
     };
   }, [id]);
-
-  const purchaseEventSent = useRef(false);
-
-  useEffect(() => {
-    if (reserva?.estado === "pagado" && statusParam === "SUCCESS") {
-      if (purchaseEventSent.current) return;
-      purchaseEventSent.current = true;
-
-      TrackingService.sendEvent("purchase", {
-        transaction_id: reserva.id,
-        value: Number(reserva.total),
-        currency: "CLP",
-        items: [{
-          item_id: reserva.domo_id || "DOMO-GENERICO",
-          item_name: "Domo TreePod",
-          price: Number(reserva.total),
-          quantity: 1
-        }]
-      });
-    }
-  }, [reserva, statusParam]);
 
   const paymentViewSent = useRef(false);
   useEffect(() => {
@@ -272,7 +251,9 @@ function ReservaContent({ id }: { id: string }) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
   const total = reserva.total;
 
-  const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email);
+  // El telefono ahora se pide aqui y no en el checkout, asi que cuenta para
+  // saber si la ficha del huesped esta completa.
+  const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email && reserva.telefono);
 
   return (
     <div className="min-h-screen bg-[#F7F3EC] text-[#1E1B16] font-sans transition-colors duration-300">
@@ -600,4 +581,3 @@ export default function ReservaPage({
     </Suspense>
   );
 }
-

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { trackEvent } from "../lib/analytics";
+import { getGaClientId, trackEvent } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
 import { RefreshCw } from "lucide-react";
 import Stepper from '../components/Stepper';
@@ -59,7 +59,7 @@ function DisponibilidadContent() {
   const [reserving, setReserving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Disponibilidad REAL por domo para el rango elegido (null = aún no verificado)
-  const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null; domosLibres: number | null }>({ checking: false, disponible: null, domosLibres: null });
+  const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null; domosLibres: number | null; domos: Array<{ id: string; nombre: string }> }>({ checking: false, disponible: null, domosLibres: null, domos: [] });
   const router = useRouter();
   const [initialCalcDone, setInitialCalcDone] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
@@ -86,6 +86,7 @@ function DisponibilidadContent() {
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLDivElement>(null);
+  const availabilityTrackedRef = useRef("");
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
 
@@ -189,24 +190,56 @@ function DisponibilidadContent() {
   // Verificar disponibilidad REAL (un domo libre toda la estadía) al cambiar fechas/huéspedes
   useEffect(() => {
     if (!entrada || !salida || salida <= entrada) {
-      setDisponibilidad({ checking: false, disponible: null, domosLibres: null });
+      setDisponibilidad({ checking: false, disponible: null, domosLibres: null, domos: [] });
       return;
     }
     let cancelado = false;
-    setDisponibilidad({ checking: true, disponible: null, domosLibres: null });
+    setDisponibilidad({ checking: true, disponible: null, domosLibres: null, domos: [] });
     const timer = setTimeout(async () => {
       try {
         const params = new URLSearchParams({ from: entrada, to: salida, adultos: adultos.toString() });
         const res = await fetch(`/api/public/disponibilidad/rango?${params}`);
         const data = await res.json();
         if (cancelado) return;
+        const domos = res.ok && Array.isArray(data.domos) ? data.domos : [];
+        const disponible = res.ok ? !!data.disponible : null;
+        const domosLibres = res.ok && typeof data.domosLibres === "number" ? data.domosLibres : null;
         setDisponibilidad({
           checking: false,
-          disponible: res.ok ? !!data.disponible : null,
-          domosLibres: res.ok && typeof data.domosLibres === "number" ? data.domosLibres : null,
+          disponible,
+          domosLibres,
+          domos,
         });
+        if (res.ok) {
+          const searchKey = `${entrada}|${salida}|${adultos}`;
+          if (availabilityTrackedRef.current !== searchKey) {
+            availabilityTrackedRef.current = searchKey;
+            trackEvent("availability_checked", {
+              check_in: entrada,
+              check_out: salida,
+              guests: adultos,
+              available: disponible,
+              available_domes_count: domosLibres,
+              available_dome_ids: domos.map((domo: { id: string }) => domo.id).join(","),
+              available_dome_names: domos.map((domo: { nombre: string }) => domo.nombre).join(","),
+            });
+          }
+        } else {
+          trackEvent("availability_check_failed", {
+            stage: "availability_api",
+            failure_reason: "http_error",
+            http_status: res.status,
+          });
+        }
       } catch (e) {
-        if (!cancelado) setDisponibilidad({ checking: false, disponible: null, domosLibres: null });
+        if (!cancelado) {
+          setDisponibilidad({ checking: false, disponible: null, domosLibres: null, domos: [] });
+          trackEvent("availability_check_failed", {
+            stage: "availability_api",
+            failure_reason: "network_or_parse_error",
+            http_status: 0,
+          });
+        }
       }
     }, 400);
     return () => { cancelado = true; clearTimeout(timer); };
@@ -245,6 +278,7 @@ function DisponibilidadContent() {
   }, [email, telefono, entrada, salida]);
 
   const calcularPrecio = async () => {
+    let precioHttpStatus = 0;
     setLoading(true);
     setError(null);
     setResultado(null);
@@ -270,6 +304,7 @@ function DisponibilidadContent() {
           cupon: "",
         }),
       });
+      precioHttpStatus = res.status;
 
       const text = await res.text();
       let data;
@@ -286,8 +321,9 @@ function DisponibilidadContent() {
       setResultado(data);
 
       trackEvent("select_fechas", {
-        entrada,
-        salida,
+        check_in: entrada,
+        check_out: salida,
+        guests: adultos,
         noches: data.noches,
         temporada: data.temporada,
         total: data.total
@@ -301,6 +337,11 @@ function DisponibilidadContent() {
 
     } catch (err: unknown) {
       console.error("❌ Error en calcularPrecio:", err);
+      trackEvent("pricing_failed", {
+        stage: "pricing_api",
+        failure_reason: precioHttpStatus ? "http_or_parse_error" : "network_error",
+        http_status: precioHttpStatus,
+      });
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
       setLoading(false);
@@ -308,30 +349,35 @@ function DisponibilidadContent() {
   };
 
   const reservar = async () => {
+    let reservaHttpStatus = 0;
     try {
       if (!resultado) return;
 
       // Bloquear si las fechas no tienen un domo libre toda la estadía
       if (disponibilidad.disponible === false) {
+        trackEvent("reservation_create_failed", {
+          stage: "client_validation",
+          failure_reason: "dates_unavailable",
+          http_status: 0,
+        });
         setError("Estas fechas ya no están disponibles para una estadía completa. Por favor elige otras.");
         return;
       }
 
-      // Disparar select_dome cuando usuario hace clic en reservar
-      // Disparar evento GA4 via GTM
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'select_dome',
-        domo_id: "DOMO-GENERICO", // ID genérico ya que se asigna automáticamente
-        fecha_inicio: entrada,
-        fecha_fin: salida,
-        adultos: adultos,
-        value: calcularTotalConServicios()
-      });
-
       // Validate client data
-      if (!nombre.trim() || !apellido.trim() || !email.trim() || !telefono.trim()) {
-        setError("Por favor completa todos los datos: nombre, apellido, email y teléfono");
+      // Antes del pago se pide UN solo dato: el correo. Con el se confirma la
+      // reserva y se puede recuperar a quien no termine. El nombre y el telefono
+      // se piden despues, en la pagina de la reserva (GuestForm), cuando la
+      // persona ya pago y no abandona. Los cuatro campos obligatorios eran la
+      // ultima barrera del checkout: en agosto de 2026, 13 personas vieron el
+      // precio y ninguna llego a completarlos.
+      if (!email.trim()) {
+        trackEvent("reservation_create_failed", {
+          stage: "client_validation",
+          failure_reason: "missing_contact_fields",
+          http_status: 0,
+        });
+        setError("Necesitamos tu correo para confirmar la reserva.");
         // Validación visible: marca los campos vacíos y lleva la vista al formulario
         setIntentoEnvio(true);
         datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -341,6 +387,11 @@ function DisponibilidadContent() {
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
+        trackEvent("reservation_create_failed", {
+          stage: "client_validation",
+          failure_reason: "invalid_email_format",
+          http_status: 0,
+        });
         setError("Por favor ingresa un email válido");
         setIntentoEnvio(true);
         datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -373,6 +424,7 @@ function DisponibilidadContent() {
           apellido: apellido.trim(),
           email: email.trim().toLowerCase(),
           telefono: telefono.trim(),
+          ga_client_id: getGaClientId(),
           ...utms, // ← NUEVO: expande utm_source, utm_medium, utm_campaign, etc.
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);
@@ -400,6 +452,7 @@ function DisponibilidadContent() {
           }).filter(Boolean)
         }),
       });
+      reservaHttpStatus = res.status;
 
       const data = await res.json();
       if (!res.ok) {
@@ -411,9 +464,32 @@ function DisponibilidadContent() {
         throw new Error("No se recibió el ID de la reserva");
       }
       console.log("✅ Reserva creada con éxito:", data.id);
+      trackEvent("reservation_created", {
+        reserva_id: data.id,
+        transaction_id: data.id,
+        value: calcularTotalConServicios(),
+        currency: "CLP",
+        check_in: entrada,
+        check_out: salida,
+        guests: adultos,
+        dome_id: data.domo_id,
+        dome_name: data.domo_nombre,
+        items: [{
+          item_id: data.domo_id,
+          item_name: data.domo_nombre,
+          item_category: "Glamping",
+          price: calcularTotalConServicios(),
+          quantity: 1,
+        }],
+      });
       router.push(`/reserva/${data.id}`);
     } catch (err: unknown) {
       console.error("❌ Error en reservar:", err);
+      trackEvent("reservation_create_failed", {
+        stage: "reservation_api",
+        failure_reason: reservaHttpStatus ? "http_or_response_error" : "network_error",
+        http_status: reservaHttpStatus,
+      });
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
       setReserving(false);
@@ -1039,51 +1115,22 @@ function DisponibilidadContent() {
                         Tus datos
                       </h3>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block dato text-[#5B5348] mb-2">Nombre *</label>
-                          <input
-                            type="text"
-                            value={nombre}
-                            onChange={(e) => setNombre(e.target.value)}
-                            className={`${inputFicha} ${bordeCampo(nombre)}`}
-                            placeholder="Tu nombre"
-                          />
-                        </div>
-                        <div>
-                          <label className="block dato text-[#5B5348] mb-2">Apellido *</label>
-                          <input
-                            type="text"
-                            value={apellido}
-                            onChange={(e) => setApellido(e.target.value)}
-                            className={`${inputFicha} ${bordeCampo(apellido)}`}
-                            placeholder="Tu apellido"
-                          />
-                        </div>
+                      <div>
+                        <label className="block dato text-[#5B5348] mb-2">Email *</label>
+                        <input
+                          type="email"
+                          inputMode="email"
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className={`${inputFicha} ${bordeCampo(email)}`}
+                          placeholder="tu@email.com"
+                        />
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block dato text-[#5B5348] mb-2">Email *</label>
-                          <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={`${inputFicha} ${bordeCampo(email)}`}
-                            placeholder="tu@email.com"
-                          />
-                        </div>
-                        <div>
-                          <label className="block dato text-[#5B5348] mb-2">Teléfono *</label>
-                          <input
-                            type="tel"
-                            value={telefono}
-                            onChange={(e) => setTelefono(e.target.value)}
-                            className={`${inputFicha} ${bordeCampo(telefono)}`}
-                            placeholder="+56 9 1234 5678"
-                          />
-                        </div>
-                      </div>
+                      <p className="text-[12px] text-[#5B5348] mt-3 leading-snug">
+                        Es el único dato que necesitamos ahora. El nombre y el teléfono te los pedimos después, en tu página de reserva.
+                      </p>
 
                       {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
