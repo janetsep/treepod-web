@@ -14,6 +14,12 @@ interface PurchaseData {
     transaction_id: string;
     value: number;
     currency: string;
+    client_id?: string;
+    check_in?: string;
+    check_out?: string;
+    guests?: number;
+    dome_id?: string;
+    dome_name?: string;
     items?: Array<{
         item_id: string;
         item_name: string;
@@ -30,7 +36,9 @@ export async function trackServerPurchase(data: PurchaseData) {
 
     // El client_id es requerido por Google. Usamos un ID de sistema o el ID de la transacción
     // para identificar este evento "fuera de línea".
-    const clientId = `server.${data.transaction_id}`;
+    // Mantener el client_id original atribuye la compra a la sesión/campaña que
+    // inició la reserva. El fallback solo aplica a reservas antiguas.
+    const clientId = data.client_id || `server.${data.transaction_id}`;
 
     // Seleccionar URL de validación o real según el ambiente
     const isDev = process.env.NODE_ENV === 'development';
@@ -56,6 +64,11 @@ export async function trackServerPurchase(data: PurchaseData) {
                 }],
                 source_type: 'server_side',
                 site_version: 'web_nueva_2026',
+                check_in: data.check_in,
+                check_out: data.check_out,
+                guests: data.guests,
+                dome_id: data.dome_id,
+                dome_name: data.dome_name,
                 // Indicar a Google que es un evento de prueba para que aparezca en el DebugView de GA4
                 debug_mode: isDev ? 1 : undefined
             }
