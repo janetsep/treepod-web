@@ -3,13 +3,20 @@ export type AnalyticsEventName =
   | "click_ver_disponibilidad_home"
   | "view_disponibilidad"
   | "select_fechas"
+  | "availability_checked"
+  | "availability_check_failed"
   | "click_reservar"
+  | "reservation_created"
+  | "reservation_create_failed"
   | "view_reserva"
   | "click_pagar"
   | "reserva_cancelada"
   | "reserva_modificada"
   | "payment_started"
+  | "webpay_redirect_started"
+  | "webpay_start_failed"
   | "payment_success"
+  | "booking_payment_confirmed"
   | "payment_failed"
   | "click_whatsapp"
   | "whatsapp_click"
@@ -38,6 +45,7 @@ export type AnalyticsEventName =
   | "view_servicios"
   | "view_guia_huesped"
   | "view_pricing_result"
+  | "pricing_failed"
   | "select_payment_method"
   | "click_whatsapp_contacto"
   | "click_whatsapp_servicios"
@@ -94,7 +102,8 @@ export type AnalyticsEventName =
 
 declare global {
   interface Window {
-    dataLayer: Record<string, any>[];
+    dataLayer: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -113,4 +122,63 @@ export function trackEvent(
     site_version: "web_nueva_2026", // Tag for differentiating traffic
     ...params,
   });
+
+  // dataLayer se conserva para Meta, Ads y etiquetas históricas. GA4 recibe el
+  // evento por Google tag; el tag genérico equivalente de GTM debe permanecer
+  // pausado para no duplicar la misma interacción.
+  window.gtag = window.gtag || function gtag(...args: unknown[]) {
+    window.dataLayer.push(args);
+  };
+  window.gtag("event", eventName, {
+    site_version: "web_nueva_2026",
+    ...params,
+  });
+}
+
+/** Devuelve el client_id que GA4 ya asignó al navegador (_ga=GA1.1.x.y). */
+export function getGaClientId(): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const gaCookie = document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith("_ga="))
+    ?.split("=")
+    .slice(1)
+    .join("=");
+
+  if (!gaCookie) return undefined;
+  const parts = gaCookie.split(".");
+  return parts.length >= 4 ? parts.slice(-2).join(".") : undefined;
+}
+
+/** Envía solo la conversión de Ads; GA4 recibe `purchase` desde el servidor. */
+export function trackGoogleAdsPurchase(data: {
+  transactionId: string;
+  value: number;
+}) {
+  if (typeof window === "undefined") return false;
+  const sendTo = process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_SEND_TO;
+  if (!sendTo) {
+    console.warn("Google Ads: falta NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_SEND_TO");
+    return false;
+  }
+
+  const dedupeKey = `treepod_google_ads_purchase_${data.transactionId}`;
+  try {
+    if (localStorage.getItem(dedupeKey)) return false;
+  } catch { /* La deduplicación de Ads conserva transaction_id como respaldo. */ }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function gtag(...args: unknown[]) {
+    window.dataLayer.push(args);
+  };
+  window.gtag("event", "conversion", {
+    send_to: sendTo,
+    value: data.value,
+    currency: "CLP",
+    transaction_id: data.transactionId,
+  });
+  try {
+    localStorage.setItem(dedupeKey, new Date().toISOString());
+  } catch { /* Algunos navegadores bloquean storage; Ads deduplica transaction_id. */ }
+  return true;
 }
