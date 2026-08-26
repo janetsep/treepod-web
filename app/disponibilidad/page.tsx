@@ -9,6 +9,7 @@ import { getGaClientId, trackEvent, trackEventAndWait } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
 import { RefreshCw } from "lucide-react";
 import Stepper from '../components/Stepper';
+import EnviarCotizacion from '../components/EnviarCotizacion';
 import SectionFolio from '../components/SectionFolio';
 import TriBullet from '../components/deco/TriBullet';
 import { btnPrimary, linkLine } from '../components/deco/cta';
@@ -1225,6 +1226,11 @@ function DisponibilidadContent() {
                         </span>
                       </div>
                     </div>
+
+                    {/* Salida para quien no decide hoy. Antes esa persona se iba sin
+                        dejar nada: en agosto no se capturo ni un contacto real, pese a
+                        que 27 personas volvieron mas de cinco veces a mirar fechas. */}
+                    <EnviarCotizacion entrada={entrada} salida={salida} adultos={adultos} />
 
                     {/* Refuerzo de valor en el punto de mayor abandono del embudo:
                         aparece después del precio y antes de pedir datos. */}
