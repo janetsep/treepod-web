@@ -119,7 +119,7 @@ export default function EnviarCotizacion({
               Listo, te lo mandamos.
             </p>
             <p className="text-[14px] text-[#5B5348] mt-2 leading-snug">
-              Revisa tu correo. El enlace te trae de vuelta con estas fechas ya puestas.
+              Revisa tu correo. Trae el precio y un enlace que te devuelve acá con las fechas ya escritas.
             </p>
             <button
               onClick={cerrar}

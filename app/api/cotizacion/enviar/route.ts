@@ -110,7 +110,7 @@ export async function POST(req: Request) {
     const html = `
 <div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#1E1B16;max-width:560px;margin:0 auto;padding:28px">
   <p style="font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#008CBF;font-weight:700;margin:0">TreePod Glamping</p>
-  <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;line-height:1.2;margin:12px 0 6px">Tus fechas en el bosque</h1>
+  <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;line-height:1.2;margin:12px 0 6px">El precio que consultaste</h1>
   <p style="color:#5B5348;margin:0 0 22px">Del ${fechaLarga(fecha_inicio)} al ${fechaLarga(fecha_fin)} &middot; ${noches} ${noches === 1 ? "noche" : "noches"} &middot; ${adultos} ${adultos === 1 ? "persona" : "personas"}</p>
 
   <table style="width:100%;border-collapse:collapse;margin-bottom:22px">
@@ -119,10 +119,14 @@ export async function POST(req: Request) {
     <tr><td style="padding:9px 0">Saldo al llegar</td><td style="padding:9px 0;text-align:right">${clp(total - abono)}</td></tr>
   </table>
 
-  <p style="margin:0 0 8px"><strong>Incluye</strong> el domo completo, estufa a pellet automática, cocina equipada, baño privado, terraza y WiFi Starlink.</p>
-  <p style="color:#5B5348;font-size:14px;margin:0 0 24px">El desayuno y otros servicios se agregan después de reservar.</p>
+  <p style="margin:0 0 8px"><strong>El precio incluye</strong> el domo completo, estufa a pellet automática, cocina equipada, baño privado, terraza y WiFi Starlink.</p>
+  <p style="color:#5B5348;font-size:14px;margin:0 0 20px"><strong>El desayuno no viene incluido</strong>: es un servicio aparte, con costo y horario coordinado. Lo mismo el almuerzo y la cena. Si te interesan, nos escribes después de reservar y te pasamos los valores.</p>
 
-  <a href="${volver}" style="display:inline-block;background:#00ADEF;color:#1E1B16;font-weight:700;text-decoration:none;padding:14px 26px;border-radius:2px">Reservar estas fechas</a>
+  <p style="background:#F7F3EC;border-left:3px solid #00ADEF;padding:12px 16px;margin:0 0 24px;font-size:14px">
+    <strong>Estas fechas no quedan tomadas con este correo.</strong> Siguen disponibles para cualquiera hasta que alguien reserve: se confirman solo al pagar.
+  </p>
+
+  <a href="${volver}" style="display:inline-block;background:#00ADEF;color:#1E1B16;font-weight:700;text-decoration:none;padding:14px 26px;border-radius:2px">Ir a reservar estas fechas</a>
   <p style="color:#5B5348;font-size:13px;margin:14px 0 0">Ese enlace te devuelve al sitio con las fechas ya puestas.</p>
 
   <hr style="border:0;border-top:1px solid #E6E0D6;margin:28px 0">
@@ -135,7 +139,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: "TreePod <info@domostreepod.cl>",
       to: [email],
-      subject: `Tus fechas en TreePod: ${fechaLarga(fecha_inicio)} al ${fechaLarga(fecha_fin)}`,
+      subject: `El precio de tu estadía en TreePod: ${fechaLarga(fecha_inicio)} al ${fechaLarga(fecha_fin)}`,
       html,
     });
 
