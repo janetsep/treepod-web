@@ -3,10 +3,9 @@
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { getGaClientId, trackEvent } from "../lib/analytics";
+import { getGaClientId, trackEvent, trackEventAndWait } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
 import { RefreshCw } from "lucide-react";
 import Stepper from '../components/Stepper';
@@ -40,6 +39,36 @@ type Servicio = {
   image_url: string;
 };
 
+type WebpayCreateResponse = {
+  url?: string;
+  token?: string;
+  alreadyPaid?: boolean;
+  redirectUrl?: string;
+  error?: string;
+  details?: string;
+};
+
+// Webpay recibe el token mediante POST. Se construye el formulario solo después
+// de que el servidor creó la transacción; el navegador sale directo a Transbank.
+function redirectToWebpay(url: string, token: string) {
+  const target = new URL(url);
+  if (target.protocol !== "https:" || !/(^|\.)transbank\.cl$/i.test(target.hostname)) {
+    throw new Error("La dirección de pago recibida no es válida.");
+  }
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = target.toString();
+
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "token_ws";
+  input.value = token;
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+}
+
 // Línea punteada de leyenda (dotted leader): une el concepto con su dato,
 // como en una ficha técnica impresa.
 function DottedLeader({ className = "border-[#1E1B16]/25" }: { className?: string }) {
@@ -48,12 +77,15 @@ function DottedLeader({ className = "border-[#1E1B16]/25" }: { className?: strin
 
 function DisponibilidadContent() {
   const searchParams = useSearchParams();
-  const [entrada, setEntrada] = useState(searchParams.get("entrada") || "");
-  const [salida, setSalida] = useState(searchParams.get("salida") || "");
+  const entradaParam = searchParams.get("entrada") || "";
+  const salidaParam = searchParams.get("salida") || "";
+  const adultosParam = searchParams.get("adultos") || "";
+  const [entrada, setEntrada] = useState(entradaParam);
+  const [salida, setSalida] = useState(salidaParam);
   // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
   // rango (?adultos=6) dejaba el select en un valor sin opción visible y pedía
   // precios para una capacidad que no existe.
-  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(searchParams.get("adultos")) || 2)));
+  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
   const [resultado, setResultado] = useState<ResultadoPrecio | null>(null);
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
@@ -78,7 +110,7 @@ function DisponibilidadContent() {
   // pedirle nada al visitante. Si el endpoint falla, simplemente no se muestra.
   const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
   useEffect(() => {
-    fetch("/api/public/tarifa-desde")
+    fetch("/api/public/tarifa-desde", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { if (typeof d.desde === "number") setTarifaDesde(d.desde); })
       .catch(() => {});
@@ -89,6 +121,18 @@ function DisponibilidadContent() {
   const availabilityTrackedRef = useRef("");
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
+
+  // En navegaciones internas de Next.js los search params pueden estar listos
+  // después del primer render. Sin esta sincronización, la landing del 18
+  // entregaba septiembre en la URL, pero el calendario conservaba agosto.
+  useEffect(() => {
+    const fechaValida = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+    if (fechaValida(entradaParam)) setEntrada(entradaParam);
+    if (fechaValida(salidaParam)) setSalida(salidaParam);
+    if (adultosParam) {
+      setAdultos(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
+    }
+  }, [entradaParam, salidaParam, adultosParam]);
 
   // Auto-scroll to results when calculating is done
   useEffect(() => {
@@ -350,6 +394,9 @@ function DisponibilidadContent() {
 
   const reservar = async () => {
     let reservaHttpStatus = 0;
+    let webpayHttpStatus = 0;
+    let reservaCreadaId: string | null = null;
+    let redirectingToWebpay = false;
     try {
       if (!resultado) return;
 
@@ -374,10 +421,10 @@ function DisponibilidadContent() {
       if (!email.trim()) {
         trackEvent("reservation_create_failed", {
           stage: "client_validation",
-          failure_reason: "missing_contact_fields",
+          failure_reason: "missing_email",
           http_status: 0,
         });
-        setError("Necesitamos tu correo para confirmar la reserva.");
+        setError("Ingresa tu correo para continuar al pago seguro");
         // Validación visible: marca los campos vacíos y lleva la vista al formulario
         setIntentoEnvio(true);
         datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -463,6 +510,7 @@ function DisponibilidadContent() {
       if (!data?.id) {
         throw new Error("No se recibió el ID de la reserva");
       }
+      reservaCreadaId = data.id;
       console.log("✅ Reserva creada con éxito:", data.id);
       trackEvent("reservation_created", {
         reserva_id: data.id,
@@ -482,17 +530,103 @@ function DisponibilidadContent() {
           quantity: 1,
         }],
       });
-      router.push(`/reserva/${data.id}`);
+
+      // Un único CTA: después de crear la retención, iniciar Webpay y salir
+      // directamente a Transbank. /reserva/[id] queda como respaldo/reintento.
+      trackEvent("click_pagar", { metodo: "webpay", origen: "disponibilidad" });
+      trackEvent("payment_started", { metodo: "webpay", origen: "disponibilidad" });
+
+      const pagoRes = await fetch("/api/pagos/webpay/crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reservaId: data.id }),
+      });
+      webpayHttpStatus = pagoRes.status;
+
+      const rawPago = await pagoRes.text();
+      let pago: WebpayCreateResponse | null = null;
+      try {
+        pago = rawPago ? (JSON.parse(rawPago) as WebpayCreateResponse) : null;
+      } catch {
+        pago = null;
+      }
+
+      if (!pagoRes.ok) {
+        throw new Error(pago?.error || pago?.details || "No pudimos abrir el pago seguro.");
+      }
+
+      if (pago?.alreadyPaid && pago.redirectUrl) {
+        trackEvent("webpay_redirect_started", {
+          stage: "already_paid",
+          value: calcularTotalConServicios(),
+          currency: "CLP",
+        });
+        redirectingToWebpay = true;
+        window.location.href = pago.redirectUrl;
+        return;
+      }
+
+      if (!pago?.url || !pago.token) {
+        throw new Error("Webpay no entregó los datos necesarios para continuar.");
+      }
+
+      trackEvent("webpay_redirect_started", {
+        stage: "token_created",
+        value: calcularTotalConServicios(),
+        currency: "CLP",
+      });
+      trackEvent("begin_checkout", {
+        reserva_id: data.id,
+        transaction_id: data.id,
+        value: calcularTotalConServicios(),
+        deposit_value: Math.round(calcularTotalConServicios() * 0.5),
+        currency: "CLP",
+        check_in: entrada,
+        check_out: salida,
+        guests: adultos,
+        dome_id: data.domo_id,
+        dome_name: data.domo_nombre,
+        items: [{
+          item_id: data.domo_id,
+          item_name: data.domo_nombre,
+          item_category: "Glamping",
+          price: calcularTotalConServicios(),
+          quantity: 1,
+        }],
+      });
+
+      redirectingToWebpay = true;
+      // El POST a Webpay es una navegacion dura: corta cualquier envio pendiente.
+      // Se espera a que GA4 confirme este ultimo evento (maximo 800 ms) para no
+      // perder el tramo final del embudo, que es justo el que no se podia medir.
+      await trackEventAndWait("webpay_redirect_started", {
+        reserva_id: data.id,
+        transaction_id: data.id,
+        value: calcularTotalConServicios(),
+        currency: "CLP",
+      });
+      redirectToWebpay(pago.url, pago.token);
     } catch (err: unknown) {
       console.error("❌ Error en reservar:", err);
-      trackEvent("reservation_create_failed", {
-        stage: "reservation_api",
-        failure_reason: reservaHttpStatus ? "http_or_response_error" : "network_error",
-        http_status: reservaHttpStatus,
-      });
-      setError(err instanceof Error ? err.message : "Error desconocido");
+      if (reservaCreadaId) {
+        // La reserva ya existe y retiene el domo. Evitamos crear otra al reintentar:
+        // la pantalla de respaldo usa el mismo ID y vuelve a iniciar Webpay.
+        trackEvent("webpay_start_failed", {
+          stage: "webpay_create",
+          failure_reason: webpayHttpStatus ? "http_or_response_error" : "network_error",
+          http_status: webpayHttpStatus,
+        });
+        router.push(`/reserva/${reservaCreadaId}?error=webpay_start_failed`);
+      } else {
+        trackEvent("reservation_create_failed", {
+          stage: "reservation_api",
+          failure_reason: reservaHttpStatus ? "http_or_response_error" : "network_error",
+          http_status: reservaHttpStatus,
+        });
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
     } finally {
-      setReserving(false);
+      if (!redirectingToWebpay) setReserving(false);
     }
   };
 
@@ -569,7 +703,7 @@ function DisponibilidadContent() {
             <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
             <span>Mejor precio directo, sin comisiones</span>
             <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
-            <span>Reserva con el 50%, saldo en el check-in</span>
+            <span>Reserva con el 50%; paga el saldo al llegar</span>
           </div>
         </div>
       </header>
@@ -582,7 +716,7 @@ function DisponibilidadContent() {
         </p>
 
         {/* TRES COLUMNAS: ESTADÍA — EXTRAS — RESUMEN */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-2 items-start">
+        <div id="reservar" className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-2 items-start scroll-mt-24 md:scroll-mt-28">
 
           {/* COL 1: 01 — Estadía */}
           {!isMundialEvent && (
@@ -604,7 +738,7 @@ function DisponibilidadContent() {
                       className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] font-medium appearance-none focus:border-[#00ADEF] focus:ring-0 transition-colors outline-none text-[#1E1B16] cursor-pointer"
                     >
                       {[1, 2, 3, 4].map(n => (
-                        <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'Persona' : 'Personas'}</option>
+                        <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'persona' : 'personas'}</option>
                       ))}
                     </select>
                     <TriBullet className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-2.5 text-[#00ADEF] rotate-180" />
@@ -1084,13 +1218,42 @@ function DisponibilidadContent() {
                         </div>
                       </div>
                       <div className="flex items-baseline gap-3 text-[13px]">
-                        <span className="text-[#5B5348]">Saldo a pagar en el check-in</span>
+                        <span className="text-[#5B5348]">Saldo a pagar al llegar</span>
                         <DottedLeader />
                         <span className="tabular-nums text-[#1E1B16]">
                           ${((calcularTotalConServicios() || 0) - abonoHoy).toLocaleString("es-CL")}
                         </span>
                       </div>
                     </div>
+
+                    {/* Refuerzo de valor en el punto de mayor abandono del embudo:
+                        aparece después del precio y antes de pedir datos. */}
+                    <section
+                      aria-labelledby="valor-estadia-title"
+                      className="border border-[#1E1B16]/15 bg-[#F7F3EC] px-5 py-5 rounded-[2px]"
+                    >
+                      <p className="dato text-[#008CBF] mb-2">Lo que estás reservando</p>
+                      <h3
+                        id="valor-estadia-title"
+                        className="font-display text-[1.3rem] leading-tight text-[#1E1B16]"
+                      >
+                        Tu propio domo geodésico en el bosque nativo
+                      </h3>
+                      <div className="mt-4 space-y-2.5 text-[13px] leading-snug text-[#5B5348]">
+                        <p className="flex items-start gap-2.5">
+                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                          <span>Estufa a pellet automática para mantener el domo temperado.</span>
+                        </p>
+                        <p className="flex items-start gap-2.5">
+                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                          <span>Baño privado y cocina equipada con cafetera Nespresso.</span>
+                        </p>
+                        <p className="flex items-start gap-2.5">
+                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                          <span>Reserva directa y atención personal de Janet y Jaime.</span>
+                        </p>
+                      </div>
+                    </section>
 
                     {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
                         1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
@@ -1112,11 +1275,11 @@ function DisponibilidadContent() {
                     <div ref={datosRef} className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2">
                       <h3 className="flex items-center gap-2 dato text-[#1E1B16] mb-4">
                         <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
-                        Tus datos
+                        ¿Dónde enviamos tu confirmación?
                       </h3>
 
                       <div>
-                        <label className="block dato text-[#5B5348] mb-2">Email *</label>
+                        <label className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
                         <input
                           type="email"
                           inputMode="email"
@@ -1129,7 +1292,7 @@ function DisponibilidadContent() {
                       </div>
 
                       <p className="text-[12px] text-[#5B5348] mt-3 leading-snug">
-                        Es el único dato que necesitamos ahora. El nombre y el teléfono te los pedimos después, en tu página de reserva.
+                        Al continuar irás directamente a Webpay. Después de pagar te pediremos nombre y teléfono para coordinar tu llegada.
                       </p>
 
                       {error && (
@@ -1154,14 +1317,14 @@ function DisponibilidadContent() {
                       ) : disponibilidad.disponible === false
                         ? "No disponible en estas fechas"
                         : abonoHoy > 0
-                          ? `Reservar — hoy pagas $${abonoHoy.toLocaleString("es-CL")}`
-                          : "Continuar al pago seguro"}
+                          ? `Pagar $${abonoHoy.toLocaleString("es-CL")} con Webpay`
+                          : "Ir a Webpay"}
                     </button>
 
                     {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
                     <p className="flex items-center justify-center gap-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348]">
                       <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                      Pago 100% seguro · Webpay Plus
+                      Pago seguro mediante Webpay Plus
                     </p>
                     <p className="text-[11px] text-gray-600 text-center pt-1 leading-snug">
                       Desayuno y otros extras se pueden agregar después de reservar, por WhatsApp o
@@ -1233,52 +1396,6 @@ function DisponibilidadContent() {
   );
 }
 
-// Fuera del límite de Suspense: useSearchParams hace que el checkout sea
-// dinámico, pero esta guía debe permanecer en el HTML prerenderizado para SEO.
-function ReservationInfo() {
-  return (
-    <section className="bg-[#F7F3EC] font-sans text-[#1E1B16] border-t border-[#1E1B16]/15 py-14 md:py-20">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-        <SectionFolio num="N° 03" label="Antes de reservar" />
-        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10">
-          <div className="col-span-12 lg:col-span-5">
-            <h2 className="display-lg text-[#1E1B16]">
-              Tu estadía en la montaña,{" "}
-              <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">paso a paso</span>
-            </h2>
-            <p className="lead text-[#5B5348] mt-6 max-w-xl">
-              Elige tus fechas, revisa el valor completo y confirma tu domo directamente en TreePod. El calendario consulta la disponibilidad para toda la estadía antes de continuar al pago.
-            </p>
-          </div>
-          <div className="col-span-12 lg:col-span-7 grid sm:grid-cols-2 gap-x-8 gap-y-8">
-            <article className="border-t border-[#1E1B16]/15 pt-5">
-              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cómo se confirma la reserva?</h3>
-              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Selecciona entrada, salida y número de huéspedes. Verás el precio de la estadía antes de ingresar tus datos. La reserva queda confirmada al pagar el 50% mediante Webpay Plus; el saldo se paga durante el check-in.</p>
-            </article>
-            <article className="border-t border-[#1E1B16]/15 pt-5">
-              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cuáles son los horarios?</h3>
-              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">El check-in comienza a las 16:00 y el check-out es hasta las 12:00. Antes de tu llegada coordinamos por WhatsApp la recepción y la información necesaria para llegar a Valle Las Trancas.</p>
-            </article>
-            <article className="border-t border-[#1E1B16]/15 pt-5">
-              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Cuántas personas pueden alojarse?</h3>
-              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Cada domo admite entre una y cuatro personas. Indica el número correcto de huéspedes para que el sistema calcule la tarifa y compruebe una alternativa disponible para todo el período elegido.</p>
-            </article>
-            <article className="border-t border-[#1E1B16]/15 pt-5">
-              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Puedo agregar servicios?</h3>
-              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">Sí. Después de reservar puedes consultar desayunos y otros extras por WhatsApp o correo. Algunos servicios dependen de la temporada, por lo que nuestro equipo confirma su disponibilidad para tus fechas.</p>
-            </article>
-            <article className="border-t border-[#1E1B16]/15 pt-5 sm:col-span-2">
-              <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Necesitas revisar las condiciones?</h3>
-              <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3 max-w-3xl">Consulta las condiciones de confirmación, cambios y cancelación antes de pagar. Si tienes una solicitud especial o prefieres orientación humana, puedes escribirnos por WhatsApp antes de completar la reserva.</p>
-              <Link href="/terminos" className={`${linkLine} mt-5 inline-flex`}>Leer términos de reserva <span aria-hidden="true">→</span></Link>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function DisponibilidadPage() {
   return (
     <div className="bg-[#F7F3EC]">
@@ -1286,7 +1403,6 @@ export default function DisponibilidadPage() {
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] font-display italic text-3xl text-[#1E1B16] animate-pulse">TreePod…</div>}>
         <DisponibilidadContent />
       </Suspense>
-      <ReservationInfo />
     </div>
   );
 }

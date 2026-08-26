@@ -129,9 +129,54 @@ export function trackEvent(
   window.gtag = window.gtag || function gtag(...args: unknown[]) {
     window.dataLayer.push(args);
   };
+  // transport_type "beacon" hace que el envio sobreviva a una navegacion dura.
+  // Sin esto se perdian los eventos del final del embudo: al apretar Reservar la
+  // pagina crea la reserva y sale hacia Webpay con un envio de formulario, que
+  // corta cualquier peticion pendiente. Resultado medido el 24-ago-2026: dos
+  // reservas creadas y cero click_reservar / reservation_created en GA4.
   window.gtag("event", eventName, {
     site_version: "web_nueva_2026",
+    transport_type: "beacon",
     ...params,
+  });
+}
+
+/**
+ * Dispara un evento y espera a que GA4 confirme el envio antes de continuar.
+ *
+ * Se usa justo antes de salir del sitio (el POST a Webpay). GA4 llama a
+ * event_callback cuando el evento salio; el tiempo limite evita que la reserva
+ * quede colgada si la analitica esta bloqueada por el navegador o un adblocker.
+ */
+export function trackEventAndWait(
+  eventName: AnalyticsEventName,
+  params?: Record<string, unknown>,
+  esperaMaxMs = 800
+): Promise<void> {
+  if (typeof window === "undefined") return Promise.resolve();
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: eventName,
+    site_version: "web_nueva_2026",
+    ...params,
+  });
+
+  const enviar = window.gtag || function gtag(...args: unknown[]) {
+    window.dataLayer.push(args);
+  };
+  window.gtag = enviar;
+
+  return new Promise<void>((resolve) => {
+    let listo = false;
+    const terminar = () => { if (!listo) { listo = true; resolve(); } };
+    setTimeout(terminar, esperaMaxMs);
+    enviar("event", eventName, {
+      site_version: "web_nueva_2026",
+      transport_type: "beacon",
+      ...params,
+      event_callback: terminar,
+    });
   });
 }
 
