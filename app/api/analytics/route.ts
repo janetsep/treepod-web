@@ -32,7 +32,9 @@ export async function GET() {
             }
         });
 
-        // Reporte 2: Eventos de conversión clave (mes actual)
+        // Reporte 2: embudo real (mes actual). Se excluyen generate_lead,
+        // select_dome y begin_checkout porque existen reglas históricas de GA4
+        // que los inflan con page_view y no sirven para tomar decisiones.
         const now = new Date();
         const startOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
 
@@ -42,21 +44,27 @@ export async function GET() {
             data: {
                 dateRanges: [{ startDate: startOfMonth, endDate: 'today' }],
                 dimensions: [{ name: 'eventName' }],
-                metrics: [{ name: 'eventCount' }],
+                metrics: [{ name: 'eventCount' }, { name: 'totalUsers' }],
                 dimensionFilter: {
                     filter: {
                         fieldName: 'eventName',
                         inListFilter: {
                             values: [
                                 'purchase',
-                                'begin_checkout',
                                 'view_disponibilidad',
                                 'select_fechas',
-                                'generate_lead',
+                                'availability_checked',
+                                'view_pricing_result',
                                 'click_reservar',
-                                'view_home',
-                                'begin_checkout_mundial',
-                                'begin_checkout_semana_santa',
+                                'click_reservar_sticky',
+                                'click_whatsapp_reserva',
+                                'reservation_created',
+                                'click_pagar',
+                                'webpay_redirect_started',
+                                'availability_check_failed',
+                                'pricing_failed',
+                                'reservation_create_failed',
+                                'webpay_start_failed',
                             ]
                         }
                     }
@@ -91,12 +99,37 @@ export async function GET() {
 
         // Parsear eventos de conversión
         const eventCounts: Record<string, number> = {};
+        const eventUserCounts: Record<string, number> = {};
         const eventRows = eventsReport.data.rows || [];
         eventRows.forEach((row: any) => {
             const eventName = row.dimensionValues[0].value;
             const count = parseInt(row.metricValues[0].value) || 0;
             eventCounts[eventName] = count;
+            eventUserCounts[eventName] = parseInt(row.metricValues[1].value) || 0;
         });
+
+        // Ambos CTA de reserva representan la misma intención. GA4 debe calcular
+        // la unión de usuarios, no sumar los dos nombres (una persona puede usar
+        // ambos botones). Este reporte sin dimensión entrega ese total deduplicado.
+        const reserveClicksReport = await client.request<any>({
+            url,
+            method: 'POST',
+            data: {
+                dateRanges: [{ startDate: startOfMonth, endDate: 'today' }],
+                metrics: [{ name: 'eventCount' }, { name: 'totalUsers' }],
+                dimensionFilter: {
+                    filter: {
+                        fieldName: 'eventName',
+                        inListFilter: { values: ['click_reservar', 'click_reservar_sticky'] }
+                    }
+                }
+            }
+        });
+        const reserveClicksRow = reserveClicksReport.data.rows?.[0];
+        if (reserveClicksRow) {
+            eventCounts['click_reservar'] = parseInt(reserveClicksRow.metricValues[0].value) || 0;
+            eventUserCounts['click_reservar'] = parseInt(reserveClicksRow.metricValues[1].value) || 0;
+        }
 
         // Parsear fuentes de tráfico
         const trafficSources: Array<{ channel: string; sessions: number; users: number }> = [];
@@ -110,8 +143,8 @@ export async function GET() {
         });
 
         // Calcular tasa de conversión: purchase / view_disponibilidad
-        const totalViews = eventCounts['view_disponibilidad'] || 0;
-        const totalPurchases = eventCounts['purchase'] || 0;
+        const totalViews = eventUserCounts['view_disponibilidad'] || 0;
+        const totalPurchases = eventUserCounts['purchase'] || 0;
         const conversionRate = totalViews > 0 ? ((totalPurchases / totalViews) * 100).toFixed(1) : '0.0';
 
         return NextResponse.json({
@@ -125,12 +158,30 @@ export async function GET() {
             // Eventos de conversión (mes actual)
             events: {
                 purchase: eventCounts['purchase'] || 0,
-                begin_checkout: (eventCounts['begin_checkout'] || 0) + (eventCounts['begin_checkout_mundial'] || 0) + (eventCounts['begin_checkout_semana_santa'] || 0),
                 view_disponibilidad: eventCounts['view_disponibilidad'] || 0,
                 select_fechas: eventCounts['select_fechas'] || 0,
-                generate_lead: eventCounts['generate_lead'] || 0,
+                availability_checked: eventCounts['availability_checked'] || 0,
+                view_pricing_result: eventCounts['view_pricing_result'] || 0,
+                reservation_created: eventCounts['reservation_created'] || 0,
                 click_reservar: eventCounts['click_reservar'] || 0,
-                view_home: eventCounts['view_home'] || 0,
+                click_whatsapp_reserva: eventCounts['click_whatsapp_reserva'] || 0,
+                click_pagar: eventCounts['click_pagar'] || 0,
+                webpay_redirect_started: eventCounts['webpay_redirect_started'] || 0,
+                availability_check_failed: eventCounts['availability_check_failed'] || 0,
+                pricing_failed: eventCounts['pricing_failed'] || 0,
+                reservation_create_failed: eventCounts['reservation_create_failed'] || 0,
+                webpay_start_failed: eventCounts['webpay_start_failed'] || 0,
+            },
+            eventUsers: {
+                purchase: eventUserCounts['purchase'] || 0,
+                view_disponibilidad: eventUserCounts['view_disponibilidad'] || 0,
+                availability_checked: eventUserCounts['availability_checked'] || 0,
+                view_pricing_result: eventUserCounts['view_pricing_result'] || 0,
+                click_reservar: eventUserCounts['click_reservar'] || 0,
+                click_whatsapp_reserva: eventUserCounts['click_whatsapp_reserva'] || 0,
+                reservation_created: eventUserCounts['reservation_created'] || 0,
+                click_pagar: eventUserCounts['click_pagar'] || 0,
+                webpay_redirect_started: eventUserCounts['webpay_redirect_started'] || 0,
             },
             conversionRate,
             // Fuentes de tráfico

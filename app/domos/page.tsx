@@ -65,7 +65,7 @@ export default function DomosPage() {
         // más alta, y las dos páginas se contradecían.
         async function loadPrices() {
             try {
-                const r = await fetch("/api/public/tarifa-desde");
+                const r = await fetch("/api/public/tarifa-desde", { cache: "no-store" });
                 const d = await r.json();
                 setPrice1Night(typeof d.desde === "number" ? new Intl.NumberFormat('es-CL').format(d.desde) : null);
             } catch {
@@ -85,7 +85,7 @@ export default function DomosPage() {
                 title={<>Domos geodésicos equipados,<br className="hidden md:block" /> inmersos en el bosque nativo</>}
                 text="Duerme en medio del bosque nativo, sin renunciar a ninguna comodidad."
                 ctaText="Ver disponibilidad y precio"
-                ctaHref="/disponibilidad"
+                ctaHref="/disponibilidad#reservar"
                 priority
                 titleAs="h1"
                 photoCaption="Exterior del domo, Valle Las Trancas"

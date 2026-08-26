@@ -59,7 +59,7 @@ export default function ServicesPage() {
 
             {/* Artículos de servicio: retícula asimétrica, folios y viñetas triángulo */}
             <main className="py-16 md:py-24 mx-auto max-w-[1280px] px-5 md:px-10">
-                <SectionFolio num="N° 01" label="Tu refugio en la cordillera" />
+                <SectionFolio num="N° 01" label="Tu domo en la cordillera" />
                 <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-20 md:mb-28">
                     <div className="col-span-12 lg:col-span-8">
                         <h2 className="display-lg text-[#1E1B16] mb-6">

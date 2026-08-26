@@ -33,8 +33,8 @@ const inter = Figtree({
 export const metadata: Metadata = {
   metadataBase: new URL('https://domostreepod.cl'),
   title: 'Glamping en Valle Las Trancas | Domos TreePod - Chillán',
-  description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán. Reserva tu refugio hoy.',
-  keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod refugio', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'donde alojar en las trancas', 'turismo nuble'],
+  description: 'Domos geodésicos en el bosque nativo de Valle Las Trancas. Glamping cerca de Termas de Chillán y Nevados de Chillán. Reserva tu domo en TreePod.',
+  keywords: ['glamping chile', 'glamping chillan', 'valle las trancas', 'alojamiento montaña', 'domos las trancas', 'treepod domos', 'glamping cerca de santiago', 'domos geodesicos chile', 'cabañas valle las trancas', 'termas de chillan alojamiento', 'glamping con tinaja', 'escapada romantica chile', 'donde alojar en las trancas', 'turismo nuble'],
   icons: {
     icon: [
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
@@ -61,6 +61,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     // Las variables de fuente van en <html>: los alias --font-display/--font-sans
     // se declaran en :root (globals.css) y las custom properties resuelven sus
@@ -80,6 +82,30 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-KFDWNCT');
           `}
         </Script>
+
+        {/*
+          GA4 explícito para los eventos del embudo. GTM conserva la medición de
+          páginas y las integraciones históricas; send_page_view:false evita que
+          esta segunda vía duplique cada visita.
+        */}
+        {gaMeasurementId && (
+          <>
+            <Script
+              id="google-analytics-library"
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics-config" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                window.gtag = window.gtag || gtag;
+                gtag('js', new Date());
+                gtag('config', '${gaMeasurementId}', { send_page_view: false });
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Meta Pixel - Tracking Conversiones */}
         <Script id="meta-pixel" strategy="afterInteractive">

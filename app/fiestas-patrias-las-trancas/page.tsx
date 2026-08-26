@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import SeasonalLanding from '../components/SeasonalLanding';
 
-// Fiestas Patrias 2026: el 18 y el 19 de septiembre caen VIERNES y SÁBADO, así
-// que el fin de semana largo va del jueves 17 al lunes 21. Al 30-jul-2026 los
+// Fiestas Patrias 2026: el 18 y el 19 de septiembre caen VIERNES y SÁBADO. La
+// estadía promocionada entra el jueves 17 y sale el domingo 20. Al 30-jul-2026 los
 // cuatro domos estaban libres esos días: es la mayor venta al alcance del año.
 // Sigue siendo temporada de invierno (hasta el 21 de septiembre), por lo que
 // esta página NO puede mostrar ni prometer la tinaja (cerrada todo el invierno)
@@ -10,31 +10,31 @@ import SeasonalLanding from '../components/SeasonalLanding';
 
 export const metadata: Metadata = {
     title: 'Fiestas Patrias 2026 en Las Trancas | Domos TreePod, Ñuble',
-    description: 'Pasa el 18 de septiembre en el bosque nativo de Valle Las Trancas. Domos geodésicos cálidos para 2 a 4 personas. Fin de semana largo del 17 al 21 de septiembre 2026.',
+    description: 'Pasa el 18 de septiembre en el bosque nativo de Valle Las Trancas. Domos geodésicos cálidos para 2 a 4 personas. Estadía del 17 al 20 de septiembre 2026.',
     keywords: ['fiestas patrias las trancas', 'donde alojar 18 de septiembre ñuble', '18 de septiembre valle las trancas', 'fin de semana largo septiembre 2026', 'glamping fiestas patrias', 'domos 18 de septiembre chillán', 'escapada fiestas patrias sur de chile', 'alojamiento 18 septiembre nevados de chillán'],
     alternates: {
         canonical: '/fiestas-patrias-las-trancas',
     },
     openGraph: {
         title: 'Fiestas Patrias 2026 en Valle Las Trancas | Domos TreePod',
-        description: 'El 18 y 19 caen viernes y sábado. Cuatro domos en el bosque nativo, a 12 minutos de Nevados de Chillán.',
+        description: 'El 18 y el 19 caen viernes y sábado. Cuatro domos en el bosque nativo, a 12 minutos de Nevados de Chillán.',
         images: ['/images/Galeria/domo3noche1.jpeg'],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Fiestas Patrias 2026 en Valle Las Trancas | Domos TreePod',
-        description: 'El 18 y 19 caen viernes y sábado. Cuatro domos en el bosque nativo, a 12 minutos de Nevados de Chillán.',
+        description: 'El 18 y el 19 caen viernes y sábado. Cuatro domos en el bosque nativo, a 12 minutos de Nevados de Chillán.',
         images: ['/images/Galeria/domo3noche1.jpeg'],
     }
 };
 
 const whatsappNumber = "56984643307";
-const whatsappMessage = "Hola TreePod, quiero consultar por Fiestas Patrias, del 17 al 21 de septiembre.";
+const whatsappMessage = "Hola TreePod, quiero consultar por Fiestas Patrias, del 17 al 20 de septiembre.";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-// Viernes 18 a lunes 21: tres noches, el tramo que más se pide. Quien quiera
-// llegar el jueves lo ajusta en el calendario.
-const reservaHref = "/disponibilidad?entrada=2026-09-18&salida=2026-09-21&adultos=4&event=fiestas-patrias";
+// La landing promociona ingreso jueves 17 y salida domingo 20: tres noches.
+// El calendario debe abrir exactamente ese rango.
+const reservaHref = "/disponibilidad?entrada=2026-09-17&salida=2026-09-20&adultos=4&event=fiestas-patrias#reservar";
 
 export default function FiestasPatriasPage() {
     return (
@@ -45,11 +45,11 @@ export default function FiestasPatriasPage() {
                 alt: "Domo TreePod iluminado de noche entre los árboles, Valle Las Trancas",
                 position: "center 40%",
                 eyebrow: "Fiestas Patrias 2026 · Valle Las Trancas",
-                title: <>Este 18 celebra en el bosque, no en el taco</>,
-                text: "El 18 y el 19 caen viernes y sábado: son cuatro días. Tu domo entre los robles, la parrilla que te llevamos hasta ahí y el valle a 12 minutos de Nevados de Chillán.",
+                title: <>Este 18, celebra entre los árboles</>,
+                text: "Ingresa el jueves 17 y sal el domingo 20: son tres noches en tu domo geodésico, entre los robles y a 12 minutos de Nevados de Chillán. Para tu asado, llevamos la parrilla hasta el domo.",
                 priceLine: "Desde $175.000 la noche para 4 personas",
-                priceSub: "Tarifa de invierno, estadías de 2 noches o más. Se reserva con el 50%.",
-                stat: "17–21",
+                priceSub: "Tarifa de invierno. Reserva con el 50%.",
+                stat: "17–20",
                 statCaption: "septiembre 2026 · fin de semana largo",
                 photoCaption: "Domo entre los árboles, Valle Las Trancas",
             }}
@@ -58,8 +58,8 @@ export default function FiestasPatriasPage() {
                 eventName: "click_reservar_fiestas_patrias",
                 secondEventName: "begin_checkout_fiestas_patrias",
                 secondParams: { event: "fiestas_patrias_2026" },
-                label: "Ver disponibilidad del 18",
-                sublabel: "Solo tenemos 4 domos",
+                label: "Ver disponibilidad del 17 al 20",
+                sublabel: "Reserva directa con TreePod",
             }}
             whatsapp={{
                 url: whatsappUrl,
@@ -68,38 +68,38 @@ export default function FiestasPatriasPage() {
             }}
             beneficios={{
                 label: "El fin de semana largo",
-                title: <>Cuatro días de <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">septiembre</span> en la cordillera</>,
-                lead: "Jueves 17, viernes 18, sábado 19 y domingo 20: el finde largo más grande del año",
+                title: <>Tres noches de <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">septiembre</span> en la cordillera</>,
+                lead: "Ingreso el jueves 17 y salida el domingo 20: tres noches para pasar Fiestas Patrias en la cordillera.",
                 items: [
                     {
                         // El quincho salió de esta landing: a agosto de 2026 la obra
                         // lleva tres meses sin terminarse y no se anuncia lo que no
                         // se puede cumplir. Volver a sumarlo solo con la obra recibida
                         // y una foto real.
-                        title: "Tu asado del 18 sin compartirlo con nadie",
-                        desc: "Te llevamos la parrilla hasta tu domo para que hagas tu asado del 18 sin compartir espacio con nadie. Tú pones la carne y el vino; el bosque pone el resto.",
+                        title: "Tu asado del 18, junto a tu domo",
+                        desc: "Llevamos la parrilla hasta tu domo para que prepares tu asado. Tú eliges qué cocinar y nosotros dejamos la parrilla lista en tu espacio.",
                     },
                     {
-                        title: "Solo cuatro domos en todo el terreno",
-                        desc: "No somos un complejo con cien cabañas. Son cuatro domos separados entre los árboles: el 18 se escucha el bosque y no la música del vecino.",
+                        title: "Cuatro domos entre los árboles",
+                        desc: "TreePod tiene cuatro domos geodésicos distribuidos en el terreno. Cada uno cuenta con su propio espacio para disfrutar la estadía.",
                     },
                     {
-                        title: "Calor asegurado aunque afuera esté helado",
-                        desc: "Septiembre en la montaña todavía es frío de noche. La estufa a pellet automática mantiene el domo completo temperado mientras duermes.",
+                        title: "Un domo temperado para las noches frías",
+                        desc: "En septiembre, las noches de montaña todavía pueden ser frías. La estufa a pellet automática ayuda a mantener temperado el domo completo.",
                     },
                     {
                         title: "A 12 minutos de Nevados de Chillán",
-                        desc: "El centro de ski y las termas quedan a un cuarto de hora. Si queda nieve, alcanzas a subir; si no, hay senderos, cabalgatas y el valle entero.",
+                        desc: "Nevados de Chillán y las termas están a 12 minutos en auto. La presencia de nieve varía según el clima y la temporada; consúltanos antes de viajar.",
                     },
                     {
-                        title: "Cocina equipada y WiFi Starlink",
-                        desc: "Cocina completa para los días largos, y conexión estable en un valle donde casi nadie tiene señal.",
+                        title: "Cocina equipada y Wi-Fi Starlink",
+                        desc: "Cada domo cuenta con cocina equipada y conexión Wi-Fi Starlink para usar durante la estadía.",
                     },
                 ],
             }}
             galeria={{
-                title: <>Tu 18 de septiembre en <span className="italic">Valle Las Trancas</span></>,
-                lead: "Así se ve el lugar donde vas a pasar el fin de semana largo",
+                title: <>Así es tu domo para <span className="italic">Fiestas Patrias</span></>,
+                lead: "Imágenes reales de TreePod y de los espacios que encontrarás durante tu estadía.",
                 photos: [
                     {
                         src: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",
@@ -108,48 +108,48 @@ export default function FiestasPatriasPage() {
                     },
                     {
                         src: "/images/Galeria/lastrancas-exterior-domo-8-2.jpg",
-                        alt: "Domo geodésico entre el bosque nativo de Valle Las Trancas",
+                        alt: "Domo geodésico en el bosque nativo de Valle Las Trancas",
                         caption: "Bosque nativo · terraza privada",
                     },
                     {
                         src: "/images/EquipamientoParaTuEstadia/Cocina.jpg",
                         alt: "Cocina equipada del domo",
-                        caption: "Cocina completa · para los días largos",
+                        caption: "Cocina equipada · dentro del domo",
                     },
                     {
                         src: "/images/Galeria/Desayuno.jpg",
-                        alt: "Desayuno servido con productos de la zona",
+                        alt: "Desayuno servido en el domo",
                         caption: "Desayuno al domo · servicio con cargo",
                     },
                 ],
                 cta: {
                     href: reservaHref,
                     eventName: "click_reservar_fiestas_patrias_galeria",
-                    label: "Ver disponibilidad del 17 al 21",
+                    label: "Ver disponibilidad del 17 al 20",
                 },
             }}
             resenas={{
                 title: <>Lo que dicen <span className="italic">nuestros huéspedes</span></>,
-                lead: "4,9 con 209 reseñas sumando todas las plataformas",
+                lead: "4,9 · 209 reseñas de todas las plataformas",
                 cta: {
                     href: reservaHref,
                     eventName: "click_reservar_fiestas_patrias_testimonios",
-                    label: "Reservar mi domo para el 18",
+                    label: "Reservar del 17 al 20",
                 },
             }}
             cierre={{
                 label: "Fiestas Patrias 2026",
-                title: <>Son cuatro domos <span className="italic text-[#00ADEF]">para todo el fin de semana largo</span></>,
-                text: "El 18 y el 19 caen viernes y sábado, y este es de los findes largos que se llenan primero en la cordillera. Reserva con el 50%; el saldo lo pagas al llegar.",
-                note: "Jueves 17 al lunes 21 de septiembre 2026 · atendido por sus dueños, Janet y Jaime",
+                title: <>Tres noches en un domo geodésico <span className="italic text-[#00ADEF]">en Valle Las Trancas</span></>,
+                text: "El 18 y el 19 caen viernes y sábado. Ingresa el jueves 17, sal el domingo 20 y confirma pagando el 50% mediante Webpay. El saldo se paga al llegar.",
+                note: "Del jueves 17 al domingo 20 de septiembre de 2026 · atendido por sus dueños, Janet y Jaime",
                 cta: {
                     href: reservaHref,
                     eventName: "click_reservar_fiestas_patrias_final",
                     secondEventName: "begin_checkout_fiestas_patrias",
                     secondParams: { event: "fiestas_patrias_2026" },
-                    label: "Reservar mi 18 en el bosque",
+                    label: "Reservar del 17 al 20",
                 },
-                trust: ["Pago seguro con Webpay", "Reserva con el 50%", "Registro SERNATUR N° 36806"],
+                trust: ["Pago seguro con Webpay", "Reserva con el 50%", "Registro SERNATUR N° 36805"],
             }}
         />
     );

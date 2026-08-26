@@ -7,18 +7,17 @@ import TriBullet from './deco/TriBullet';
 // triángulo cyan como marca del paso activo. Reemplaza los círculos-píldora
 // con anillo y pulso (huella plantilla). Misma prop de siempre: activeStep.
 interface StepperProps {
-    activeStep: 1 | 2 | 3;
+    activeStep: 1 | 2;
 }
 
 const Stepper: React.FC<StepperProps> = ({ activeStep }) => {
     const steps = [
-        { label: "Fechas y extras" },
-        { label: "Tus datos" },
+        { label: "Fechas y correo" },
         { label: "Pago" }
     ];
 
     return (
-        <ol className="flex items-center gap-3 md:gap-4 max-w-2xl mb-10 md:mb-12 w-full" aria-label={`Paso ${activeStep} de 3`}>
+        <ol className="flex items-center gap-3 md:gap-4 max-w-2xl mb-10 md:mb-12 w-full" aria-label={`Paso ${activeStep} de 2`}>
             {steps.map((step, index) => {
                 const stepNumber = index + 1;
                 const isCompleted = activeStep > stepNumber;

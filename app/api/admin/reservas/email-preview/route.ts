@@ -110,7 +110,7 @@ export async function GET(request: Request) {
     </div>
     <div style="background:#ffffff;padding:20px 24px;text-align:center;border-radius:0 0 12px 12px;">
         <img src="https://domostreepod.cl/images/branding/sello-sernatur-sin-fecha.png" alt="Sello SERNATUR" style="width:80px;height:auto;margin-bottom:8px;" />
-        <p style="font-size:12px;color:#333333;margin:0;font-weight:600;">Registro SERNATUR N° 36806</p>
+        <p style="font-size:12px;color:#333333;margin:0;font-weight:600;">Registro SERNATUR N° 36805</p>
     </div>
 
 </div>

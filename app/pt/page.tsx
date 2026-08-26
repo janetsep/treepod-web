@@ -6,6 +6,7 @@ import SectionFolio from "../components/SectionFolio";
 import TriBullet from "../components/deco/TriBullet";
 import GeoDivider from "../components/deco/GeoDivider";
 import { btnPrimary, linkLine } from "../components/deco/cta";
+import LocalizedRates from "../components/LocalizedRates";
 
 export const metadata: Metadata = {
     title: "Onde Ficar Perto do Nevados de Chillán | Domos TreePod",
@@ -111,11 +112,7 @@ export default function PortugueseSkiPage() {
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10 mt-4">
                         <div className="col-span-12 md:col-span-6">
                             <p className="dato text-[#5B5348]">Domos a partir de</p>
-                            <p className="font-display font-medium text-[clamp(2.6rem,6vw,4rem)] leading-none text-[#1E1B16] mt-2">CLP $145.000</p>
-                            <p className="text-sm text-[#5B5348] mt-2 leading-relaxed">
-                                por noite · 2 pessoas · estadias de 2+ noites (pesos chilenos).<br />
-                                Estadia de 1 noite: CLP $160.000.
-                            </p>
+                            <LocalizedRates locale="pt" />
                         </div>
                         <div className="col-span-12 md:col-span-6 space-y-3 self-center">
                             {[

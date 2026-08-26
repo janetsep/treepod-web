@@ -92,10 +92,8 @@ export async function POST(req: Request) {
       }
     }
 
-    // Antes de pagar se exige UN solo dato: el correo. Con el se confirma la
-    // reserva y se puede recuperar a quien no termine. El nombre y el telefono
-    // se completan despues del pago (GuestForm en /reserva/[id]), donde ya no
-    // hay riesgo de abandono.
+    // El correo es el único dato personal imprescindible antes de Webpay.
+    // Los datos de llegada se solicitan cuando el pago ya fue confirmado.
     if (!email?.trim()) {
       return NextResponse.json({ error: "Necesitamos tu correo para confirmar la reserva." }, { status: 400 });
     }
@@ -303,14 +301,16 @@ export async function POST(req: Request) {
       );
     }
 
-    // CRM: vincular o crear el cliente apenas nace la reserva (no bloqueante).
-    await vincularClienteAReserva(data.id, {
-      nombre,
-      apellido,
-      email,
-      telefono,
-      fuente: "web",
-    });
+    // No crear una ficha CRM "Sin Nombre" por un carrito aún no pagado.
+    if (nombre?.trim() && apellido?.trim()) {
+      await vincularClienteAReserva(data.id, {
+        nombre,
+        apellido,
+        email,
+        telefono,
+        fuente: "web",
+      });
+    }
 
     // 4. Insertar servicios si existen
     if (servicios && servicios.length > 0) {
@@ -345,7 +345,7 @@ export async function POST(req: Request) {
       if (aseos >= 2) {
         await sendWhatsAppAlert(
           `TreePod · Aviso de aseo\n` +
-          `Nueva reserva web: ${[nombre, apellido].filter(Boolean).join(' ').trim() || email}\n` +
+          `Nueva reserva web pendiente de pago\n` +
           `Entrada ${entrada} · Domo ${domoDisponible.nombre || domoDisponible.id}\n` +
           `Ese dia ya hay ${aseos} salidas/aseos. Por capacidad, evalua ingreso desde las 18:00. Revisa en el panel.`
         );

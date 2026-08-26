@@ -44,7 +44,7 @@ export default function NotForEveryone() {
             </div>
 
             <div className="mt-10">
-              <Link href="/disponibilidad" className={linkLine}>
+              <Link href="/disponibilidad#reservar" className={linkLine}>
                 Reservar mi escapada <span aria-hidden="true">→</span>
               </Link>
               <p className="caption-editorial mt-3">

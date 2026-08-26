@@ -31,7 +31,7 @@ export default function Footer() {
                             <Logo className="h-14 w-auto transition-transform duration-300 group-hover:scale-105" variant="white" />
                         </Link>
                         <p className="text-white/80 text-base leading-relaxed max-w-sm">
-                            Tu refugio en el corazón de Valle Las Trancas. Naturaleza, bienestar y calidez en un solo lugar.
+                            Domos geodésicos en el corazón de Valle Las Trancas, con naturaleza, comodidad y hospitalidad cercana.
                         </p>
                         <div className="flex gap-3">
                             <a href="https://instagram.com/domostreepod" target="_blank" className="w-10 h-10 rounded-[2px] border border-white/20 flex items-center justify-center hover:border-[#00ADEF] hover:text-[#00ADEF] transition-colors" aria-label="Instagram">
@@ -117,26 +117,19 @@ export default function Footer() {
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="dato text-white/60">Servicio Registrado</span>
-                        <span className="font-display italic text-3xl md:text-4xl text-[#00ADEF] tabular-nums">N° 36806</span>
+                        <span className="font-display italic text-3xl md:text-4xl text-[#00ADEF] tabular-nums">N° 36805</span>
                     </div>
                 </div>
 
                 {/* Colofón */}
                 <div className="border-t border-white/15 pt-6 flex flex-col gap-4">
                     <p className="text-[11px] tracking-[0.12em] uppercase text-white/50">
-                        TreePod Glamping · Migryk Correa Ltda · Registro SERNATUR N° 36806 · Ruta N-55 Km 72, Valle Las Trancas, Pinto — Chile
+                        TreePod Glamping · Migryk Correa Ltda · Registro SERNATUR N° 36805 · Ruta N-55 Km 72, Valle Las Trancas, Pinto — Chile
                     </p>
                     <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                        <div className="flex flex-col gap-1">
-                            <p className="text-[11px] tracking-[0.12em] uppercase text-white/50">
-                                © {new Date().getFullYear()} Migryk Correa Ltda. · TreePod Glamping de Montaña.
-                            </p>
-                            {/* white/60 sobre charcoal pasa AA (4,5:1) para texto pequeño;
-                                el /40 anterior daba ~3,5:1 y fallaba */}
-                            <p className="text-white/60 text-[10px]">
-                                TreePod es una marca operada por Migryk Correa Ltda., RUT 76.286.428-2. Contacto: info@domostreepod.cl
-                            </p>
-                        </div>
+                        <p className="text-[11px] tracking-[0.12em] uppercase text-white/50">
+                            © {new Date().getFullYear()} Migryk Correa Ltda. · TreePod Glamping de Montaña.
+                        </p>
                         <div className="flex gap-8 text-[11px] tracking-[0.12em] uppercase text-white/50">
                             <Link href="/nosotros" className="hover:text-[#00ADEF] transition-colors">Nosotros</Link>
                             <Link href="/privacidad" className="hover:text-[#00ADEF] transition-colors">Privacidad</Link>

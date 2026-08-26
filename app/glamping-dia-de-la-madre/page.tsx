@@ -88,7 +88,7 @@ const experiencia = [
         desc: "Nevados de Chillán — termas y ski — está a pocos minutos en auto. Desde TreePod tienes acceso fácil a uno de los principales destinos de montaña de Ñuble."
     },
     {
-        title: "Registro SERNATUR N° 36806",
+        title: "Registro SERNATUR N° 36805",
         desc: "Somos un establecimiento turístico registrado en SERNATUR. Eso respalda nuestros estándares de calidad, seguridad y servicio."
     },
     {

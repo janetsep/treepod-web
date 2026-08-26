@@ -1,9 +1,8 @@
 "use client";
 
 import { Suspense, useEffect, useState, use, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PagarButton from "../../components/PagarButton";
-import GuestForm from "../../components/GuestForm";
 import Link from "next/link";
 import { trackEvent } from "../../lib/analytics";
 import Stepper from "../../components/Stepper";
@@ -37,8 +36,8 @@ interface Reserva {
   fecha_inicio: string;
   fecha_fin: string;
   total: number;
-  nombre: string;
-  apellido: string;
+  nombre: string | null;
+  apellido: string | null;
   email: string;
   telefono?: string | null;
   rut: string;
@@ -61,7 +60,6 @@ interface Reserva {
 }
 
 function ReservaContent({ id }: { id: string }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status");
   const errorParam = searchParams.get("error");
@@ -122,8 +120,8 @@ function ReservaContent({ id }: { id: string }) {
 
   const paymentViewSent = useRef(false);
   useEffect(() => {
-    const guestComplete = !!(reserva?.nombre && reserva?.apellido && reserva?.email);
-    if (guestComplete && reserva && !paymentViewSent.current) {
+    const readyToPay = !!reserva?.email;
+    if (readyToPay && reserva && !paymentViewSent.current) {
       paymentViewSent.current = true;
       trackEvent("select_payment_method", {
         reserva_id: id,
@@ -144,7 +142,7 @@ function ReservaContent({ id }: { id: string }) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[#F7F3EC]">
         <div className="max-w-md w-full bg-white p-8 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-red-500 space-y-4">
-          <h2 className="font-display font-medium text-2xl text-[#1E1B16]">Error de Carga</h2>
+          <h2 className="font-display font-medium text-2xl text-[#1E1B16]">Error de carga</h2>
           <p className="text-[#5B5348]">No pudimos encontrar la reserva con ID: <code className="bg-red-50 text-red-700 px-2 py-1 rounded-[2px]">{id}</code></p>
           <p className="text-sm text-[#5B5348]">Si acabas de crear esta reserva, es posible que haya un retraso en la base de datos o un problema de permisos (RLS).</p>
           <button onClick={() => window.location.reload()} className={`${btnPrimary} w-full mt-4`}>Reintentar</button>
@@ -165,7 +163,7 @@ function ReservaContent({ id }: { id: string }) {
         <div className="relative z-10 mx-auto max-w-[720px] px-5 md:px-10 pt-32 md:pt-40 pb-24 animate-fade-in">
           <p className="dato text-[#5B5348] mb-6">Reserva directa TreePod</p>
           <h1 className="display-lg text-[#1E1B16]">
-            ¡Reserva <span className="italic">Confirmada</span>!
+            ¡Reserva <span className="italic">confirmada</span>!
           </h1>
           {/* Mismo formato de código que /confirmacion y el calendario del admin (últimos 5 del id),
               para que el cliente reciba un único código en todas las pantallas. */}
@@ -174,7 +172,7 @@ function ReservaContent({ id }: { id: string }) {
             Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}
           </p>
           <p className="mt-6 text-[#5B5348] leading-relaxed max-w-lg">
-            Tu refugio en el bosque te espera. Hemos enviado los detalles de tu estadía a{" "}
+            Tu domo geodésico te espera. Enviamos los detalles de tu estadía a{" "}
             <span className="font-semibold text-[#1E1B16]">{reserva.email}</span>.
           </p>
 
@@ -231,7 +229,7 @@ function ReservaContent({ id }: { id: string }) {
       <div className="min-h-screen bg-[#F7F3EC] font-sans flex items-center justify-center p-6 text-[#1E1B16]">
         <div className="max-w-lg w-full bg-white p-8 md:p-10 rounded-[2px] border border-[#1E1B16]/12 space-y-6 animate-fade-in">
           <p className="dato text-[#5B5348]">Reserva expirada</p>
-          <h1 className="font-display font-medium text-3xl leading-tight">Tiempo Excedido</h1>
+          <h1 className="font-display font-medium text-3xl leading-tight">Tiempo excedido</h1>
           <p className="text-[#5B5348] leading-relaxed">
             Lo sentimos, la reserva ha expirado para liberar el espacio a otros huéspedes.
           </p>
@@ -251,9 +249,7 @@ function ReservaContent({ id }: { id: string }) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
   const total = reserva.total;
 
-  // El telefono ahora se pide aqui y no en el checkout, asi que cuenta para
-  // saber si la ficha del huesped esta completa.
-  const isGuestDataComplete = !!(reserva.nombre && reserva.apellido && reserva.email && reserva.telefono);
+  const isReadyToPay = !!reserva.email;
 
   return (
     <div className="min-h-screen bg-[#F7F3EC] text-[#1E1B16] font-sans transition-colors duration-300">
@@ -262,12 +258,16 @@ function ReservaContent({ id }: { id: string }) {
       <div className="container mx-auto px-4 md:px-6 pt-4 pb-32 lg:pt-6 lg:pb-16 max-w-5xl">
         <div className="space-y-10">
 
-          {/* Paso Visual del Checkout (Stepper) + retención del domo siempre visible:
+          {/* El stepper se conserva en escritorio. En móvil priorizamos la acción
+              de pago y evitamos otra franja de información. */}
+          <div className="mb-0 pt-2 md:pt-4">
+            <div className="hidden md:block">
+              <Stepper activeStep={2} />
+            </div>
+            {/* Retención del domo siempre visible:
               la urgencia legítima vive junto al Stepper, no escondida al final. */}
-          <div className="mb-0 pt-4">
-            <Stepper activeStep={isGuestDataComplete ? 3 : 2} />
             {reserva.estado === "pendiente_pago" && minutesLeft > 0 && (
-              <p className="-mt-5 md:-mt-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
+              <p className="md:-mt-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
                 <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
                 Domo retenido · {minutesLeft} min
               </p>
@@ -276,11 +276,15 @@ function ReservaContent({ id }: { id: string }) {
 
           {/* Aviso cuando el huésped canceló o abortó el pago en Webpay y vuelve al checkout.
               Sin esto, ?error=webpay_abort / ?error=missing_token no mostraban ningún mensaje. */}
-          {(errorParam === "webpay_abort" || errorParam === "missing_token") && (
+          {(errorParam === "webpay_abort" || errorParam === "missing_token" || errorParam === "webpay_start_failed") && (
             <div className="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-[2px] text-sm font-medium animate-fade-in space-y-3">
               <div className="flex items-start gap-3">
                 <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0 mt-1.5" />
-                <span>El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras.</span>
+                <span>
+                  {errorParam === "webpay_start_failed"
+                    ? "No pudimos abrir Webpay automáticamente. No se realizó ningún cobro y tu domo sigue retenido: puedes reintentar con el botón Pagar."
+                    : "El pago no se completó en Webpay y no se realizó ningún cobro. Tu reserva sigue aquí: puedes reintentar el pago cuando quieras."}
+                </span>
               </div>
               {/* Rescate: quien falla pagando (tarjeta extranjera, tope de débito) necesita
                   un humano AHORA, no rendirse tras el tercer intento. */}
@@ -299,18 +303,18 @@ function ReservaContent({ id }: { id: string }) {
           )}
 
           <header>
-            <SectionFolio num="Paso 3 de 3" label="Confirmar y pagar" note="Reserva directa TreePod" className="!mb-8" />
+            <SectionFolio num="Último paso" label="Confirmar y pagar" note="Reserva directa TreePod" className="!mb-8 hidden md:flex" />
             <h1 className="display-lg text-[#1E1B16]">
               Finaliza <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">Tu Reserva</span>
             </h1>
             <p className="text-sm md:text-base text-[#5B5348] max-w-xl mt-4 leading-relaxed">
-              Revisa los detalles finales y asegura tu refugio en la cordillera.
+              Revisa las fechas y el monto antes de pagar el 50% mediante Webpay.
             </p>
           </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Columna 1: Resumen y Detalle Financiero — ficha de reserva */}
-            <div className="space-y-6">
+            <div className="space-y-6 order-2 lg:order-1">
               <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
                 <div className="flex items-baseline gap-3 mb-8">
                   <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
@@ -329,13 +333,45 @@ function ReservaContent({ id }: { id: string }) {
                   </div>
                   <div className="space-y-1">
                     <span className="dato text-[#5B5348]">Huéspedes</span>
-                    <p className="text-sm font-medium">{reserva.adultos} Personas</p>
+                    <p className="text-sm font-medium">{reserva.adultos} personas</p>
                   </div>
                   <div className="space-y-1">
                     <span className="dato text-[#5B5348]">Duración</span>
-                    <p className="text-sm font-medium">{diffDays} {diffDays === 1 ? 'Noche' : 'Noches'}</p>
+                    <p className="text-sm font-medium">{diffDays} {diffDays === 1 ? 'noche' : 'noches'}</p>
                   </div>
                 </div>
+
+                {/* El valor debe verse antes del desglose financiero, no debajo del
+                    pliegue. En escritorio se resume en una franja compacta. */}
+                <aside
+                  aria-labelledby="valor-reserva-title"
+                  className="mb-6 border-y border-[#1E1B16]/12 bg-[#F7F3EC] px-4 py-4"
+                >
+                  <p className="dato text-[#008CBF] mb-1.5">Tu estadía incluye</p>
+                  <h3
+                    id="valor-reserva-title"
+                    className="font-display text-lg leading-tight text-[#1E1B16]"
+                  >
+                    Tu propio domo geodésico en el bosque nativo
+                  </h3>
+                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[12px] leading-snug text-[#5B5348]">
+                    <p className="flex items-start gap-2">
+                      <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 mt-1" />
+                      <span>Estufa a pellet automática</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 mt-1" />
+                      <span>Baño privado</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 mt-1" />
+                      <span>Cocina equipada con Nespresso</span>
+                    </p>
+                  </div>
+                  <p className="mt-3 text-[12px] leading-snug text-[#5B5348]">
+                    Reserva directa con la atención personal de Janet y Jaime.
+                  </p>
+                </aside>
 
                 <div className="pt-6 border-t border-[#1E1B16]/12 space-y-3">
                   {/* Desglose Matemático Correcto */}
@@ -378,7 +414,7 @@ function ReservaContent({ id }: { id: string }) {
 
                         {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
                           <div className="pt-3 space-y-2">
-                            <span className="dato text-[#5B5348]">Extras Seleccionados</span>
+                            <span className="dato text-[#5B5348]">Extras seleccionados</span>
                             {reserva.reserva_servicios.map((s) => (
                               <div key={s.id} className="flex items-baseline gap-3 text-[13px] text-[#5B5348]">
                                 <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
@@ -417,13 +453,13 @@ function ReservaContent({ id }: { id: string }) {
                           </div>
 
                           <div className="flex items-baseline gap-3 text-[13px]">
-                            <span className="text-[#5B5348]">Saldo a pagar en el check-in</span>
+                            <span className="text-[#5B5348]">Saldo a pagar al llegar</span>
                             <DottedLeader />
                             <span className="tabular-nums text-[#1E1B16]">${(total - Math.round(total * 0.5)).toLocaleString("es-CL")}</span>
                           </div>
 
                           <p className="text-[12px] text-[#5B5348] leading-relaxed border border-[#1E1B16]/12 rounded-[2px] px-4 py-3">
-                            Hoy pagas la mitad vía Webpay para confirmar tu reserva. El saldo restante se cancela al inicio de tu estadía.
+                            Hoy pagas la mitad mediante Webpay para confirmar tu reserva. El saldo restante se paga al llegar.
                           </p>
                         </div>
                       </>
@@ -432,84 +468,25 @@ function ReservaContent({ id }: { id: string }) {
                 </div>
               </section>
 
-              {/* Teaser de extras: se anuncia como sorpresa post-confirmación, no como
-                  paso del checkout. Cero fricción aquí; el enlace real va en el correo. */}
-              {reserva.estado === "pendiente_pago" && (!reserva.reserva_servicios || reserva.reserva_servicios.length === 0) && (
-                <aside className="bg-[#E6F7FD] p-5 md:p-6 rounded-[2px] border border-[#00ADEF]/40 border-t-4 border-t-[#00ADEF]">
-                  <p className="flex items-center gap-2 dato text-[#008CBF] mb-3">
-                    <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
-                    Un secreto para después
-                  </p>
-                  <p className="font-display italic text-lg md:text-xl text-[#1E1B16] leading-snug mb-3">
-                    Desayuno con pan recién hecho servido en tu domo, cena privada entre los árboles…
-                  </p>
-                  <p className="text-sm text-[#5B5348] leading-relaxed">
-                    No elijas nada todavía: al confirmar tu reserva te llegará un enlace para agregar
-                    los extras con calma, y se pagan recién en el check-in.
-                  </p>
-                </aside>
-              )}
             </div>
 
-            {/* Columna 2: Datos y Pago */}
-            <div className="space-y-6">
-
-              <section className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
-                <div className="flex items-baseline gap-3 mb-6">
-                  <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
-                  <h2 className="dato text-[#1E1B16]">Información de Contacto</h2>
-                  <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
-                </div>
-
-                {!isGuestDataComplete ? (
-                  <GuestForm
-                    reservaId={id}
-                    initialData={reserva}
-                    onSave={(data) => {
-                      setReserva({ ...reserva, ...data });
-
-                      // ✅ NUEVO: disparar generate_lead cuando el usuario completa sus datos via GTM
-                      window.dataLayer = window.dataLayer || [];
-                      window.dataLayer.push({
-                        event: 'generate_lead',
-                        reserva_id: id,
-                        value: reserva?.total,
-                        currency: 'CLP'
-                      });
-
-                      router.refresh();
-                    }}
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-1">
-                      <span className="dato text-[#5B5348]">Nombre Completo</span>
-                      <p className="text-lg font-medium">{reserva.nombre} {reserva.apellido}</p>
-                    </div>
-
-                    <div className="space-y-1 sm:col-span-2">
-                      <span className="dato text-[#5B5348]">Email de Notificación</span>
-                      <p className="text-lg font-medium">{reserva.email}</p>
-                    </div>
-                  </div>
-                )}
-              </section>
-
-              {isGuestDataComplete && (
+            {/* En móvil el pago va primero; el resumen detallado queda debajo. */}
+            <div className="space-y-6 order-1 lg:order-2">
+              {isReadyToPay && (
                 <section className="animate-fade-in">
                   <div className="bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12">
                     <div className="flex items-baseline gap-3 mb-6">
-                      <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">03</span>
-                      <h2 className="dato text-[#1E1B16]">Método de Pago</h2>
+                      <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
+                      <h2 className="dato text-[#1E1B16]">Pago seguro</h2>
                       <span className="flex-1 h-px bg-[#1E1B16]/15 self-center" aria-hidden="true" />
                     </div>
 
                     <div className="border border-[#1E1B16]/12 border-l-4 border-l-[#00ADEF] rounded-[2px] p-5 md:p-6">
-                      <h3 className="font-display font-medium text-lg text-[#1E1B16]">Pago Seguro vía WebPay</h3>
-                      <p className="dato text-[#5B5348] mt-1">Transacción Inmediata</p>
+                      <h3 className="font-display font-medium text-lg text-[#1E1B16]">Webpay Plus</h3>
+                      <p className="text-[12px] text-[#5B5348] mt-1 break-all">Confirmación a {reserva.email}</p>
 
-                      <p className="text-sm text-[#5B5348] mt-4 mb-7 leading-relaxed">
-                        Serás redirigido al servidor seguro de Transbank. TreePod no almacena los datos de tu tarjeta.
+                      <p className="text-sm text-[#5B5348] mt-4 mb-5 leading-relaxed">
+                        Paga el 50% para confirmar. Webpay procesa tu tarjeta de forma segura; TreePod no guarda esos datos.
                       </p>
 
                       {/* El label dice exactamente lo que se cobra: el 50% ya calculado,
@@ -523,7 +500,7 @@ function ReservaContent({ id }: { id: string }) {
                       {/* Confianza en el punto de máxima ansiedad */}
                       <p className="mt-5 flex items-center justify-center gap-2 dato text-[#5B5348] text-center">
                         <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                        Registro SERNATUR N° 36806 · 4,9 · 209 reseñas
+                        Registro SERNATUR N° 36805 · 4,9 · 209 reseñas
                       </p>
                     </div>
                   </div>
@@ -536,7 +513,7 @@ function ReservaContent({ id }: { id: string }) {
 
       {/* Barra de pago sticky (mobile): la cifra principal es lo que se paga HOY.
           Solo en el paso de pago; StickyReservar ya se excluye en /reserva. */}
-      {isGuestDataComplete && reserva.estado === "pendiente_pago" && (
+      {isReadyToPay && reserva.estado === "pendiente_pago" && (
         <div className="lg:hidden fixed inset-x-0 bottom-0 z-[100] animate-fade-in-up">
           <div
             className="bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 py-2.5 flex items-center justify-between gap-3"

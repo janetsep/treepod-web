@@ -13,7 +13,7 @@ export default function TreePodDomes() {
   return (
     <section className="bg-white py-20 md:py-32 overflow-hidden">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-        <SectionFolio num="N° 01" label="Tu refugio" />
+        <SectionFolio num="N° 01" label="Tu domo" />
 
         <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-start">
           {/* Foto principal sangrada al borde izquierdo (solo desde lg) */}
@@ -46,7 +46,7 @@ export default function TreePodDomes() {
             </span>
 
             <h2 className="display-lg text-[#1E1B16] relative z-10 lg:-ml-28 lg:bg-white lg:px-4 lg:py-3 lg:inline-block">
-              Un refugio propio{" "}
+              Un domo propio{" "}
               <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
                 en medio del bosque
               </span>
@@ -81,7 +81,7 @@ export default function TreePodDomes() {
             </figure>
 
             <div className="mt-10 lg:px-4">
-              <Link href="/disponibilidad" className={btnPrimary}>
+              <Link href="/disponibilidad#reservar" className={btnPrimary}>
                 Reservar mi domo
               </Link>
               <p className="caption-editorial mt-4">

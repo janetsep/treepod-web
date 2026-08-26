@@ -68,7 +68,7 @@ export default async function GloriasNavalesPage() {
                 ],
             }}
             galeria={{
-                title: <>Tu refugio otoñal en <span className="italic">Valle Las Trancas</span></>,
+                title: <>Tu domo en otoño, en <span className="italic">Valle Las Trancas</span></>,
                 lead: "Lo necesario para tu finde largo de Glorias Navales",
                 photos: [
                     {

@@ -9,7 +9,7 @@ import TriBullet from "./deco/TriBullet";
 const items = [
   { t: "Mejor precio directo", s: "Sin comisión de intermediarios" },
   { t: "Reserva con el 50%", s: "El saldo se paga en el check-in" },
-  { t: "Registro SERNATUR", s: "N° 36806 · operación formal" },
+  { t: "Registro SERNATUR", s: "N° 36805 · operación formal" },
   { t: "Respuesta rápida", s: "Te asesoramos por WhatsApp" },
 ];
 

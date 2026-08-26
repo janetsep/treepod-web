@@ -148,7 +148,7 @@ export default function DomoAmenities() {
 
         {/* CTA de la sección: quien se convenció aquí no debe buscar dónde reservar */}
         <div className="mt-12">
-          <a href="/disponibilidad" className={btnPrimary}>
+          <a href="/disponibilidad#reservar" className={btnPrimary}>
             Quiero mi escapada al bosque
           </a>
         </div>

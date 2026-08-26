@@ -37,7 +37,7 @@ export default function ComoReservar() {
               Tu escapada, en <span className="italic text-[#00ADEF]">tres pasos</span>
             </h2>
             <div className="mt-10 hidden lg:block">
-              <Link href="/disponibilidad" className={btnPrimaryDark}>
+              <Link href="/disponibilidad#reservar" className={btnPrimaryDark}>
                 Ver disponibilidad y reservar
               </Link>
             </div>
@@ -65,7 +65,7 @@ export default function ComoReservar() {
             </div>
 
             <div className="mt-10 lg:hidden">
-              <Link href="/disponibilidad" className={btnPrimaryDark}>
+              <Link href="/disponibilidad#reservar" className={btnPrimaryDark}>
                 Ver disponibilidad y reservar
               </Link>
             </div>

@@ -6,6 +6,8 @@ import Stepper from '../components/Stepper';
 import TriBullet from '../components/deco/TriBullet';
 import GeoArc from '../components/deco/GeoArc';
 import { btnPrimary, linkLine } from '../components/deco/cta';
+import { trackGoogleAdsPurchase } from '../lib/analytics';
+import GuestForm from '../components/GuestForm';
 
 // Las fechas llegan como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') las interpreta como
 // medianoche UTC, que en Chile (UTC-4) cae el día ANTERIOR: mostraba check-in y
@@ -76,11 +78,19 @@ function ConfirmacionContent() {
                             );
 
                             (window as any).dataLayer = (window as any).dataLayer || [];
+                            // La compra GA4 canónica se envía una sola vez desde el
+                            // servidor. Este evento confirma la llegada del navegador
+                            // sin volver a crear una conversión.
                             (window as any).dataLayer.push({
-                                event: 'purchase',
+                                event: 'booking_payment_confirmed',
                                 transaction_id: transactionId || data.id,
                                 value: valorVenta,
                                 currency: 'CLP',
+                                check_in: data.fecha_inicio,
+                                check_out: data.fecha_fin,
+                                guests: data.adultos,
+                                dome_id: data.domo_id,
+                                dome_name: domoName,
                                 items: [{
                                     item_id: data.id,
                                     item_name: `Reserva ${domoName}`,
@@ -90,7 +100,13 @@ function ConfirmacionContent() {
                                 }]
                             });
 
-                            // Meta Pixel (Facebook) - Tracking de Compra Real
+                            trackGoogleAdsPurchase({
+                                transactionId: transactionId || data.id,
+                                value: valorVenta,
+                            });
+
+                            // Meta Pixel (Facebook) - Tracking de Compra Real. El
+                            // mismo eventID de CAPI permite que Meta deduplique.
                             // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
                             if ((window as any).fbq) {
                                 (window as any).fbq('track', 'Purchase', {
@@ -99,7 +115,7 @@ function ConfirmacionContent() {
                                     content_name: `Reserva ${domoName}`,
                                     content_ids: [data.id],
                                     num_items: 1
-                                });
+                                }, { eventID: transactionId || data.id });
                                 console.log('✅ Meta Pixel Purchase event enviado:', { reservaId: data.id, amount, domoName });
                             } else {
                                 console.warn('⚠️ fbq no disponible - Meta Pixel puede no estar cargado');
@@ -179,6 +195,9 @@ function ConfirmacionContent() {
             ? reserva.monto_pagado
             : Math.round(reserva.total * 0.5);
     const saldo = reserva.total - abono;
+    const datosLlegadaCompletos = !!(
+        reserva.nombre && reserva.apellido && reserva.telefono
+    );
 
     return (
         <div className="relative min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16] overflow-hidden">
@@ -186,11 +205,11 @@ function ConfirmacionContent() {
             <GeoArc className="absolute -top-px left-1/2 -translate-x-1/2 rotate-180 w-[560px] max-w-[90vw] text-[#00ADEF]/10 pointer-events-none" />
 
             <div className="relative z-10 mx-auto max-w-[720px] px-5 md:px-10 pt-28 md:pt-36 pb-24 animate-fade-in">
-                <Stepper activeStep={3} />
+                <Stepper activeStep={2} />
 
                 <p className="dato text-[#5B5348] mb-6">Reserva directa TreePod · Pago vía Webpay</p>
                 <h1 className="display-lg text-[#1E1B16]">
-                    ¡Reserva <span className="italic">Confirmada</span>!
+                    ¡Reserva <span className="italic">confirmada</span>!
                 </h1>
                 {/* Mismo formato de código que /reserva/[id] y el calendario del admin (últimos 5 del id),
                     para que el cliente reciba un único código en todas las pantallas. */}
@@ -199,9 +218,37 @@ function ConfirmacionContent() {
                     Nº Reserva: #{reserva.id.slice(-5).toUpperCase()}
                 </p>
                 <p className="mt-6 text-[#5B5348] leading-relaxed max-w-lg">
-                    Tu pago ha sido procesado exitosamente. Hemos enviado los detalles de tu estadía a{' '}
+                    Tu pago fue confirmado. Enviamos los detalles de tu estadía a{' '}
                     <span className="font-semibold text-[#1E1B16]">{reserva.email}</span>.
                 </p>
+
+                {/* Los datos operativos se solicitan solo después del pago. Si la
+                    persona cierra esta pantalla, la reserva sigue confirmada. */}
+                <section className="mt-10 bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                    {datosLlegadaCompletos ? (
+                        <div className="flex items-start gap-3">
+                            <TriBullet className="w-2.5 h-2 text-emerald-600 shrink-0 mt-1.5" />
+                            <div>
+                                <h2 className="font-display font-medium text-xl">Datos de llegada listos</h2>
+                                <p className="text-sm text-[#5B5348] mt-1">
+                                    Coordinaremos contigo al {reserva.telefono}.
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <h2 className="font-display font-medium text-2xl">Ahora, tus datos de llegada</h2>
+                            <p className="text-sm text-[#5B5348] mt-2 mb-6 leading-relaxed">
+                                Tu pago ya está confirmado. Solo necesitamos saber con quién coordinamos el ingreso.
+                            </p>
+                            <GuestForm
+                                reservaId={reserva.id}
+                                initialData={reserva}
+                                onSave={(data) => setReserva({ ...reserva, ...data })}
+                            />
+                        </>
+                    )}
+                </section>
 
                 {/* Datos reales de la estadía en tabla de leyenda con puntos */}
                 <div className="mt-10 border-t border-[#1E1B16]/15">
@@ -209,7 +256,9 @@ function ConfirmacionContent() {
                         ['Domo', reserva.domos?.nombre || 'TreePod'],
                         ['Llegada', formatFecha(reserva.fecha_inicio)],
                         ['Salida', formatFecha(reserva.fecha_fin)],
-                        ['Huésped', `${reserva.nombre} ${reserva.apellido}`],
+                        ...(datosLlegadaCompletos
+                            ? [['Huésped', `${reserva.nombre} ${reserva.apellido}`]]
+                            : []),
                     ].map(([k, v]) => (
                         <div key={k} className="flex items-baseline gap-3 py-3.5 border-b border-[#1E1B16]/10">
                             <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
@@ -221,7 +270,7 @@ function ConfirmacionContent() {
 
                     {reserva.reserva_servicios && reserva.reserva_servicios.length > 0 && (
                         <div className="py-3.5 border-b border-[#1E1B16]/10 space-y-2">
-                            <span className="dato text-[#5B5348] block">Servicios Extra</span>
+                            <span className="dato text-[#5B5348] block">Servicios extra</span>
                             {reserva.reserva_servicios.map((rs: any) => (
                                 <div key={rs.id} className="flex items-baseline gap-3 text-[13px] text-[#5B5348]">
                                     <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
@@ -241,7 +290,7 @@ function ConfirmacionContent() {
                 {/* Leyenda financiera: lo pagado hoy es el número dominante */}
                 <div className="mt-10 space-y-4">
                     <div>
-                        <span className="dato text-[#5B5348]">Abono Confirmado (50%)</span>
+                        <span className="dato text-[#5B5348]">Abono confirmado (50%)</span>
                         <div className="font-display font-medium text-[clamp(2.2rem,4vw,3rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
                             ${abono.toLocaleString('es-CL')}
                         </div>
@@ -250,12 +299,12 @@ function ConfirmacionContent() {
 
                     <div className="space-y-1.5">
                         <div className="flex items-baseline gap-3 text-[13px]">
-                            <span className="text-[#5B5348]">Saldo Pendiente (50%) al check-in</span>
+                            <span className="text-[#5B5348]">Saldo pendiente (50%) al llegar</span>
                             <DottedLeader />
                             <span className="font-semibold tabular-nums text-[#1E1B16]">${saldo.toLocaleString('es-CL')}</span>
                         </div>
                         <div className="flex items-baseline gap-3 text-[13px]">
-                            <span className="text-[#5B5348]">Total Estadía</span>
+                            <span className="text-[#5B5348]">Total de la estadía</span>
                             <DottedLeader />
                             <span className="tabular-nums text-[#1E1B16]">${reserva.total.toLocaleString('es-CL')}</span>
                         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import * as XLSX from "xlsx";
 import { Upload, Trash2, Building2, FileSpreadsheet, X } from "lucide-react";
@@ -20,6 +20,15 @@ interface Movimiento {
   reservas?: { nombre: string; apellido: string } | null;
 }
 interface Sugerencia { reserva_id: string; cliente: string; fecha_inicio: string; total: number; }
+interface AbonoConciliacion { id: string; fecha: string | null; descripcion: string; monto: number; reserva_id: string | null; }
+interface ReservaConciliacion {
+  id: string; pago_id: string; nombre: string | null; apellido: string | null; fecha_pago: string | null;
+  monto_pagado: number | null; abonado_cartola: number; abonos: AbonoConciliacion[];
+}
+interface MesConciliacion {
+  mes: string; ingresos_reservas: number; abonos_cartola: number; conciliado: number;
+  sin_conciliar: number; diferencia: number; reservas: ReservaConciliacion[]; abonos: AbonoConciliacion[];
+}
 
 const CATEGORIAS = [
   { value: "por_revisar", label: "Por revisar", color: "bg-gray-100 text-gray-600" },
@@ -37,6 +46,7 @@ const FUENTES = [
   { value: "prestamo", label: "Préstamo" },
   { value: "fondo_concursable", label: "Fondo concursable" },
 ];
+const MOVIMIENTOS_POR_PAGINA = 50;
 
 function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString("es-CL");
@@ -94,6 +104,8 @@ export default function CartolasPanel() {
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorCarga, setErrorCarga] = useState("");
+  const [limiteVisible, setLimiteVisible] = useState(MOVIMIENTOS_POR_PAGINA);
   const [banco, setBanco] = useState("Banco de Chile");
   // Por defecto se muestran solo los "por revisar"; con el chip "Todos" se ve todo.
   const [filtro, setFiltro] = useState("por_revisar");
@@ -103,6 +115,12 @@ export default function CartolasPanel() {
   const [sugiriendo, setSugiriendo] = useState(false);
   // Lista de reservas (18 meses) para conciliar a mano cuando el automático no calza.
   const [reservasLista, setReservasLista] = useState<Sugerencia[]>([]);
+  const [conciliacionMensual, setConciliacionMensual] = useState<MesConciliacion[]>([]);
+  const [cargandoConciliacion, setCargandoConciliacion] = useState(true);
+  const [errorConciliacion, setErrorConciliacion] = useState("");
+  const [mesAbierto, setMesAbierto] = useState<string | null>(null);
+  const [reservaElegidaPorAbono, setReservaElegidaPorAbono] = useState<Record<string, string>>({});
+  const [abonoConciliando, setAbonoConciliando] = useState<string | null>(null);
   // Movimientos tocados en esta sesión: se mantienen visibles aunque el filtro los
   // ocultaría, para poder terminar de conciliarlos ahí mismo (ej. ingreso → reserva).
   const [tocados, setTocados] = useState<Set<string>>(new Set());
@@ -120,15 +138,26 @@ export default function CartolasPanel() {
 
   async function cargar() {
     setLoading(true);
+    setErrorCarga("");
     try {
       const [rm, rp] = await Promise.all([
         adminFetch("/api/admin/cartolas"),
-        adminFetch("/api/admin/proyectos"),
+        // Cartolas solo necesita el selector id/nombre. Evita descargar aquí todos
+        // los gastos y resúmenes históricos de cada proyecto.
+        adminFetch("/api/admin/proyectos?resumen=1"),
       ]);
-      if (rm.ok) setMovimientos((await rm.json()).movimientos || []);
+      if (rm.ok) {
+        setMovimientos((await rm.json()).movimientos || []);
+      } else {
+        const data = await rm.json().catch(() => ({}));
+        setErrorCarga(data.error || "No se pudieron cargar los movimientos.");
+      }
       if (rp.ok) setProyectos(((await rp.json()).proyectos || []).map((p: any) => ({ id: p.id, nombre: p.nombre })));
-    } catch { }
-    setLoading(false);
+    } catch {
+      setErrorCarga("No se pudieron cargar los movimientos. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   }
   useEffect(() => { cargar(); }, []);
 
@@ -139,6 +168,48 @@ export default function CartolasPanel() {
       .then((d) => setReservasLista((d.reservas || []).map((r: any) => ({ reserva_id: r.id, cliente: r.cliente, fecha_inicio: r.fecha_inicio, total: r.total }))))
       .catch(() => { });
   }, []);
+
+  async function cargarConciliacionMensual() {
+    setCargandoConciliacion(true);
+    setErrorConciliacion("");
+    try {
+      const res = await adminFetch("/api/admin/cartolas/conciliacion-mensual");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "No se pudo cargar la conciliación.");
+      setConciliacionMensual(data.conciliacion || []);
+    } catch (error) {
+      setErrorConciliacion(error instanceof Error ? error.message : "No se pudo cargar la conciliación.");
+    } finally {
+      setCargandoConciliacion(false);
+    }
+  }
+  useEffect(() => { cargarConciliacionMensual(); }, []);
+
+  async function conciliarAbonoDelMes(abono: AbonoConciliacion) {
+    const reservaId = reservaElegidaPorAbono[abono.id];
+    if (!reservaId) return;
+    setAbonoConciliando(abono.id);
+    setErrorConciliacion("");
+    try {
+      const res = await adminFetch("/api/admin/cartolas", {
+        method: "PATCH",
+        body: JSON.stringify({ id: abono.id, categoria: "ingreso", reserva_id: reservaId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "No se pudo guardar la conciliación.");
+      setReservaElegidaPorAbono((actual) => {
+        const siguiente = { ...actual };
+        delete siguiente[abono.id];
+        return siguiente;
+      });
+      setMsg("✓ Abono conciliado con la reserva seleccionada.");
+      await Promise.all([cargarConciliacionMensual(), cargar()]);
+    } catch (error) {
+      setErrorConciliacion(error instanceof Error ? error.message : "No se pudo guardar la conciliación.");
+    } finally {
+      setAbonoConciliando(null);
+    }
+  }
 
   async function onFile(file: File) {
     setMsg("");
@@ -364,6 +435,9 @@ export default function CartolasPanel() {
   // Los "tocados" en esta sesión se mantienen visibles aunque el filtro los ocultaría,
   // para poder terminar de conciliarlos sin cambiar de pestaña.
   const visibles = filtro === "todos" ? movimientos : movimientos.filter((m) => m.categoria === filtro || tocados.has(m.id));
+  // Montar cientos de filas con inputs/selects en un solo render bloquea el hilo del
+  // navegador. Los datos siguen completos en memoria; solo se pagina el árbol visual.
+  const visiblesRenderizados = visibles.slice(0, limiteVisible);
   const porRevisar = movimientos.filter((m) => m.categoria === "por_revisar").length;
   const nCols = rows.length ? Math.max(...rows.map((r) => r.length)) : 0;
   const colOpts = Array.from({ length: nCols }, (_, i) => i);
@@ -507,6 +581,115 @@ export default function CartolasPanel() {
         </div>
       )}
 
+      {/* Comparación de caja: lo cobrado en reservas versus los abonos bancarios. */}
+      <section className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="p-5 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-black text-gray-900">Conciliación mensual: reservas y cartola</h3>
+            <p className="text-xs text-gray-600 mt-1">Ingresos cobrados por reserva comparados con abonos bancarios clasificados como ingreso.</p>
+          </div>
+          <button onClick={cargarConciliacionMensual} disabled={cargandoConciliacion} className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 disabled:opacity-50">
+            {cargandoConciliacion ? "Actualizando…" : "Actualizar conciliación"}
+          </button>
+        </div>
+        {errorConciliacion ? (
+          <p className="p-5 text-sm text-red-700 bg-red-50">{errorConciliacion}</p>
+        ) : cargandoConciliacion ? (
+          <p className="p-5 text-sm text-gray-500">Cargando conciliación…</p>
+        ) : conciliacionMensual.length === 0 ? (
+          <p className="p-5 text-sm text-gray-500">No hay ingresos de reservas ni abonos clasificados como ingreso.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs min-w-[900px]">
+              <thead className="bg-gray-50 text-gray-600 uppercase tracking-wide">
+                <tr>
+                  <th className="text-left px-4 py-3">Mes</th>
+                  <th className="text-right px-4 py-3">Ingresos reservas</th>
+                  <th className="text-right px-4 py-3">Abonos cartola</th>
+                  <th className="text-right px-4 py-3">Conciliado</th>
+                  <th className="text-right px-4 py-3">Sin conciliar</th>
+                  <th className="text-right px-4 py-3">Diferencia</th>
+                  <th className="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {conciliacionMensual.map((fila) => {
+                  const abierta = mesAbierto === fila.mes;
+                  return (
+                    <Fragment key={fila.mes}>
+                      <tr className="border-t border-gray-100">
+                        <td className="px-4 py-3 font-black text-gray-900">{new Date(`${fila.mes}-01T12:00:00`).toLocaleDateString("es-CL", { month: "long", year: "numeric" })}</td>
+                        <td className="px-4 py-3 text-right font-bold">{fmt(fila.ingresos_reservas)}</td>
+                        <td className="px-4 py-3 text-right font-bold">{fmt(fila.abonos_cartola)}</td>
+                        <td className="px-4 py-3 text-right font-bold text-emerald-700">{fmt(fila.conciliado)}</td>
+                        <td className="px-4 py-3 text-right font-bold text-amber-700">{fmt(fila.sin_conciliar)}</td>
+                        <td className={`px-4 py-3 text-right font-black ${Math.abs(fila.diferencia) < 1 ? "text-emerald-700" : "text-rose-700"}`}>{fmt(fila.diferencia)}</td>
+                        <td className="px-4 py-3 text-right"><button onClick={() => setMesAbierto(abierta ? null : fila.mes)} className="font-black text-primary hover:underline">{abierta ? "Cerrar" : "Ver detalle"}</button></td>
+                      </tr>
+                      {abierta && (
+                        <tr className="bg-gray-50/70">
+                          <td colSpan={7} className="p-4">
+                            <div className="grid lg:grid-cols-2 gap-4">
+                              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <p className="px-3 py-2 bg-gray-50 font-black text-gray-700">Reservas cobradas ({fila.reservas.length})</p>
+                                <div className="max-h-80 overflow-auto divide-y divide-gray-100">
+                                  {fila.reservas.map((r) => (
+                                    <div key={r.pago_id} className="p-3 flex justify-between gap-3">
+                                      <div><p className="font-bold text-gray-900">{`${r.nombre || ""} ${r.apellido || ""}`.trim() || "Sin nombre"}</p><p className="text-[10px] text-gray-500">Pago {fmtFecha(r.fecha_pago)} · {r.abonos.length ? `${r.abonos.length} abono(s) vinculado(s)` : "sin abono vinculado"}</p></div>
+                                      <div className="text-right shrink-0"><p className="font-black">{fmt(Number(r.monto_pagado || 0))}</p><p className={`text-[10px] font-bold ${r.abonado_cartola ? "text-emerald-700" : "text-amber-700"}`}>Cartola {fmt(r.abonado_cartola)}</p></div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <p className="px-3 py-2 bg-gray-50 font-black text-gray-700">Abonos de cartola ({fila.abonos.length})</p>
+                                <div className="max-h-80 overflow-auto divide-y divide-gray-100">
+                                  {fila.abonos.map((a) => (
+                                    <div key={a.id} className="p-3 space-y-2">
+                                      <div className="flex justify-between gap-3">
+                                        <div><p className="font-bold text-gray-900">{a.descripcion}</p><p className={`text-[10px] font-bold ${a.reserva_id ? "text-emerald-700" : "text-amber-700"}`}>{fmtFecha(a.fecha)} · {a.reserva_id ? "vinculado a reserva" : "sin reserva vinculada"}</p></div>
+                                        <p className="font-black text-emerald-700 shrink-0">{fmt(a.monto)}</p>
+                                      </div>
+                                      {!a.reserva_id && (
+                                        <div className="flex flex-wrap items-center gap-2">
+                                          <select
+                                            value={reservaElegidaPorAbono[a.id] || ""}
+                                            onChange={(e) => setReservaElegidaPorAbono((actual) => ({ ...actual, [a.id]: e.target.value }))}
+                                            className="min-w-0 flex-1 border border-amber-200 rounded-lg px-2 py-1.5 text-[11px] bg-white outline-none"
+                                          >
+                                            <option value="">Elegir reserva de {new Date(`${fila.mes}-01T12:00:00`).toLocaleDateString("es-CL", { month: "long" })}…</option>
+                                            {[...new Map(fila.reservas.map((r) => [r.id, r])).values()].map((r) => (
+                                              <option key={r.id} value={r.id}>
+                                                {`${r.nombre || ""} ${r.apellido || ""}`.trim() || "Sin nombre"} · {fmt(Number(r.monto_pagado || 0))} · {fmtFecha(r.fecha_pago)}
+                                              </option>
+                                            ))}
+                                          </select>
+                                          <button
+                                            onClick={() => conciliarAbonoDelMes(a)}
+                                            disabled={!reservaElegidaPorAbono[a.id] || abonoConciliando === a.id}
+                                            className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-emerald-700 disabled:opacity-40"
+                                          >
+                                            {abonoConciliando === a.id ? "Guardando…" : "Conciliar"}
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
       {/* Conciliación: botón de auto-match + resumen por categoría */}
       {movimientos.length > 0 && (() => {
         const suma = (cat: string) => movimientos.filter((m) => m.categoria === cat).reduce((s, m) => s + m.monto, 0);
@@ -532,14 +715,14 @@ export default function CartolasPanel() {
       {/* Resumen + filtro */}
       {movimientos.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <button onClick={() => setFiltro("todos")} className={`px-3 py-1.5 rounded-full text-xs font-bold ${filtro === "todos" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"}`}>
+          <button onClick={() => { setFiltro("todos"); setLimiteVisible(MOVIMIENTOS_POR_PAGINA); }} className={`px-3 py-1.5 rounded-full text-xs font-bold ${filtro === "todos" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"}`}>
             Todos ({movimientos.length})
           </button>
           {CATEGORIAS.map((c) => {
             const n = movimientos.filter((m) => m.categoria === c.value).length;
             if (!n) return null;
             return (
-              <button key={c.value} onClick={() => setFiltro(c.value)} className={`px-3 py-1.5 rounded-full text-xs font-bold ${filtro === c.value ? "bg-gray-900 text-white" : c.color}`}>
+              <button key={c.value} onClick={() => { setFiltro(c.value); setLimiteVisible(MOVIMIENTOS_POR_PAGINA); }} className={`px-3 py-1.5 rounded-full text-xs font-bold ${filtro === c.value ? "bg-gray-900 text-white" : c.color}`}>
                 {c.label} ({n})
               </button>
             );
@@ -551,13 +734,18 @@ export default function CartolasPanel() {
       {/* Lista de movimientos */}
       {loading ? (
         <p className="text-gray-600 text-sm">Cargando…</p>
+      ) : errorCarga ? (
+        <div className="text-center py-12 text-red-700 bg-red-50 border border-red-200 rounded-2xl">
+          <p className="font-semibold">{errorCarga}</p>
+          <button onClick={cargar} className="mt-3 px-4 py-2 bg-white border border-red-200 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100">Reintentar</button>
+        </div>
       ) : visibles.length === 0 ? (
         <div className="text-center py-16 text-gray-500 font-medium italic">
           {movimientos.length === 0 ? "Aún no hay movimientos. Sube una cartola arriba para empezar." : "No hay movimientos en este filtro."}
         </div>
       ) : (
         <div className="space-y-2">
-          {visibles.map((m) => (
+          {visiblesRenderizados.map((m) => (
             <div key={m.id} className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -632,6 +820,16 @@ export default function CartolasPanel() {
               </div>
             </div>
           ))}
+          {visiblesRenderizados.length < visibles.length && (
+            <div className="py-4 text-center">
+              <button
+                onClick={() => setLimiteVisible((n) => n + MOVIMIENTOS_POR_PAGINA)}
+                className="px-5 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-50"
+              >
+                Mostrar {Math.min(MOVIMIENTOS_POR_PAGINA, visibles.length - visiblesRenderizados.length)} más ({visiblesRenderizados.length} de {visibles.length})
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

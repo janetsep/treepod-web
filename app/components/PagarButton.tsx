@@ -16,6 +16,13 @@ export default function PagarButton({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [reservaTotal, setReservaTotal] = useState<number>(0);
+  const [booking, setBooking] = useState<{
+    domoId?: string;
+    domoNombre?: string;
+    entrada?: string;
+    salida?: string;
+    huespedes?: number;
+  }>({});
 
   // Obtener total de la reserva para calcular el 50% en begin_checkout
   useEffect(() => {
@@ -25,6 +32,13 @@ export default function PagarButton({
         const data = res.ok ? await res.json() : null;
         if (data?.total) {
           setReservaTotal(data.total);
+          setBooking({
+            domoId: data.domo_id,
+            domoNombre: data.domos?.nombre,
+            entrada: data.fecha_inicio,
+            salida: data.fecha_fin,
+            huespedes: data.adultos,
+          });
         }
       } catch (error) {
         console.error('Error obteniendo total de reserva:', error);
@@ -70,6 +84,7 @@ export default function PagarButton({
   };
 
   const pagarWebpay = async () => {
+    let webpayHttpStatus = 0;
     try {
       if (!reservaId) {
         alert('No se encontró el ID de la reserva.');
@@ -85,6 +100,7 @@ export default function PagarButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reservaId }),
       });
+      webpayHttpStatus = res.status;
 
       const raw = await res.text();
       let data: WebpayCreateResponse | null = null;
@@ -95,6 +111,11 @@ export default function PagarButton({
       }
 
       if (!res.ok) {
+        trackEvent("webpay_start_failed", {
+          stage: "webpay_create",
+          failure_reason: "http_error",
+          http_status: res.status,
+        });
         const message =
           data?.error ||
           data?.details ||
@@ -104,11 +125,21 @@ export default function PagarButton({
       }
 
       if (data?.alreadyPaid && data?.redirectUrl) {
+        trackEvent("webpay_redirect_started", {
+          stage: "already_paid",
+          value: reservaTotal,
+          currency: "CLP",
+        });
         window.location.href = data.redirectUrl;
         return;
       }
 
       if (data?.url && data?.token) {
+        trackEvent("webpay_redirect_started", {
+          stage: "token_created",
+          value: reservaTotal,
+          currency: "CLP",
+        });
         if (data.returnUrl) {
           const currentOrigin = window.location.origin;
           if (!data.returnUrl.startsWith(currentOrigin)) {
@@ -118,22 +149,43 @@ export default function PagarButton({
           }
         }
 
-        // Evento begin_checkout ANTES de iniciar el flujo WebPay via GTM
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'begin_checkout',
+        // Evento begin_checkout antes de salir a Webpay.
+        trackEvent('begin_checkout', {
           reserva_id: reservaId,
-          value: Math.round(reservaTotal * 0.5), // monto a cobrar (50% del total)
-          currency: 'CLP'
+          value: reservaTotal, // valor económico total, consistente con purchase
+          deposit_value: Math.round(reservaTotal * 0.5),
+          currency: 'CLP',
+          check_in: booking.entrada,
+          check_out: booking.salida,
+          guests: booking.huespedes,
+          dome_id: booking.domoId,
+          dome_name: booking.domoNombre,
+          items: [{
+            item_id: booking.domoId || 'DOMO-GENERICO',
+            item_name: booking.domoNombre || 'Domo TreePod',
+            item_category: 'Glamping',
+            price: reservaTotal,
+            quantity: 1,
+          }]
         });
 
         redirectToWebpay(data.url, data.token);
         return;
       }
 
+      trackEvent("webpay_start_failed", {
+        stage: "webpay_create",
+        failure_reason: "missing_redirect_data",
+        http_status: res.status,
+      });
       alert(data?.error || 'Error iniciando pago');
     } catch (error) {
       console.error("Error al procesar el pago:", error);
+      trackEvent("webpay_start_failed", {
+        stage: "webpay_create",
+        failure_reason: webpayHttpStatus ? "response_parse_error" : "network_error",
+        http_status: webpayHttpStatus,
+      });
       alert("Error al procesar el pago. Por favor, inténtalo de nuevo.");
     } finally {
       setIsLoading(false);

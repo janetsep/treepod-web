@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
     const pathname = usePathname(); // Keep this
-    const router = useRouter(); // Keep this
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state from instruction
 
@@ -126,12 +125,12 @@ export default function Navbar() {
                         <div className="flex items-center gap-3">
                             {/* Botón primario "sello de imprenta": texto charcoal sobre cyan (AA)
                                 y marco desfasado; sobre foto el marco pasa a crema */}
-                            <button
-                                onClick={() => router.push('/disponibilidad')}
+                            <Link
+                                href="/disponibilidad#reservar"
                                 className={`relative z-0 px-7 py-3 rounded-[2px] font-semibold text-sm transition-all bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] after:absolute after:inset-0 after:rounded-[2px] after:border after:-z-10 after:translate-x-1 after:translate-y-1 after:transition-transform hover:after:translate-x-0.5 hover:after:translate-y-0.5 ${isNavbarSolid ? 'after:border-[#1E1B16]' : 'after:border-[#F7F3EC]/70'}`}
                             >
                                 Reservar
-                            </button>
+                            </Link>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-7 h-5 rounded-sm shadow-md flex-shrink-0" aria-label="Bandera de Chile">
                                 <rect width="30" height="10" fill="#fff"/>
                                 <rect y="10" width="30" height="10" fill="#D52B1E"/>
@@ -146,12 +145,12 @@ export default function Navbar() {
                 <div className="lg:hidden flex items-center gap-4 relative z-50">
                     {!isDisponibilidadPage && (
                         <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => router.push('/disponibilidad')}
+                            <Link
+                                href="/disponibilidad#reservar"
                                 className={`relative z-0 px-5 py-2.5 rounded-[2px] font-semibold text-sm bg-[#00ADEF] text-[#1E1B16] after:absolute after:inset-0 after:rounded-[2px] after:border after:-z-10 after:translate-x-1 after:translate-y-1 ${isNavbarSolid ? 'after:border-[#1E1B16]' : 'after:border-[#F7F3EC]/70'}`}
                             >
                                 Reservar
-                            </button>
+                            </Link>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-6 h-4 rounded-sm shadow-md flex-shrink-0" aria-label="Bandera de Chile">
                                 <rect width="30" height="10" fill="#fff"/>
                                 <rect y="10" width="30" height="10" fill="#D52B1E"/>
@@ -187,15 +186,13 @@ export default function Navbar() {
                                 </Link>
                             ))}
                             <div className="pt-8 border-t border-black/10 w-full mt-4">
-                                <button
-                                    onClick={() => {
-                                        setIsMobileMenuOpen(false);
-                                        router.push('/disponibilidad');
-                                    }}
+                                <Link
+                                    href="/disponibilidad#reservar"
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                     className="relative z-0 block bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold py-4 px-8 rounded-[2px] text-base transition-all w-full after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1.5 after:translate-y-1.5 after:-z-10"
                                 >
                                     Reservar ahora
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -204,5 +201,3 @@ export default function Navbar() {
         </nav>
     );
 }
-
-

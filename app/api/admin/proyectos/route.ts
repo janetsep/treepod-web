@@ -6,6 +6,18 @@ export async function GET(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
+  const { searchParams } = new URL(request.url);
+  // Selector liviano para Cartolas. La vista completa de Proyectos conserva abajo
+  // exactamente la misma consulta, cálculos y respuesta de siempre.
+  if (searchParams.get("resumen") === "1") {
+    const { data, error } = await supabaseAdmin
+      .from("sicra_proyectos")
+      .select("id, nombre")
+      .order("created_at", { ascending: false });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ proyectos: data || [] });
+  }
+
   const { data: proyectos, error } = await supabaseAdmin
     .from("sicra_proyectos")
     .select("*, sicra_proyecto_gastos(*)")

@@ -44,7 +44,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Cama del domo con mesa de comedor y terraza al fondo", aspect: "landscape" },
 
     // --- ATMOSFERA & NOCHE ---
-    { src: "/images/Galeria/Domo3noche.jpeg", alt: "La calidez del refugio durante la noche", aspect: "landscape" },
+    { src: "/images/Galeria/Domo3noche.jpeg", alt: "Domo TreePod iluminado durante la noche", aspect: "landscape" },
     { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
     { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo entre los árboles al caer la noche", aspect: "square" },
     { src: "/images/Galeria/domo3noche1.jpeg", alt: "Cielo nocturno sobre los Nevados de Chillán", aspect: "landscape" },
@@ -65,7 +65,7 @@ export default function GaleriaPage() {
                 image="/images/real/NOdomoaereo.jpeg"
                 alt="Vista aérea de los domos TreePod en el bosque nativo de Las Trancas"
                 eyebrow="La vida en el bosque"
-                title={<>Imágenes reales de<br className="hidden md:block" /> tu próximo refugio</>}
+                title={<>Imágenes reales de<br className="hidden md:block" /> tu próximo domo</>}
                 text="Sin modelos ni montajes. El bosque, la cama y el domo tal como los vas a vivir."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
@@ -132,7 +132,7 @@ export default function GaleriaPage() {
 
                 {/* Cierre editorial: texto asimétrico + CTA, sin tarjetas */}
                 <section id="estilo-vida" className="mx-auto max-w-[1280px] px-5 md:px-10 mt-24 md:mt-32">
-                    <SectionFolio num="N° 02" label="Refugio genuino" />
+                    <SectionFolio num="N° 02" label="Domos geodésicos" />
                     <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-start">
                         <div className="col-span-12 lg:col-span-6">
                             <h2 className="display-lg text-[#1E1B16]">

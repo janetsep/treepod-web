@@ -20,12 +20,30 @@ type Analytics = {
     engagementRate: number;
     events?: {
         purchase: number;
-        begin_checkout: number;
         view_disponibilidad: number;
         select_fechas: number;
-        generate_lead: number;
+        availability_checked: number;
+        view_pricing_result: number;
         click_reservar: number;
-        view_home: number;
+        click_whatsapp_reserva: number;
+        reservation_created: number;
+        click_pagar: number;
+        webpay_redirect_started: number;
+        availability_check_failed: number;
+        pricing_failed: number;
+        reservation_create_failed: number;
+        webpay_start_failed: number;
+    };
+    eventUsers?: {
+        purchase: number;
+        view_disponibilidad: number;
+        availability_checked: number;
+        view_pricing_result: number;
+        click_reservar: number;
+        click_whatsapp_reserva: number;
+        reservation_created: number;
+        click_pagar: number;
+        webpay_redirect_started: number;
     };
     conversionRate?: string;
     trafficSources?: Array<{ channel: string; sessions: number; users: number }>;
@@ -418,15 +436,18 @@ export default function DashboardAdmin() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
                         <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary" /> Funnel de Conversión Web (mes)
+                            <TrendingUp className="w-4 h-4 text-primary" /> Embudo real de reserva (mes)
                         </h3>
+                        <p className="text-[10px] text-gray-400 mb-5">Personas aproximadas por etapa. Se excluyen los eventos históricos inflados de GA4.</p>
                         <div className="space-y-3">
                             {[
-                                { label: 'Visitas Home', value: analytics.events?.view_home || 0, color: 'bg-blue-500' },
-                                { label: 'Ver Disponibilidad', value: analytics.events?.view_disponibilidad || 0, color: 'bg-indigo-500' },
-                                { label: 'Fechas Seleccionadas', value: analytics.events?.select_fechas || 0, color: 'bg-violet-500' },
-                                { label: 'Inicio Checkout', value: analytics.events?.begin_checkout || 0, color: 'bg-orange-500' },
-                                { label: 'Compras (Purchase)', value: analytics.events?.purchase || 0, color: 'bg-emerald-500' },
+                                { label: 'Llegaron a disponibilidad', value: analytics.eventUsers?.view_disponibilidad || 0, color: 'bg-blue-500' },
+                                { label: 'Consultaron fechas', value: analytics.eventUsers?.availability_checked || 0, color: 'bg-indigo-500' },
+                                { label: 'Vieron precio', value: analytics.eventUsers?.view_pricing_result || 0, color: 'bg-violet-500' },
+                                { label: 'Presionaron Reservar', value: analytics.eventUsers?.click_reservar || 0, color: 'bg-fuchsia-500' },
+                                { label: 'Reserva creada', value: analytics.eventUsers?.reservation_created || 0, color: 'bg-orange-500' },
+                                { label: 'Entraron a Webpay', value: analytics.eventUsers?.webpay_redirect_started || 0, color: 'bg-amber-500' },
+                                { label: 'Compra confirmada', value: analytics.eventUsers?.purchase || 0, color: 'bg-emerald-500' },
                             ].map((step, i, arr) => {
                                 const maxVal = arr[0].value || 1;
                                 const pct = Math.round((step.value / maxVal) * 100);
@@ -443,9 +464,22 @@ export default function DashboardAdmin() {
                                 );
                             })}
                         </div>
+                        <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 p-3 flex items-center justify-between gap-4">
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-wide text-emerald-800">Salida alternativa</p>
+                                <p className="text-xs text-emerald-900">Consultaron por WhatsApp desde disponibilidad</p>
+                            </div>
+                            <span className="text-lg font-black text-emerald-700">
+                                {(analytics.eventUsers?.click_whatsapp_reserva || 0).toLocaleString('es-CL')}
+                            </span>
+                        </div>
                         <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
                             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tasa de Conversión</span>
                             <span className="text-lg font-black text-emerald-600">{analytics.conversionRate || '0.0'}%</span>
+                        </div>
+                        <div className="mt-3 rounded-xl bg-rose-50 border border-rose-100 p-3 text-[10px] text-rose-800">
+                            <span className="font-black uppercase tracking-wide">Fallos medidos: </span>
+                            disponibilidad {analytics.events?.availability_check_failed || 0} · precio {analytics.events?.pricing_failed || 0} · crear reserva {analytics.events?.reservation_create_failed || 0} · Webpay {analytics.events?.webpay_start_failed || 0}
                         </div>
                     </div>
 

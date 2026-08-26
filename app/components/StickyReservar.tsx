@@ -10,10 +10,8 @@ import { useEffect, useState } from "react";
 export default function StickyReservar() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
-  // Precio "desde" real (2 personas, temporada vigente) para que la barra venda con
-  // el dato concreto y no solo con un eslogan. noches_min acompaña al precio para no
-  // prometer una tarifa que exige estadía mínima. Si el fetch falla, se muestra el
-  // texto genérico de siempre.
+  // Precio comercial canónico: el mismo endpoint que usa la ficha principal.
+  // Así una temporada superpuesta de mayor prioridad no deja valores distintos.
   const [desde, setDesde] = useState<{ precio: number; nochesMin: number } | null>(null);
 
   useEffect(() => {
@@ -24,18 +22,12 @@ export default function StickyReservar() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/tarifas")
+    fetch("/api/public/tarifa-desde", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => {
-        const hoy = new Date().toISOString().slice(0, 10);
-        const temporada = (data.temporadas || []).find(
-          (t: any) => t.fecha_inicio <= hoy && t.fecha_fin >= hoy
-        );
-        if (!temporada) return;
-        const tarifa = (data.tarifas || [])
-          .filter((t: any) => t.temporada_id === temporada.id && t.adultos === 2 && t.precio_noche > 0)
-          .sort((a: any, b: any) => a.precio_noche - b.precio_noche)[0];
-        if (tarifa) setDesde({ precio: tarifa.precio_noche, nochesMin: tarifa.noches_min || 1 });
+        if (typeof data.desde === "number") {
+          setDesde({ precio: data.desde, nochesMin: 2 });
+        }
       })
       .catch(() => {});
   }, []);
@@ -89,7 +81,7 @@ export default function StickyReservar() {
             )}
           </div>
           <Link
-            href="/disponibilidad"
+            href="/disponibilidad#reservar"
             className="shrink-0 relative z-0 inline-flex items-center justify-center bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0"
           >
             Reservar
@@ -100,7 +92,7 @@ export default function StickyReservar() {
       {/* DESKTOP: marcador de página al borde derecho, solo en la home */}
       {pathname === "/" && (
         <Link
-          href="/disponibilidad"
+          href="/disponibilidad#reservar"
           className={`hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 [writing-mode:vertical-rl] bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-2.5 py-5 rounded-[2px] border border-[#1E1B16]/30 transition-all duration-300 ${
             visible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
           }`}

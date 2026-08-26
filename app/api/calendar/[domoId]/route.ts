@@ -1,8 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
-// IDs de domos habilitados para exportar iCal (solo los que están en Airbnb)
+// IDs de domos habilitados para exportar iCal.
+// Domos 3 y 4 se comparten con Airbnb; domos 1 y 2 se exponen para que el sistema
+// energetico SIGRE lea la ocupacion. Por privacidad NO se publican nombres de
+// huespedes (ver SUMMARY mas abajo): el feed solo indica fechas ocupadas.
 const DOMOS_AIRBNB: Record<string, string> = {
+  "10322e69-2622-4e9e-94e5-ddc3310b7a84": "Domo 1",
+  "bbf13ecc-ca84-4554-8ba3-7fe8a79c3d80": "Domo 2",
   "18e83b14-554d-4c11-ae24-a6c1b936af67": "Domo 3",
   "ac7d3717-8049-4c09-9773-2905ae5f5c37": "Domo 4",
 };
@@ -87,11 +92,12 @@ export async function GET(
     const dtend = formatICalDate(reserva.fecha_fin);
 
     const uid = `treepod-${reserva.id}@domostreepod.cl`;
-    // Para bloqueos manuales mostramos el motivo (de las notas), no un nombre de huésped
+    // Privacidad: el feed es publico (Airbnb + SIGRE) y NO debe exponer datos de
+    // huespedes. Solo se indica que la fecha esta ocupada; los bloqueos muestran el motivo.
     const summary = escapeICalText(
       reserva.estado === "bloqueado"
         ? `Bloqueado${reserva.notas ? ` - ${reserva.notas}` : ""}`
-        : `Reservado - ${reserva.nombre ?? ""} ${reserva.apellido ?? ""}`.trim()
+        : "Reservado"
     );
 
     lines.push("BEGIN:VEVENT");

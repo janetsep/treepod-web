@@ -45,10 +45,10 @@ export default function Home() {
         image="/images/Galeria/Domo3noche.jpeg"
         alt="Domo TreePod iluminado de noche en el bosque nativo"
         eyebrow="La experiencia"
-        title={<>Tu refugio bajo las estrellas,<br className="hidden md:block" /> en el bosque nativo</>}
+        title={<>Tu domo bajo las estrellas,<br className="hidden md:block" /> en el bosque nativo</>}
         text="Domos cálidos y bien equipados en medio del bosque. Sin frío y sin apuro."
         ctaText="Ver disponibilidad y precio"
-        ctaHref="/disponibilidad"
+        ctaHref="/disponibilidad#reservar"
         photoCaption="Domo de noche, Valle Las Trancas"
       />
 
@@ -64,10 +64,10 @@ export default function Home() {
           alt="Domos TreePod en invierno, a 12 minutos de la nieve"
           eyebrow="Invierno en Las Trancas"
           title={<>A 12 minutos de la nieve de<br className="hidden md:block" /> Nevados de Chillán</>}
-          text="Pasas el día en la nieve o en las termas y vuelves a tu propio refugio en el bosque, con todo listo."
+          text="Pasas el día en la nieve o en las termas y vuelves a tu propio domo en el bosque, con todo listo."
           dato="Nevados de Chillán no es un solo volcán: son 17 centros eruptivos con unos 650.000 años de actividad."
           ctaText="Ver disponibilidad y precio"
-          ctaHref="/disponibilidad"
+          ctaHref="/disponibilidad#reservar"
           stat="12"
           statCaption="minutos a Nevados de Chillán"
           photoCaption="Invierno en el valle, Las Trancas"

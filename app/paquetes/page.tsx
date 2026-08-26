@@ -83,7 +83,7 @@ export default function PaquetesPage() {
 
             <main className="flex-1 w-full max-w-[1280px] mx-auto px-5 md:px-10 py-16 md:py-24">
                 {/* Cabecera editorial */}
-                <SectionFolio num="N° 01" label="Personaliza tu refugio" />
+                <SectionFolio num="N° 01" label="Personaliza tu estadía" />
                 <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 mb-14 md:mb-20">
                     <div className="col-span-12 lg:col-span-9">
                         <h2 className="display-lg text-[#1E1B16]">

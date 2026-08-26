@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { getStoredUTMs, getStoredLandingPage } from "./UTMCapture";
 import { btnPrimary } from "./deco/cta";
 
 /* Inputs de ficha: rectangulares, foco cyan sin anillos (lenguaje "KM 72") */
@@ -40,29 +39,12 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
         setLoading(true);
 
         try {
-            // Captura UTMs + landing_page del sessionStorage (capturados al primer touch)
-            const utms = getStoredUTMs();
-            const landing_page = getStoredLandingPage();
-            const session_id = (() => {
-                try {
-                    let sid = sessionStorage.getItem("treepod_session_id");
-                    if (!sid) {
-                        sid = crypto.randomUUID();
-                        sessionStorage.setItem("treepod_session_id", sid);
-                    }
-                    return sid;
-                } catch { return null; }
-            })();
-
             const res = await fetch("/api/reservas/actualizar-huesped", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     reservaId,
                     ...formData,
-                    ...utms,
-                    landing_page,
-                    session_id,
                 }),
             });
 
@@ -88,6 +70,7 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
                     <input
                         type="text"
                         required
+                        autoComplete="given-name"
                         value={formData.nombre}
                         onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                         className={inputFicha}
@@ -99,38 +82,30 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
                     <input
                         type="text"
                         required
+                        autoComplete="family-name"
                         value={formData.apellido}
                         onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
                         className={inputFicha}
                         placeholder="Pérez"
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="dato text-[#5B5348] block">Email</label>
-                    <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={inputFicha}
-                        placeholder="juan@ejemplo.com"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label className="dato text-[#5B5348] block">Teléfono</label>
+                <div className="space-y-2 md:col-span-2">
+                    <label className="dato text-[#5B5348] block">Teléfono para coordinar la llegada</label>
                     <input
                         type="tel"
                         required
+                        autoComplete="tel"
                         value={formData.telefono}
                         onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
                         className={inputFicha}
                         placeholder="+56 9 1234 5678"
                     />
-                    <p className="text-[12px] text-[#5B5348] leading-snug">
-                        Por aquí coordinamos tu llegada.
-                    </p>
                 </div>
             </div>
+
+            <p className="text-[12px] leading-relaxed text-[#5B5348]">
+                La confirmación se enviará a <strong className="text-[#1E1B16]">{formData.email}</strong>.
+            </p>
 
             {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] text-sm font-medium">
@@ -143,7 +118,7 @@ export default function GuestForm({ reservaId, initialData, onSave }: GuestFormP
                 disabled={loading}
                 className={`${btnPrimary} w-full disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-                {loading ? "Guardando..." : "Guardar y continuar al pago"}
+                {loading ? "Guardando..." : "Guardar datos de llegada"}
             </button>
         </form>
     );

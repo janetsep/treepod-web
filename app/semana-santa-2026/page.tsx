@@ -45,7 +45,7 @@ export default function SemanaSantaPage() {
                 eventName: "click_reservar_semana_santa",
                 secondEventName: "begin_checkout_semana_santa",
                 secondParams: { event: "semana_santa_2026" },
-                label: "Reserva tu refugio ahora",
+                label: "Reserva tu domo ahora",
             }}
             whatsapp={{
                 url: whatsappUrl,
@@ -79,7 +79,7 @@ export default function SemanaSantaPage() {
                 ],
             }}
             galeria={{
-                title: <>Tu refugio privado <span className="italic">en el bosque</span></>,
+                title: <>Tu domo geodésico <span className="italic">en el bosque</span></>,
                 lead: "Interior cálido, cocina equipada y todo lo necesario para descansar tranquilo",
                 photos: [
                     {

@@ -52,7 +52,7 @@ const fichaLegal: Array<[string, string]> = [
   ["Sitio web", "domostreepod.cl"],
   ["Domicilio", "Ruta N-55, Km 72, Valle Las Trancas, Pinto, Región de Ñuble, Chile"],
   ["Correo de contacto", "info@domostreepod.cl"],
-  ["Registro SERNATUR", "N° 36806"],
+  ["Registro SERNATUR", "N° 36805"],
 ];
 
 export default function NosotrosPage() {

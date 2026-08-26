@@ -56,12 +56,6 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     }, []);
 
     useEffect(() => {
-        if (defaultMonth) {
-            setMonth(defaultMonth);
-        }
-    }, [defaultMonth]);
-
-    useEffect(() => {
         const fetchAvailability = async () => {
             try {
                 const today = new Date();
@@ -285,4 +279,3 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
         </div>
     );
 }
-

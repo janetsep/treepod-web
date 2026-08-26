@@ -225,8 +225,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
             fetch("/api/admin/servicios")
                 .then((r) => r.json())
                 .then((data) => {
-                    const activos = (data.servicios || []).filter((s: Servicio) => s.activo);
-                    setServiciosDisponibles(activos);
+                    // En el administrador Janet puede asignar cualquier servicio,
+                    // aunque no esté publicado en la web. `activo` controla la
+                    // oferta pública; no debe bloquear una asignación manual ni
+                    // una cortesía dentro de una reserva.
+                    setServiciosDisponibles(data.servicios || []);
                 })
                 .catch(() => setServiciosDisponibles([]))
                 .finally(() => setLoadingServicios(false));
@@ -831,6 +834,9 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
                             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Servicios Adicionales</h4>
                         </div>
+                        <p className="text-[11px] leading-relaxed font-semibold text-gray-600">
+                            Puedes asignar cualquier servicio o marcarlo como cortesía. “No publicado en la web” solo indica que el huésped no puede seleccionarlo en la reserva online.
+                        </p>
                         {loadingServicios ? (
                             <div className="flex items-center gap-2 py-3 text-gray-700">
                                 <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
@@ -858,7 +864,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                            * (servicio.multiplicador_personas ? adultos : 1);
                                             // Precio: usa override si existe, si no el precio base del servicio
                                             const precioEfectivo = preciosPorServicio[servicio.id] ?? servicio.precio;
-                                            const subtotal = esCortesia ? 0 : precioEfectivo * cantidad;
+                                            const subtotalNormal = precioEfectivo * cantidad;
+                                            const subtotal = esCortesia ? 0 : subtotalNormal;
                                             const etiqueta = (() => {
                                                 const partes = [];
                                                 if (servicio.multiplicador_noches) partes.push(`${nochesEste}n`);
@@ -896,10 +903,15 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                                                 )}
                                                             </div>
                                                         </div>
+                                                        {!servicio.activo && (
+                                                            <span className="mt-2 inline-flex text-[9px] font-black uppercase tracking-wider text-gray-600 bg-white border border-gray-200 px-1.5 py-0.5 rounded-md">
+                                                                No publicado en la web
+                                                            </span>
+                                                        )}
                                                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                                             {esCortesia ? (
                                                                 <>
-                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotal.toLocaleString('es-CL')}</span>
+                                                                    <span className="text-[10px] font-black text-amber-600 line-through">${subtotalNormal.toLocaleString('es-CL')}</span>
                                                                     <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md">CORTESÍA</span>
                                                                 </>
                                                             ) : (

@@ -18,7 +18,7 @@ export default function NotFound() {
                     Te has desviado <span className="italic">del sendero</span>
                 </h1>
                 <p className="text-[#5B5348] leading-relaxed max-w-md mt-6">
-                    La página que buscas no existe o ha sido movida. Pero no te preocupes, el refugio siempre está cerca.
+                    La página que buscas no existe o fue trasladada. Puedes volver al inicio o consultar nuestros domos.
                 </p>
 
                 <div className="mt-10">

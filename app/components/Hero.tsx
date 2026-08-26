@@ -73,7 +73,7 @@ export default function Hero() {
               <span className="text-white/40" aria-hidden="true">
                 ·
               </span>
-              <span>Registro SERNATUR N° 36806</span>
+              <span>Registro SERNATUR N° 36805</span>
             </div>
           </div>
 

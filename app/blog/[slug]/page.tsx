@@ -560,7 +560,7 @@ Hay dos formas de conocer la nieve en Chile: mirarla desde la ventana de un hote
 
 ## Por qué el invierno es la mejor temporada para el glamping
 
-En verano el glamping es bosque, piscina y estrellas. En invierno se transforma: el domo se convierte en un refugio tibio y, cuando la nieve llega al valle, el bosque amanece blanco y el plan del día es **Nevados de Chillán**, a unos 12 minutos en auto.
+En verano el glamping es bosque, piscina y estrellas. En invierno se transforma: el domo se mantiene temperado y, cuando la nieve llega al valle, el bosque amanece blanco y el plan del día es **Nevados de Chillán**, a unos 12 minutos en auto.
 
 Un consejo honesto antes de reservar por la nieve: la fecha y cantidad de nieve varía cada año. Antes de tu viaje revisa el parte de nieve del centro de ski o escríbenos y te contamos cómo está el valle esa semana, sin adornos.
 
@@ -622,7 +622,7 @@ El plan romántico de siempre — hotel, cena, spa — está bien. Pero no sorpr
 
 En un hotel, la naturaleza es el paisaje del pasillo. En el domo, es la habitación: las panorámicas dan al bosque, el techo deja pasar la luz del amanecer y en la noche —sin televisores de por medio— el plan es mirar las estrellas y escuchar el bosque.
 
-Cada domo es un refugio privado para dos (con capacidad hasta 4): cama king, estufa a pellet automática que mantiene el domo completo temperado, baño privado y cocina equipada con cafetera Nespresso. Nadie al otro lado de la pared.
+Cada domo es un espacio privado para dos personas, con capacidad máxima para cuatro: cama king, estufa a pellet automática que mantiene el domo completo temperado, baño privado y cocina equipada con cafetera Nespresso. No comparte paredes con otro alojamiento.
 
 ## Los momentos que hacen la escapada
 
@@ -977,7 +977,7 @@ export default async function BlogPost({ params }: Props) {
             {/* CTA FINAL — banda charcoal editorial, composición asimétrica */}
             <section className="py-20 md:py-28 bg-[#1E1B16] text-[#F7F3EC]">
                 <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-                    <SectionFolio num="Km 72" label="Tu refugio en Valle Las Trancas" dark />
+                    <SectionFolio num="Km 72" label="Tu domo en Valle Las Trancas" dark />
                     <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-end">
                         <div className="col-span-12 lg:col-span-8">
                             <h2 className="display-lg !text-[#F7F3EC]">

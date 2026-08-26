@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import TriBullet from "./deco/TriBullet";
+import { trackEvent } from "../lib/analytics";
 
 // "Ficha de reserva" del home. Convierte el home de folleto en herramienta de
 // reserva: el visitante elige fechas y huéspedes y entra al flujo con todo
@@ -17,7 +18,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   // expectativa antes de pedir fechas. Si el endpoint falla, simplemente no se muestra.
   const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
   useEffect(() => {
-    fetch("/api/public/tarifa-desde")
+    fetch("/api/public/tarifa-desde", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { if (typeof d.desde === "number") setTarifaDesde(d.desde); })
       .catch(() => {});
@@ -28,7 +29,13 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
     if (entrada) p.set("entrada", entrada);
     if (salida) p.set("salida", salida);
     p.set("adultos", String(adultos));
-    router.push(`/disponibilidad?${p.toString()}`);
+    trackEvent("click_ver_disponibilidad_home", {
+      check_in: entrada || undefined,
+      check_out: salida || undefined,
+      guests: adultos,
+      dates_selected: Boolean(entrada && salida),
+    });
+    router.push(`/disponibilidad?${p.toString()}#reservar`);
   };
 
   const baseField =
