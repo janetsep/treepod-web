@@ -99,7 +99,8 @@ export type AnalyticsEventName =
   | "begin_checkout_fiestas_patrias"
   | "click_whatsapp_fiestas_patrias"
   | "click_franja_fiestas_patrias"
-  | "cotizacion_enviada";
+  | "cotizacion_enviada"
+  | "cotizacion_ofrecida";
 
 declare global {
   interface Window {

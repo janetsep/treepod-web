@@ -1227,11 +1227,6 @@ function DisponibilidadContent() {
                       </div>
                     </div>
 
-                    {/* Salida para quien no decide hoy. Antes esa persona se iba sin
-                        dejar nada: en agosto no se capturo ni un contacto real, pese a
-                        que 27 personas volvieron mas de cinco veces a mirar fechas. */}
-                    <EnviarCotizacion entrada={entrada} salida={salida} adultos={adultos} />
-
                     {/* Refuerzo de valor en el punto de mayor abandono del embudo:
                         aparece después del precio y antes de pedir datos. */}
                     <section
@@ -1398,6 +1393,18 @@ function DisponibilidadContent() {
         )}
 
       </main>
+
+      {/* Salida de emergencia: aparece SOLO cuando la persona se esta yendo,
+          nunca junto al precio. Ahi decia "piensalo con calma" justo encima del
+          boton de pagar, o sea invitaba a postergar en el momento de decidir
+          (correccion de Janet, 26-ago-2026). Se apaga mientras se esta creando
+          la reserva o pagando. */}
+      <EnviarCotizacion
+        entrada={entrada}
+        salida={salida}
+        adultos={adultos}
+        activo={!reserving && disponibilidad.disponible !== false}
+      />
     </div>
   );
 }
