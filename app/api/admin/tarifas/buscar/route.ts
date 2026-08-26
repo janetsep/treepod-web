@@ -31,14 +31,25 @@ export async function GET(request: Request) {
 
   const temporada = temporadas[0];
 
-  // Buscar tarifa exacta: adultos y noches dentro del rango
+  // Buscar tarifa: adultos exacto y las noches dentro del rango.
+  //
+  // noches_max vacio significa "sin tope", no "ningun valor": en Postgres una
+  // comparacion contra null nunca es verdadera, asi que un .gte() lo descartaba
+  // y la busqueda caia al respaldo, que devolvia la tarifa de UNA noche para
+  // cualquier estadia. Con Primavera (21 sep al 19 dic), que tenia todos sus
+  // topes vacios, el panel sugeria $130.000 por noche en vez de $95.000.
+  // Se corrigieron los datos y ademas se cubre el caso aca.
+  //
+  // El orden descendente por noches_min toma la tarifa MAS especifica cuando
+  // varias calzan (para 3 noches gana la de "2 o mas", no la de "1 o mas").
   const { data: tarifas } = await supabaseAdmin
     .from("tarifas")
     .select("id, adultos, noches_min, noches_max, precio_noche")
     .eq("temporada_id", temporada.id)
     .eq("adultos", adultos)
     .lte("noches_min", noches)
-    .gte("noches_max", noches)
+    .or(`noches_max.is.null,noches_max.gte.${noches}`)
+    .order("noches_min", { ascending: false })
     .limit(1);
 
   if (!tarifas?.length) {
@@ -48,7 +59,9 @@ export async function GET(request: Request) {
       .select("id, adultos, noches_min, noches_max, precio_noche")
       .eq("temporada_id", temporada.id)
       .eq("adultos", adultos)
-      .order("noches_min", { ascending: true })
+      // Descendente: si hay que aproximar, se aproxima con la tarifa mas cercana
+      // a la estadia real, no con la de una noche que es siempre la mas cara.
+      .order("noches_min", { ascending: false })
       .limit(1);
 
     if (!fallback?.length) {
