@@ -66,7 +66,7 @@ const EXPERIENCIAS: Array<{ titulo: string; texto: string }> = [
 ];
 
 const DATOS_PRACTICOS = [
-  "Cómo llegar: 71 km desde Chillán por la Ruta N-55 (~1h10); ~5 horas desde Santiago.",
+  "Cómo llegar: 71 km desde Chillán por la Ruta N-55 (~1h10); entre 6 y 7 horas desde Santiago.",
   "Sin auto: bus RemBus desde Chillán aproximadamente cada hora (~$2.700).",
   "En invierno lleva cadenas: son obligatorias cuando hay nieve en la ruta.",
   "El volcán opera en Alerta Amarilla permanente con el turismo funcionando normal bajo protocolos oficiales.",

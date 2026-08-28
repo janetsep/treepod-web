@@ -108,7 +108,7 @@ Las noches frescas son perfectas para un asado con la parrilla en tu domo o un l
     'como-llegar-valle-las-trancas-desde-santiago': {
         title: 'Cómo Llegar a Valle Las Trancas desde Santiago',
         excerpt: 'Las opciones más comunes para llegar a Valle Las Trancas desde Santiago y otras ciudades.',
-        metaDescription: 'Cómo llegar a Valle Las Trancas desde Santiago: en auto, bus o avión, con tiempos, rutas y consejos. Planifica tu viaje y reserva tu domo en TreePod.',
+        metaDescription: '480 km por la Ruta 5 Sur hasta Chillán y la N-55 al valle: entre 6 y 7 horas en auto. También las opciones en bus y los tramos paso a paso.',
         image: '/images/Galeria/Las Trancas Bosque Nativo 2.jpeg',
         content: `
 Valle Las Trancas se ubica en la Región de Ñuble, a unos 72 km al oriente de la ciudad de **Chillán**. La forma más común de llegar es por carretera. Aquí están las alternativas principales.
@@ -230,9 +230,9 @@ Valle Las Trancas está a unos 70 km de Chillán por la Ruta N-55. Si quieres ar
         publishDate: '2026-07-06'
     },
     'senderos-cascadas-valle-las-trancas': {
-        title: 'Senderos y Cascadas del Valle Las Trancas',
+        title: 'Más de 20 Senderos y Cascadas en Las Trancas',
         excerpt: 'Las caminatas del valle: desde la cascada más fácil hasta los trekkings de montaña, todas a minutos de tu domo.',
-        metaDescription: 'Senderos y cascadas en Valle Las Trancas: Velo de la Novia, Shangri-La, Garganta del Diablo y Laguna del Huemul. Rutas para familias y montañistas.',
+        metaDescription: 'Velo de la Novia, Shangri-La, Garganta del Diablo y Laguna del Huemul: las rutas del valle ordenadas de la más fácil a la más exigente.',
         image: '/images/Galeria/IMG_8992.JPG',
         content: `
 El Valle Las Trancas es un punto de partida, no solo un lugar donde dormir. Según el mapa turístico del valle hay **más de 20 rutas de trekking** entre cascadas, saltos, cuevas y miradores. Aquí van las más conocidas, ordenadas de la más fácil a la más exigente.
@@ -339,9 +339,9 @@ Termas + una caminata corta como la [Cascada Velo de la Novia](/blog/senderos-ca
         publishDate: '2026-07-06'
     },
     'cueva-de-los-pincheira-visita': {
-        title: 'Cueva de los Pincheira: Cómo Llegar y Qué Ver',
+        title: 'Cueva de los Pincheira: Cómo Llegar desde Chillán',
         excerpt: 'La visita a la cueva del km 67: cómo llegar, qué hay en el recorrido y dónde confirmar la entrada.',
-        metaDescription: 'Cueva de los Pincheira en Pinto, Ñuble: cómo llegar desde Chillán y Valle Las Trancas, qué ver en el recorrido, la leyenda de la mula blanca y dónde ver la entrada.',
+        metaDescription: 'A una hora de Chillán y 5 km de Valle Las Trancas, en el km 67 de la Ruta N-55. Qué incluye el recorrido y la leyenda de los hermanos Pincheira.',
         image: '/images/Galeria/Las Trancas Bosque Nativo.jpeg',
         content: `
 En el **km 67 del camino Chillán–Termas** (Ruta N-55, comuna de Pinto) está uno de los paseos con más historia de Ñuble: la Cueva de los Pincheira, un alero rocoso de origen volcánico junto a una cascada y un estero, que la tradición local señala como refugio de los hermanos Pincheira en la década de 1820.
@@ -643,7 +643,7 @@ Y para el hambre: el valle tiene una ruta gastronómica de montaña real, con re
 
 ## Cómo funciona la reserva
 
-Se reserva directo en el sitio pagando el 50% de abono; el saldo se paga en el check-in. Check-in desde las 16:00, check-out hasta las 12:00. Estamos a ~1 hora de Chillán y ~5 horas de Santiago por la Ruta 5 Sur ([cómo llegar, paso a paso](/blog/como-llegar-valle-las-trancas-desde-santiago)).
+Se reserva directo en el sitio pagando el 50% de abono; el saldo se paga en el check-in. Check-in desde las 16:00, check-out hasta las 12:00. Estamos a ~1 hora de Chillán y entre 6 y 7 horas de Santiago por la Ruta 5 Sur ([cómo llegar, paso a paso](/blog/como-llegar-valle-las-trancas-desde-santiago)).
 
 ---
 

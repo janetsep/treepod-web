@@ -140,6 +140,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
     const [serviciosDisponibles, setServiciosDisponibles] = useState<Servicio[]>([]);
     const [serviciosSeleccionados, setServiciosSeleccionados] = useState<string[]>([]);
     const [serviciosCortesia, setServiciosCortesia] = useState<string[]>([]);
+    const [errorServicios, setErrorServicios] = useState<string | null>(null);
     const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
     const [preciosPorServicio, setPreciosPorServicio] = useState<Record<string, number>>({});
     const [loadingServicios, setLoadingServicios] = useState(false);
@@ -222,16 +223,27 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
             // Cargar servicios disponibles
             setLoadingServicios(true);
-            fetch("/api/admin/servicios")
-                .then((r) => r.json())
+            // Va con adminFetch: /api/admin/servicios exige sesión verificada.
+            // Con fetch a secas devolvía 401 y la lista quedaba vacía, que en
+            // pantalla se leía como "no hay servicios" en vez de un error.
+            adminFetch("/api/admin/servicios")
+                .then(async (r) => {
+                    const data = await r.json().catch(() => ({}));
+                    if (!r.ok) throw new Error(data?.error || `Error ${r.status} al cargar servicios`);
+                    return data;
+                })
                 .then((data) => {
                     // En el administrador Janet puede asignar cualquier servicio,
                     // aunque no esté publicado en la web. `activo` controla la
                     // oferta pública; no debe bloquear una asignación manual ni
                     // una cortesía dentro de una reserva.
                     setServiciosDisponibles(data.servicios || []);
+                    setErrorServicios(null);
                 })
-                .catch(() => setServiciosDisponibles([]))
+                .catch((e) => {
+                    setServiciosDisponibles([]);
+                    setErrorServicios(e instanceof Error ? e.message : "No se pudieron cargar los servicios");
+                })
                 .finally(() => setLoadingServicios(false));
 
             // Pre-seleccionar servicios ya asignados en edición (desde datos del API, sin Supabase anon)
@@ -842,6 +854,8 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
                                 <span className="text-xs font-bold">Cargando servicios...</span>
                             </div>
+                        ) : errorServicios ? (
+                            <p className="text-xs text-red-700 font-bold py-2">{errorServicios}. Vuelve a entrar al administrador y reintenta.</p>
                         ) : serviciosDisponibles.length === 0 ? (
                             <p className="text-xs text-gray-700 font-bold py-2">No hay servicios adicionales disponibles.</p>
                         ) : (
