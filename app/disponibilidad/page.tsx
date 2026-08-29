@@ -76,6 +76,33 @@ function DottedLeader({ className = "border-[#1E1B16]/25" }: { className?: strin
   return <span className={`flex-1 border-b border-dotted min-w-4 ${className}`} aria-hidden="true" />;
 }
 
+// Fila plegable de la ficha de reserva. Nace de la medicion del embudo: entre
+// el precio y el boton de pagar habia 18 bloques y se iba el 96% de quienes
+// veian el precio. Lo que no hace falta para decidir se guarda aqui.
+function Pliegue({
+  titulo, abierto, onToggle, children, ultimo = false,
+}: {
+  titulo: string; abierto: boolean; onToggle: () => void;
+  children: React.ReactNode; ultimo?: boolean;
+}) {
+  return (
+    <div className={ultimo ? "" : "border-b border-[#1E1B16]/10"}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={abierto}
+        className="w-full flex items-center justify-between gap-3 py-4 text-left text-sm text-[#1E1B16] hover:text-[#008CBF] transition-colors"
+      >
+        <span>{titulo}</span>
+        <span className="text-[#008CBF] text-lg leading-none shrink-0" aria-hidden="true">
+          {abierto ? "\u2212" : "+"}
+        </span>
+      </button>
+      {abierto && <div className="pb-5">{children}</div>}
+    </div>
+  );
+}
+
 function DisponibilidadContent() {
   const searchParams = useSearchParams();
   const entradaParam = searchParams.get("entrada") || "";
@@ -95,6 +122,11 @@ function DisponibilidadContent() {
   const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null; domosLibres: number | null; domos: Array<{ id: string; nombre: string }> }>({ checking: false, disponible: null, domosLibres: null, domos: [] });
   const router = useRouter();
   const [initialCalcDone, setInitialCalcDone] = useState(false);
+  // Pliegues de la ficha: cerrados por defecto. El desglose y el detalle de lo
+  // que incluye la estadia no son necesarios para decidir, y en telefono
+  // empujaban el boton de pagar fuera de pantalla.
+  const [verDesglose, setVerDesglose] = useState(false);
+  const [verIncluye, setVerIncluye] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState<Set<string>>(new Set());
   const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
@@ -1069,192 +1101,36 @@ function DisponibilidadContent() {
                   </button>
                 ) : (
                   <div ref={resultsRef} className="space-y-6 pt-1">
-                    {/* Desglose de la estadía: líneas punteadas y números tabulares */}
-                    <div className="space-y-2">
-                      <div className="flex items-baseline gap-3">
-                        <span className="dato text-[#5B5348]">Estadía</span>
-                        <DottedLeader />
-                        <span className="font-display font-medium text-lg tabular-nums text-[#1E1B16]">
-                          {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'}
-                        </span>
+
+                    {/* La cifra que manda es la que se cobra HOY: es la que baja la barrera.
+                        Antes competia en tamano con el total de la estadia y se
+                        confundian. El total y el saldo bajan a lineas de ficha. */}
+                    <div className="pt-5 border-t border-[#1E1B16]/15">
+                      <div className="dato text-[#008CBF]">Hoy pagas para confirmar</div>
+                      <div
+                        key={abonoHoy}
+                        className="font-display font-medium text-[clamp(2.4rem,5.5vw,3rem)] leading-none tabular-nums text-[#008CBF] mt-3 animate-fade-in"
+                      >
+                        ${abonoHoy.toLocaleString("es-CL")}
                       </div>
-                      <div className="flex items-baseline gap-3 text-[13px]">
-                        <span className="text-[#5B5348]">Valor base promedio</span>
-                        <DottedLeader />
-                        <span className="tabular-nums text-[#1E1B16]">
-                          ${(resultado.precio_promedio || resultado.precio_noche || 0).toLocaleString("es-CL")}
-                        </span>
-                      </div>
-
-                      {resultado.desglose && (
-                        <div className="mt-2 pt-3 border-t border-[#1E1B16]/12 space-y-1.5">
-                          <p className="dato text-[#5B5348] mb-2">Detalle por temporada</p>
-                          {(() => {
-                            const aggregated: Record<string, { name: string, nights: number, price: number, total: number, isRaw?: boolean }> = {};
-                            resultado.desglose.split('|').forEach((item: string) => {
-                              const parts = item.split(':');
-                              if (parts.length < 2) return;
-                              const name = parts[0].trim();
-                              const detail = parts.slice(1).join(':').trim();
-
-                              // Parse: "3 noches x $145000 = $435000"
-                              const match = detail.match(/(\d+)\s+noches?\s+x\s+\$(\d+)\s+=\s+\$(\d+)/);
-                              if (match) {
-                                const nights = parseInt(match[1]);
-                                const price = parseInt(match[2]);
-                                const total = parseInt(match[3]);
-                                const key = `${name}-${price}`;
-
-                                if (aggregated[key]) {
-                                  aggregated[key].nights += nights;
-                                  aggregated[key].total += total;
-                                } else {
-                                  aggregated[key] = { name, nights, price, total };
-                                }
-                              } else {
-                                aggregated[item] = { name: item, nights: 0, price: 0, total: 0, isRaw: true };
-                              }
-                            });
-
-                            return Object.values(aggregated).map((data, idx) => (
-                              <div key={idx} className="flex items-baseline gap-3 text-[12px]">
-                                <span className="text-[#5B5348]">{data.name}</span>
-                                <DottedLeader />
-                                <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
-                                  {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} × $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
-                                </span>
-                              </div>
-                            ));
-                          })()}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      {resultado.precio_original && resultado.total < resultado.precio_original && (
+                      <div className="mt-5 pt-4 border-t border-[#1E1B16]/12 space-y-2">
                         <div className="flex items-baseline gap-3 text-[13px]">
-                          <span className="text-[#5B5348]">Precio original</span>
+                          <span className="text-[#5B5348]">Total de la estadía</span>
                           <DottedLeader />
-                          <span className="text-[#5B5348] line-through tabular-nums">
-                            ${(resultado.precio_original || 0).toLocaleString("es-CL")}
+                          <span className="tabular-nums text-[#1E1B16]">
+                            ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                           </span>
                         </div>
-                      )}
-
-                      {resultado.descuento_aplicado && (
-                        <div className="space-y-1.5">
-                          <p className="dato text-emerald-700">Descuentos aplicados</p>
-                          <div className="flex items-baseline gap-3 text-[13px] text-emerald-700">
-                            <TriBullet className="w-2 h-1.5 text-emerald-500 shrink-0 self-center" />
-                            <span>{resultado.descuento_aplicado.tipo}</span>
-                            <DottedLeader className="border-emerald-700/30" />
-                            <span className="font-semibold tabular-nums">
-                              -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
-                            </span>
-                          </div>
-                          <div className="flex items-baseline gap-3 text-[11px] text-emerald-700/80">
-                            <span>Total ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
-                            <DottedLeader className="border-emerald-700/30" />
-                            <span className="tabular-nums">
-                              -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
-                            </span>
-                          </div>
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Saldo a pagar al llegar</span>
+                          <DottedLeader />
+                          <span className="tabular-nums text-[#1E1B16]">
+                            ${((calcularTotalConServicios() || 0) - abonoHoy).toLocaleString("es-CL")}
+                          </span>
                         </div>
-                      )}
-
-                      <div className="flex items-baseline gap-3 text-sm font-semibold">
-                        <span className="text-[#5B5348]">Subtotal domo</span>
-                        <DottedLeader />
-                        <span className="tabular-nums text-[#1E1B16]">
-                          ${(resultado.total || 0).toLocaleString("es-CL")}
-                        </span>
-                      </div>
-
-                      {Array.from(serviciosSeleccionados).length > 0 && (
-                        <div className="space-y-1.5 pt-3 border-t border-[#1E1B16]/12">
-                          <p className="dato text-[#5B5348]">Servicios seleccionados</p>
-                          {Array.from(serviciosSeleccionados).map(id => {
-                            const s = servicios.find(srv => srv.id === id);
-                            if (!s) return null;
-                            const costo = getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id]);
-                            const isBreakfastSrv = s.nombre.toLowerCase().includes("desayuno");
-                            const isDinnerSrv = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
-                            const isTinajaSrv = s.nombre.toLowerCase().includes("tinaja");
-                            const multNochesDefaultSrv = (s.multiplicador_noches || isBreakfastSrv) && !isDinnerSrv && !isTinajaSrv;
-                            const nochesSrv = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNochesDefaultSrv ? resultado.noches : 1);
-                            return (
-                              <div key={id} className="flex items-baseline gap-3 text-[13px]">
-                                <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
-                                <span className="text-[#5B5348] leading-snug">
-                                  {s.nombre} {nochesSrv && nochesSrv > 0 ? `(x${nochesSrv} ${nochesSrv === 1 ? 'noche' : 'noches'})` : ''}
-                                </span>
-                                <DottedLeader />
-                                <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
-                                  ${(costo || 0).toLocaleString("es-CL")}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Total y abono de hoy con la MISMA jerarquía y tamaño, lado a lado,
-                        para que no se confunda el 50% con el total a pagar. */}
-                    <div className="pt-5 border-t border-[#1E1B16]/15 space-y-4">
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-                        <div className="min-w-0">
-                          <div className="dato text-[#5B5348]">Total de la estadía</div>
-                          <div className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#1E1B16] mt-2">
-                            ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
-                          </div>
-                          <p className="caption-editorial mt-2">Valor total · IVA incluido</p>
-                        </div>
-                        <div>
-                          <div className="dato text-[#008CBF]">Hoy pagas (50%)</div>
-                          <div key={abonoHoy} className="font-display font-medium text-[clamp(1.35rem,1.9vw,1.8rem)] leading-none tabular-nums text-[#008CBF] mt-2 animate-fade-in">
-                            ${abonoHoy.toLocaleString("es-CL")}
-                          </div>
-                          <p className="caption-editorial mt-2">Para confirmar tu reserva</p>
-                        </div>
-                      </div>
-                      <div className="flex items-baseline gap-3 text-[13px]">
-                        <span className="text-[#5B5348]">Saldo a pagar al llegar</span>
-                        <DottedLeader />
-                        <span className="tabular-nums text-[#1E1B16]">
-                          ${((calcularTotalConServicios() || 0) - abonoHoy).toLocaleString("es-CL")}
-                        </span>
+                        <p className="caption-editorial pt-1">Valor total · IVA incluido</p>
                       </div>
                     </div>
-
-                    {/* Refuerzo de valor en el punto de mayor abandono del embudo:
-                        aparece después del precio y antes de pedir datos. */}
-                    <section
-                      aria-labelledby="valor-estadia-title"
-                      className="border border-[#1E1B16]/15 bg-[#F7F3EC] px-5 py-5 rounded-[2px]"
-                    >
-                      <p className="dato text-[#008CBF] mb-2">Lo que estás reservando</p>
-                      <h3
-                        id="valor-estadia-title"
-                        className="font-display text-[1.3rem] leading-tight text-[#1E1B16]"
-                      >
-                        Tu propio domo geodésico en el bosque nativo
-                      </h3>
-                      <div className="mt-4 space-y-2.5 text-[13px] leading-snug text-[#5B5348]">
-                        <p className="flex items-start gap-2.5">
-                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
-                          <span>Estufa a pellet automática para mantener el domo temperado.</span>
-                        </p>
-                        <p className="flex items-start gap-2.5">
-                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
-                          <span>Baño privado y cocina equipada con cafetera Nespresso.</span>
-                        </p>
-                        <p className="flex items-start gap-2.5">
-                          <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
-                          <span>Reserva directa y atención personal de Janet y Jaime.</span>
-                        </p>
-                      </div>
-                    </section>
 
                     {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
                         1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
@@ -1331,6 +1207,171 @@ function DisponibilidadContent() {
                       Desayuno y otros extras se pueden agregar después de reservar, por WhatsApp o
                       correo.
                     </p>
+                    {/* Lo que no hace falta para decidir vive plegado. Antes esto sumaba
+                        18 bloques entre el precio y el boton, y ahi se iba el 96%. */}
+                    <div className="border border-[#1E1B16]/12 rounded-[2px] px-5 mt-5">
+                      <Pliegue titulo="Ver el desglose del precio" abierto={verDesglose} onToggle={() => setVerDesglose(v => !v)}>
+                      {/* Desglose de la estadía: líneas punteadas y números tabulares */}
+                      <div className="space-y-2">
+                        <div className="flex items-baseline gap-3">
+                          <span className="dato text-[#5B5348]">Estadía</span>
+                          <DottedLeader />
+                          <span className="font-display font-medium text-lg tabular-nums text-[#1E1B16]">
+                            {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'}
+                          </span>
+                        </div>
+                        <div className="flex items-baseline gap-3 text-[13px]">
+                          <span className="text-[#5B5348]">Valor base promedio</span>
+                          <DottedLeader />
+                          <span className="tabular-nums text-[#1E1B16]">
+                            ${(resultado.precio_promedio || resultado.precio_noche || 0).toLocaleString("es-CL")}
+                          </span>
+                        </div>
+  
+                        {resultado.desglose && (
+                          <div className="mt-2 pt-3 border-t border-[#1E1B16]/12 space-y-1.5">
+                            <p className="dato text-[#5B5348] mb-2">Detalle por temporada</p>
+                            {(() => {
+                              const aggregated: Record<string, { name: string, nights: number, price: number, total: number, isRaw?: boolean }> = {};
+                              resultado.desglose.split('|').forEach((item: string) => {
+                                const parts = item.split(':');
+                                if (parts.length < 2) return;
+                                const name = parts[0].trim();
+                                const detail = parts.slice(1).join(':').trim();
+  
+                                // Parse: "3 noches x $145000 = $435000"
+                                const match = detail.match(/(\d+)\s+noches?\s+x\s+\$(\d+)\s+=\s+\$(\d+)/);
+                                if (match) {
+                                  const nights = parseInt(match[1]);
+                                  const price = parseInt(match[2]);
+                                  const total = parseInt(match[3]);
+                                  const key = `${name}-${price}`;
+  
+                                  if (aggregated[key]) {
+                                    aggregated[key].nights += nights;
+                                    aggregated[key].total += total;
+                                  } else {
+                                    aggregated[key] = { name, nights, price, total };
+                                  }
+                                } else {
+                                  aggregated[item] = { name: item, nights: 0, price: 0, total: 0, isRaw: true };
+                                }
+                              });
+  
+                              return Object.values(aggregated).map((data, idx) => (
+                                <div key={idx} className="flex items-baseline gap-3 text-[12px]">
+                                  <span className="text-[#5B5348]">{data.name}</span>
+                                  <DottedLeader />
+                                  <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
+                                    {data.isRaw ? "" : `${data.nights} ${data.nights === 1 ? 'noche' : 'noches'} × $${data.price.toLocaleString("es-CL")} = $${data.total.toLocaleString("es-CL")}`}
+                                  </span>
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        )}
+                      </div>
+  
+                      <div className="space-y-2">
+                        {resultado.precio_original && resultado.total < resultado.precio_original && (
+                          <div className="flex items-baseline gap-3 text-[13px]">
+                            <span className="text-[#5B5348]">Precio original</span>
+                            <DottedLeader />
+                            <span className="text-[#5B5348] line-through tabular-nums">
+                              ${(resultado.precio_original || 0).toLocaleString("es-CL")}
+                            </span>
+                          </div>
+                        )}
+  
+                        {resultado.descuento_aplicado && (
+                          <div className="space-y-1.5">
+                            <p className="dato text-emerald-700">Descuentos aplicados</p>
+                            <div className="flex items-baseline gap-3 text-[13px] text-emerald-700">
+                              <TriBullet className="w-2 h-1.5 text-emerald-500 shrink-0 self-center" />
+                              <span>{resultado.descuento_aplicado.tipo}</span>
+                              <DottedLeader className="border-emerald-700/30" />
+                              <span className="font-semibold tabular-nums">
+                                -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
+                              </span>
+                            </div>
+                            <div className="flex items-baseline gap-3 text-[11px] text-emerald-700/80">
+                              <span>Total ahorrado ({resultado.descuento_aplicado.porcentaje}%)</span>
+                              <DottedLeader className="border-emerald-700/30" />
+                              <span className="tabular-nums">
+                                -${(resultado.descuento_aplicado.monto || 0).toLocaleString("es-CL")}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+  
+                        <div className="flex items-baseline gap-3 text-sm font-semibold">
+                          <span className="text-[#5B5348]">Subtotal domo</span>
+                          <DottedLeader />
+                          <span className="tabular-nums text-[#1E1B16]">
+                            ${(resultado.total || 0).toLocaleString("es-CL")}
+                          </span>
+                        </div>
+  
+                        {Array.from(serviciosSeleccionados).length > 0 && (
+                          <div className="space-y-1.5 pt-3 border-t border-[#1E1B16]/12">
+                            <p className="dato text-[#5B5348]">Servicios seleccionados</p>
+                            {Array.from(serviciosSeleccionados).map(id => {
+                              const s = servicios.find(srv => srv.id === id);
+                              if (!s) return null;
+                              const costo = getServiceCost(s, adultos, resultado.noches || 1, nochesPorServicio[id]);
+                              const isBreakfastSrv = s.nombre.toLowerCase().includes("desayuno");
+                              const isDinnerSrv = s.nombre.toLowerCase().includes("cena") || s.nombre.toLowerCase().includes("romántico") || s.nombre.toLowerCase().includes("almuerzo");
+                              const isTinajaSrv = s.nombre.toLowerCase().includes("tinaja");
+                              const multNochesDefaultSrv = (s.multiplicador_noches || isBreakfastSrv) && !isDinnerSrv && !isTinajaSrv;
+                              const nochesSrv = nochesPorServicio[id] !== undefined ? nochesPorServicio[id] : (multNochesDefaultSrv ? resultado.noches : 1);
+                              return (
+                                <div key={id} className="flex items-baseline gap-3 text-[13px]">
+                                  <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0 self-center" />
+                                  <span className="text-[#5B5348] leading-snug">
+                                    {s.nombre} {nochesSrv && nochesSrv > 0 ? `(x${nochesSrv} ${nochesSrv === 1 ? 'noche' : 'noches'})` : ''}
+                                  </span>
+                                  <DottedLeader />
+                                  <span className="tabular-nums text-[#1E1B16] whitespace-nowrap">
+                                    ${(costo || 0).toLocaleString("es-CL")}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                      </Pliegue>
+                      <Pliegue titulo="Qué incluye tu domo" abierto={verIncluye} onToggle={() => setVerIncluye(v => !v)} ultimo>
+                      {/* Refuerzo de valor en el punto de mayor abandono del embudo:
+                          aparece después del precio y antes de pedir datos. */}
+                      <section
+                        aria-labelledby="valor-estadia-title"
+                        className=""
+                      >
+                        <p className="dato text-[#008CBF] mb-2">Lo que estás reservando</p>
+                        <h3
+                          id="valor-estadia-title"
+                          className="font-display text-[1.3rem] leading-tight text-[#1E1B16]"
+                        >
+                          Tu propio domo geodésico en el bosque nativo
+                        </h3>
+                        <div className="mt-4 space-y-2.5 text-[13px] leading-snug text-[#5B5348]">
+                          <p className="flex items-start gap-2.5">
+                            <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                            <span>Estufa a pellet automática para mantener el domo temperado.</span>
+                          </p>
+                          <p className="flex items-start gap-2.5">
+                            <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                            <span>Baño privado y cocina equipada con cafetera Nespresso.</span>
+                          </p>
+                          <p className="flex items-start gap-2.5">
+                            <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1" />
+                            <span>Reserva directa y atención personal de Janet y Jaime.</span>
+                          </p>
+                        </div>
+                      </section>
+                      </Pliegue>
+                    </div>
                   </div>
                 )}
               </div>
