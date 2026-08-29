@@ -38,7 +38,7 @@ export default function ComoReservar() {
             </h2>
             <div className="mt-10 hidden lg:block">
               <Link href="/disponibilidad#reservar" className={btnPrimaryDark}>
-                Ver disponibilidad y reservar
+                Ver disponibilidad y precio
               </Link>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function ComoReservar() {
 
             <div className="mt-10 lg:hidden">
               <Link href="/disponibilidad#reservar" className={btnPrimaryDark}>
-                Ver disponibilidad y reservar
+                Ver disponibilidad y precio
               </Link>
             </div>
           </div>

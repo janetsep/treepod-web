@@ -82,7 +82,7 @@ export default function TreePodDomes() {
 
             <div className="mt-10 lg:px-4">
               <Link href="/disponibilidad#reservar" className={btnPrimary}>
-                Reservar mi domo
+                Ver disponibilidad y precio
               </Link>
               <p className="caption-editorial mt-4">
                 Ves la disponibilidad y el precio al instante, sin compromiso.

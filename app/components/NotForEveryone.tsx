@@ -45,7 +45,7 @@ export default function NotForEveryone() {
 
             <div className="mt-10">
               <Link href="/disponibilidad#reservar" className={linkLine}>
-                Reservar mi escapada <span aria-hidden="true">→</span>
+                Ver disponibilidad y precio <span aria-hidden="true">→</span>
               </Link>
               <p className="caption-editorial mt-3">
                 Reservas con el 50%. El saldo lo pagas en el check-in.

@@ -15,6 +15,10 @@ const items = [
 
 export default async function ValueBand() {
   const { precio: desde, nochesMin } = await precioDesde();
+  // Si las tarifas no responden se omite la franja entera. Antes habia un
+  // respaldo fijo de $160.000 que no estaba en la base: publicar un precio
+  // inventado es peor que no publicar ninguno.
+  if (!desde) return null;
   return (
     <section className="bg-white border-b border-[#1E1B16]/15 py-6">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-6 items-center">

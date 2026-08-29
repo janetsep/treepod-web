@@ -252,7 +252,7 @@ export default function GlampingValleLasTrancasPage() {
                             eventName="click_reservar_glamping_trancas"
                             className={btnPrimary}
                         >
-                            Ver disponibilidad y precios
+                            Ver disponibilidad y precio
                         </TrackedLink>
                     </div>
                 </div>
