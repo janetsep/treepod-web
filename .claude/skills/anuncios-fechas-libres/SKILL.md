@@ -75,3 +75,32 @@ reservables en 30 días, cero consultas fallidas.
 
 Falta: filtrar fotos por estación, y decidir si conviene tener también la
 fórmula Whitepod (fila D del lienzo de anuncios) en versión automática.
+
+## Janet edita en el lienzo. Nunca regenerar sin leerla primero.
+
+Ella corrige las tarjetas directamente en el artifact publicado y guarda. Esos
+cambios son la version buena, no los archivos locales.
+
+Hay un watch conectado sobre el artifact, asi que su Save llega como aviso a la
+sesion. **No hace falta que ella avise.**
+
+El texto vive separado del molde, en `textos.json` de la carpeta de salida. El
+orden es:
+
+1. Llega el aviso de que republico (o ella menciona que edito).
+2. Extraer la version viva:
+   `node <skill design>/seed-canvas.mjs --extract <archivo guardado> --to ./_vivo`
+3. `python3 sincronizar.py ./_vivo` — vuelca sus frases a textos.json.
+4. Recien ahi `python3 build.py` y volver a publicar.
+
+Que refresca la maquina y que no:
+
+| Se actualiza solo | Es de Janet, no se toca |
+|---|---|
+| La fecha | La cita |
+| El numero de domos libres | La foto elegida |
+| La volanta del dia de la semana | El encuadre de la foto |
+
+Saltarse los pasos 2 y 3 le borra el trabajo. Paso una vez con la carpeta de
+diseno de la pagina de pagos: se regeneraron los archivos seis veces seguidas
+y cualquier edicion suya se habria perdido.
