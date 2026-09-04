@@ -112,6 +112,30 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
         }
     };
 
+    // Actualiza dos filas (1 noche y 2+ noches) al mismo precio. Se usa cuando
+    // ambas ya estan igualadas: sin esto, la matriz mostraba dos tarjetas
+    // idénticas y editar una sola volvia a separarlas sin que se notara.
+    const handleUpdatePriceLinked = async (ids: string[], newPrice: number) => {
+        const key = `linked:${ids.join(',')}`;
+        setSaving(key);
+        try {
+            for (const id of ids) {
+                const res = await adminFetch("/api/admin/tarifas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, precio_noche: newPrice, adminEmail }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Error al actualizar");
+            }
+            setTarifas(prev => prev.map(t => ids.includes(t.id) ? { ...t, precio_noche: newPrice } : t));
+        } catch (error: any) {
+            alert("No se pudo actualizar el precio: " + error.message);
+        } finally {
+            setSaving(null);
+        }
+    };
+
     const handleSaveTemporada = async () => {
         if (!editingTemporada) return;
         setSaving('temporada');
@@ -389,51 +413,117 @@ export default function TarifasConsole({ adminRole, adminEmail }: { adminRole: s
                                 </div>
                             </div>
 
-                            {[
-                                { label: "Tarifa 1 Noche", noches: 1 },
-                                { label: "Tarifa 2+ Noches", noches: 2 },
-                            ].map(({ label, noches }) => {
-                                const grupo = filteredTarifas
-                                    .filter(t => t.noches_min === noches)
-                                    .sort((a, b) => a.adultos - b.adultos);
-                                if (grupo.length === 0) return null;
+                            {(() => {
+                                // Agrupa por adultos. Cuando la tarifa de 1 noche y la de 2+
+                                // noches ya quedaron al mismo precio (temporadas parejas, como
+                                // Invierno esta temporada), se muestran como UNA sola tarjeta
+                                // que edita las dos filas a la vez: dos tarjetas idénticas se
+                                // leían como un error, y editar solo una las volvía a separar
+                                // sin que nadie lo notara.
+                                const porAdultos = new Map<number, { unaNoche?: Tarifa; masNoches?: Tarifa }>();
+                                filteredTarifas.forEach(t => {
+                                    const entry = porAdultos.get(t.adultos) || {};
+                                    if (t.noches_min === 1) entry.unaNoche = t;
+                                    else if (t.noches_min === 2) entry.masNoches = t;
+                                    porAdultos.set(t.adultos, entry);
+                                });
+                                const adultosOrdenados = [...porAdultos.keys()].sort((a, b) => a - b);
+                                const igualadas = adultosOrdenados.filter(a => {
+                                    const { unaNoche, masNoches } = porAdultos.get(a)!;
+                                    return !!unaNoche && !!masNoches && unaNoche.precio_noche === masNoches.precio_noche;
+                                });
+                                const distintas = adultosOrdenados.filter(a => !igualadas.includes(a));
+
                                 return (
-                                    <div key={noches}>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 px-1 mb-3">{label}</p>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                            {grupo.map((tarifa) => (
-                                    <div key={tarifa.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm group hover:border-primary/20 transition-all">
-                                        <div className="flex justify-between items-start mb-4">
+                                    <>
+                                        {igualadas.length > 0 && (
                                             <div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-2xl font-black text-gray-900">{tarifa.adultos}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Adultos</span>
+                                                <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 px-1 mb-1">Tarifa por noche</p>
+                                                <p className="text-[9px] text-gray-500 font-bold px-1 mb-3">1 noche o más · mismo precio esta temporada</p>
+                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                    {igualadas.map((adultos) => {
+                                                        const { unaNoche, masNoches } = porAdultos.get(adultos)!;
+                                                        const ids = [unaNoche!.id, masNoches!.id];
+                                                        const key = `linked:${ids.join(',')}`;
+                                                        return (
+                                                            <div key={key} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm group hover:border-primary/20 transition-all">
+                                                                <div className="flex justify-between items-start mb-4">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-2xl font-black text-gray-900">{adultos}</span>
+                                                                        <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Adultos</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="relative">
+                                                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xs">$</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        readOnly={isViewer}
+                                                                        defaultValue={unaNoche!.precio_noche}
+                                                                        onBlur={(e) => !isViewer && handleUpdatePriceLinked(ids, Number(e.target.value))}
+                                                                        className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-700 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
+                                                                    />
+                                                                    {saving === key && (
+                                                                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                                                            <RefreshCw size={14} className="animate-spin text-primary" />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
-                                            <span className="text-[8px] font-mono text-gray-600">#{tarifa.id.slice(-6)}</span>
-                                        </div>
+                                        )}
 
-                                        <div className="relative">
-                                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xs">$</span>
-                                            <input
-                                                type="number"
-                                                readOnly={isViewer}
-                                                defaultValue={tarifa.precio_noche}
-                                                onBlur={(e) => !isViewer && handleUpdatePrice(tarifa.id, Number(e.target.value))}
-                                                className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-700 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
-                                            />
-                                            {saving === tarifa.id && (
-                                                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                                    <RefreshCw size={14} className="animate-spin text-primary" />
+                                        {[
+                                            { label: "Tarifa 1 Noche", key: "unaNoche" as const },
+                                            { label: "Tarifa 2+ Noches", key: "masNoches" as const },
+                                        ].map(({ label, key: campo }) => {
+                                            const grupo = distintas
+                                                .map(a => porAdultos.get(a)![campo])
+                                                .filter((t): t is Tarifa => !!t)
+                                                .sort((a, b) => a.adultos - b.adultos);
+                                            if (grupo.length === 0) return null;
+                                            return (
+                                                <div key={campo}>
+                                                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-700 px-1 mb-3">{label}</p>
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                        {grupo.map((tarifa) => (
+                                                            <div key={tarifa.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm group hover:border-primary/20 transition-all">
+                                                                <div className="flex justify-between items-start mb-4">
+                                                                    <div>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="text-2xl font-black text-gray-900">{tarifa.adultos}</span>
+                                                                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-700">Adultos</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span className="text-[8px] font-mono text-gray-600">#{tarifa.id.slice(-6)}</span>
+                                                                </div>
+
+                                                                <div className="relative">
+                                                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xs">$</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        readOnly={isViewer}
+                                                                        defaultValue={tarifa.precio_noche}
+                                                                        onBlur={(e) => !isViewer && handleUpdatePrice(tarifa.id, Number(e.target.value))}
+                                                                        className={`w-full pl-7 pr-2 py-3 border-transparent border-2 rounded-2xl text-sm font-black transition-all outline-none ${isViewer ? 'bg-gray-100 text-gray-700 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-white focus:border-primary'}`}
+                                                                    />
+                                                                    {saving === tarifa.id && (
+                                                                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                                                            <RefreshCw size={14} className="animate-spin text-primary" />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                            );
+                                        })}
+                                    </>
                                 );
-                            })}
+                            })()}
                         </div>
                     )}
                 </div>
