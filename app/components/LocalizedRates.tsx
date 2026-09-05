@@ -31,6 +31,12 @@ export default function LocalizedRates({ locale }: { locale: Locale }) {
 
   const desde = rates.desde.toLocaleString("es-CL");
   const unaNoche = rates.unaNoche?.toLocaleString("es-CL");
+  // Solo vale la pena aclarar la tarifa de 1 noche cuando es DISTINTA de la de
+  // 2+ noches. En temporadas donde se igualaron (como Invierno ahora), esta
+  // frase repetia el mismo numero con dos etiquetas distintas: "por noche...
+  // 2+ noches" y luego "1 noche: CLP $145.000" otra vez, lo que leia como
+  // contradictorio en vez de informativo.
+  const hayDiferencia = !!unaNoche && unaNoche !== desde;
 
   if (locale === "en") {
     return (
@@ -39,8 +45,14 @@ export default function LocalizedRates({ locale }: { locale: Locale }) {
           CLP ${desde}
         </p>
         <p className="text-sm text-[#5B5348] mt-2 leading-relaxed">
-          per night · 2 guests · stays of 2+ nights.
-          {unaNoche ? <><br />Single-night stays: CLP ${unaNoche}.</> : null}
+          {hayDiferencia ? (
+            <>
+              per night · 2 guests · stays of 2+ nights.
+              <br />Single-night stays: CLP ${unaNoche}.
+            </>
+          ) : (
+            "per night · 2 guests."
+          )}
         </p>
       </>
     );
@@ -52,8 +64,14 @@ export default function LocalizedRates({ locale }: { locale: Locale }) {
         CLP ${desde}
       </p>
       <p className="text-sm text-[#5B5348] mt-2 leading-relaxed">
-        por noite · 2 pessoas · estadias de 2+ noites (pesos chilenos).
-        {unaNoche ? <><br />Estadia de 1 noite: CLP ${unaNoche}.</> : null}
+        {hayDiferencia ? (
+          <>
+            por noite · 2 pessoas · estadias de 2+ noites (pesos chilenos).
+            <br />Estadia de 1 noite: CLP ${unaNoche}.
+          </>
+        ) : (
+          "por noite · 2 pessoas (pesos chilenos)."
+        )}
       </p>
     </>
   );
