@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
 import { vincularClienteAReserva } from "@/lib/crm-cliente";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { isCronAuthorized } from "@/lib/cron-auth";
+import { observeJob } from "@/lib/job-observability";
 
 // ─── Parser iCal mínimo (sin dependencias externas) ───────────────────────────
 
@@ -136,16 +139,18 @@ function extractGuestInfo(summary: string, description: string): {
 // ─── Handler principal ────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
+  return observeJob('airbnb', () => run(request));
+}
+
+async function run(request: NextRequest) {
   // Proteger con CRON_SECRET (Vercel lo envía automáticamente en cron jobs)
-  const authHeader = request.headers.get("authorization");
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
   // También puede ser invocado manualmente desde el admin
   const isManual = request.nextUrl.searchParams.get("manual") === "1";
+  if (!isCronAuthorized(request, process.env.CRON_SECRET)) {
+    const admin = isManual ? await getVerifiedAdmin(request) : null;
+    if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    if (admin.rol === "viewer") return NextResponse.json({ error: "Solo lectura" }, { status: 403 });
+  }
 
   try {
     // 1. Obtener domos con URL iCal de Airbnb configurada
@@ -361,9 +366,11 @@ export async function GET(request: NextRequest) {
     const totalCreadas = results.reduce((s, r) => s + (r.creadas as number), 0);
     const totalActualizadas = results.reduce((s, r) => s + (r.actualizadas as number), 0);
     const totalCanceladas = results.reduce((s, r) => s + (r.canceladas as number), 0);
+    const hayErrores = results.some(r => (r.errores as string[]).length > 0);
 
     return NextResponse.json({
-      ok: true,
+      ok: !hayErrores,
+      ...(hayErrores ? { error: "Sincronización incompleta. Revisa el detalle antes de reintentar." } : {}),
       timestamp: new Date().toISOString(),
       manual: isManual,
       domos_sincronizados: domos.length,
@@ -371,7 +378,7 @@ export async function GET(request: NextRequest) {
       total_actualizadas: totalActualizadas,
       total_canceladas: totalCanceladas,
       detalle: results,
-    });
+    }, { status: hayErrores ? 502 : 200 });
   } catch (err: unknown) {
     console.error("Error en sync-airbnb:", err);
     return NextResponse.json(

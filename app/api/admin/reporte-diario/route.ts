@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { Resend } from "resend";
 import { refrescarPreciosMercado } from "@/lib/refrescar-precios";
+import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { isCronAuthorized } from "@/lib/cron-auth";
+import { observeJob } from "@/lib/job-observability";
 
 // 60s: tope del plan Hobby. Deja margen para el refresco de ofertas que corre al final.
 export const maxDuration = 60;
@@ -21,8 +24,10 @@ const ADMIN_EMAIL = "janetsep@gmail.com";
  *  - Vista previa sin enviar:        ?preview=1  (devuelve el HTML y el conteo)
  */
 export async function GET(request: NextRequest) {
-    const authHeader = request.headers.get("authorization");
-    const cronSecret = process.env.CRON_SECRET;
+    return observeJob('reporte', () => run(request));
+}
+
+async function run(request: NextRequest) {
     const isManual = request.nextUrl.searchParams.get("manual") === "1";
     const isPreview = request.nextUrl.searchParams.get("preview") === "1";
 
@@ -30,9 +35,11 @@ export async function GET(request: NextRequest) {
     if (isPreview && process.env.NODE_ENV === "production") {
         return NextResponse.json({ error: "Preview no disponible en producción" }, { status: 403 });
     }
-    // Cron protegido; manual permitido (botón admin), igual que el sync de Airbnb.
-    if (cronSecret && !isManual && !isPreview && authHeader !== `Bearer ${cronSecret}`) {
-        return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    // El parámetro manual no es autorización; el reporte puede modificar reservas.
+    if (!isCronAuthorized(request, process.env.CRON_SECRET)) {
+        const admin = (isManual || isPreview) ? await getVerifiedAdmin(request) : null;
+        if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+        if (admin.rol === "viewer") return NextResponse.json({ error: "Solo lectura" }, { status: 403 });
     }
 
     try {
@@ -56,28 +63,38 @@ export async function GET(request: NextRequest) {
 
         // ── Transferencias sin confirmar: aviso a las 24h y liberación automática a las 48h ──
         const ahoraMs = Date.now();
-        const { data: transfersPend } = await supabaseAdmin
+        const { data: transfersPend, error: transfersError } = await supabaseAdmin
             .from("reservas")
-            .select("id, nombre, apellido, fecha_inicio, fecha_fin, total, updated_at, notas, domos(nombre)")
+            .select("id, nombre, apellido, fecha_inicio, fecha_fin, total, monto_pagado, updated_at, notas, domos(nombre)")
             .eq("estado", "pending_transfer_confirmation")
             .is("deleted_at", null);
+        if (transfersError) throw transfersError;
 
         const transferPorVencer: any[] = [];
         const transferLiberadas: any[] = [];
         for (const t of transfersPend || []) {
+            // Una transferencia con dinero registrado requiere revisión, nunca liberación automática.
+            if (Number(t.monto_pagado) > 0) { transferPorVencer.push(t); continue; }
             const horas = (ahoraMs - new Date(t.updated_at).getTime()) / 3600000;
             if (horas >= 48) {
                 // Liberar el domo: la transferencia nunca llegó / no fue confirmada.
                 // En modo preview solo se muestra, no se modifica nada.
                 if (!isPreview) {
-                    await supabaseAdmin
+                    const { data: liberada, error: liberarError } = await supabaseAdmin
                         .from("reservas")
                         .update({
                             estado: "cancelada",
                             notas: `${t.notas ? t.notas + " · " : ""}Liberada automáticamente: transferencia no confirmada en 48h`,
                             updated_at: new Date().toISOString(),
                         })
-                        .eq("id", t.id);
+                        .eq("id", t.id)
+                        .eq("estado", "pending_transfer_confirmation")
+                        .eq("updated_at", t.updated_at)
+                        .or("monto_pagado.is.null,monto_pagado.eq.0")
+                        .is("deleted_at", null)
+                        .select("id");
+                    if (liberarError) throw liberarError;
+                    if (!liberada?.length) continue;
                 }
                 transferLiberadas.push(t);
             } else if (horas >= 24) {
@@ -167,12 +184,13 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "RESEND_API_KEY no configurada" }, { status: 500 });
         }
         const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
+        const envio = await resend.emails.send({
             from: "TreePod Reportes <info@domostreepod.cl>",
             to: [ADMIN_EMAIL],
             subject: `📋 Próximas llegadas TreePod — ${reservasParaTabla.length} reserva(s) · ${hoyStr}${transferLiberadas.length > 0 ? ` · 🔓 ${transferLiberadas.length} liberada(s)` : ""}${transferPorVencer.length > 0 ? ` · ⏳ ${transferPorVencer.length} transf.` : ""}`,
             html,
         });
+        if (envio.error) throw new Error("El proveedor no confirmó el envío del reporte");
 
         // Refresco diario de OFERTAS de supermercados (Pilar B de ALMA). Va DESPUÉS del
         // correo y es no-fatal: si Knasta falla o se acaba el tiempo, el reporte ya se envió.

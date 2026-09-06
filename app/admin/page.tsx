@@ -48,6 +48,7 @@ export default function AdminDashboard() {
     const [pagoMonto, setPagoMonto] = useState<string>("");
     const [pagoMetodo, setPagoMetodo] = useState<string>("efectivo");
     const [pagoLoading, setPagoLoading] = useState(false);
+    const [pagoOperacion, setPagoOperacion] = useState("");
     const ITEMS_PER_PAGE = 30;
 
     useEffect(() => {
@@ -291,17 +292,18 @@ export default function AdminDashboard() {
         setPagoReserva(reserva);
         setPagoMonto(String(saldo > 0 ? saldo : ""));
         setPagoMetodo("efectivo");
+        setPagoOperacion(crypto.randomUUID());
     };
 
     async function registrarPago() {
-        if (!pagoReserva) return;
+        if (!pagoReserva || pagoLoading) return;
         const monto = Math.round(Number(pagoMonto));
         if (!monto || monto <= 0) { alert("Ingresa un monto válido"); return; }
         setPagoLoading(true);
         try {
             const res = await adminFetch("/api/admin/reservas/registrar-pago", {
                 method: "POST",
-                body: JSON.stringify({ reservaId: pagoReserva.id, monto, metodo: pagoMetodo })
+                body: JSON.stringify({ reservaId: pagoReserva.id, monto, metodo: pagoMetodo, operacionId: pagoOperacion })
             });
             const data = await res.json();
             if (res.ok) {
@@ -596,6 +598,12 @@ export default function AdminDashboard() {
                         <CreditCard className="w-4 h-4" />
                         Cartolas
                     </button>
+                    <Link
+                        href="/admin/calidad"
+                        className="px-4 py-3 text-xs font-bold whitespace-nowrap text-gray-700 hover:bg-white rounded-xl"
+                    >
+                        Calidad del sistema
+                    </Link>
                     <Link
                         href="/admin/dashboard"
                         className="flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"

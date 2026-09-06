@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { isCronAuthorized } from "@/lib/cron-auth";
+import { observeJob } from "@/lib/job-observability";
 
 // Registro diario de meteorología para Valle Las Trancas (KM 72).
 // Guarda el pronóstico a 7 días y lo observado ayer, para medir después
@@ -10,9 +12,12 @@ const LAT = -36.9066, LON = -71.4881;
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  return observeJob('meteo', () => run(request));
+}
+
+async function run(request: Request) {
   // Vercel Cron manda este header; también se permite ejecución manual con el secreto.
-  const auth = request.headers.get("authorization");
-  if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isCronAuthorized(request, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
@@ -50,6 +55,9 @@ export async function GET(request: Request) {
     });
   }
 
+  if (!d?.time?.length || !o?.time?.length || filas.length === 0) {
+    return NextResponse.json({ error: "El proveedor no entregó datos meteorológicos completos" }, { status: 502 });
+  }
   const { error } = await supabaseAdmin
     .from("meteo_registros")
     .upsert(filas, { onConflict: "tipo,emitido,fecha_objetivo" });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 // Lectura de clientes SOLO desde el servidor (con login). Reemplaza las lecturas que antes
 // hacía el navegador con la clave pública, para poder cerrar la tabla `clientes` con RLS.
@@ -23,10 +24,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ cliente: data || null });
   }
 
-  const { data, error } = await supabaseAdmin
+  try {
+  const data = await fetchAllPages((from, to) => supabaseAdmin
     .from("clientes")
     .select("*, reservas(id, fecha_inicio, fecha_fin, total, monto_pagado, pagado_at, metodo_pago, estado, created_at)")
-    .order("nombre");
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    .order("nombre").order("id").range(from, to));
   return NextResponse.json({ clientes: data || [] });
+  } catch {
+    return NextResponse.json({ error: "No se pudo cargar la lista completa de clientes" }, { status: 500 });
+  }
 }

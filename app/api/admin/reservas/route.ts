@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 export async function GET(request: Request) {
     try {
         const admin = await getVerifiedAdmin(request);
         if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-        const { data, error } = await supabaseAdmin
+        const data = await fetchAllPages((from, to) => supabaseAdmin
             .from("reservas")
             .select(`
         *,
@@ -15,12 +16,9 @@ export async function GET(request: Request) {
         reserva_servicios (id, cantidad, precio_unitario, total, es_cortesia, servicios (id, nombre))
       `)
             .is("deleted_at", null)
-            .order("fecha_inicio", { ascending: false });
-
-        if (error) {
-            console.error("Supabase Admin Error:", error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+            .order("fecha_inicio", { ascending: false })
+            .order("id")
+            .range(from, to));
 
         return NextResponse.json(data);
     } catch (err: any) {
