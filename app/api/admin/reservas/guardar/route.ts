@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
 import { vincularClienteAReserva } from "@/lib/crm-cliente";
+import { buildAdminExtras } from "@/lib/admin-extras";
 
 export async function POST(request: Request) {
     try {
@@ -14,7 +15,6 @@ export async function POST(request: Request) {
         if (admin.rol === 'viewer') {
             return NextResponse.json({ error: "No tienes permisos para guardar o editar registros. Tu perfil es de solo lectura." }, { status: 403 });
         }
-        const adminData = { rol: admin.rol, nombre: admin.nombre };
         const adminEmail = admin.email;
 
         const body = await request.json();
@@ -66,181 +66,46 @@ export async function POST(request: Request) {
             sincronizar_calendario: sincronizar_calendario ?? true,
         };
 
-        let result;
         const isUpdate = !!id;
-        let changeDetails = "";
-
-        if (isUpdate) {
-            // Obtener datos actuales para comparar
-            const { data: oldReserva } = await supabaseAdmin
-                .from("reservas")
-                .select("*")
-                .eq("id", id)
-                .single();
-
-            if (oldReserva) {
-                const CAMPOS_AUDITADOS: Array<{ campo: string; label: string; viejo: () => string; nuevo: () => string; diferente: boolean }> = [
-                    { campo: "fecha_inicio",  label: "Fecha entrada",   viejo: () => oldReserva.fecha_inicio,                          nuevo: () => fecha_inicio,                             diferente: oldReserva.fecha_inicio !== fecha_inicio },
-                    { campo: "fecha_fin",     label: "Fecha salida",    viejo: () => oldReserva.fecha_fin,                             nuevo: () => fecha_fin,                                diferente: oldReserva.fecha_fin !== fecha_fin },
-                    { campo: "adultos",       label: "Personas",        viejo: () => String(oldReserva.adultos),                       nuevo: () => String(adultos),                          diferente: Number(oldReserva.adultos) !== Number(adultos) },
-                    { campo: "total",         label: "Total",           viejo: () => `$${oldReserva.total}`,                           nuevo: () => `$${total}`,                              diferente: Number(oldReserva.total) !== Number(total) },
-                    { campo: "monto_pagado",  label: "Monto pagado",    viejo: () => `$${oldReserva.monto_pagado}`,                    nuevo: () => `$${monto_pagado}`,                       diferente: Number(oldReserva.monto_pagado) !== Number(monto_pagado) },
-                    { campo: "estado",        label: "Estado",          viejo: () => oldReserva.estado,                                nuevo: () => estado || 'pendiente',                    diferente: oldReserva.estado !== (estado || 'pendiente') },
-                    { campo: "domo_id",       label: "Domo",            viejo: () => oldReserva.domo_id,                               nuevo: () => domoAsignado,                             diferente: oldReserva.domo_id !== domoAsignado },
-                    { campo: "nombre",        label: "Nombre",          viejo: () => `${oldReserva.nombre} ${oldReserva.apellido}`,    nuevo: () => `${nombre} ${apellido}`,                  diferente: oldReserva.nombre !== nombre || oldReserva.apellido !== apellido },
-                ];
-
-                const snapshot = { ...oldReserva };
-                const logsInsert = CAMPOS_AUDITADOS
-                    .filter(c => c.diferente)
-                    .map(c => ({
-                        reserva_id: id,
-                        campo: c.campo,
-                        valor_anterior: c.viejo(),
-                        valor_nuevo: c.nuevo(),
-                        admin_email: adminEmail,
-                        snapshot,
-                    }));
-
-                if (logsInsert.length > 0) {
-                    await supabaseAdmin.from("reserva_cambios").insert(logsInsert);
-                }
-
-                const changes = logsInsert.map(l => `${l.campo}: ${l.valor_anterior} → ${l.valor_nuevo}`);
-                changeDetails = changes.length > 0 ? `. Cambios: ${changes.join(', ')}` : ". Sin cambios en campos principales.";
-            }
-
-            // Folio DTE: se guarda fusionando con el metadata existente (sin pisar otras claves).
-            const baseMeta = (oldReserva?.metadata && typeof oldReserva.metadata === "object") ? oldReserva.metadata : {};
-            const nuevaMeta: Record<string, any> = { ...baseMeta };
-            if (folioTrim) {
-                nuevaMeta.folio_dte = folioTrim;
-                if (!nuevaMeta.fecha_dte) nuevaMeta.fecha_dte = new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" });
-            } else {
-                delete nuevaMeta.folio_dte;
-            }
-
-            result = await supabaseAdmin
-                .from("reservas")
-                .update({ ...reservaData, metadata: nuevaMeta })
-                .eq("id", id)
-                .select()
-                .single();
-        } else {
-            result = await supabaseAdmin
-                .from("reservas")
-                .insert({
-                    ...reservaData,
-                    ...(folioTrim ? { metadata: { folio_dte: folioTrim, fecha_dte: new Date().toLocaleDateString("en-CA", { timeZone: "America/Santiago" }) } } : {}),
-                    created_at: new Date().toISOString()
-                })
-                .select()
-                .single();
+        const operation = body.operacion_id;
+        if (typeof operation !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(operation)) {
+            return NextResponse.json({ error: "Recarga el panel para guardar con protección de reintentos." }, { status: 400 });
         }
-
-        if (result.error) {
-            return NextResponse.json({ error: result.error.message }, { status: 500 });
+        const noches = Math.round((Date.parse(fecha_fin) - Date.parse(fecha_inicio)) / 86400000);
+        if (!Number.isInteger(noches) || noches <= 0) {
+            return NextResponse.json({ error: "La salida debe ser posterior a la entrada." }, { status: 400 });
         }
-
-        // Loggear la acción con detalle
-        await supabaseAdmin.from('admin_access_logs').insert({
-            email: adminEmail,
-            action: isUpdate ? 'reservation_updated' : 'reservation_created',
-            details: `El usuario ${adminData.nombre} (${adminData.rol}) ${isUpdate ? 'editó' : 'creó'} una reserva para ${nombre} ${apellido}. ID: ${id || result.data.id}${changeDetails}`
+        let registros = null;
+        if (servicios_seleccionados !== undefined) {
+            if (!Array.isArray(servicios_seleccionados)) return NextResponse.json({ error: "Selección de servicios inválida" }, { status: 400 });
+            const { data: catalogo, error: catalogoError } = await supabaseAdmin.from("servicios")
+                .select("id,nombre,precio,multiplicador_noches,multiplicador_personas")
+                .in("id", servicios_seleccionados).order("id");
+            if (catalogoError) return NextResponse.json({ error: "No se pudo comprobar el catálogo. No se guardó la reserva." }, { status: 503 });
+            try {
+                registros = buildAdminExtras(catalogo || [], servicios_seleccionados, cortesiaSet, nochesPorServicio, preciosPorServicio, noches, Number(adultos) || 2);
+            } catch {
+                return NextResponse.json({ error: "Revisa los servicios, cantidades y precios seleccionados." }, { status: 400 });
+            }
+        }
+        const { data: guardado, error: saveError } = await supabaseAdmin.rpc("guardar_reserva_admin_atomica", {
+            p_id: id || null, p_operacion: operation, p_data: { ...reservaData, folio_dte: folioTrim },
+            p_extras: registros, p_expected: body.expected || null, p_admin: adminEmail,
         });
-
-        // Calcular noches y personas (necesario para multiplicadores de servicios)
-        const noches = Math.round(
-            (new Date(fecha_fin).getTime() - new Date(fecha_inicio).getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const numAdultos = Number(adultos) || 2;
-
-        // Insertar/actualizar servicios seleccionados en reserva_servicios
-        const reservaId = id || result.data.id;
-        let sumExtras = 0;
-        if (Array.isArray(servicios_seleccionados) && servicios_seleccionados.length > 0) {
-            if (isUpdate) {
-                await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
-            }
-
-            const { data: serviciosData } = await supabaseAdmin
-                .from("servicios")
-                .select("id, nombre, precio, multiplicador_noches, multiplicador_personas")
-                .in("id", servicios_seleccionados);
-
-            if (serviciosData && serviciosData.length > 0) {
-                const registros = serviciosData.map((servicio) => {
-                    const esCortesia = cortesiaSet.has(servicio.id);
-                    const esCena = servicio.nombre.toLowerCase().includes("cena") || servicio.nombre.toLowerCase().includes("romántico") || servicio.nombre.toLowerCase().includes("almuerzo");
-                    // Para cena: usar noches elegidas por el admin; para otros: todas las noches
-                    const nochesEste = (esCena && nochesPorServicio[servicio.id])
-                        ? nochesPorServicio[servicio.id]
-                        : noches;
-                    // Calcular cantidad real según multiplicadores del servicio
-                    let cantidad = 1;
-                    if (servicio.multiplicador_noches) cantidad *= nochesEste;
-                    if (servicio.multiplicador_personas) cantidad *= numAdultos;
-                    // Usar precio override si fue ajustado en el form, si no el precio base del servicio
-                    const precioUnitario = esCortesia ? 0 : (preciosPorServicio[servicio.id] ?? servicio.precio ?? 0);
-                    const subtotal = esCortesia ? 0 : precioUnitario * cantidad;
-                    if (!esCortesia) sumExtras += subtotal;
-                    return {
-                        reserva_id: reservaId,
-                        servicio_id: servicio.id,
-                        cantidad,
-                        precio_unitario: precioUnitario,
-                        total: subtotal,
-                        es_cortesia: esCortesia,
-                    };
-                });
-                await supabaseAdmin.from("reserva_servicios").insert(registros);
-            }
-        } else if (isUpdate) {
-            if (Array.isArray(servicios_seleccionados)) {
-                await supabaseAdmin.from("reserva_servicios").delete().eq("reserva_id", reservaId);
-            }
+        if (saveError) {
+            const messages: Record<string,string> = {
+                SAVE_STALE: "La reserva cambió mientras la editabas. Cierra y vuelve a abrir para revisar los datos actuales; no se sobrescribió nada.",
+                SAVE_KEY_CONFLICT: "Esta solicitud ya se guardó con otros datos. Cierra y vuelve a abrir la reserva antes de editarla.",
+                SAVE_NOT_FOUND: "La reserva ya no está disponible para editar.",
+                SAVE_INVALID: "Revisa las fechas, personas y montos. El pago no puede superar el total.",
+                SAVE_EXTRAS_TOTAL: "El valor de los extras supera el total de la reserva.",
+                SAVE_EXTRAS_INVALID: "Revisa las cantidades y precios de los extras.",
+            };
+            return NextResponse.json({ error: messages[saveError.message] || (saveError.code === "23P01" ? "El domo ya está ocupado en esas fechas." : "No se pudo guardar la reserva completa. Ningún cambio de esta solicitud fue aplicado.") }, { status: 409 });
         }
-
-        // Guardar precio_noche histórico (precio al momento de la venta, no el actual del catálogo)
-        const precioNocheCalc = noches > 0 ? Math.round((Number(total || 0) - sumExtras) / noches) : 0;
-        if (precioNocheCalc > 0) {
-            await supabaseAdmin.from("reservas").update({ precio_noche: precioNocheCalc }).eq("id", reservaId);
-        }
-
-        // Registrar cobros en reserva_cobros (inmutables — solo al crear, no al editar)
-        if (!isUpdate) {
-            const cobros: any[] = [];
-            if (precioNocheCalc > 0 && noches > 0) {
-                cobros.push({
-                    reserva_id: reservaId,
-                    tipo: 'hospedaje',
-                    concepto: 'Hospedaje',
-                    cantidad: noches,
-                    precio_unitario: precioNocheCalc,
-                    total: precioNocheCalc * noches,
-                    es_cortesia: false,
-                });
-            }
-            // Leer servicios que se acaban de insertar para agregarlos con sus totales reales
-            const { data: cobrosExtras } = await supabaseAdmin
-                .from("reserva_servicios")
-                .select("cantidad, precio_unitario, total, es_cortesia, servicios(nombre)")
-                .eq("reserva_id", reservaId);
-            for (const e of (cobrosExtras || [])) {
-                cobros.push({
-                    reserva_id: reservaId,
-                    tipo: 'extra',
-                    concepto: (e as any).servicios?.nombre || 'Extra',
-                    cantidad: e.cantidad || 1,
-                    precio_unitario: e.precio_unitario || 0,
-                    total: e.total || 0,
-                    es_cortesia: e.es_cortesia || false,
-                });
-            }
-            if (cobros.length > 0) {
-                await supabaseAdmin.from("reserva_cobros").insert(cobros);
-            }
-        }
+        const result = { data: guardado.reserva };
+        const reservaId = result.data.id;
+        if (guardado.repetido) return NextResponse.json({ ok: true, data: result.data, repetido: true, domo_id: result.data.domo_id });
 
         const { data: domoData } = await supabaseAdmin
             .from("domos")
@@ -304,16 +169,18 @@ export async function POST(request: Request) {
         }
 
         // CRM: toda reserva guardada queda vinculada a un cliente (con o sin email).
-        await vincularClienteAReserva(id || result.data.id, {
+        let crmPendiente = false;
+        const clienteId = await vincularClienteAReserva(id || result.data.id, {
             nombre,
             apellido,
             email,
             telefono,
             rut,
             fuente: fuente || "manual_admin",
-        });
+        }).catch(() => { crmPendiente = true; console.error('Reserva guardada; vínculo CRM pendiente'); });
+        if (!clienteId && (email || nombre)) crmPendiente = true;
 
-        return NextResponse.json({ ok: true, data: result.data, domo_id: domoAsignado, domo_automatico: domoFueAutomatico, domo_nombre: domoData?.nombre || null });
+        return NextResponse.json({ ok: true, data: result.data, crm_pendiente: crmPendiente, domo_id: domoAsignado, domo_automatico: domoFueAutomatico, domo_nombre: domoData?.nombre || null });
 
     } catch (e: any) {
         return NextResponse.json({ error: e.message || "Error desconocido" }, { status: 500 });

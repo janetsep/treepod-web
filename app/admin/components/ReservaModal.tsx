@@ -136,6 +136,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         sincronizar_calendario: true
     });
     const [loading, setLoading] = useState(false);
+    const [saveOperation, setSaveOperation] = useState("");
     const [uploading, setUploading] = useState(false);
     const [serviciosDisponibles, setServiciosDisponibles] = useState<Servicio[]>([]);
     const [serviciosSeleccionados, setServiciosSeleccionados] = useState<string[]>([]);
@@ -158,6 +159,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
     useEffect(() => {
         if (isOpen) {
+            setSaveOperation(crypto.randomUUID());
             setSavedReservaData(null);
 
             if (reservaToEdit) {
@@ -454,6 +456,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (loading || loadingServicios || errorServicios) return;
 
         // Aviso de capacidad de aseo: si el día de entrada ya tiene 2+ salidas (aseos),
         // requiere tu aprobación explícita antes de guardar (ingreso sugerido desde 18:00).
@@ -472,11 +475,12 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
             const res = await adminFetch("/api/admin/reservas/guardar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, adminEmail, servicios_seleccionados: serviciosSeleccionados, servicios_cortesia: serviciosCortesia, noches_por_servicio: nochesPorServicio, precios_por_servicio: preciosPorServicio }),
+                body: JSON.stringify({ ...formData, operacion_id: saveOperation, expected: reservaToEdit ? { updated_at: reservaToEdit.updated_at, monto_pagado: reservaToEdit.monto_pagado, estado: reservaToEdit.estado, total: reservaToEdit.total } : null, adminEmail, servicios_seleccionados: serviciosSeleccionados, servicios_cortesia: serviciosCortesia, noches_por_servicio: nochesPorServicio, precios_por_servicio: preciosPorServicio }),
             });
             const data = await res.json();
 
             if (res.ok) {
+                if (data.crm_pendiente) alert("La reserva y sus extras quedaron guardados. Falta completar el vínculo con la ficha del cliente.");
                 const isNew = !reservaToEdit;
                 if (isNew) {
                     setSavedReservaData({
@@ -1242,7 +1246,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                             </button>
                             <button
                                 type="submit"
-                                disabled={loading || isViewer}
+                                disabled={loading || isViewer || loadingServicios || !!errorServicios}
                                 className="flex-3 py-4 bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-widest text-sm rounded-2xl shadow-xl shadow-primary/20 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
                             >
                                 {loading ? "Sincronizando..." : isViewer ? "Vista de Solo Lectura" : reservaToEdit ? "Actualizar Registro" : "Crear Reserva"}
