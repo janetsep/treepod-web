@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 export const dynamic = "force-dynamic";
 
@@ -36,25 +37,27 @@ export async function GET(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-  const dias = Number(new URL(request.url).searchParams.get("dias")) || 14;
+  try {
+  const dias = Number(new URL(request.url).searchParams.get("dias") || 14);
+  if (!Number.isInteger(dias) || dias < 1 || dias > 31) return NextResponse.json({error:'La ventana debe ser de 1 a 31 días'},{status:400});
   const hoy = new Date().toISOString().slice(0, 10);
   const hastaDate = new Date(Date.now() + dias * 86400000).toISOString().slice(0, 10);
 
   // 1) Historial de consumo ligado a reservas (para la tasa por huésped-noche).
-  const { data: consumos } = await supabaseAdmin
+  const consumos = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_consumo_reserva")
     .select("producto_id, cantidad, reserva_id")
     .not("reserva_id", "is", null)
-    .not("producto_id", "is", null);
+    .not("producto_id", "is", null).order('id').range(from,to));
 
   const reservaIds = Array.from(new Set((consumos || []).map((c: any) => c.reserva_id)));
-  const { data: reservasHist } = reservaIds.length
-    ? await supabaseAdmin
+  const reservasHist = reservaIds.length
+    ? await fetchAllPages<any>((from,to) => supabaseAdmin
         .from("reservas")
         .select("id, adultos, fecha_inicio, fecha_fin")
         .in("id", reservaIds)
-        .is("deleted_at", null) // excluir borradas, igual que la ventana próxima (consistencia)
-    : { data: [] as any[] };
+        .is("deleted_at", null).order('id').range(from,to))
+    : [];
 
   const gnPorReserva: Record<string, number> = {};
   let gnTotalHist = 0;
@@ -83,31 +86,31 @@ export async function GET(request: Request) {
   }
 
   // 2) Ocupación de la ventana próxima → huésped-noches proyectadas.
-  const { data: reservasProx } = await supabaseAdmin
+  const reservasProx = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("reservas")
     .select("adultos, fecha_inicio, fecha_fin, estado")
     .is("deleted_at", null)
     .in("estado", ESTADOS_FIRMES)
     .lt("fecha_inicio", hastaDate)
-    .gte("fecha_fin", hoy);
+    .gte("fecha_fin", hoy).order('id').range(from,to));
 
   let gnProximas = 0;
   for (const r of reservasProx || []) gnProximas += huespedNochesEnVentana(r, hoy, hastaDate);
 
   // 3) Catálogo + precios de mercado recientes.
-  const { data: productos } = await supabaseAdmin
+  const productos = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_productos")
     .select("id, nombre, categoria, unidad_consumo, stock_actual, precio_compra, ean, termino_busqueda, activo")
-    .eq("activo", true);
+    .eq("activo", true).order('id').range(from,to));
 
   const prodIds = (productos || []).map((p: any) => p.id);
-  const { data: precios } = prodIds.length
-    ? await supabaseAdmin
+  const precios = prodIds.length
+    ? await fetchAllPages<any>((from,to) => supabaseAdmin
         .from("sicra_jumbo_precios")
         .select("producto_id, supermercado, precio, en_oferta, url, origen, titulo, observado_at")
         .in("producto_id", prodIds)
-        .order("observado_at", { ascending: false })
-    : { data: [] as any[] };
+        .order("observado_at", { ascending: false }).order('id').range(from,to))
+    : [];
 
   // Última observación por (producto, supermercado).
   const preciosPorProducto: Record<string, any[]> = {};
@@ -156,6 +159,7 @@ export async function GET(request: Request) {
     .sort((a: any, b: any) => b.falta_comprar / (b.necesidad_estimada || 1) - a.falta_comprar / (a.necesidad_estimada || 1));
 
   return NextResponse.json({
+    lectura: {consumos:consumos.length,precios:precios.length,comprobada_at:new Date().toISOString()},
     ventana_dias: dias,
     ocupacion: {
       huesped_noches_proximos: Math.round(gnProximas * 10) / 10,
@@ -171,4 +175,7 @@ export async function GET(request: Request) {
     total_a_comprar: sugerencias.length,
     sugerencias,
   });
+  } catch {
+    return NextResponse.json({error:'No se pudo leer toda la información. No se muestran recomendaciones incompletas.'},{status:503});
+  }
 }

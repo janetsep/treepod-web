@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase-admin";
-import { isAdminRole } from "@/lib/admin-permissions";
+import { canUseAdminRequest } from "@/lib/admin-permissions";
 
 export type VerifiedAdmin = { email: string; rol: string; nombre: string };
 
@@ -28,7 +28,7 @@ export async function getVerifiedAdmin(request: Request): Promise<VerifiedAdmin 
         .eq("email", email)
         .single();
 
-    if (adminData && isAdminRole(adminData.rol)) {
+    if (adminData && canUseAdminRequest(adminData.rol, request.method, new URL(request.url).pathname)) {
         return { email, rol: adminData.rol, nombre: adminData.nombre || email };
     }
 

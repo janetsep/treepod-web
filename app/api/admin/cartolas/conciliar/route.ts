@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 // Sugiere, para cada ABONO sin clasificar, qué reserva lo originó — cruzando el
 // NOMBRE del cliente que aparece en la glosa con las reservas, y desempatando por
@@ -29,19 +30,20 @@ export async function GET(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
+  try {
   const { searchParams } = new URL(request.url);
 
   // ?listar=1 → lista de reservas (últimos 18 meses) para conciliar a mano un
   // ingreso cuando el match automático no lo encontró. Solo lectura.
   if (searchParams.get("listar") === "1") {
     const desde = new Date(Date.now() - 548 * 86400000).toISOString().split("T")[0];
-    const { data } = await supabaseAdmin
+    const data = await fetchAllPages<any>((from,to) => supabaseAdmin
       .from("reservas")
       .select("id, nombre, apellido, fecha_inicio, total")
       .is("deleted_at", null)
       .in("estado", ESTADOS_VALIDOS)
       .gte("fecha_inicio", desde)
-      .order("fecha_inicio", { ascending: false });
+      .order("fecha_inicio", { ascending: false }).order('id').range(from,to));
     return NextResponse.json({
       reservas: (data || []).map((r) => ({
         id: r.id,
@@ -53,17 +55,17 @@ export async function GET(request: Request) {
   }
 
   // Abonos aún sin clasificar
-  const { data: movs } = await supabaseAdmin
+  const movs = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_cartola_movimientos")
     .select("id, fecha, descripcion, monto")
     .eq("categoria", "por_revisar")
-    .eq("tipo", "abono");
+    .eq("tipo", "abono").order('id').range(from,to));
 
-  const { data: reservas } = await supabaseAdmin
+  const reservas = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("reservas")
     .select("id, nombre, apellido, fecha_inicio, total, created_at")
     .is("deleted_at", null)
-    .in("estado", ESTADOS_VALIDOS);
+    .in("estado", ESTADOS_VALIDOS).order('id').range(from,to));
 
   const res = reservas || [];
   const sugerencias = (movs || []).map((m) => {
@@ -103,4 +105,7 @@ export async function GET(request: Request) {
   }).filter((s) => s.sugerencia);
 
   return NextResponse.json({ sugerencias });
+  } catch {
+    return NextResponse.json({error:'No se pudo leer toda la información para sugerir vínculos. No se modificó ningún movimiento.'},{status:503});
+  }
 }

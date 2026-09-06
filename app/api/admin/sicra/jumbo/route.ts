@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 // Monitoreo de ofertas de Jumbo para los productos que MÁS usamos (derivado del
 // consumo real). Guarda un historial de precios observados (manual o por captura
@@ -15,25 +16,28 @@ export async function GET(request: Request) {
   const admin = await getVerifiedAdmin(request);
   if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
+  try {
   const { searchParams } = new URL(request.url);
   const productoId = searchParams.get("producto_id");
 
   if (productoId) {
-    const { data: historial } = await supabaseAdmin
+    const { data: historial, error } = await supabaseAdmin
       .from("sicra_jumbo_precios")
       .select("*")
       .eq("producto_id", productoId)
       .order("observado_at", { ascending: false })
       .limit(60);
+    if (error) throw error;
     return NextResponse.json({ historial: historial || [] });
   }
 
-  const limite = Number(searchParams.get("limite")) || 25;
+  const limite = Number(searchParams.get("limite") || 25);
+  if (!Number.isInteger(limite) || limite<1 || limite>100) return NextResponse.json({error:'Límite inválido'},{status:400});
 
   // 1) Frecuencia de uso por producto (cuántas veces se consumió).
-  const { data: consumos } = await supabaseAdmin
+  const consumos = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_consumo_reserva")
-    .select("producto_id, cantidad");
+    .select("producto_id, cantidad").order('id').range(from,to));
   const uso: Record<string, { veces: number; cantidad: number }> = {};
   for (const c of consumos || []) {
     if (!c.producto_id) continue;
@@ -50,17 +54,17 @@ export async function GET(request: Request) {
   if (topIds.length === 0) return NextResponse.json({ productos: [] });
 
   // 2) Datos de catálogo de esos productos.
-  const { data: prods } = await supabaseAdmin
+  const prods = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_productos")
     .select("id, nombre, categoria, unidad, precio_compra, termino_busqueda")
-    .in("id", topIds);
+    .in("id", topIds).order('id').range(from,to));
 
   // 3) Última observación de precio por producto y por supermercado.
-  const { data: precios } = await supabaseAdmin
+  const precios = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_jumbo_precios")
     .select("producto_id, supermercado, precio, precio_normal, en_oferta, url, origen, titulo, observado_at")
     .in("producto_id", topIds)
-    .order("observado_at", { ascending: false });
+    .order("observado_at", { ascending: false }).order('id').range(from,to));
   // ultimaPorSuper[producto_id][supermercado] = fila más reciente
   const ultimaPorSuper: Record<string, Record<string, any>> = {};
   const conteo: Record<string, number> = {};
@@ -100,6 +104,9 @@ export async function GET(request: Request) {
   });
 
   return NextResponse.json({ productos });
+  } catch {
+    return NextResponse.json({error:'No se pudo completar la lectura de productos y precios.'},{status:503});
+  }
 }
 
 // POST → registrar un precio/oferta observado (manual o por captura en navegador).

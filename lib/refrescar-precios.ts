@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { buscarKnasta } from "@/lib/knasta";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -20,9 +21,9 @@ export interface RefrescoPreciosResultado {
  * precios" del admin (endpoint precios-cron).
  */
 export async function refrescarPreciosMercado(limite = 25): Promise<RefrescoPreciosResultado> {
-  const { data: consumos } = await supabaseAdmin
+  const consumos = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_consumo_reserva")
-    .select("producto_id");
+    .select("producto_id").order('id').range(from,to));
 
   const veces: Record<string, number> = {};
   for (const c of consumos || []) if (c.producto_id) veces[c.producto_id] = (veces[c.producto_id] || 0) + 1;
@@ -34,10 +35,10 @@ export async function refrescarPreciosMercado(limite = 25): Promise<RefrescoPrec
 
   if (!topIds.length) return { refrescados: 0, guardados: 0, errores: [] };
 
-  const { data: prods } = await supabaseAdmin
+  const prods = await fetchAllPages<any>((from,to) => supabaseAdmin
     .from("sicra_productos")
     .select("id, nombre, termino_busqueda")
-    .in("id", topIds);
+    .in("id", topIds).order('id').range(from,to));
 
   const objetivos = topIds
     .map((id) => {

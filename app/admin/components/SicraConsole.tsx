@@ -187,15 +187,20 @@ function QueComprar() {
   const [loading, setLoading] = useState(true);
   const [refrescando, setRefrescando] = useState(false);
   const [msg, setMsg] = useState("");
+  const [errorCarga,setErrorCarga] = useState('');
 
   const cargar = useCallback(async () => {
     setLoading(true);
+    setErrorCarga('');
+    setData(null);
     try {
       const res = await adminFetch(`/api/admin/sicra/sugerencias-compra?dias=${dias}`);
       const d = await res.json();
-      setData(res.ok ? d : null);
-    } catch {
+      if (!res.ok) throw new Error(d.error || 'No se pudo completar la lectura de datos.');
+      setData(d);
+    } catch(e) {
       setData(null);
+      setErrorCarga(e instanceof Error ? e.message : 'No se pudo consultar la información.');
     } finally {
       setLoading(false);
     }
@@ -209,7 +214,7 @@ function QueComprar() {
     try {
       const res = await adminFetch(`/api/admin/sicra/precios-cron?limite=25`);
       const d = await res.json();
-      setMsg(res.ok ? `Precios actualizados: ${d.guardados} observaciones guardadas.` : "No se pudo actualizar.");
+      setMsg(res.ok && d.ok ? `Precios actualizados: ${d.guardados} observaciones guardadas.` : d.parcial ? `Actualización parcial: ${d.guardados || 0} observaciones guardadas; ${d.errores?.length || 0} errores. No todos los precios están actualizados.` : d.error || 'No se pudo actualizar.');
       await cargar();
     } catch {
       setMsg("Error al actualizar precios.");
@@ -257,6 +262,8 @@ function QueComprar() {
         </div>
       )}
 
+      {data?.lectura ? <p className="text-xs text-gray-600">Lectura completa: {data.lectura.consumos} consumos y {data.lectura.precios} observaciones de precios. Actualizada: {new Date(data.lectura.comprobada_at).toLocaleString('es-CL',{timeZone:'America/Santiago'})}.</p> : null}
+
       {(data?.avisos || []).length > 0 && (
         <ul className="text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 space-y-0.5">
           {data.avisos.map((a: string, i: number) => (
@@ -267,6 +274,8 @@ function QueComprar() {
 
       {loading ? (
         <p className="text-zinc-700 text-sm">Calculando sugerencias...</p>
+      ) : errorCarga ? (
+        <p role="alert" className="text-sm text-red-800 bg-red-50 p-3 rounded">{errorCarga} No interpretes este resultado como “no hace falta comprar”.</p>
       ) : sugs.length === 0 ? (
         <p className="text-sm text-gray-500">Nada por comprar para esta ventana (o falta historial de consumo).</p>
       ) : (
@@ -572,6 +581,7 @@ function ComparacionPanel({ c }: { c: Comparacion }) {
 
 function OfertasJumbo() {
   const [productos, setProductos] = useState<JumboProducto[]>([]);
+  const [errorCarga, setErrorCarga] = useState('');
   const [loading, setLoading] = useState(true);
   const [abierto, setAbierto] = useState(true);
   const [draft, setDraft] = useState<Record<string, { precio: string; oferta: boolean }>>({});
@@ -595,9 +605,15 @@ function OfertasJumbo() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const r = await adminFetch("/api/admin/sicra/jumbo");
-    if (r.ok) setProductos((await r.json()).productos || []);
-    setLoading(false);
+    if (!r.ok) throw new Error('Lectura no disponible');
+    setProductos((await r.json()).productos || []);
+    setErrorCarga('');
+    } catch {
+      setProductos([]);
+      setErrorCarga('No se pudieron consultar todos los precios y consumos. No hay una comparación verificada disponible.');
+    } finally { setLoading(false); }
   }, []);
   useEffect(() => { load(); }, [load]);
 
@@ -658,7 +674,7 @@ function OfertasJumbo() {
         <span className="text-sm font-semibold text-emerald-900 flex items-center gap-2">
           <Tag size={14} /> Ofertas supermercados — lo que más usamos
         </span>
-        <span className="text-xs text-emerald-700">{abierto ? "ocultar" : `${productos.length} productos`}</span>
+        <span className="text-xs text-emerald-700">{errorCarga ? 'Consulta no disponible' : abierto ? "ocultar" : `${productos.length} productos`}</span>
       </button>
 
       {abierto && (
@@ -681,6 +697,8 @@ function OfertasJumbo() {
           </div>
           {loading ? (
             <p className="text-gray-600 text-sm px-1 py-3">Cargando...</p>
+          ) : errorCarga ? (
+            <p role="alert" className="text-red-700 text-sm px-1 py-3">{errorCarga}</p>
           ) : productos.length === 0 ? (
             <p className="text-gray-600 text-sm px-1 py-3">Aún no hay consumo registrado para detectar los productos más usados.</p>
           ) : (

@@ -21,7 +21,12 @@ export async function GET(request: NextRequest) {
     if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const limite = Number(request.nextUrl.searchParams.get("limite")) || 25;
-  const r = await refrescarPreciosMercado(limite);
-  return NextResponse.json({ ok: true, timestamp: new Date().toISOString(), ...r });
+  const limite = Number(request.nextUrl.searchParams.get("limite") || 25);
+  if (!Number.isInteger(limite) || limite<1 || limite>25) return NextResponse.json({error:'Límite inválido (1 a 25)'},{status:400});
+  try {
+    const r = await refrescarPreciosMercado(limite);
+    return NextResponse.json({ ok: r.errores.length===0, parcial:r.errores.length>0, timestamp: new Date().toISOString(), ...r },{status:r.errores.length ? 502:200});
+  } catch {
+    return NextResponse.json({ok:false,error:'No se pudo completar la lectura de productos y consumos; no se confirma la actualización.'},{status:503});
+  }
 }

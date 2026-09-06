@@ -2,6 +2,7 @@
 
 import { Fragment, useState, useEffect } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
+import { runSaveBatch, requireSaved } from '@/lib/save-batch';
 import * as XLSX from "xlsx";
 import { Upload, Trash2, Building2, FileSpreadsheet, X } from "lucide-react";
 
@@ -164,9 +165,9 @@ export default function CartolasPanel() {
   // Cargar la lista de reservas una vez, para el selector de conciliación manual.
   useEffect(() => {
     adminFetch("/api/admin/cartolas/conciliar?listar=1")
-      .then((r) => (r.ok ? r.json() : { reservas: [] }))
+      .then((r) => { if (!r.ok) throw new Error('Lectura no disponible'); return r.json(); })
       .then((d) => setReservasLista((d.reservas || []).map((r: any) => ({ reserva_id: r.id, cliente: r.cliente, fecha_inicio: r.fecha_inicio, total: r.total }))))
-      .catch(() => { });
+      .catch(() => setMsg('No se pudo cargar la lista de reservas para vincular abonos. Recarga antes de continuar.'));
   }, []);
 
   async function cargarConciliacionMensual() {
@@ -322,17 +323,20 @@ export default function CartolasPanel() {
 
   async function categorizar(m: Movimiento, cambios: Partial<Movimiento>) {
     const nuevo = { ...m, ...cambios };
-    setTocados((t) => new Set(t).add(m.id));
-    setMovimientos((ms) => ms.map((x) => (x.id === m.id ? nuevo : x)));
-    const res = await adminFetch("/api/admin/cartolas", {
+    try {
+    const data = await requireSaved(await adminFetch("/api/admin/cartolas", {
       method: "PATCH",
       body: JSON.stringify({ id: m.id, categoria: nuevo.categoria, proyecto_id: nuevo.proyecto_id, reserva_id: nuevo.reserva_id, fuente_pago: nuevo.fuente_pago, fecha: nuevo.fecha }),
-    });
-    try {
-      const d = await res.json();
-      if (d.propagados > 0) setMsg(`✓ Se clasificaron también ${d.propagados} movimiento${d.propagados !== 1 ? "s" : ""} con la misma glosa.`);
-    } catch { }
-    cargar();
+    }));
+    setTocados((t) => new Set(t).add(m.id));
+    setMovimientos((ms) => ms.map((x) => (x.id === m.id ? nuevo : x)));
+    if (data.propagados>0) setMsg(`Guardado; ${data.propagados} movimientos similares clasificados.`);
+    await cargar();
+    return true;
+    } catch(e) {
+      setMsg(e instanceof Error ? e.message : 'No se pudo confirmar el guardado.');
+      return false;
+    }
   }
 
   // ── Modo revisar-y-grabar: los desplegables editan LOCAL (sin guardar). Janet
@@ -348,21 +352,22 @@ export default function CartolasPanel() {
   }
 
   async function grabarCambios() {
+    if (grabando) return;
     setGrabando(true);
     let propagadosTotal = 0;
     // Usa el estado actual (ya editado localmente) de cada movimiento pendiente.
     const aGrabar = movimientos.filter((m) => pendGrabar.has(m.id));
-    for (const m of aGrabar) {
-      const res = await adminFetch("/api/admin/cartolas", {
+    const result = await runSaveBatch(aGrabar,async m => {
+      const d = await requireSaved(await adminFetch("/api/admin/cartolas", {
         method: "PATCH",
         body: JSON.stringify({ id: m.id, categoria: m.categoria, proyecto_id: m.proyecto_id, reserva_id: m.reserva_id, fuente_pago: m.fuente_pago, fecha: m.fecha }),
-      });
-      try { const d = await res.json(); propagadosTotal += d.propagados || 0; } catch { }
-    }
-    setPendGrabar(new Set());
+      }));
+      propagadosTotal += d.propagados || 0;
+    });
+    setPendGrabar(new Set(result.unconfirmed.map(m=>m.id)));
     setGrabando(false);
-    setMsg(`✓ ${aGrabar.length} cambio${aGrabar.length !== 1 ? "s" : ""} grabado${aGrabar.length !== 1 ? "s" : ""}${propagadosTotal ? ` · ${propagadosTotal} movimiento${propagadosTotal !== 1 ? "s" : ""} similares clasificados solos` : ""}.`);
-    cargar();
+    setMsg(`${result.saved.length} cambios guardados${propagadosTotal ? ` · ${propagadosTotal} similares clasificados`:''}.${result.unconfirmed.length ? ` ${result.unconfirmed.length} sin confirmar; sus ediciones se conservan. Revisa antes de reintentar.`:''}`);
+    if (!result.unconfirmed.length) await cargar();
   }
 
   function descartarCambios() {
@@ -375,6 +380,7 @@ export default function CartolasPanel() {
     setSugiriendo(true);
     try {
       const res = await adminFetch("/api/admin/cartolas/conciliar");
+      if (!res.ok) throw new Error('Lectura no disponible');
       if (res.ok) {
         const data = await res.json();
         const map: Record<string, Sugerencia> = {};
@@ -383,29 +389,33 @@ export default function CartolasPanel() {
         const n = Object.keys(map).length;
         setMsg(n ? `Encontré ${n} abono${n !== 1 ? "s" : ""} que calzan con una reserva. Revisa y confirma abajo.` : "No encontré abonos que calcen con reservas por nombre.");
       }
-    } catch { }
+    } catch { setMsg('No se pudieron consultar las sugerencias. No se ha confirmado ninguna conciliación.'); }
     setSugiriendo(false);
   }
 
   // Confirma la sugerencia: marca el movimiento como ingreso y lo enlaza a la reserva.
   async function confirmarIngreso(m: Movimiento, s: Sugerencia) {
-    setSugerencias((prev) => { const n = { ...prev }; delete n[m.id]; return n; });
-    await categorizar(m, { categoria: "ingreso", reserva_id: s.reserva_id } as Partial<Movimiento>);
+    if (await categorizar(m, { categoria: "ingreso", reserva_id: s.reserva_id } as Partial<Movimiento>)) {
+      setSugerencias((prev) => { const n = { ...prev }; delete n[m.id]; return n; });
+    }
   }
 
   // Acepta TODAS las sugerencias de una vez (un clic en vez de uno por movimiento).
   async function aceptarTodas() {
+    if (grabando) return;
+    setGrabando(true);
     const entradas = Object.entries(sugerencias);
-    setSugerencias({});
-    for (const [movId, s] of entradas) {
-      setTocados((t) => new Set(t).add(movId));
-      await adminFetch("/api/admin/cartolas", {
+    const result=await runSaveBatch(entradas,async ([movId,s])=>{
+      await requireSaved(await adminFetch("/api/admin/cartolas", {
         method: "PATCH",
         body: JSON.stringify({ id: movId, categoria: "ingreso", reserva_id: s.reserva_id }),
-      });
-    }
-    setMsg(`✓ ${entradas.length} ingreso${entradas.length !== 1 ? "s" : ""} conciliado${entradas.length !== 1 ? "s" : ""} con su reserva.`);
-    cargar();
+      }));
+      setTocados((t) => new Set(t).add(movId));
+    });
+    setSugerencias(Object.fromEntries(result.unconfirmed));
+    setGrabando(false);
+    setMsg(`${result.saved.length} vínculos guardados.${result.unconfirmed.length ? ` ${result.unconfirmed.length} sin confirmar; revisa antes de reintentar.`:''} Vincular no verifica por sí solo la conciliación bancaria.`);
+    await cargar();
   }
 
   async function eliminar(id: string) {
@@ -699,7 +709,7 @@ export default function CartolasPanel() {
               {sugiriendo ? "Buscando…" : "Conciliar ingresos con reservas"}
             </button>
             {Object.keys(sugerencias).length > 0 && (
-              <button onClick={aceptarTodas} className="px-4 py-2 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-200 transition-all">
+              <button onClick={aceptarTodas} disabled={grabando} className="px-4 py-2 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-200 transition-all disabled:opacity-50">
                 Aceptar todas ({Object.keys(sugerencias).length})
               </button>
             )}
