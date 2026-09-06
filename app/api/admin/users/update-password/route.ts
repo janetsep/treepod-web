@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   try {
     // Identidad verificada por token de sesión (no por el body)
     const admin = await getVerifiedAdmin(req);
-    if (!admin || !['admin', 'superadmin'].includes(admin.rol)) {
+    if (!admin || admin.rol !== 'superadmin') {
       return NextResponse.json({ error: 'No autorizado para realizar esta acción' }, { status: 403 });
     }
     const adminUser = { rol: admin.rol, nombre: admin.nombre };

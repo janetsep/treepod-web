@@ -38,6 +38,7 @@ export default function AdminDashboard() {
     const [soloPorEmitir, setSoloPorEmitir] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [adminRole, setAdminRole] = useState<string | null>(null);
+    const [reservasError, setReservasError] = useState<string | null>(null);
     const [adminEmail, setAdminEmail] = useState<string | null>(null);
     const [sortConfig, setSortConfig] = useState<{ key: 'fecha_inicio' | 'fecha_fin', order: 'asc' | 'desc' } | null>(null);
     const [syncingAirbnb, setSyncingAirbnb] = useState(false);
@@ -64,7 +65,7 @@ export default function AdminDashboard() {
                 .select("rol")
                 .eq("email", session.user.email)
                 .single();
-            setAdminRole(adminData?.rol || (session.user.email.endsWith("@domostreepod.cl") ? "admin" : "viewer"));
+            setAdminRole(adminData?.rol || "viewer");
         }
         await Promise.all([fetchReservas(), fetchDomos()]);
         setLoading(false);
@@ -103,12 +104,14 @@ export default function AdminDashboard() {
 
             if (!res.ok) {
                 console.error("Error fetching reservas:", data.error);
-                // Fallback empty or alert? Console is enough.
+                setReservasError("No se pudieron actualizar las reservas. Los datos mostrados pueden estar desactualizados; reintenta antes de operar.");
             } else {
                 setReservas(data || []);
+                setReservasError(null);
             }
         } catch (e) {
             console.error("Network error fetching reservas:", e);
+            setReservasError("No hay conexión con las reservas. Esto no significa que no existan reservas.");
         }
     }
 
@@ -477,6 +480,10 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen bg-white p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
+                {reservasError && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+                    <p>{reservasError}</p>
+                    <button type="button" onClick={loadData} className="mt-2 underline font-bold">Reintentar carga</button>
+                </div>}
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <img src="/images/branding/logo-treepod.jpg" alt="Domos TreePod" className="h-14 w-14 object-contain" />
@@ -488,7 +495,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-6">
                         <div className="hidden md:flex flex-col text-right">
                             <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Estado Sistema</span>
-                            <span className="text-xs font-bold text-green-500">Operativo · Online</span>
+                            <span className={`text-xs font-bold ${reservasError ? 'text-red-600' : 'text-green-500'}`}>{reservasError ? 'Revisar conexión' : 'Reservas actualizadas'}</span>
                         </div>
                         {adminRole !== 'viewer' && (
                             <button
@@ -1272,4 +1279,3 @@ export default function AdminDashboard() {
         </div>
     );
 }
-

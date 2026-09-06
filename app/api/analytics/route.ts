@@ -1,14 +1,21 @@
 
 import { NextResponse } from 'next/server';
 import { GoogleAuth } from 'google-auth-library';
-import path from 'path';
+import { getVerifiedAdmin } from '@/lib/admin-auth';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        const keyFile = path.join(process.cwd(), 'google_credentials.json');
+        if (!await getVerifiedAdmin(request)) {
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+        }
+        const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+        const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+        if (!clientEmail || !privateKey) {
+            return NextResponse.json({ error: 'Analítica no configurada. No equivale a cero visitas.' }, { status: 503 });
+        }
 
         const auth = new GoogleAuth({
-            keyFile: keyFile,
+            credentials: { client_email: clientEmail, private_key: privateKey },
             scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
         });
 
@@ -190,6 +197,6 @@ export async function GET() {
 
     } catch (error: any) {
         console.error('Analytics API Error:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: 'No se pudo consultar la analítica. Reintenta; esto no significa cero visitas.' }, { status: 503 });
     }
 }

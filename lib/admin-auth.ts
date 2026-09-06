@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { isAdminRole } from "@/lib/admin-permissions";
 
 export type VerifiedAdmin = { email: string; rol: string; nombre: string };
 
@@ -19,7 +20,7 @@ export async function getVerifiedAdmin(request: Request): Promise<VerifiedAdmin 
 
     const { data, error } = await supabaseAdmin.auth.getUser(token);
     const email = data?.user?.email?.toLowerCase();
-    if (error || !email) return null;
+    if (error || !email || !data.user?.email_confirmed_at) return null;
 
     const { data: adminData } = await supabaseAdmin
         .from("authorized_admins")
@@ -27,14 +28,10 @@ export async function getVerifiedAdmin(request: Request): Promise<VerifiedAdmin 
         .eq("email", email)
         .single();
 
-    if (adminData) {
+    if (adminData && isAdminRole(adminData.rol)) {
         return { email, rol: adminData.rol, nombre: adminData.nombre || email };
     }
 
-    // Compatibilidad: el dominio corporativo se considera admin (mismo criterio del layout)
-    if (email.endsWith("@domostreepod.cl")) {
-        return { email, rol: "admin", nombre: email };
-    }
-
+    // A corporate email is not authorization: removal from the allowlist revokes access.
     return null;
 }

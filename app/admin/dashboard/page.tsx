@@ -79,6 +79,7 @@ export default function DashboardAdmin() {
     const [loading, setLoading] = useState(true);
     const [docTab, setDocTab] = useState<'pendientes' | 'emitidas'>('pendientes');
     const [analytics, setAnalytics] = useState<Analytics>({ activeUsers: 0, sessions: 0, engagementRate: 0 });
+    const [loadErrors, setLoadErrors] = useState<string[]>([]);
     const [stats, setStats] = useState<Estadisticas | null>(null);
     const [matriz, setMatriz] = useState<{ years: number[]; matriz: { mes: number; valores: number[] }[]; totalesPorAnio: number[] } | null>(null);
     const [ocupacion, setOcupacion] = useState<{ years: number[]; matriz: { mes: number; valores: (number | null)[] }[]; promedioPorAnio: (number | null)[]; domosConsiderados: number } | null>(null);
@@ -93,12 +94,21 @@ export default function DashboardAdmin() {
 
     useEffect(() => {
         async function fetchData() {
+            async function read(url: string, label: string, assign: (data: any) => void) {
+                try {
+                    const response = await adminFetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    assign(await response.json());
+                } catch {
+                    setLoadErrors(previous => previous.includes(label) ? previous : [...previous, label]);
+                }
+            }
             await Promise.all([
-                adminFetch('/api/admin/estadisticas').then(r => r.ok ? r.json() : null).then(d => d && setStats(d)).catch(e => console.error("estadisticas", e)),
-                fetch('/api/analytics').then(r => r.ok ? r.json() : null).then(d => d && setAnalytics(d)).catch(e => console.error("analytics", e)),
-                adminFetch('/api/admin/ingresos-matriz').then(r => r.ok ? r.json() : null).then(d => d && setMatriz(d)).catch(e => console.error("matriz", e)),
-                adminFetch('/api/admin/ocupacion-matriz').then(r => r.ok ? r.json() : null).then(d => d && setOcupacion(d)).catch(e => console.error("ocupacion", e)),
-                adminFetch('/api/admin/meta-ads').then(r => r.ok ? r.json() : null).then(d => d && setMetaAds(d)).catch(e => console.error("meta-ads", e)),
+                read('/api/admin/estadisticas', 'reservas', setStats),
+                read('/api/analytics', 'analítica web', setAnalytics),
+                read('/api/admin/ingresos-matriz', 'ingresos mensuales', setMatriz),
+                read('/api/admin/ocupacion-matriz', 'ocupación', setOcupacion),
+                read('/api/admin/meta-ads', 'Meta Ads', setMetaAds),
             ]);
             setLoading(false);
         }
@@ -106,6 +116,12 @@ export default function DashboardAdmin() {
     }, []);
 
     if (loading) return <div className="h-screen w-full flex items-center justify-center bg-gray-50 text-gray-500 font-medium">Cargando Estadísticas...</div>;
+    if (loadErrors.includes('reservas')) return <div role="alert" className="p-8 space-y-4">
+        <p>No se pudieron cargar las estadísticas de reservas. No se muestran cifras para evitar confundir un error con cero ventas.</p>
+        <button onClick={() => window.location.reload()} className="underline">Reintentar</button>
+        <Link href="/admin" className="block underline">Volver al administrador</Link>
+    </div>;
+    const analyticsAvailable = !loadErrors.includes('analítica web');
 
     const fmt = (n: number) => "$" + (Math.round(n) || 0).toLocaleString("es-CL");
     const mesActualNombre = new Date().toLocaleDateString("es-CL", { month: "long" });
@@ -144,6 +160,10 @@ export default function DashboardAdmin() {
                 </header>
 
                 {/* KPI CARDS */}
+                {loadErrors.length > 0 && <div role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
+                    No se pudo cargar: {loadErrors.join(', ')}. Los datos de esas secciones no están disponibles, no son cero.
+                    <button onClick={() => window.location.reload()} className="block mt-2 underline">Reintentar</button>
+                </div>}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <CardKpi
                         title={`Ingresos · estadías de ${mesActualNombre}`}
@@ -168,9 +188,9 @@ export default function DashboardAdmin() {
                     />
                     <CardKpi
                         title="Visitas web (28d)"
-                        value={`${analytics.activeUsers || 0}`}
+                        value={analyticsAvailable ? `${analytics.activeUsers || 0}` : 'No disponible'}
                         icon={<Eye className="w-5 h-5" />}
-                        sub={`Engagement: ${Math.round((analytics.engagementRate || 0) * 100)}% · ${(analytics.sessions || 0).toLocaleString('es-CL')} sesiones`}
+                        sub={analyticsAvailable ? `Engagement: ${Math.round((analytics.engagementRate || 0) * 100)}% · ${(analytics.sessions || 0).toLocaleString('es-CL')} sesiones` : 'Error de conexión con analítica'}
                         color="border-l-indigo-500"
                     />
                 </div>
@@ -433,6 +453,7 @@ export default function DashboardAdmin() {
                 </div>
 
                 {/* FUNNEL DE CONVERSIÓN + FUENTES DE TRÁFICO */}
+                {analyticsAvailable && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
                         <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
@@ -524,6 +545,7 @@ export default function DashboardAdmin() {
                     </div>
                 </div>
 
+                )}
                 {/* MATRIZ DE INGRESOS POR MES Y AÑO */}
                 {matriz && matriz.years.length > 0 && (
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">

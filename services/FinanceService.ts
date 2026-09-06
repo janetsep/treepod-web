@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export type FinanceMovementInput = {
     tipo: 'ingreso' | 'egreso';
@@ -20,7 +20,7 @@ export class FinanceService {
      * Registra un movimiento financiero validado en la base de datos.
      */
     static async registrarMovimiento(input: FinanceMovementInput) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from("finanzas_movimientos")
             .insert({
                 ...input,

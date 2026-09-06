@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
+import { isAdminRole, isPublicAdminPath } from "@/lib/admin-permissions";
 
 export default function AdminLayout({
     children,
@@ -17,7 +18,7 @@ export default function AdminLayout({
     useEffect(() => {
         async function checkAuth() {
             // Si estamos en login, permitimos renderizar sin chequeo
-            if (pathname === "/admin/login") {
+            if (isPublicAdminPath(pathname)) {
                 setAuthorized(true);
                 setLoading(false);
                 return;
@@ -37,15 +38,14 @@ export default function AdminLayout({
                     .eq("email", userEmail)
                     .single();
 
-                // Permitir también si termina en @domostreepod.cl (dominio corporativo)
-                const isCorporate = userEmail.endsWith("@domostreepod.cl");
-                const isAuthorized = !!adminData || isCorporate;
+                // El dominio del correo no sustituye una autorización explícita.
+                const isAuthorized = !!adminData && isAdminRole(adminData.rol);
 
                 // Log del acceso
                 await supabase.from('admin_access_logs').insert({
                     email: userEmail,
                     action: isAuthorized ? 'access_granted' : 'access_denied',
-                    details: `Ruta: ${pathname} | Rol: ${adminData?.rol || (isCorporate ? 'corporate' : 'none')}`
+                    details: `Ruta: ${pathname} | Rol: ${adminData?.rol || 'none'}`
                 });
 
                 if (isAuthorized) {
@@ -93,7 +93,7 @@ export default function AdminLayout({
     };
 
     // Si no está autorizado (y no es login page), no renderizamos children (el redirect ocurre en useEffect)
-    if (!authorized && pathname !== "/admin/login") {
+    if (!authorized && !isPublicAdminPath(pathname)) {
         return null;
     }
 
@@ -105,7 +105,7 @@ export default function AdminLayout({
             <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content="TreePod" />
             <meta name="theme-color" content="#00ADEF" />
-            {authorized && pathname !== "/admin/login" && (
+            {authorized && !isPublicAdminPath(pathname) && (
                 <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
                         <div className="flex items-center gap-3">
@@ -132,4 +132,3 @@ export default function AdminLayout({
         </div>
     );
 }
-
