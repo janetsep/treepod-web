@@ -1,0 +1,20 @@
+// Explicit, network-isolated Docker database. No credentials and no real provider calls.
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {randomUUID} from 'node:crypto';
+import assert from 'node:assert/strict';
+const exec=promisify(execFile);
+const sql=async query=>(await exec('docker',['exec','treepod-security-test-20260906','psql','-U','postgres','-d','webpay_final','-At','-v','ON_ERROR_STOP=1','-c',query])).stdout.trim();
+const rid=randomUUID(),token=randomUUID();
+await sql(`INSERT INTO reservas(id,fecha_inicio,fecha_fin,total,estado) VALUES('${rid}','2098-02-01','2098-02-03',200,'pendiente_pago'); SELECT registrar_intento_webpay('${rid}','${token}','synthetic',100,200,'https://example.invalid',null);`);
+const receipt=JSON.stringify({status:'AUTHORIZED',response_code:0,amount:100,buy_order:'synthetic',session_id:'synthetic',transaction_date:'2026-09-06T01:00:00Z'});
+const call=`SELECT confirmar_webpay_atomico('${token}','${receipt}');`;
+const results=await Promise.all([sql(call),sql(call)]);
+assert.deepEqual(results.map(x=>JSON.parse(x).repetido).sort(),[false,true]);
+assert.equal(await sql(`SELECT count(*) FROM finanzas_movimientos WHERE reserva_id='${rid}';`),'1');
+const rid2=randomUUID();
+await sql(`INSERT INTO reservas(id,fecha_inicio,fecha_fin,total,estado) VALUES('${rid2}','2098-02-04','2098-02-06',200,'pendiente_pago');`);
+const attempts=await Promise.allSettled([1,2].map(i=>sql(`SELECT registrar_intento_webpay('${rid2}','${randomUUID()}','synthetic_${i}',100,200,'https://example.invalid',null);`)));
+assert.equal(attempts.filter(x=>x.status==='fulfilled').length,1);
+assert.equal(await sql(`SELECT count(*) FROM webpay_intentos WHERE reserva_id='${rid2}';`),'1');
+console.log('PASS: concurrent confirmations create one income; concurrent creation returns one bound attempt. Synthetic local data only.');

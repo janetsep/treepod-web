@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { adminFetch } from '@/lib/admin-fetch';
+import WebpayReview from './WebpayReview';
 
 type Report = {
     year: number; checked_at: string;
@@ -34,7 +35,8 @@ export default function QualityPage() {
     return <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-6 text-gray-900">
         <Link href="/admin" className="underline">Volver al administrador</Link>
         <div className="flex flex-wrap justify-between gap-4 items-center"><h1 className="text-2xl font-bold">Calidad del sistema</h1><button disabled={loading} onClick={()=>setRevision(v=>v+1)} className="rounded-lg border px-4 py-2 disabled:opacity-50">Actualizar revisión</button></div>
-        <p>Control de relaciones, uso registrado y tareas automáticas. Esta revisión no cambia reservas ni envía información.</p>
+        <p>Control de relaciones, uso registrado y tareas automáticas. Abrir esta página no cambia reservas ni envía información. La recuperación de un pago requiere pulsar su botón de consulta.</p>
+        <WebpayReview />
         {loading ? <p role="status">Comprobando datos actuales…</p> : error ? <p role="alert" className="p-4 bg-red-50 text-red-800">{error}</p> : report ? <>
             <p className="text-sm text-gray-600">Estadías de {report.year} · Consultado: {date(report.checked_at)}. Los controles pueden solaparse; no deben sumarse como reservas diferentes.</p>
             <section className="grid md:grid-cols-2 gap-4" aria-label="Revisión de datos">{report.checks.map(check=><article key={check.label} className={`border rounded-xl p-4 ${check.count ? 'border-amber-300 bg-amber-50':'border-gray-200'}`}><p className="font-bold">{check.count} · {check.label}</p><p className="text-sm mt-2">{check.next}</p></article>)}</section>

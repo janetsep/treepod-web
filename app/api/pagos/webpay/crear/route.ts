@@ -1,282 +1,44 @@
-import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { createWebpayProvider, webpayApproved } from '@/lib/webpay-provider';
 
-// Configuración — SIN credenciales de respaldo: si faltan las variables de entorno
-// el pago debe FALLAR ruidosamente, nunca procesarse contra el ambiente de prueba.
-const config = {
-  commerceCode: process.env.WEBPAY_COMMERCE_CODE || process.env.TRANSBANK_COMMERCE_CODE || "",
-  apiKey: process.env.WEBPAY_API_KEY || process.env.TRANSBANK_API_KEY || "",
-  environment: process.env.WEBPAY_ENV || process.env.TRANSBANK_ENVIRONMENT || "",
-  apiUrl: (process.env.WEBPAY_ENV === "PRODUCTION" || process.env.TRANSBANK_ENVIRONMENT === "PRODUCTION")
-    ? "https://webpay3g.transbank.cl"
-    : "https://webpay3gint.transbank.cl"
-};
-
-// Función para crear transacción
-async function createTransaction(amount: number, buyOrder: string, sessionId: string, returnUrl: string) {
-  const url = `${config.apiUrl}/rswebpaytransaction/api/webpay/v1.2/transactions`;
-
-  console.log('🌐 Enviando petición a:', url);
-  console.log('🔑 Headers:', {
-    'Tbk-Api-Key-Id': config.commerceCode,
-    'Tbk-Api-Key-Secret': '****' + config.apiKey.slice(-4)
-  });
-  console.log('📦 Body:', {
-    buy_order: buyOrder,
-    session_id: sessionId,
-    amount: amount,
-    return_url: returnUrl
-  });
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Tbk-Api-Key-Id': config.commerceCode,
-        'Tbk-Api-Key-Secret': config.apiKey
-      },
-      body: JSON.stringify({
-        buy_order: buyOrder,
-        session_id: sessionId,
-        amount: amount,
-        return_url: returnUrl
-      })
-    });
-
-    const responseText = await response.text();
-    console.log('📥 Respuesta de Transbank:', {
-      status: response.status,
-      statusText: response.statusText,
-      headers: Object.fromEntries(response.headers.entries()),
-      body: responseText
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}, body: ${responseText}`);
-    }
-
-    return JSON.parse(responseText);
-  } catch (error) {
-    console.error('❌ Error en la petición a Transbank:', error);
-    throw error;
-  }
-}
-
-function getBaseUrl(req: Request) {
-  // En producción, siempre usar NEXT_PUBLIC_BASE_URL para que Transbank retorne al dominio correcto
-  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL) {
-    return process.env.NEXT_PUBLIC_BASE_URL;
-  }
-
-  const proto = req.headers.get("x-forwarded-proto") ?? "http";
-  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
-
-  if (host) {
-    return `${proto}://${host}`;
-  }
-
-  if (process.env.NEXT_PUBLIC_BASE_URL) {
-    return process.env.NEXT_PUBLIC_BASE_URL;
-  }
-
-  return new URL(req.url).origin;
-}
+const review = () => NextResponse.json({error:'Estamos verificando tu pago. No vuelvas a pagar; contacta a TreePod si necesitas ayuda.',review:true,redirectUrl:'/pago-en-revision'},{status:409});
 
 export async function POST(req: Request) {
   try {
-    console.log('🔍 Iniciando proceso de pago...');
-
-    if (!config.commerceCode || !config.apiKey || !config.environment) {
-      console.error('❌ CRÍTICO: Credenciales de Transbank no configuradas en el entorno');
-      return NextResponse.json(
-        { error: "El sistema de pagos no está disponible en este momento. Por favor contáctanos por WhatsApp." },
-        { status: 503 }
-      );
+    const {reservaId} = await req.json();
+    if (typeof reservaId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservaId)) return NextResponse.json({error:'Reserva inválida'},{status:400});
+    const {data:reserva,error} = await supabaseAdmin.from('reservas').select('id,total,estado,monto_pagado,payment_intent_id').eq('id',reservaId).is('deleted_at',null).maybeSingle();
+    if (error) return NextResponse.json({error:'No se pudo verificar la reserva'},{status:503});
+    if (!reserva) return NextResponse.json({error:'Reserva no encontrada'},{status:404});
+    if (reserva.estado === 'pagado' && Number(reserva.monto_pagado)>0) return NextResponse.json({alreadyPaid:true,redirectUrl:`/confirmacion?reserva_id=${reserva.id}&status=SUCCESS`});
+    if (Number(reserva.monto_pagado)>0 || !['pendiente_pago','rechazado','expirada'].includes(reserva.estado)) return review();
+    const provider = createWebpayProvider();
+    if (reserva.payment_intent_id) {
+      try {
+        const status = await provider.status(reserva.payment_intent_id);
+        if (webpayApproved(status)) return NextResponse.json({alreadyPaid:true,redirectUrl:`/api/pagos/webpay/retorno?token_ws=${encodeURIComponent(reserva.payment_intent_id)}`});
+        const {data:attempt,error:attemptError} = await supabaseAdmin.from('webpay_intentos').select('url_pago,monto,total_reserva,estado').eq('token',reserva.payment_intent_id).eq('reserva_id',reserva.id).maybeSingle();
+        if (attemptError || attempt?.estado === 'revision') return review();
+        if (status.status === 'INITIALIZED' && attempt?.url_pago && Number(attempt.total_reserva)===Number(reserva.total)) return NextResponse.json({url:attempt.url_pago,token:reserva.payment_intent_id});
+        // Unknown or reversed transactions require review, not a new charge.
+        if (status.status !== 'FAILED') return review();
+      } catch { return review(); }
     }
-
-    const { reservaId } = await req.json();
-
-    // Validación básica
-    if (!reservaId) {
-      console.log('❌ Error: No se proporcionó ID de reserva');
-      return NextResponse.json(
-        { error: "Se requiere el ID de la reserva" },
-        { status: 400 }
-      );
-    }
-
-    console.log('🔍 ID de reserva recibido:', {
-      id: reservaId,
-      tipo: typeof reservaId,
-      longitud: reservaId.length
+    const monto = Math.round(Number(reserva.total)*0.5);
+    if (!Number.isSafeInteger(monto) || monto<=0) return review();
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://domostreepod.cl' : new URL(req.url).origin);
+    const returnUrl = new URL('/api/pagos/webpay/retorno',baseUrl).toString();
+    const order = `r${reserva.id.slice(0,8)}-${crypto.randomUUID().replaceAll('-','').slice(0,12)}`;
+    const response = await provider.create(monto,order,returnUrl);
+    const {error:saveError} = await supabaseAdmin.rpc('registrar_intento_webpay',{
+      p_reserva:reserva.id,p_token:response.token,p_orden:order,p_monto:monto,p_total:Number(reserva.total),p_url:response.url,p_previous:reserva.payment_intent_id,
     });
-
-    // 1. Verificar conexión y listar todas las reservas
-    console.log('🔌 Verificando conexión con Supabase...');
-    const { data: todasLasReservas, error: errorReservas } = await supabaseAdmin
-      .from('reservas')
-      .select('id, total, estado, created_at')
-      .order('created_at', { ascending: false })
-      .limit(5);
-
-    if (errorReservas) {
-      console.error('❌ Error al conectar con Supabase:', errorReservas);
-      return NextResponse.json(
-        {
-          error: "Error al conectar con la base de datos",
-          details: errorReservas.message
-        },
-        { status: 500 }
-      );
-    }
-
-    console.log('📋 Últimas 5 reservas:', JSON.stringify(todasLasReservas, null, 2));
-
-    // 2. Buscar la reserva específica
-    console.log(`🔍 Buscando reserva con ID: ${reservaId}`);
-    const { data: reserva, error: reservaError } = await supabaseAdmin
-      .from('reservas')
-      .select('*')
-      .eq('id', reservaId.trim())
-      .single();
-
-    if (reservaError) {
-      console.error('❌ Error en la consulta:', {
-        code: reservaError.code,
-        message: reservaError.message,
-        details: reservaError.details,
-        hint: reservaError.hint
-      });
-    }
-
-    if (!reserva) {
-      console.log('⚠️ No se encontró la reserva');
-      return NextResponse.json(
-        {
-          error: "Reserva no encontrada",
-          idBuscado: reservaId,
-          totalReservas: todasLasReservas?.length || 0,
-          ultimasReservas: todasLasReservas?.map((r: any) => ({
-            id: r.id,
-            estado: r.estado,
-            total: r.total
-          })) || []
-        },
-        { status: 404 }
-      );
-    }
-
-    console.log('✅ Reserva encontrada:', {
-      id: reserva.id,
-      total: reserva.total,
-      estado: reserva.estado
-    });
-
-    // Si la reserva ya está pagada, no crear otra transacción (evita cobro doble).
-    if (reserva.estado === 'pagado') {
-      console.log('⚠️ Reserva ya pagada, no se crea nueva transacción:', reserva.id);
-      return NextResponse.json({
-        alreadyPaid: true,
-        redirectUrl: `/confirmacion?reserva_id=${reserva.id}&status=SUCCESS`,
-      });
-    }
-
-    // 3. Procesar el pago
-    console.log('💳 Procesando pago...');
-    const monto = Math.round(reserva.total * 0.5);
-
-    // Orden de compra única: id de la reserva + timestamp (evita colisiones entre
-    // peticiones simultáneas; máx 26 caracteres permitidos por Transbank)
-    const ordenCompra = `r${reserva.id.slice(0, 8)}-${Date.now().toString(36)}`;
-
-    const baseUrl = getBaseUrl(req);
-    const returnUrl = `${baseUrl}/api/pagos/webpay/retorno?reserva_id=${reserva.id}`;
-    console.log('🌐 Usando baseUrl/returnUrl:', { baseUrl, returnUrl });
-
-    console.log('📝 Detalles del pago:', {
-      monto,
-      ordenCompra,
-      returnUrl
-    });
-
-    console.log('🔄 Creando transacción en Webpay...');
-    let response;
-    try {
-      // Crear transacción usando la API REST directamente
-      response = await createTransaction(
-        monto,
-        ordenCompra,
-        ordenCompra,
-        returnUrl
-      );
-
-      console.log('✅ Transacción creada:', {
-        url: response.url,
-        token: response.token,
-        buyOrder: ordenCompra
-      });
-    } catch (error: unknown) {
-      const errorObj = error as Error & { code?: string };
-      console.error('❌ Error al crear transacción en Webpay:', {
-        message: errorObj.message,
-        code: errorObj.code,
-        stack: errorObj.stack,
-        name: errorObj.name
-      });
-
-      // Devolver un mensaje de error más descriptivo
-      throw new Error(`Error al procesar el pago: ${errorObj.message || 'Error desconocido'}`);
-    }
-
-    // 4. Actualizar la reserva.
-    // - monto_pagado NO se toca aquí: solo el retorno de Webpay (pago confirmado)
-    //   registra dinero real. Antes se anotaba el 50% al crear la transacción,
-    //   generando "pagos fantasma" en carritos abandonados.
-    // - expires_at se renueva +10 min: el huésped que entra a Webpay tiene la
-    //   retención completa para terminar de pagar.
-    console.log('🔄 Actualizando estado de la reserva...');
-    const { error: updateError } = await supabaseAdmin
-      .from("reservas")
-      .update({
-        metodo_pago_inicial: "webpay",
-        payment_intent_id: response.token,
-        estado: 'pendiente_pago',
-        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-        updated_at: new Date().toISOString()
-      })
-      .eq("id", reservaId);
-
-    if (updateError) {
-      console.error('❌ Error al actualizar la reserva:', updateError);
-      throw updateError;
-    }
-
-    console.log('✅ Pago procesado correctamente');
-    return NextResponse.json({
-      url: response.url,
-      token: response.token,
-      returnUrl,
-      baseUrl,
-    });
-
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-    const errorStack = error instanceof Error ? error.stack : undefined;
-    const errorName = error instanceof Error ? error.name : 'Error';
-
-    console.error('❌ Error en la creación del pago:', {
-      message: errorMessage,
-      stack: errorStack,
-      name: errorName
-    });
-
-    return NextResponse.json(
-      {
-        error: "Error al procesar el pago",
-        details: errorMessage
-      },
-      { status: 500 }
-    );
+    // Never expose an unbound token, including simultaneous requests.
+    if (saveError) return review();
+    return NextResponse.json({...response,returnUrl,baseUrl});
+  } catch {
+    console.error('WEBPAY_CREATE_UNAVAILABLE');
+    return NextResponse.json({error:'El pago no está disponible en este momento. Contacta a TreePod si ya intentaste pagar.'},{status:503});
   }
 }

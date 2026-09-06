@@ -58,6 +58,7 @@ export default function PagarButton({
     error?: string;
     details?: string;
     alreadyPaid?: boolean;
+    review?: boolean;
     redirectUrl?: string;
   };
 
@@ -110,6 +111,10 @@ export default function PagarButton({
         data = null;
       }
 
+      if (data?.review) {
+        window.location.href = '/pago-en-revision';
+        return;
+      }
       if (!res.ok) {
         trackEvent("webpay_start_failed", {
           stage: "webpay_create",

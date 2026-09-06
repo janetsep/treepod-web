@@ -44,6 +44,7 @@ type WebpayCreateResponse = {
   url?: string;
   token?: string;
   alreadyPaid?: boolean;
+  review?: boolean;
   redirectUrl?: string;
   error?: string;
   details?: string;
@@ -584,6 +585,11 @@ function DisponibilidadContent() {
         pago = null;
       }
 
+      if (pago?.review) {
+        redirectingToWebpay = true;
+        window.location.href = '/pago-en-revision';
+        return;
+      }
       if (!pagoRes.ok) {
         throw new Error(pago?.error || pago?.details || "No pudimos abrir el pago seguro.");
       }
