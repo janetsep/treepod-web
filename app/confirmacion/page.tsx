@@ -78,11 +78,15 @@ function ConfirmacionContent() {
                             );
 
                             (window as any).dataLayer = (window as any).dataLayer || [];
-                            // La compra GA4 canónica se envía una sola vez desde el
-                            // servidor. Este evento confirma la llegada del navegador
-                            // sin volver a crear una conversión.
+                            // Este push ES la compra que ven GA4, Google Ads y Meta CAPI:
+                            // GTM la escucha por el evento 'purchase' (triggers 61 y 59).
+                            // El 26-ago-2026 se renombro a booking_payment_confirmed
+                            // creyendo que el servidor la enviaba por Measurement Protocol;
+                            // ese envio nunca funciono (GA4_MP_API_SECRET no existe en
+                            // Vercel) y la venta del 10-sep-2026 quedo sin registrar.
+                            // No cambiar este nombre sin cambiar tambien GTM.
                             (window as any).dataLayer.push({
-                                event: 'booking_payment_confirmed',
+                                event: 'purchase',
                                 transaction_id: transactionId || data.id,
                                 value: valorVenta,
                                 currency: 'CLP',
