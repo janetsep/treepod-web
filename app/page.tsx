@@ -41,14 +41,14 @@ export default function Home() {
         <div id="por-que-treepod" className="reveal"><NotForEveryone /></div>
         <GeoDivider left="20%" />
         <CinematicSection
-          image="/images/Galeria/Domo3noche.jpeg"
-          alt="Domo TreePod iluminado de noche en el bosque nativo"
+          image="/images/real/NODomoPrimavera.jpg"
+          alt="Domo geodésico TreePod rodeado de bosque nativo en primavera"
           eyebrow="La experiencia"
-          title={<>Tu domo bajo las estrellas,<br className="hidden md:block" /> en el bosque nativo</>}
-          text="Domos cálidos y bien equipados en medio del bosque. Sin frío y sin apuro."
+          title={<>El bosque empieza<br className="hidden md:block" /> al abrir tu puerta</>}
+          text="Un domo geodésico privado entre los árboles, con la montaña siempre cerca."
           ctaText="Ver disponibilidad y precio"
           ctaHref="/disponibilidad#reservar"
-          photoCaption="Domo de noche, Valle Las Trancas"
+          photoCaption="Domo TreePod en primavera, Valle Las Trancas"
         />
         <GeoDivider left="32%" />
         <div id="domos" className="reveal"><TreePodDomes /></div>

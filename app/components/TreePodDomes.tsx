@@ -21,7 +21,7 @@ export default function TreePodDomes() {
             <div className="relative aspect-[4/5] lg:aspect-auto lg:h-[78vh] overflow-hidden lg:ml-[calc(50%-50vw)]">
               <Image
                 alt="Domo geodésico bajo TreePod integrado en el bosque nativo"
-                className="object-cover object-[center_65%]"
+                className="object-cover object-[center_100%]"
                 src="/images/real/domo-bajo-bosque.jpg"
                 fill
                 placeholder="blur"
