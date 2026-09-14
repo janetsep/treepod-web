@@ -53,9 +53,10 @@ export default function Navbar() {
     const hasImmersiveHero = immersiveHeroRoutes.has(pathname || "");
     const isNavbarSolid = isScrolled || !hasImmersiveHero;
 
-    // "18 de Septiembre" es un enlace de temporada: se retira después del 21 de
-    // septiembre de 2026, cuando la landing deje de tener sentido.
+    // La landing se conserva para SEO/historial, pero deja de promocionarse desde
+    // el lunes 21 de septiembre de 2026 (hora de Chile).
     const FIESTAS_HREF = "/fiestas-patrias-las-trancas";
+    const mostrarFiestas = new Date() < new Date("2026-09-21T00:00:00-03:00");
 
     // El enlace del 18 va con los colores de la bandera para que destaque entre
     // los demás. Sobre el navbar sólido se usan los tonos exactos; sobre foto
@@ -71,18 +72,7 @@ export default function Navbar() {
 
     const navLinks = [
         { name: "Inicio", href: "/" },
-        { name: "18 de Septiembre", href: "/fiestas-patrias-las-trancas" },
-        { name: "Domos", href: "/domos" },
-        { name: "Servicios", href: "/servicios" },
-        { name: "Blog", href: "/blog" },
-        { name: "Galería", href: "/galeria" },
-        { name: "Contacto", href: "/contacto" },
-    ];
-
-    // Mobile essential links (simplified)
-    const mobileNavLinks = [
-        { name: "Inicio", href: "/" },
-        { name: "18 de Septiembre", href: "/fiestas-patrias-las-trancas" },
+        ...(mostrarFiestas ? [{ name: "18 de Septiembre", href: FIESTAS_HREF }] : []),
         { name: "Domos", href: "/domos" },
         { name: "Servicios", href: "/servicios" },
         { name: "Blog", href: "/blog" },

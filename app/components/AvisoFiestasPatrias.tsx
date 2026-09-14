@@ -13,8 +13,9 @@ import { trackEvent } from "../lib/analytics";
 // rojo de bandera no alcanzan contraste AA, así que se usan sus versiones
 // aclaradas (#6FA8FF y #FF7466) — se leen igual de patrias y sí se pueden leer.
 //
-// Se apaga sola el 22 de septiembre: no hay que acordarse de sacarla.
-const FIN = new Date("2026-09-22T00:00:00-03:00");
+// Se apaga sola al comenzar el lunes 21 de septiembre; la landing queda
+// disponible en su URL para referencia y SEO.
+const FIN = new Date("2026-09-21T00:00:00-03:00");
 
 function BanderaChile({ className }: { className?: string }) {
   return (

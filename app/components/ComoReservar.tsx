@@ -4,9 +4,6 @@ import { btnPrimaryDark } from "./deco/cta";
 
 // Artículo 05 — la única banda oscura del cuerpo: numerales gigantes en Fraunces
 // itálica cyan sobre charcoal, pasos como filas de índice. Datos reales.
-// [CRO P10 — PENDIENTE DE APROBACIÓN DE JANET]: el paso 2 promete "Webpay o
-// transferencia" pero el checkout solo ofrece Webpay. Propuesta: quitar
-// "o transferencia". Es cambio de copy: NO se toca sin su OK.
 const pasos = [
   {
     n: "1",
@@ -16,7 +13,7 @@ const pasos = [
   {
     n: "2",
     t: "Reserva con el 50%",
-    d: "Pago seguro con Webpay o transferencia. El saldo se paga en el check-in.",
+    d: "Pago seguro con Webpay. El saldo se paga en el check-in.",
   },
   {
     n: "3",

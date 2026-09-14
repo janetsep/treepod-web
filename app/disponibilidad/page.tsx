@@ -1051,7 +1051,7 @@ function DisponibilidadContent() {
                     <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
                     <span className="text-[13px] font-semibold text-[#1E1B16]">Huéspedes</span>
                     <DottedLeader />
-                    <span className="text-[13px] tabular-nums text-[#1E1B16]">{adultos}</span>
+                    <span className="text-[13px] tabular-nums text-[#1E1B16]">{adultos} {adultos === 1 ? 'persona' : 'personas'}</span>
                   </div>
                   <div className="flex items-baseline gap-3 py-1.5">
                     <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
@@ -1069,6 +1069,14 @@ function DisponibilidadContent() {
                       {salida ? salida.split('-').reverse().join('-') : "—"}
                     </span>
                   </div>
+                  {resultado && (
+                    <div className="flex items-baseline gap-3 py-1.5">
+                      <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
+                      <span className="text-[13px] font-semibold text-[#1E1B16]">Estadía</span>
+                      <DottedLeader />
+                      <span className="text-[13px] tabular-nums text-[#1E1B16]">{resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'}</span>
+                    </div>
+                  )}
                   <p className="caption-editorial mt-2">
                     Ingreso desde las 16:00 hrs. · salida hasta las 12:00 hrs.
                   </p>
