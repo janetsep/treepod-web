@@ -43,8 +43,8 @@ export default function ServicesPage() {
             <TrackView eventName="view_servicios" />
 
             <CinematicSection
-                image="/images/wellness/Tinaja3.jpeg"
-                alt="Tinaja privada de ciprés entre el bosque nativo de TreePod"
+                image="/images/real/comidatreepod.jpg"
+                alt="Comida servida al aire libre entre el bosque nativo de TreePod"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
                 text="Desayunos servidos en tu domo, parrilla a domicilio y tinaja privada en temporada."
@@ -52,7 +52,8 @@ export default function ServicesPage() {
                 ctaHref="/disponibilidad"
                 priority
                 titleAs="h1"
-                photoCaption="Tinaja privada entre robles, Valle Las Trancas"
+                position="center 65%"
+                photoCaption="Comida servida al aire libre, TreePod"
             />
 
             <GeoDivider left="22%" />
