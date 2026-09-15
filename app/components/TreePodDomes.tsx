@@ -6,27 +6,25 @@ import { btnPrimary } from "./deco/cta";
 const imageBlurDataURL =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
 
-// Artículo 01 — spread de revista: foto vertical sangrando al borde izquierdo,
-// titular que muerde la foto sobre bloque blanco y una segunda foto pequeña
-// desalineada a propósito. Los párrafos son el copy vigente, intacto.
+// La foto y el texto se mantienen en columnas independientes: el domo debe verse
+// completo y el titular nunca puede invadir ni quedar cortado por la imagen.
 export default function TreePodDomes() {
   return (
     <section className="bg-white py-20 md:py-32 overflow-hidden">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10">
         <SectionFolio num="N° 01" label="Tu domo" />
 
-        <div className="grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-10 items-start">
-          {/* Foto principal sangrada al borde izquierdo (solo desde lg) */}
-          <figure className="col-span-12 lg:col-span-7">
-            <div className="relative aspect-[4/5] lg:aspect-auto lg:h-[78vh] overflow-hidden lg:ml-[calc(50%-50vw)]">
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-10 gap-y-10 items-center">
+          <figure className="col-span-12 lg:col-span-6">
+            <div className="relative aspect-[4/5] overflow-hidden bg-[#E8E5DF]">
               <Image
                 alt="Domo geodésico bajo TreePod integrado en el bosque nativo"
-                className="object-cover object-center"
+                className="object-cover object-[center_85%]"
                 src="/images/real/domo-bajo-bosque.jpg"
                 fill
                 placeholder="blur"
                 blurDataURL={imageBlurDataURL}
-                sizes="(max-width: 1024px) 100vw, 55vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
             <figcaption className="mt-2 flex items-center gap-2">
@@ -35,8 +33,7 @@ export default function TreePodDomes() {
             </figcaption>
           </figure>
 
-          {/* Columna de texto: el titular muerde la foto */}
-          <div className="col-span-12 lg:col-span-5 lg:col-start-8 relative lg:pt-14">
+          <div className="col-span-12 lg:col-span-6 relative lg:py-8">
             {/* Numeral fantasma */}
             <span
               aria-hidden="true"
@@ -45,14 +42,14 @@ export default function TreePodDomes() {
               01
             </span>
 
-            <h2 className="display-lg text-[#1E1B16] relative z-10 lg:-ml-28 lg:bg-white lg:px-4 lg:py-3 lg:inline-block">
+            <h2 className="display-lg text-[#1E1B16] relative z-10">
               Un domo propio{" "}
               <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">
                 en medio del bosque
               </span>
             </h2>
 
-            <div className="mt-8 space-y-6 text-[#1E1B16]/85 text-base md:text-[17px] leading-relaxed lg:px-4">
+            <div className="mt-8 space-y-6 text-[#1E1B16]/85 text-base md:text-[17px] leading-relaxed">
               <p>
                 <strong>Tu espacio propio:</strong> un domo geodésico privado entre los árboles.
                 Desde adentro ves el bosque por las panorámicas.
@@ -63,7 +60,6 @@ export default function TreePodDomes() {
               </p>
             </div>
 
-            {/* Foto secundaria desalineada a propósito */}
             <figure className="w-3/5 ml-auto mt-10">
               <div className="relative aspect-square overflow-hidden">
                 <Image
@@ -80,7 +76,7 @@ export default function TreePodDomes() {
               </figcaption>
             </figure>
 
-            <div className="mt-10 lg:px-4">
+            <div className="mt-10">
               <Link href="/disponibilidad#reservar" className={btnPrimary}>
                 Ver disponibilidad y precio
               </Link>
