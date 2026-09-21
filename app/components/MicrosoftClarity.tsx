@@ -1,11 +1,15 @@
 "use client";
 
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 export default function MicrosoftClarity() {
     const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
+    const pathname = usePathname();
 
-    if (!clarityId) return null;
+    // El panel interno no describe el comportamiento de potenciales huéspedes.
+    // Evitar que Clarity lo grabe mantiene sus mapas y sesiones comerciales limpios.
+    if (!clarityId || pathname.startsWith("/admin")) return null;
 
     return (
         <Script
