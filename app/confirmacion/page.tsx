@@ -76,6 +76,13 @@ function ConfirmacionContent() {
                             const valorVenta = parseFloat(
                                 searchParams.get('valor_venta') || String(data.total ?? amount)
                             );
+                            // Monto realmente cobrado por Webpay. Se toma desde la
+                            // reserva ya confirmada en servidor, no desde datos que
+                            // el formulario de huésped pudiera reemplazar después.
+                            const montoTransaccion = Number(data.monto_pagado);
+                            const paymentAmount = Number.isFinite(montoTransaccion) && montoTransaccion > 0
+                                ? montoTransaccion
+                                : parseFloat(amount);
 
                             (window as any).dataLayer = (window as any).dataLayer || [];
                             // Este push ES la compra que ven GA4, Google Ads y Meta CAPI:
@@ -89,6 +96,7 @@ function ConfirmacionContent() {
                                 event: 'purchase',
                                 transaction_id: transactionId || data.id,
                                 value: valorVenta,
+                                payment_amount: paymentAmount,
                                 currency: 'CLP',
                                 check_in: data.fecha_inicio,
                                 check_out: data.fecha_fin,
@@ -226,34 +234,6 @@ function ConfirmacionContent() {
                     <span className="font-semibold text-[#1E1B16]">{reserva.email}</span>.
                 </p>
 
-                {/* Los datos operativos se solicitan solo después del pago. Si la
-                    persona cierra esta pantalla, la reserva sigue confirmada. */}
-                <section className="mt-10 bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
-                    {datosLlegadaCompletos ? (
-                        <div className="flex items-start gap-3">
-                            <TriBullet className="w-2.5 h-2 text-emerald-600 shrink-0 mt-1.5" />
-                            <div>
-                                <h2 className="font-display font-medium text-xl">Datos de llegada listos</h2>
-                                <p className="text-sm text-[#5B5348] mt-1">
-                                    Coordinaremos contigo al {reserva.telefono}.
-                                </p>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            <h2 className="font-display font-medium text-2xl">Ahora, tus datos de llegada</h2>
-                            <p className="text-sm text-[#5B5348] mt-2 mb-6 leading-relaxed">
-                                Tu pago ya está confirmado. Solo necesitamos saber con quién coordinamos el ingreso.
-                            </p>
-                            <GuestForm
-                                reservaId={reserva.id}
-                                initialData={reserva}
-                                onSave={(data) => setReserva({ ...reserva, ...data })}
-                            />
-                        </>
-                    )}
-                </section>
-
                 {/* Datos reales de la estadía en tabla de leyenda con puntos */}
                 <div className="mt-10 border-t border-[#1E1B16]/15">
                     {[
@@ -314,6 +294,35 @@ function ConfirmacionContent() {
                         </div>
                     </div>
                 </div>
+
+                {/* Los datos operativos se solicitan después de que la persona ve
+                    el detalle y el pago confirmado. Si cierra la página, la
+                    reserva sigue confirmada. */}
+                <section className="mt-10 bg-white p-5 md:p-7 rounded-[2px] border border-[#1E1B16]/12 border-t-4 border-t-[#00ADEF]">
+                    {datosLlegadaCompletos ? (
+                        <div className="flex items-start gap-3">
+                            <TriBullet className="w-2.5 h-2 text-emerald-600 shrink-0 mt-1.5" />
+                            <div>
+                                <h2 className="font-display font-medium text-xl">Datos de llegada listos</h2>
+                                <p className="text-sm text-[#5B5348] mt-1">
+                                    Coordinaremos contigo al {reserva.telefono}.
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <h2 className="font-display font-medium text-2xl">Ahora, tus datos de llegada</h2>
+                            <p className="text-sm text-[#5B5348] mt-2 mb-6 leading-relaxed">
+                                Tu pago ya está confirmado. Solo necesitamos saber con quién coordinamos el ingreso.
+                            </p>
+                            <GuestForm
+                                reservaId={reserva.id}
+                                initialData={reserva}
+                                onSave={(data) => setReserva({ ...reserva, ...data })}
+                            />
+                        </>
+                    )}
+                </section>
 
                 {/* Próximos pasos */}
                 <div className="mt-12 border-l-2 border-[#00ADEF] pl-5 md:pl-6 py-1">
