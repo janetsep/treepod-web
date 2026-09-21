@@ -6,7 +6,6 @@ import Stepper from '../components/Stepper';
 import TriBullet from '../components/deco/TriBullet';
 import GeoArc from '../components/deco/GeoArc';
 import { btnPrimary, linkLine } from '../components/deco/cta';
-import { trackGoogleAdsPurchase } from '../lib/analytics';
 import GuestForm from '../components/GuestForm';
 
 // Las fechas llegan como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') las interpreta como
@@ -55,7 +54,9 @@ function ConfirmacionContent() {
                     } else {
                         setReserva(data);
 
-                        // Disparar evento purchase a GA4/GTM con datos completos
+                        // GA4 se confirma en el retorno de Webpay, desde el servidor.
+                        // Esta pantalla puede no cargarse si el huésped cierra la pestaña
+                        // luego de pagar, por lo que no es una fuente fiable de compra.
                         const amount = searchParams.get('amount');
                         const transactionId = searchParams.get('transaction_id');
 
@@ -70,53 +71,12 @@ function ConfirmacionContent() {
                                 transactionId
                             });
 
-                            // Valor de la VENTA para GA4/Meta/Google Ads: el total de la
-                            // reserva, no el 50% que cobra Webpay. "amount" se sigue usando
-                            // para mostrarle al cliente lo que pago; no se toca.
+                            // El valor total solo se usa aquí para la deduplicación de Meta
+                            // Pixel/CAPI. GA4 y Google Ads reciben la compra confirmada desde
+                            // el retorno de Webpay, con el mismo transaction_id.
                             const valorVenta = parseFloat(
                                 searchParams.get('valor_venta') || String(data.total ?? amount)
                             );
-                            // Monto realmente cobrado por Webpay. Se toma desde la
-                            // reserva ya confirmada en servidor, no desde datos que
-                            // el formulario de huésped pudiera reemplazar después.
-                            const montoTransaccion = Number(data.monto_pagado);
-                            const paymentAmount = Number.isFinite(montoTransaccion) && montoTransaccion > 0
-                                ? montoTransaccion
-                                : parseFloat(amount);
-
-                            (window as any).dataLayer = (window as any).dataLayer || [];
-                            // Este push ES la compra que ven GA4, Google Ads y Meta CAPI:
-                            // GTM la escucha por el evento 'purchase' (triggers 61 y 59).
-                            // El 26-ago-2026 se renombro a booking_payment_confirmed
-                            // creyendo que el servidor la enviaba por Measurement Protocol;
-                            // ese envio nunca funciono (GA4_MP_API_SECRET no existe en
-                            // Vercel) y la venta del 10-sep-2026 quedo sin registrar.
-                            // No cambiar este nombre sin cambiar tambien GTM.
-                            (window as any).dataLayer.push({
-                                event: 'purchase',
-                                transaction_id: transactionId || data.id,
-                                value: valorVenta,
-                                payment_amount: paymentAmount,
-                                currency: 'CLP',
-                                check_in: data.fecha_inicio,
-                                check_out: data.fecha_fin,
-                                guests: data.adultos,
-                                dome_id: data.domo_id,
-                                dome_name: domoName,
-                                items: [{
-                                    item_id: data.id,
-                                    item_name: `Reserva ${domoName}`,
-                                    category: 'Glamping',
-                                    price: valorVenta,
-                                    quantity: 1
-                                }]
-                            });
-
-                            trackGoogleAdsPurchase({
-                                transactionId: transactionId || data.id,
-                                value: valorVenta,
-                            });
-
                             // Meta Pixel (Facebook) - Tracking de Compra Real. El
                             // mismo eventID de CAPI permite que Meta deduplique.
                             // CRÍTICO: Esto envía la conversión a Meta Ads para optimizar campaña
@@ -135,7 +95,7 @@ function ConfirmacionContent() {
 
                             // Mark as sent to prevent duplicates
                             setPurchaseEventSent(true);
-                            console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel con datos completos');
+                            console.log('✅ Meta Pixel Purchase enviado; GA4/Google Ads se registran desde Webpay');
                         }
                     }
                     setLoading(false);
