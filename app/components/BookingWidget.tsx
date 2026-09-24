@@ -54,10 +54,10 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {tarifaDesde && (
               <span className="text-right leading-tight">
                 <span className="block text-[13px] font-semibold text-[#1E1B16] whitespace-nowrap">
-                  desde ${tarifaDesde.toLocaleString("es-CL")} / noche
+                  Desde ${tarifaDesde.toLocaleString("es-CL")} por noche
                 </span>
                 <span className="block text-[10px] text-[#5B5348] whitespace-nowrap">
-                  2 personas · 2 noches o más
+                  2 personas
                 </span>
               </span>
             )}

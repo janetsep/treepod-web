@@ -12,7 +12,7 @@ export default function StickyReservar() {
   const [visible, setVisible] = useState(false);
   // Precio comercial canónico: el mismo endpoint que usa la ficha principal.
   // Así una temporada superpuesta de mayor prioridad no deja valores distintos.
-  const [desde, setDesde] = useState<{ precio: number; nochesMin: number } | null>(null);
+  const [desde, setDesde] = useState<{ precio: number } | null>(null);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 640);
@@ -26,7 +26,7 @@ export default function StickyReservar() {
       .then((r) => r.json())
       .then((data) => {
         if (typeof data.desde === "number") {
-          setDesde({ precio: data.desde, nochesMin: 2 });
+          setDesde({ precio: data.desde });
         }
       })
       .catch(() => {});
@@ -70,8 +70,7 @@ export default function StickyReservar() {
                   </span>
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
-                  /noche · 2 personas · 4,9 (209)
-                  {desde.nochesMin > 1 ? ` · ${desde.nochesMin}+ noches` : ""}
+                  por noche · 2 personas · 4,9 (209)
                 </div>
               </>
             ) : (

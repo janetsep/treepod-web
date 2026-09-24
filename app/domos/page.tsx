@@ -336,7 +336,7 @@ export default function DomosPage() {
                             </span>
                         </div>
                         <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
-                            / noche · 2 personas · 2 noches o más
+                            por noche · 2 personas
                         </div>
                     </div>
 
