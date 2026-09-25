@@ -20,7 +20,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
     { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos en el bosque de Las Trancas", width: 2560, height: 1439 },
     { src: "/images/real/domo-bajo-bosque.jpg", alt: "Domo geodésico a ras del bosque nativo, entre robles y lupinos", width: 1400, height: 2187 },
     { src: "/images/real/invernadero.jpg", alt: "Invernadero de vidrio con terraza en el bosque de TreePod", width: 1800, height: 1350 },
-    { src: "/images/real/sala-comedor-pasarela-retocada.png", alt: "Sala-comedor de TreePod vista desde la pasarela", caption: "Sala-comedor de TreePod vista desde la pasarela · foto retocada", width: 1086, height: 1448 },
+    { src: "/images/real/sala-comedor-pasarela-retocada.png", alt: "Sala-comedor de TreePod vista desde la pasarela", width: 1086, height: 1448 },
     { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", width: 1920, height: 2560 },
     { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", width: 2560, height: 1919 },
     { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", width: 2560, height: 1439 },
@@ -61,7 +61,7 @@ export default function GaleriaPage() {
                 alt="Vista aérea de los domos TreePod en el bosque nativo de Las Trancas"
                 eyebrow="La vida en el bosque"
                 title={<>Imágenes de<br className="hidden md:block" /> tu próximo domo</>}
-                text="El bosque, los espacios y los detalles de TreePod. Algunas fotos tienen retoques de edición para ocultar elementos temporales."
+                text="El bosque, los espacios y los detalles de TreePod."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority
@@ -84,7 +84,7 @@ export default function GaleriaPage() {
                                 </span>
                             </h2>
                             <p className="lead text-[#5B5348] max-w-2xl">
-                                Domos, bosque y los detalles de tu estadía. Una foto de sala-comedor tiene retoques de edición para ocultar elementos temporales.
+                                Domos, bosque y los detalles de tu estadía.
                             </p>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ export default function GaleriaPage() {
                         </div>
                         <div className="col-span-12 lg:col-span-5 lg:col-start-8 space-y-6">
                             <p className="text-[#5B5348] text-base md:text-lg leading-relaxed">
-                                Fotos de los espacios de TreePod. La foto de la sala-comedor tiene retoques de edición para ocultar elementos temporales.
+                                Fotos de los espacios de TreePod.
                             </p>
                             <p className="text-[#5B5348] text-base md:text-lg leading-relaxed">
                                 Elige tu fecha y reserva tu domo en el Valle Las Trancas.
