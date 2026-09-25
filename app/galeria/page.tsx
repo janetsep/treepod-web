@@ -7,55 +7,48 @@ import SectionFolio from "../components/SectionFolio";
 import GeoDivider from "../components/deco/GeoDivider";
 import { btnPrimary, linkLine } from "../components/deco/cta";
 
-// Proporciones para dinamismo visual
-type Aspect = "portrait" | "landscape" | "square";
-
 interface GalleryImage {
     src: string;
     alt: string;
-    aspect: Aspect;
-    objectPosition?: string;
+    width: number;
+    height: number;
 }
 
 const GALLERY_IMAGES: GalleryImage[] = [
     // --- DESTACADAS (Domo & Landscape) ---
-    { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos en el bosque de Las Trancas", aspect: "landscape" },
-    { src: "/images/real/domo-bajo-bosque.jpg", alt: "Domo geodésico a ras del bosque nativo, entre robles y lupinos", aspect: "portrait" },
-    { src: "/images/real/invernadero.jpg", alt: "Invernadero de vidrio con terraza en el bosque de TreePod", aspect: "landscape" },
-    { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", aspect: "landscape" },
-    { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", aspect: "portrait" },
-    { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo entre los robles al anochecer, con las primeras estrellas", aspect: "portrait", objectPosition: "center 30%" },
-    { src: "/images/Galeria/domoinvierno.jpeg", alt: "Domo a ras de suelo con su terraza, nevado en invierno", aspect: "landscape" },
-    { src: "/images/Galeria/IMG_8984.JPG", alt: "Cielo estrellado sobre las copas del bosque", aspect: "landscape" },
+    { src: "/images/real/NOdomoaereo.jpeg", alt: "Vista aérea de los domos en el bosque de Las Trancas", width: 2560, height: 1439 },
+    { src: "/images/real/domo-bajo-bosque.jpg", alt: "Domo geodésico a ras del bosque nativo, entre robles y lupinos", width: 1400, height: 2187 },
+    { src: "/images/real/invernadero.jpg", alt: "Invernadero de vidrio con terraza en el bosque de TreePod", width: 1800, height: 1350 },
+    { src: "/images/real/NOdomo3Verano1.jpg", alt: "Domo TreePod en verano", width: 1920, height: 2560 },
+    { src: "/images/hero/domonieve2.jpeg", alt: "Domo TreePod con nieve en invierno", width: 2560, height: 1919 },
+    { src: "/images/real/NOdomoaereo4.jpeg", alt: "Arquitectura geodésica integrada en la naturaleza", width: 2560, height: 1439 },
+    { src: "/images/Galeria/IMG_8980.JPG", alt: "Domo entre los robles al anochecer, con las primeras estrellas", width: 2048, height: 1366 },
+    { src: "/images/Galeria/domoinvierno.jpeg", alt: "Domo a ras de suelo con su terraza, nevado en invierno", width: 2560, height: 1919 },
+    { src: "/images/Galeria/IMG_8984.JPG", alt: "Cielo estrellado sobre las copas del bosque", width: 2048, height: 1366 },
 
     // --- EXPERIENCIA & WELLNESS ---
-    { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", aspect: "landscape" },
-    { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada al aire libre (servicio de temporada)", aspect: "landscape" },
-    { src: "/images/wellness/Tinaja5.jpg", alt: "Tinaja en el bosque nativo de Las Trancas", aspect: "portrait" },
-    { src: "/images/wellness/Tinaja1.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
-    { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Domo a ras de suelo y piscina, en pleno invierno", aspect: "landscape" },
+    { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", width: 4413, height: 2945 },
+    { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada al aire libre (servicio de temporada)", width: 1944, height: 2560 },
+    { src: "/images/wellness/Tinaja5.jpg", alt: "Tinaja en el bosque nativo de Las Trancas", width: 2560, height: 1920 },
+    { src: "/images/wellness/Tinaja1.jpg", alt: "Disfrute nocturno en tinaja de ciprés", width: 2560, height: 1920 },
+    { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Domo a ras de suelo y piscina, en pleno invierno", width: 2560, height: 1919 },
 
     // --- INTERIORES REALES ---
-    { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Cama principal bajo la cúpula del domo, con el bosque alrededor", aspect: "landscape" },
-    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Kitchenette del domo: cafetera Nespresso y amenidades TreePod", aspect: "portrait" },
-    { src: "/images/interiors/interior-domo-acogedor-66-2.jpg", alt: "Copas de vino y pan en la kitchenette del domo", aspect: "landscape" },
-    { src: "/images/interiors/interior-domo-acogedor-76-2.jpg", alt: "Ventana del domo hacia el bosque, con esquís a un costado", aspect: "portrait" },
-    { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Cama del domo con mesa de comedor y terraza al fondo", aspect: "landscape" },
+    { src: "/images/interiors/interior-domo-acogedor-89-2.jpg", alt: "Cama principal bajo la cúpula del domo, con el bosque alrededor", width: 3072, height: 2050 },
+    { src: "/images/interiors/interior-domo-acogedor-84-2.jpg", alt: "Kitchenette del domo: cafetera Nespresso y amenidades TreePod", width: 2560, height: 1709 },
+    { src: "/images/interiors/interior-domo-acogedor-66-2.jpg", alt: "Copas de vino y pan en la kitchenette del domo", width: 3072, height: 2050 },
+    { src: "/images/interiors/interior-domo-acogedor-76-2.jpg", alt: "Ventana del domo hacia el bosque, con esquís a un costado", width: 3072, height: 2050 },
+    { src: "/images/interiors/interior-domo-acogedor-21-4.jpg", alt: "Cama del domo con mesa de comedor y terraza al fondo", width: 2560, height: 1709 },
 
     // --- ATMOSFERA & NOCHE ---
-    { src: "/images/Galeria/Domo3noche.jpeg", alt: "Domo TreePod iluminado durante la noche", aspect: "landscape" },
-    { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", aspect: "portrait" },
-    { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo entre los árboles al caer la noche", aspect: "square" },
-    { src: "/images/Galeria/domo3noche1.jpeg", alt: "Cielo nocturno sobre los Nevados de Chillán", aspect: "landscape" },
-    { src: "/images/Galeria/lastrancas-exterior-domo-14-2.jpg", alt: "Río de montaña en el valle, Región de Ñuble", aspect: "portrait" },
-
-    // --- NATURALEZA ---
-    { src: "/images/Galeria/Las Trancas Bosque Nativo.jpeg", alt: "Bosque nativo con troncos caídos, Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/Galeria/Las Trancas Bosque Nativo 2.jpeg", alt: "Estero entre troncos caídos en el bosque nativo", aspect: "portrait" },
-    { src: "/images/real/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/real/NOdomoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", aspect: "landscape" },
-    { src: "/images/Galeria/noche-domo-iluminado-2-2.jpg", alt: "Cielo estrellado y Vía Láctea sobre el bosque", aspect: "portrait" },
+    { src: "/images/Galeria/Domo3noche.jpeg", alt: "Domo TreePod iluminado durante la noche", width: 1920, height: 2560 },
+    { src: "/images/Galeria/domo-iluminado-noche.jpg", alt: "Resplandor del domo en la oscuridad del bosque", width: 1024, height: 682 },
+    { src: "/images/Galeria/hero-night-2.jpg", alt: "Domo entre los árboles al caer la noche", width: 1024, height: 1024 },
+    { src: "/images/Galeria/domo3noche1.jpeg", alt: "Cielo nocturno sobre los Nevados de Chillán", width: 1920, height: 2560 },
+    // --- NATURALEZA EN EL PREDIO ---
+    { src: "/images/real/VegetacionOtono.jpg", alt: "Colores de otoño en Valle Las Trancas", width: 1200, height: 900 },
+    { src: "/images/real/NOdomoaereo5.jpeg", alt: "Perspectiva única de Valle Las Trancas", width: 2560, height: 1439 },
+    { src: "/images/Galeria/noche-domo-iluminado-2-2.jpg", alt: "Cielo estrellado y Vía Láctea sobre el bosque", width: 2560, height: 1709 },
 ];
 
 export default function GaleriaPage() {
@@ -101,17 +94,15 @@ export default function GaleriaPage() {
                         {GALLERY_IMAGES.map((img, index) => (
                             <figure key={index} className="break-inside-avoid">
                                 <div
-                                    className={`relative w-full overflow-hidden rounded-[2px] group
-                                    ${img.aspect === 'portrait' ? 'aspect-[3/4]' :
-                                            img.aspect === 'landscape' ? 'aspect-[4/3]' : 'aspect-square'}`}
+                                    className="w-full overflow-hidden rounded-[2px] group"
                                 >
                                     <Image
                                         alt={img.alt}
                                         src={img.src}
-                                        fill
+                                        width={img.width}
+                                        height={img.height}
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover transform group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                                        style={{ objectPosition: img.objectPosition || 'center' }}
+                                        className="h-auto w-full transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                                     />
                                 </div>
                                 <figcaption className="mt-2 flex items-center gap-2">
