@@ -52,7 +52,8 @@ export default function PrivacidadPage() {
                     <ul className="list-disc pl-6 space-y-2 mb-6">
                         <li><strong>Datos de contacto:</strong> Nombre, apellidos, correo electrónico y número de teléfono (WhatsApp).</li>
                         <li><strong>Datos de reserva:</strong> Fechas de estadía, cantidad de huéspedes y extras seleccionados.</li>
-                        <li><strong>Datos de navegación y medición (Cookies):</strong> Información anónima sobre cómo interactúas con nuestro sitio web (Google Analytics y Meta Pixel) para entender qué funciona mejor, qué te interesa y ofrecer de forma responsable contenido relevante. Promovemos una medición confiable y sin duplicados de nuestras métricas.</li>
+                        <li><strong>Datos de navegación y medición (Cookies):</strong> Información sobre cómo interactúas con nuestro sitio web (Google Analytics y Meta Pixel), incluidos identificadores de medición y el origen de una reserva cuando esté disponible. Esto nos permite entender qué funciona, mejorar el sitio y medir nuestras campañas de forma responsable.</li>
+                        <li><strong>Datos agregados de reserva:</strong> Estadísticas no identificables sobre reservas, pagos y canal de origen —por ejemplo, sitio web, WhatsApp, Airbnb, Booking.com o CloudBeds— para comprender el desempeño comercial de TreePod.</li>
                     </ul>
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">2. Uso de tu Información</h2>
@@ -61,6 +62,7 @@ export default function PrivacidadPage() {
                         <li><strong>Procesar y confirmar reservas:</strong> Validar el estado del pago mediante Transbank/Webpay o transferencia bancaria y asegurar tu cupo.</li>
                         <li><strong>Comunicación directa:</strong> Contactarte vía WhatsApp o correo electrónico para coordinar tu llegada (check-in), enviar indicaciones, o confirmar detalles de tu alojamiento.</li>
                         <li><strong>Mejora del sitio:</strong> Entender el comportamiento de uso para optimizar la velocidad, claridad y accesibilidad de nuestro entorno digital.</li>
+                        <li><strong>Medición publicitaria de reservas directas:</strong> Con autorización específica cuando corresponda, medir si una reserva directa pagada se relaciona con una campaña de Google o Meta. Este uso busca optimizar la publicidad para reservas reales y no vender ni perfilar públicamente a nuestros huéspedes.</li>
                         <li><strong>Publicidad y comunicaciones:</strong> Enviarte información o beneficios si decides suscribirte voluntariamente, siempre respetando tu decisión y ofreciendo opciones simples de cancelación en cualquier momento (cero SPAM).</li>
                     </ul>
 
@@ -69,9 +71,15 @@ export default function PrivacidadPage() {
                         TreePod NO almacena datos de tarjetas de crédito o débito. Toda transacción web se realiza de manera segura mediante proveedores externos certificados (Transbank Webpay Plus), quienes manejan esta información sensible bajo los más altos estándares bancarios.
                     </p>
 
-                    <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">4. Compartir Información</h2>
+                    <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">4. Compartir Información y Medición Publicitaria</h2>
                     <p>
-                        No vendemos, alquilamos ni cedemos tus datos a terceros bajo ninguna circunstancia. Solo compartimos datos si existiera un requerimiento legal por parte de las autoridades competentes.
+                        No vendemos ni alquilamos datos personales. Para medir la eficacia de publicidad de TreePod, y únicamente cuando exista una base válida y la autorización requerida, podemos transmitir a proveedores de medición publicitaria como Google y Meta datos de conversión limitados: el momento y valor de una reserva directa pagada, un identificador único de la operación y datos de contacto protegidos mediante cifrado de una sola vía. Estos proveedores pueden usar la información exclusivamente para medir conversiones y mejorar la atribución publicitaria de TreePod.
+                    </p>
+                    <p>
+                        La decisión de autorizar esta medición no afecta la posibilidad de reservar ni la atención que recibes. Puedes solicitar información, oposición o retiro de autorización en cualquier momento escribiendo a info@domostreepod.cl.
+                    </p>
+                    <p>
+                        Las reservas obtenidas por Airbnb, Booking.com, CloudBeds u otras plataformas externas se usan en forma agregada y no identificable para análisis interno de canales. TreePod no utiliza los datos personales recibidos desde esas plataformas para crear audiencias publicitarias ni los transmite a Google o Meta salvo que exista una autorización separada del huésped y que las condiciones de la plataforma lo permitan.
                     </p>
 
                     <h2 className="text-text-main font-display font-bold mt-10 mb-4 text-2xl">5. Tus Derechos</h2>
@@ -84,7 +92,7 @@ export default function PrivacidadPage() {
                     </div>
 
                     <p className="text-sm mt-12 text-text-sub/70">
-                        Última actualización: Marzo 2026. TreePod se reserva el derecho a actualizar esta política para cumplir con los estándares requeridos.
+                        Última actualización: Septiembre 2026. TreePod se reserva el derecho a actualizar esta política para cumplir con los estándares requeridos.
                     </p>
                 </div>
             </div>
