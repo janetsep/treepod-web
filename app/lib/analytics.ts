@@ -197,6 +197,22 @@ export function getGaClientId(): string | undefined {
   return parts.length >= 4 ? parts.slice(-2).join(".") : undefined;
 }
 
+/** Ask the Google tag for the active session; never guess its cookie format. */
+export function getGaSessionId(): Promise<number | undefined> {
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  if (typeof window === 'undefined' || !window.gtag || !measurementId) {
+    return Promise.resolve(undefined);
+  }
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(undefined), 300);
+    window.gtag!('get', measurementId, 'session_id', (value: unknown) => {
+      clearTimeout(timer);
+      const sessionId = Number(value);
+      resolve(Number.isSafeInteger(sessionId) && sessionId > 0 ? sessionId : undefined);
+    });
+  });
+}
+
 /** Envía solo la conversión de Ads; GA4 recibe `purchase` desde el servidor. */
 export function trackGoogleAdsPurchase(data: {
   transactionId: string;

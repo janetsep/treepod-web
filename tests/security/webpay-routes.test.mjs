@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
+import {confirmedPurchase} from '../../lib/purchase-policy.ts';
 
 // Execute real route handlers with in-memory substitutes only: never use network or credentials.
 function route(name, rows, rpcResult={data:null,error:null}) {
@@ -12,7 +13,7 @@ function route(name, rows, rpcResult={data:null,error:null}) {
       const result=rows.shift();
       if(!result) throw new Error(`Unexpected query: ${table}`);
       const chain={then(resolve){return Promise.resolve(result).then(resolve);}};
-      for(const method of ['select','eq','is','maybeSingle']) chain[method]=(...args)=>{calls.push([table,method,...args]);return chain;};
+      for(const method of ['select','eq','is','maybeSingle','upsert']) chain[method]=(...args)=>{calls.push([table,method,...args]);return chain;};
       return chain;
     },
     async rpc(...args){calls.push(['rpc',...args]);return rpcResult;},
@@ -25,7 +26,8 @@ function route(name, rows, rpcResult={data:null,error:null}) {
     '@/lib/supabase-admin':{supabaseAdmin:client},
     '@/lib/webpay-provider':{createWebpayProvider:()=>provider,resolveWebpayReturn:async()=>receipt,webpayApproved:r=>r.status==='AUTHORIZED'&&r.response_code===0},
     '@/services/NotificationService':{NotificationService:{sendWelcomeEmail:mockEffect,syncReservaToCalendar:mockEffect}},
-    '@/lib/server-analytics':{trackServerPurchase:mockEffect},
+    '@/lib/purchase-policy':{confirmedPurchase},
+    '@/lib/server-analytics':{trackServerPurchase:async()=>{effects.push('ga4');return {status:'http_accepted'};}},
     '@/lib/meta-capi':{trackMetaConversion:mockEffect},
     '@/lib/track-conversion':{recordConversion:mockEffect,extractClientInfo:()=>({})},
   };
@@ -64,4 +66,25 @@ test('create does not disclose other reservations and never returns an unbound t
   const failed=await unbound.handler.POST(req());
   const body=await failed.json();
   assert.equal(failed.status,409);assert.equal(body.review,true);assert.equal(body.token,undefined);
+});
+
+test('confirmed first callback audits delivery without changing the payment redirect',async()=>{
+  const r=route('retorno',[{data:{reserva_id:id}},{data:{...reservation,total:145000}},{data:[]},{error:null}],
+    {data:{status:'registered',repetido:false,monto:72500,total:145000}});
+  const response=await r.handler.GET(new Request('https://domostreepod.cl/api/pagos/webpay/retorno?token_ws=synthetic_token_123'));
+  assert.equal(new URL(response.headers.get('location')).searchParams.get('status'),'SUCCESS');
+  assert.equal(r.effects.filter(e=>e==='ga4').length,1);
+  const audit=r.calls.find(c=>c[0]==='analytics_entregas'&&c[1]==='upsert')[2];
+  assert.equal(audit.estado,'http_accepted');
+  assert.equal(audit.valor,145000);
+  assert.equal(audit.monto_abonado,72500);
+});
+test('test callback is excluded from GA4 while the authorized payment still succeeds',async()=>{
+  const r=route('retorno',[{data:{reserva_id:id}},{data:{...reservation,total:500}},{data:[]},{error:null}],
+    {data:{status:'registered',repetido:false,monto:250,total:500}});
+  const response=await r.handler.GET(new Request('https://domostreepod.cl/api/pagos/webpay/retorno?token_ws=synthetic_token_123'));
+  assert.equal(new URL(response.headers.get('location')).searchParams.get('status'),'SUCCESS');
+  assert.equal(r.effects.filter(e=>e==='ga4').length,0);
+  const audit=r.calls.find(c=>c[0]==='analytics_entregas'&&c[1]==='upsert')[2];
+  assert.equal(audit.estado,'excluded');
 });

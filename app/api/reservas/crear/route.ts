@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       gclid,
       fbclid,
       ga_client_id,
+      ga_session_id,
     } = body as {
       entrada?: string;
       salida?: string;
@@ -53,6 +54,7 @@ export async function POST(req: Request) {
       gclid?: string;
       fbclid?: string;
       ga_client_id?: string;
+      ga_session_id?: number;
     };
 
     if (!entrada || !salida || !adultos || !total) {
@@ -261,6 +263,8 @@ export async function POST(req: Request) {
       fbclid: fbclid || null,
       click_id_captured_at: gclid || fbclid ? new Date().toISOString() : null,
       ga_client_id: ga_client_id || null,
+      metadata: Number.isSafeInteger(ga_session_id) && Number(ga_session_id) > 0
+        ? {ga_session_id} : {},
     };
 
     let { data, error } = await supabaseAdmin

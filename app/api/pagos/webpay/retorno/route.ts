@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
+import { confirmedPurchase } from '@/lib/purchase-policy';
 import { trackServerPurchase } from "@/lib/server-analytics";
 import { trackMetaConversion } from "@/lib/meta-capi";
 import { recordConversion, extractClientInfo } from "@/lib/track-conversion";
@@ -44,16 +45,19 @@ async function handleReturn(req: Request) {
         // plataformas, cada venta les parece valer la mitad de lo que vale y
         // optimizan a la baja. Lo que se le cobra al cliente NO cambia: cambia
         // solo la cifra con la que los anuncios deciden a quien mostrarse.
-        const valorVenta = Number(reserva.total) || commit.amount || 0;
+        const valorVenta = Number(result.total);
+        const purchase = confirmedPurchase({...reserva, estado: 'pagado',
+          monto_pagado: result.monto, numero_transaccion: token});
 
         // 🎯 Lógica de Medición de Servidor (GA4 Measurement Protocol)
         // Se ejecuta ANTES del redirect para asegurar que el dato se envíe si el usuario cierra la pestaña
         try {
-          await trackServerPurchase({
+          const delivery = purchase ? await trackServerPurchase({
             transaction_id: token || reserva.id,
             value: valorVenta,
             currency: 'CLP',
             client_id: reserva.ga_client_id || undefined,
+            session_id: reserva.metadata?.ga_session_id,
             check_in: reserva.fecha_inicio,
             check_out: reserva.fecha_fin,
             guests: reserva.adultos,
@@ -65,7 +69,15 @@ async function handleReturn(req: Request) {
               price: valorVenta,
               quantity: 1
             }]
-          });
+          }) : {status: 'excluded' as const, reason: 'test_or_invalid_reservation'};
+          const {error: auditError} = await supabaseAdmin.from('analytics_entregas').upsert({
+            reserva_id: reserva.id, destino: 'ga4', transaction_id: token,
+            valor: valorVenta, monto_abonado: Number(result.monto),
+            estado: delivery.status, detalle: delivery.reason ?? null,
+            cliente_vinculado: Boolean(reserva.ga_client_id),
+            actualizado_en: new Date().toISOString(),
+          }, {onConflict: 'reserva_id,destino'});
+          if (auditError) console.error('GA4_DELIVERY_AUDIT_FAILED', {reservaId: reserva.id});
         } catch (analyticsError) {
           console.error("⚠️ Error disparando medición de servidor:", analyticsError);
         }
@@ -96,7 +108,7 @@ async function handleReturn(req: Request) {
         // Esto permite análisis histórico y atribución
         try {
           const clientInfo = extractClientInfo(Object.fromEntries(req.headers));
-          await recordConversion({
+          if (purchase) await recordConversion({
             transaction_id: token || reserva.id,
             reserva_id: reserva.id,
             value: valorVenta,
