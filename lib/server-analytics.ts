@@ -7,14 +7,13 @@
  * incluso si el cliente cierra el navegador después de pagar en Webpay.
  */
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-const GA_API_SECRET = process.env.GA4_MP_API_SECRET;
 
 interface PurchaseData {
     transaction_id: string;
     value: number;
     currency: string;
     client_id?: string;
+    session_id?: number;
     check_in?: string;
     check_out?: string;
     guests?: number;
@@ -28,17 +27,31 @@ interface PurchaseData {
     }>;
 }
 
-export async function trackServerPurchase(data: PurchaseData) {
+export type PurchaseDelivery = {
+    status: 'http_accepted' | 'validated' | 'missing_configuration' | 'failed' | 'excluded';
+    reason?: string;
+};
+
+export async function trackServerPurchase(data: PurchaseData): Promise<PurchaseDelivery> {
+    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+    const GA_API_SECRET = process.env.GA4_MP_API_SECRET;
+    if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
+        return {status: 'excluded', reason: 'non_production_deployment'};
+    }
+    if (!data.transaction_id || !Number.isFinite(data.value) || data.value <= 500 || data.currency !== 'CLP') {
+        return {status: 'excluded', reason: 'test_or_invalid_purchase'};
+    }
     if (!GA_MEASUREMENT_ID || !GA_API_SECRET) {
         console.warn('⚠️ Server Analytics: Faltan credenciales (GA_MEASUREMENT_ID o GA_API_SECRET)');
-        return;
+        return {status: 'missing_configuration', reason: 'measurement_id_or_api_secret_missing'};
     }
 
-    // El client_id es requerido por Google. Usamos un ID de sistema o el ID de la transacción
-    // para identificar este evento "fuera de línea".
-    // Mantener el client_id original atribuye la compra a la sesión/campaña que
-    // inició la reserva. El fallback solo aplica a reservas antiguas.
-    const clientId = data.client_id || `server.${data.transaction_id}`;
+    // Never invent a GA4 user: a synthetic id cannot be reconciled with the
+    // browser's purchase and can defeat transaction deduplication/attribution.
+    if (!data.client_id?.trim()) {
+        return {status: 'excluded', reason: 'original_client_id_missing'};
+    }
+    const clientId = data.client_id;
 
     // Seleccionar URL de validación o real según el ambiente
     const isDev = process.env.NODE_ENV === 'development';
@@ -54,6 +67,8 @@ export async function trackServerPurchase(data: PurchaseData) {
             name: 'purchase',
             params: {
                 transaction_id: data.transaction_id,
+                session_id: Number.isSafeInteger(data.session_id) && Number(data.session_id) > 0 ? data.session_id : undefined,
+                engagement_time_msec: 1,
                 value: data.value,
                 currency: data.currency,
                 items: data.items || [{
@@ -79,24 +94,26 @@ export async function trackServerPurchase(data: PurchaseData) {
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(payload),
+            headers: {'Content-Type': 'application/json'},
+            signal: AbortSignal.timeout(5000),
         });
 
-        const responseData = isDev ? await response.json() : null;
-
         if (!response.ok) {
-            console.error('❌ Server Analytics Error:', response.statusText);
-        } else {
-            console.log(`✅ Server Analytics: ${isDev ? 'Validando estructura de' : 'Compra registrada'} (${data.transaction_id}) por $${data.value}`);
-            if (isDev && responseData) {
-                // Si hay errores de validación, Google los reporta en el JSON en modo debug
-                if (responseData.validationMessages && responseData.validationMessages.length > 0) {
-                    console.warn('⚠️ Errores de validación GA4:', JSON.stringify(responseData.validationMessages, null, 2));
-                } else {
-                    console.log('🟢 Estructura Correcta (Sandbox)');
-                }
-            }
+            return {status: 'failed', reason: `http_${response.status}`};
         }
-    } catch (error) {
-        console.error('🔥 Server Analytics Critical Error:', error);
+        if (isDev) {
+            const result = await response.json();
+            if (result.validationMessages?.length) {
+                return {status: 'failed', reason: 'payload_validation_failed'};
+            }
+            return {status: 'validated'};
+        }
+        // A 2xx means transport accepted, not that GA4 processed the purchase.
+        console.log('GA4_PURCHASE_HTTP_ACCEPTED', {transactionId: data.transaction_id});
+        return {status: 'http_accepted'};
+    } catch {
+        // Never log the fetch URL: it contains the Measurement Protocol secret.
+        console.error('GA4_PURCHASE_TRANSPORT_FAILED', {transactionId: data.transaction_id});
+        return {status: 'failed', reason: 'transport_error_or_timeout'};
     }
 }

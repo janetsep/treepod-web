@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { getGaClientId, trackEvent, trackEventAndWait } from "../lib/analytics";
+import { getGaClientId, getGaSessionId, trackEvent, trackEventAndWait } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
 import { RefreshCw } from "lucide-react";
 import Stepper from '../components/Stepper';
@@ -506,6 +506,7 @@ function DisponibilidadContent() {
           email: email.trim().toLowerCase(),
           telefono: telefono.trim(),
           ga_client_id: getGaClientId(),
+          ga_session_id: await getGaSessionId(),
           ...utms, // ← NUEVO: expande utm_source, utm_medium, utm_campaign, etc.
           servicios: Array.from(serviciosSeleccionados).map(id => {
             const s = servicios.find(srv => srv.id === id);

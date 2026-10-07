@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Stepper from '../components/Stepper';
 import TriBullet from '../components/deco/TriBullet';
@@ -8,6 +8,7 @@ import GeoArc from '../components/deco/GeoArc';
 import { btnPrimary, linkLine } from '../components/deco/cta';
 import { trackGoogleAdsPurchase } from '../lib/analytics';
 import GuestForm from '../components/GuestForm';
+import { confirmedPurchase } from '@/lib/purchase-policy';
 
 // Las fechas llegan como 'YYYY-MM-DD'. new Date('YYYY-MM-DD') las interpreta como
 // medianoche UTC, que en Chile (UTC-4) cae el día ANTERIOR: mostraba check-in y
@@ -30,7 +31,7 @@ function ConfirmacionContent() {
     const [reserva, setReserva] = useState<any>(null);
     const [montoPagado, setMontoPagado] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
-    const [purchaseEventSent, setPurchaseEventSent] = useState(false);
+    const sentPurchases = useRef(new Set<string>());
 
     useEffect(() => {
         const reservaId = searchParams.get('reserva_id');
@@ -60,8 +61,10 @@ function ConfirmacionContent() {
                         const transactionId = searchParams.get('transaction_id');
 
                         // Solo disparar la conversión si el pago NO fue rechazado.
-                        const pagoOk = searchParams.get('status') !== 'FAILURE' && data.estado !== 'rechazado';
-                        if (!purchaseEventSent && data && amount && pagoOk && typeof window !== 'undefined') {
+                        const purchase = confirmedPurchase(data);
+                        const pagoOk = searchParams.get('status') !== 'FAILURE' && purchase !== null;
+                        if (purchase && !sentPurchases.current.has(purchase.transactionId) && pagoOk && typeof window !== 'undefined') {
+                            sentPurchases.current.add(purchase.transactionId);
                             const domoName = data.domos?.nombre || 'TreePod Domo';
                             console.log('🎯 Disparando evento purchase a GA4 con datos completos', {
                                 reservaId: data.id,
@@ -73,28 +76,16 @@ function ConfirmacionContent() {
                             // Valor de la VENTA para GA4/Meta/Google Ads: el total de la
                             // reserva, no el 50% que cobra Webpay. "amount" se sigue usando
                             // para mostrarle al cliente lo que pago; no se toca.
-                            const valorVenta = parseFloat(
-                                searchParams.get('valor_venta') || String(data.total ?? amount)
-                            );
-                            // Monto realmente cobrado por Webpay. Se toma desde la
-                            // reserva ya confirmada en servidor, no desde datos que
-                            // el formulario de huésped pudiera reemplazar después.
-                            const montoTransaccion = Number(data.monto_pagado);
-                            const paymentAmount = Number.isFinite(montoTransaccion) && montoTransaccion > 0
-                                ? montoTransaccion
-                                : parseFloat(amount);
+                            const valorVenta = purchase.value;
+                            const paymentAmount = purchase.paymentAmount;
+                            const confirmedTransactionId = purchase.transactionId;
 
                             (window as any).dataLayer = (window as any).dataLayer || [];
-                            // Este push ES la compra que ven GA4, Google Ads y Meta CAPI:
-                            // GTM la escucha por el evento 'purchase' (triggers 61 y 59).
-                            // El 26-ago-2026 se renombro a booking_payment_confirmed
-                            // creyendo que el servidor la enviaba por Measurement Protocol;
-                            // ese envio nunca funciono (GA4_MP_API_SECRET no existe en
-                            // Vercel) y la venta del 10-sep-2026 quedo sin registrar.
-                            // No cambiar este nombre sin cambiar tambien GTM.
+                            // Keep the existing GTM purchase trigger. Browser and server
+                            // use the same confirmed transaction id for deduplication.
                             (window as any).dataLayer.push({
                                 event: 'purchase',
-                                transaction_id: transactionId || data.id,
+                                transaction_id: confirmedTransactionId,
                                 value: valorVenta,
                                 payment_amount: paymentAmount,
                                 currency: 'CLP',
@@ -113,7 +104,7 @@ function ConfirmacionContent() {
                             });
 
                             trackGoogleAdsPurchase({
-                                transactionId: transactionId || data.id,
+                                transactionId: confirmedTransactionId,
                                 value: valorVenta,
                             });
 
@@ -127,14 +118,14 @@ function ConfirmacionContent() {
                                     content_name: `Reserva ${domoName}`,
                                     content_ids: [data.id],
                                     num_items: 1
-                                }, { eventID: transactionId || data.id });
+                                }, { eventID: confirmedTransactionId });
                                 console.log('✅ Meta Pixel Purchase event enviado:', { reservaId: data.id, amount, domoName });
                             } else {
                                 console.warn('⚠️ fbq no disponible - Meta Pixel puede no estar cargado');
                             }
 
                             // Mark as sent to prevent duplicates
-                            setPurchaseEventSent(true);
+
                             console.log('✅ Evento purchase enviado a dataLayer y Meta Pixel con datos completos');
                         }
                     }
