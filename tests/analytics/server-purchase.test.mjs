@@ -24,6 +24,7 @@ test('GA4 delivery distinguishes excluded, missing, failed, validated and transp
       return new Response(null,{status:204});
     };
     assert.equal((await trackServerPurchase({...purchase,value:500})).status,'excluded');
+    assert.equal((await trackServerPurchase({...purchase,client_id:undefined})).reason,'original_client_id_missing');
     process.env.VERCEL_ENV='preview';
     assert.equal((await trackServerPurchase(purchase)).status,'excluded');
     assert.equal(calls,0);

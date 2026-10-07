@@ -205,11 +205,16 @@ export function getGaSessionId(): Promise<number | undefined> {
   }
   return new Promise((resolve) => {
     const timer = setTimeout(() => resolve(undefined), 300);
-    window.gtag!('get', measurementId, 'session_id', (value: unknown) => {
+    try {
+      window.gtag!('get', measurementId, 'session_id', (value: unknown) => {
+        clearTimeout(timer);
+        const sessionId = Number(value);
+        resolve(Number.isSafeInteger(sessionId) && sessionId > 0 ? sessionId : undefined);
+      });
+    } catch {
       clearTimeout(timer);
-      const sessionId = Number(value);
-      resolve(Number.isSafeInteger(sessionId) && sessionId > 0 ? sessionId : undefined);
-    });
+      resolve(undefined);
+    }
   });
 }
 

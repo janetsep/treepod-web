@@ -46,11 +46,12 @@ export async function trackServerPurchase(data: PurchaseData): Promise<PurchaseD
         return {status: 'missing_configuration', reason: 'measurement_id_or_api_secret_missing'};
     }
 
-    // El client_id es requerido por Google. Usamos un ID de sistema o el ID de la transacción
-    // para identificar este evento "fuera de línea".
-    // Mantener el client_id original atribuye la compra a la sesión/campaña que
-    // inició la reserva. El fallback solo aplica a reservas antiguas.
-    const clientId = data.client_id || `server.${data.transaction_id}`;
+    // Never invent a GA4 user: a synthetic id cannot be reconciled with the
+    // browser's purchase and can defeat transaction deduplication/attribution.
+    if (!data.client_id?.trim()) {
+        return {status: 'excluded', reason: 'original_client_id_missing'};
+    }
+    const clientId = data.client_id;
 
     // Seleccionar URL de validación o real según el ambiente
     const isDev = process.env.NODE_ENV === 'development';
