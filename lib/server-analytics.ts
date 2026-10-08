@@ -3,8 +3,8 @@
  * TreePod Server-Side Analytics (GA4 Measurement Protocol)
  * 
  * Permite enviar eventos directamente desde el servidor (Node.js) a Google Analytics.
- * Esto asegura que las conversiones (reservas pagadas) se midan siempre,
- * incluso si el cliente cierra el navegador después de pagar en Webpay.
+ * Intenta enviar la compra confirmada aunque el cliente cierre el navegador.
+ * La aceptación HTTP no acredita su procesamiento en los informes de GA4.
  */
 
 

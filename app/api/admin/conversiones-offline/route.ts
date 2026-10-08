@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     const end = new Date(Date.parse(hasta)+86400000).toISOString();
     try {
         const rows = await fetchAllPages((from,to)=>supabaseAdmin.from('reservas')
-            .select('id,estado,total,monto_pagado,pagado_at,gclid,deleted_at,fuente')
+            .select('id,estado,total,monto_pagado,pagado_at,gclid,deleted_at,fuente,metadata')
             .is('deleted_at',null).eq('estado','pagado').not('gclid','is',null)
             .gte('pagado_at',`${desde}T00:00:00Z`).lt('pagado_at',end).order('id').range(from,to));
         const eligible = rows.filter(isOfflineReviewCandidate);
