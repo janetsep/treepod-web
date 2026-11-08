@@ -81,8 +81,8 @@ const jsonLd = {
 // Índice de lo que incluye la estadía: filas numeradas, sin iconos ni tarjetas
 const queIncluye = [
     {
-        title: "Tinaja privada de ciprés (de temporada)",
-        desc: "Cada domo tiene su propia tinaja de agua caliente con pasarela por el bosque, sin compartir con nadie. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
+        title: "Tinaja privada de ciprés (servicio adicional)",
+        desc: "Tinaja privada de agua caliente con pasarela por el bosque, sin compartir con nadie. Disponible para contratar como servicio adicional."
     },
     {
         title: "Estufa a pellet automática: calor constante",
@@ -281,7 +281,7 @@ export default function GlampingValleLasTrancasPage() {
                             <h3 className="dato text-[#1E1B16] mb-6">Equipamiento</h3>
                             <ul className="space-y-3.5">
                                 {[
-                                    "Tinaja privada de ciprés (servicio de temporada)",
+                                    "Tinaja privada de ciprés (servicio adicional)",
                                     "Estufa a pellet automática y programable",
                                     "Cama matrimonial y dos individuales, ropa de cama de calidad",
                                     "Cocina equipada con Nespresso",
