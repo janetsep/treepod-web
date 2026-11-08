@@ -945,7 +945,7 @@ function DisponibilidadContent() {
                           {isTinaja && (
                             <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
                               <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                              Servicio adicional · $48.000 CLP
+                              Servicio adicional · $48.000
                             </span>
                           )}
                           <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
