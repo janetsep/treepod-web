@@ -76,8 +76,8 @@ const jsonLd = {
 // La experiencia como índice numerado de revista, sin iconos ni tarjetas
 const experiencia = [
     {
-        title: "Tinaja de ciprés (de temporada)",
-        desc: "Agua caliente, vista a la montaña y cielo estrellado. Es un servicio de temporada que vuelve en primavera; en invierno no opera. Consúltanos por la disponibilidad de tu fecha."
+        title: "Tinaja de ciprés (servicio adicional)",
+        desc: "Agua caliente, vista a la montaña y cielo estrellado. Disponible para contratar como servicio adicional."
     },
     {
         title: "Domo geodésico equipado",
