@@ -21,7 +21,7 @@ export default async function GloriasNavalesPage() {
                 position: "center 30%",
                 eyebrow: "Finde Largo 21–24 Mayo · Valle Las Trancas",
                 title: <>Tu finde largo de Glorias Navales en el bosque nativo de Valle Las Trancas</>,
-                text: "4 días en la cordillera, con el bosque nativo y opción de tinaja privada (servicio de temporada, vuelve en primavera).",
+                text: "4 días en la cordillera, con el bosque nativo y opción de tinaja privada (servicio adicional, disponible para contratar).",
                 priceLine: priceText,
                 priceSub: "Glorias Navales · 21 al 24 Mayo 2026",
                 stat: "21–24",
@@ -51,7 +51,7 @@ export default async function GloriasNavalesPage() {
                     },
                     {
                         title: "Tinaja privada opcional (servicio de temporada)",
-                        desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Es un servicio de temporada que vuelve en primavera: consúltanos si está disponible para tus fechas."
+                        desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Está disponible para contratar como servicio adicional."
                     },
                     {
                         title: "Calefacción automática 24/7",
