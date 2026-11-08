@@ -26,7 +26,7 @@ const amenities: {
   {
     title: "Tinaja caliente privada al aire libre",
     description:
-      "Tu propia tinaja de ciprés temperada a leña, con vista al bosque y sin compartir. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
+      "Tu propia tinaja de ciprés temperada a leña, con vista al bosque y sin compartir. Disponible para contratar como servicio adicional.",
     seasonal: true,
     image: "/images/wellness/Tinaja5.jpg",
     objectPosition: "object-center",
@@ -103,7 +103,7 @@ export default function DomoAmenities() {
                 <h3 className="display-md text-[#1E1B16]">{item.title}</h3>
                 {item.seasonal && (
                   <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
-                    <TriBullet /> De temporada · desde primavera
+                    <TriBullet /> Servicio adicional · disponible para contratar
                   </span>
                 )}
               </div>

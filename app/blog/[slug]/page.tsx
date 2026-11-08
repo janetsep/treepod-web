@@ -577,7 +577,7 @@ La gracia del domo en invierno es simple: su forma geodésica distribuye el calo
 - **Termas de Chillán**: piscinas termales de origen volcánico, un panorama perfecto para el día después del ski.
 - **El valle**: restaurantes de montaña y cafeterías a minutos del glamping. Te dejamos recomendaciones al llegar.
 
-Una aclaración honesta: nuestra **tinaja de exterior es un servicio de temporada y no opera en invierno** (vuelve en primavera). Si vienes por la combinación tinaja + nieve, escríbenos antes para confirmar fechas de temporada.
+Nuestra tinaja de exterior está disponible como servicio adicional. Puedes seleccionarla al reservar; su disponibilidad se confirma para las fechas de tu estadía.
 
 ## ¿Es seguro llegar en invierno con auto?
 
@@ -627,7 +627,7 @@ Cada domo es un espacio privado para dos personas, con capacidad máxima para cu
 ## Los momentos que hacen la escapada
 
 - **El amanecer desde la cama**: la luz entra por la cúpula y el bosque aparece de a poco. Nadie se levanta temprano en vacaciones, hasta que amanece así.
-- **La tinaja de ciprés para dos** (servicio de temporada, con reserva): agua caliente mineralizada de vertientes del río Chillán, al aire libre, rodeados de robles. No opera en invierno; en primavera y verano es el momento estrella de la estadía.
+- **La tinaja de ciprés para dos** (servicio adicional, con reserva): agua caliente mineralizada de vertientes del río Chillán, al aire libre, rodeados de robles. Puedes contratarla para tu estadía.
 - **Desayuno en el domo** (adicional opcional): productos locales del valle servidos en tu domo, coordinando el horario al reservar.
 - **El asado en el domo**: pídenos la parrilla, te la llevamos al domo y cierras el día con un asado entre los árboles.
 

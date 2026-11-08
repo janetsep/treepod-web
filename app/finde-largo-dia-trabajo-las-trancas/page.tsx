@@ -42,7 +42,7 @@ export default function FindeLargoPage() {
                 alt: "Finde largo mayo Las Trancas TreePod",
                 eyebrow: "Finde Largo Mayo · Valle Las Trancas",
                 title: <>Tu finde largo del día del trabajo en el bosque nativo de Valle Las Trancas</>,
-                text: "Tres días en la montaña, con el bosque nativo y el otoño en la cordillera. Con opción de tinaja privada (servicio de temporada, vuelve en primavera).",
+                text: "Tres días en la montaña, con el bosque nativo y el otoño en la cordillera. Con opción de tinaja privada (servicio adicional, disponible para contratar).",
                 priceLine: "Tarifas según temporada",
                 priceSub: "Revisa el precio de tus fechas en el calendario de reservas",
                 stat: "01–04",
@@ -72,7 +72,7 @@ export default function FindeLargoPage() {
                     },
                     {
                         title: "Tinaja privada opcional (servicio de temporada)",
-                        desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Es un servicio de temporada que vuelve en primavera: consúltanos si está disponible para tus fechas."
+                        desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Está disponible para contratar como servicio adicional."
                     },
                     {
                         title: "Calefacción automática 24/7",

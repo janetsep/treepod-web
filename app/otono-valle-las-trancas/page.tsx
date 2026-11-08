@@ -102,7 +102,7 @@ export default function OtonoValleLasTrancasPage() {
                     {
                         src: "/images/wellness/Tinaja1.jpg",
                         alt: "Tinaja de ciprés rodeada de bosque nativo",
-                        caption: "Tinaja en el bosque · servicio de temporada (vuelve en primavera)",
+                        caption: "Tinaja en el bosque · servicio adicional, disponible para contratar",
                     },
                     {
                         src: "/images/EquipamientoParaTuEstadia/interior-cama-estufa.jpg",

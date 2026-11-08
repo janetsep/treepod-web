@@ -33,8 +33,8 @@ export default function GuestGuidePage() {
             ]
         },
         {
-            title: "Tinaja de Ciprés (servicio de temporada)",
-            content: "Nuestras tinajas de ciprés son de uso simple. El agua se calienta con una caldera de leña. Es un servicio de temporada: vuelve en primavera y no opera en invierno.",
+            title: "Tinaja de Ciprés (servicio adicional)",
+            content: "Nuestras tinajas de ciprés son de uso simple. El agua se calienta con una caldera de leña. Está disponible para contratar como servicio adicional.",
             items: [
                 "Tiempo de calentamiento: 3 a 4 horas",
                 "Uso privado, solo para tu domo",
