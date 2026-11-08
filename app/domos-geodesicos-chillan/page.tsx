@@ -84,8 +84,8 @@ const especificaciones = [
         desc: "Estufa a pellet programable que mantiene el domo cálido toda la noche. No necesitas levantarte a alimentar el fuego: el domo amanece tibio incluso cuando afuera está nevando."
     },
     {
-        title: "Tinaja de ciprés privada (de temporada)",
-        desc: "Cada domo tiene acceso a su propia tinaja de agua caliente, sin compartir. Es un servicio de temporada: no opera en invierno y vuelve en primavera."
+        title: "Tinaja de ciprés privada (servicio adicional)",
+        desc: "Tinaja privada de agua caliente, sin compartir, disponible para contratar como servicio adicional."
     },
     {
         title: "A 12 minutos de Nevados de Chillán",
@@ -136,7 +136,7 @@ export default function DomosGeodesicosChillanPage() {
                 alt="Domo geodésico iluminado de noche en Valle Las Trancas, Chillán"
                 eyebrow="Domos Geodésicos · Valle Las Trancas · Chillán"
                 title={<>Domos geodésicos en Chillán: duerme bajo las estrellas <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[8px]">sin pasar frío</span></>}
-                text="Estructura geodésica con 38 m² de interior y vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada es servicio de temporada, vuelve en primavera."
+                text="Estructura geodésica con 38 m² de interior y vista al bosque nativo. Estufa a pellet automática, cocina equipada y WiFi Starlink. La tinaja privada está disponible para contratar como servicio adicional."
                 priority
                 titleAs="h1"
                 stat="38"
