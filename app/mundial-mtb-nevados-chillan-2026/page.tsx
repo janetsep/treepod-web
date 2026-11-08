@@ -161,7 +161,7 @@ export default function MundialMtbPage() {
                                 Tu propia <span className="italic underline decoration-[#00ADEF] decoration-[3px] underline-offset-[6px]">tinaja caliente</span>
                             </h2>
                             <p className="text-[15px] md:text-base text-[#5B5348] leading-relaxed mt-6 mb-8">
-                                Después de horas en el cerro, el agua caliente ayuda a relajar y descargar las piernas para el día siguiente. La tinaja es un servicio de temporada (vuelve en primavera): consúltanos disponibilidad para tus fechas.
+                                Después de horas en el cerro, el agua caliente ayuda a relajar y descargar las piernas para el día siguiente. La tinaja está disponible para contratar como servicio adicional.
                             </p>
                             <ul className="space-y-3.5">
                                 {[
