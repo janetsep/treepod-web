@@ -45,7 +45,7 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(w
 const razones = [
     {
         title: "Un domo solo para ustedes",
-        desc: "Cada domo está separado del resto e inmerso en bosque nativo, con su propio acceso. Sin pasillos de hotel. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
+        desc: "Cada domo está separado del resto e inmerso en bosque nativo, con su propio acceso. Sin pasillos de hotel. La tinaja de ciprés está disponible como servicio adicional para contratar durante tu estadía."
     },
     {
         title: "Noches bajo las estrellas sin salir del domo",
@@ -78,7 +78,7 @@ const galeria = [
     {
         src: "/images/wellness/Tinaja5.jpg",
         alt: "Tinaja privada de ciprés para dos",
-        caption: "Tinaja de ciprés · servicio de temporada (vuelve en primavera)",
+        caption: "Tinaja de ciprés · servicio adicional, disponible para contratar",
     },
     {
         src: "/images/interiors/interior-domo-acogedor-89-2.jpg",
