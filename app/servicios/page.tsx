@@ -32,7 +32,7 @@ export default function ServicesPage() {
             image: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno cordillerano servido en un domo de TreePod",
             caption: "Desayuno cordillerano en tu domo",
-            features: ["Desayuno servido en tu domo (costo adicional)", "Parrilla que llevamos a tu domo (costo adicional)", "Productos del valle"],
+            features: ["Desayuno servido en tu domo (costo adicional)", "Parrilla que llevamos a tu domo (costo adicional)", "Productos del valle (costo adicional)"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
         }
