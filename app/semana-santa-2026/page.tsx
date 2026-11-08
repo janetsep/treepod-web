@@ -62,7 +62,7 @@ export default function SemanaSantaPage() {
                     },
                     {
                         title: "Bosque nativo y cielo estrellado",
-                        desc: "Domos separados entre sí e inmersos en bosque nativo. En las noches despejadas, el cielo de Las Trancas se llena de estrellas. La tinaja de ciprés es un servicio de temporada que vuelve en primavera."
+                        desc: "Domos separados entre sí e inmersos en bosque nativo. En las noches despejadas, el cielo de Las Trancas se llena de estrellas. La tinaja de ciprés está disponible para contratar como servicio adicional."
                     },
                     {
                         title: "Afuera hace frío, adentro estás en polera",
@@ -95,7 +95,7 @@ export default function SemanaSantaPage() {
                     {
                         src: "/images/wellness/Tinaja1.jpg",
                         alt: "Tinaja de ciprés rodeada de bosque nativo",
-                        caption: "Tinaja de ciprés · servicio de temporada (vuelve en primavera)",
+                        caption: "Tinaja de ciprés · servicio adicional, disponible para contratar",
                     },
                     {
                         src: "/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg",
