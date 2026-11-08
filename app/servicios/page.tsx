@@ -17,22 +17,22 @@ export default function ServicesPage() {
         {
             title: "Tinaja privada bajo las estrellas",
             subtitle: "Uso exclusivo · Servicio adicional",
-            description: "Tu propia tinaja de ciprés al aire libre, temperada a leña y con vista al bosque. Sin compartir. Disponible para contratar como servicio adicional por $48.000 CLP.",
+            description: "Tu propia tinaja de ciprés al aire libre, temperada a leña y con vista al bosque. Sin compartir. Disponible para contratar como servicio adicional por $48.000.",
             image: "/images/wellness/Tinaja1.jpg",
             alt: "Tinaja privada de ciprés al aire libre en TreePod",
             caption: "Tinaja privada, al aire libre",
-            features: ["Servicio adicional · $48.000 CLP", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
+            features: ["Servicio adicional · $48.000", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
             buttonText: "Ver disponibilidad y precio",
             href: "/disponibilidad"
         },
         {
             title: "Desayuno en tu domo y parrilla a domicilio",
-            subtitle: "Sabor cordillerano",
-            description: "Despierta con un desayuno cordillerano servido en tu domo. Si prefieres preparar un asado, pídenos la parrilla y la llevamos hasta tu terraza para que disfrutes a tu ritmo.",
+            subtitle: "Servicios adicionales",
+            description: "Puedes agregar un desayuno cordillerano servido en tu domo o pedir la parrilla para tu terraza. Ambos son servicios adicionales.",
             image: "/images/Galeria/Desayuno.jpg",
             alt: "Desayuno cordillerano servido en un domo de TreePod",
             caption: "Desayuno cordillerano en tu domo",
-            features: ["Desayuno servido en tu domo", "Parrilla que llevamos a tu domo", "Productos del valle (costo adicional)"],
+            features: ["Desayuno servido en tu domo (costo adicional)", "Parrilla que llevamos a tu domo (costo adicional)", "Productos del valle"],
             buttonText: "Ver opciones de comida",
             href: "/contacto"
         }
@@ -47,7 +47,7 @@ export default function ServicesPage() {
                 alt="Comida servida al aire libre entre el bosque nativo de TreePod"
                 eyebrow="Servicios TreePod"
                 title={<>Todo listo para que<br className="hidden md:block" /> no muevas un dedo</>}
-                text="Desayunos servidos en tu domo, parrilla a domicilio y tinaja privada disponible para contratar."
+                text="Desayuno, parrilla y tinaja privada disponibles como servicios adicionales."
                 ctaText="Ver disponibilidad y precio"
                 ctaHref="/disponibilidad"
                 priority
