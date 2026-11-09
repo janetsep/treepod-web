@@ -91,6 +91,7 @@ export type AnalyticsEventName =
   | "lead_guia_las_trancas"
   | "lead_alerta_nieve"
   | "click_whatsapp_reserva"
+  | "click_whatsapp_tinaja"
   | "view_fiestas_patrias_page"
   | "click_reservar_fiestas_patrias"
   | "click_reservar_fiestas_patrias_galeria"
