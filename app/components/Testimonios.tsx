@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import SectionFolio from "./SectionFolio";
 import TriBullet from "./deco/TriBullet";
 import { RESENAS, RESUMEN, DISTINCIONES, DISTINCION_PRINCIPAL, DISTINCION_SUPERHOST, type Resena } from "../data/resenas";
@@ -62,7 +65,15 @@ export function ResenasGrid() {
   );
 }
 
+const opiniones = RESENAS.filter((r) => r.autor !== "Lidia y Andrés");
+
 export default function Testimonios() {
+  const [inicio, setInicio] = useState(0);
+  const visibles = Math.min(2, opiniones.length);
+  useEffect(() => {
+    if (opiniones.length) setInicio(Math.floor(Date.now() / 86400000) % opiniones.length);
+  }, []);
+  const grupo = Array.from({ length: visibles }, (_, i) => opiniones[(inicio + i) % opiniones.length]);
   return (
     <section className="bg-[#F7F3EC] py-14 md:py-20" id="testimonios">
       <div className="mx-auto max-w-[1280px] px-5 md:px-10">
@@ -184,10 +195,16 @@ export default function Testimonios() {
 
           <div className="col-span-12 lg:col-span-8">
             <div className="columns-1 md:columns-2 gap-5">
-              {RESENAS.map((r, i) => (
-                <TarjetaResena key={i} r={r} />
+              {grupo.map((r) => (
+                <TarjetaResena key={r.url} r={r} />
               ))}
             </div>
+            {opiniones.length > visibles && (
+              <div className="flex gap-5 mt-4">
+                <button type="button" className="underline py-2" onClick={() => setInicio((i) => (i - visibles + opiniones.length) % opiniones.length)}>Reseñas anteriores</button>
+                <button type="button" className="underline py-2" onClick={() => setInicio((i) => (i + visibles) % opiniones.length)}>Más reseñas</button>
+              </div>
+            )}
           </div>
         </div>
       </div>
