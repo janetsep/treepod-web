@@ -31,7 +31,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
 
     // --- EXPERIENCIA & WELLNESS ---
     { src: "/images/real/comidatreepod.jpg", alt: "Gastronomía local en la terraza", aspect: "landscape" },
-    { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada al aire libre (servicio de temporada)", aspect: "landscape" },
+    { src: "/images/wellness/Tinaja3.jpeg", alt: "Tinaja privada al aire libre (servicio adicional)", aspect: "landscape" },
     { src: "/images/wellness/Tinaja5.jpg", alt: "Tinaja en el bosque nativo de Las Trancas", aspect: "portrait" },
     { src: "/images/wellness/Tinaja1.jpg", alt: "Disfrute nocturno en tinaja de ciprés", aspect: "landscape" },
     { src: "/images/Galeria/domopiscinainvierno.jpg", alt: "Domo a ras de suelo y piscina, en pleno invierno", aspect: "landscape" },
