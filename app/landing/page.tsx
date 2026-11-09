@@ -61,7 +61,7 @@ export default function LandingPage() {
             "Domo equipado",
             "Calefacción a pellet",
             "WiFi Starlink",
-            "Tinaja privada (servicio de temporada)",
+            "Tinaja privada (servicio adicional)",
           ].map((item) => (
             <li key={item} className="flex items-start gap-3 border-b border-dotted border-[#1E1B16]/15 pb-3">
               <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 mt-1.5" />
