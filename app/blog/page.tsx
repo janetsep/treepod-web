@@ -35,7 +35,7 @@ const blogPosts = [
     {
         slug: 'escapada-romantica-glamping-chile',
         title: 'Escapada Romántica en Chile: un Domo en el Bosque para Dos',
-        excerpt: 'Por qué un domo geodésico en Las Trancas le gana al hotel de siempre: el amanecer desde la cama, tinaja de temporada para dos y cero logística. Ideas para un fin de semana distinto.',
+        excerpt: 'Por qué un domo geodésico en Las Trancas le gana al hotel de siempre: el amanecer desde la cama, tinaja como servicio adicional para dos y cero logística. Ideas para un fin de semana distinto.',
         image: '/images/Galeria/Domo3noche.jpeg',
         category: 'Guías',
         readTime: '4 min',
