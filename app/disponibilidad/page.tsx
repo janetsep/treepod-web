@@ -844,13 +844,8 @@ function DisponibilidadContent() {
             </div>
           )}
 
-          {/* COL 2: 02 — Extras.
-              OCULTO en el checkout (decisión 19-jul-2026): cada campo extra en el
-              flujo de pago mata conversión móvil, y los extras se venden mejor
-              después de confirmar (WhatsApp/correo). La lógica queda intacta:
-              sin selección, el total es solo alojamiento, que todos los flujos
-              ya soportan. Para reactivar: quitar el `false &&`. */}
-          {false && !isMundialEvent && (
+          {/* COL 2: solo la tinaja autorizada como extra durante la reserva. */}
+          {!isMundialEvent && servicios.some((s) => s.nombre.toLowerCase().includes("tinaja")) && (
             <div className="lg:col-span-6 xl:col-span-4 space-y-4">
               <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
                 <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
@@ -868,7 +863,7 @@ function DisponibilidadContent() {
               {/* Índice de servicios: fila de ficha con foto cuadrada, línea punteada
                   hasta el precio y borde izquierdo cyan al seleccionar. */}
               <section className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 transition-opacity duration-700 ${entrada && salida ? 'opacity-100' : 'opacity-40'}`}>
-                {servicios.map((s) => {
+                {servicios.filter((s) => s.nombre.toLowerCase().includes("tinaja")).map((s) => {
                   // Usar directamente los nombres y datos de la base de datos
                   const displayNombre = s.nombre;
                   const displayDescripcion = s.descripcion;
@@ -945,7 +940,7 @@ function DisponibilidadContent() {
                           {isTinaja && (
                             <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#5B5348] border-b border-dotted border-[#5B5348]/50 pb-0.5">
                               <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                              Servicio adicional · $48.000
+                              Servicio adicional · ${(s.precio || 0).toLocaleString("es-CL")}
                             </span>
                           )}
                           <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
