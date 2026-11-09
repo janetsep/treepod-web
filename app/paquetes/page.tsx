@@ -72,7 +72,7 @@ export default function PaquetesPage() {
                 alt="Cena y experiencias especiales en TreePod, Valle Las Trancas"
                 eyebrow="Experiencias TreePod"
                 title={<>Suma <span className="bg-[#00ADEF] text-[#1E1B16] px-2 box-decoration-clone">detalles</span><br className="hidden md:block" /> a tu estadía</>}
-                text="Desayunos, cenas y sorpresas para armar tu escapada a tu medida. La tinaja es servicio de temporada."
+                text="Desayunos, cenas y sorpresas para armar tu escapada a tu medida. La tinaja está disponible como servicio adicional."
                 ctaText="Ver disponibilidad"
                 ctaHref="/disponibilidad"
                 priority
@@ -204,7 +204,7 @@ export default function PaquetesPage() {
                             <article className="border-t border-[#1E1B16]/15 pt-5">
                                 <h3 className="font-display font-medium text-2xl text-[#1E1B16]">¿Todos los servicios funcionan durante el año?</h3>
                                 <p className="text-[15px] text-[#5B5348] leading-relaxed mt-3">
-                                    No necesariamente. La tinaja privada es un servicio de temporada y otras alternativas pueden depender de disponibilidad operativa. Por eso confirmamos cada solicitud para las fechas concretas de tu estadía en Valle Las Trancas.
+                                    No necesariamente. La tinaja privada es un servicio adicional y su disponibilidad se confirma para las fechas de tu estadía. Por eso confirmamos cada solicitud para las fechas concretas de tu estadía en Valle Las Trancas.
                                 </p>
                             </article>
 
