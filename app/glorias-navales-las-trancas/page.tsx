@@ -50,7 +50,7 @@ export default async function GloriasNavalesPage() {
                         desc: "Mayo en Las Trancas tiene días templados, noches frescas y colores de otoño, lejos de las multitudes de la temporada alta de invierno."
                     },
                     {
-                        title: "Tinaja privada opcional (servicio de temporada)",
+                        title: "Tinaja privada opcional (servicio adicional)",
                         desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Está disponible para contratar como servicio adicional."
                     },
                     {
@@ -79,7 +79,7 @@ export default async function GloriasNavalesPage() {
                     {
                         src: "/images/wellness/Tinaja1.jpg",
                         alt: "Tinaja privada en el bosque para Glorias Navales",
-                        caption: "Tinaja privada · servicio de temporada",
+                        caption: "Tinaja privada · servicio adicional",
                     },
                     {
                         src: "/images/EquipamientoParaTuEstadia/Cocina.jpg",
