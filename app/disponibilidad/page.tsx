@@ -13,6 +13,7 @@ import EnviarCotizacion from '../components/EnviarCotizacion';
 import SectionFolio from '../components/SectionFolio';
 import TriBullet from '../components/deco/TriBullet';
 import { btnPrimary, linkLine } from '../components/deco/cta';
+import { crearEnlaceConsultaTinaja } from '@/lib/tinaja-consulta';
 
 type ResultadoPrecio = {
   temporada: string;
@@ -713,6 +714,7 @@ function DisponibilidadContent() {
   const inputFicha =
     "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
   const bordeCampo = (v: string) => (intentoEnvio && !v.trim() ? "border-red-400" : "border-[#1E1B16]/20");
+  const enlaceConsultaTinaja = crearEnlaceConsultaTinaja(entrada, salida, adultos);
 
   return (
     <div className="min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16]">
@@ -1193,20 +1195,18 @@ function DisponibilidadContent() {
                       )}
                     </div>
 
-                    <p className="text-sm text-[#5B5348] mb-4">
+                    {enlaceConsultaTinaja && <p className="text-sm text-[#5B5348] mb-4">
                       ¿Buscas un domo con tinaja?{" "}
                       <a
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
-                        href={`https://wa.me/56984643307?text=${encodeURIComponent(
-                          `Hola, ¿hay tinaja disponible del ${entrada} al ${salida} para ${adultos} ${adultos === 1 ? "persona" : "personas"}? ¿Cuánto cuesta la estadía con tinaja incluida?`
-                        )}`}
+                        href={enlaceConsultaTinaja}
                         onClick={() => trackEvent("click_whatsapp_tinaja")}
                       >
                         Consulta disponibilidad y precio total antes de pagar.
                       </a>
-                    </p>
+                    </p>}
 
                     {/* CTA principal: dice exactamente lo que se cobra hoy (el 50%
                         ya calculado en pantalla), no "Pagar ahora". */}
