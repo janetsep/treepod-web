@@ -1230,7 +1230,19 @@ function DisponibilidadContent() {
                           : "Ir a Webpay"}
                     </button>
 
-                    {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
+                    {resultado && disponibilidad.disponible === true && abonoHoy > 0 && (
+                      <div className="mt-3 text-center">
+                        <a className="inline-block rounded border border-current px-4 py-2 font-semibold"
+                          target="_blank" rel="noopener noreferrer"
+                          onClick={() => trackEvent("click_whatsapp_reserva", { metodo: "transferencia" })}
+                          href={`https://wa.me/56984643307?text=${encodeURIComponent(
+                            `Hola, quiero reservar por transferencia del ${entrada.split("-").reverse().join("/")} al ${salida.split("-").reverse().join("/")} para ${adultos} ${adultos === 1 ? "persona" : "personas"} (${resultado.noches} ${resultado.noches === 1 ? "noche" : "noches"}). El total es ${calcularTotalConServicios().toLocaleString("es-CL")} y el abono es ${abonoHoy.toLocaleString("es-CL")}. ¿Me confirman disponibilidad y me envían los datos para transferir?`
+                          )}`}>
+                          Reservar por transferencia
+                        </a>
+                        <p className="mt-1 text-xs">Te enviamos los datos por WhatsApp. Confirmamos tu reserva al verificar el abono.</p>
+                      </div>
+                    )}
                     <p className="flex items-center justify-center gap-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348]">
                       <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
                       Pago seguro mediante Webpay Plus
