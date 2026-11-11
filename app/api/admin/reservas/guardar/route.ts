@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { NotificationService } from "@/services/NotificationService";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
 import { vincularClienteAReserva } from "@/lib/crm-cliente";
+import { estadoAlConfirmar } from "@/lib/admin-confirmacion";
 import { buildAdminExtras } from "@/lib/admin-extras";
 
 export async function POST(request: Request) {
@@ -44,6 +45,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Falta elegir el domo." }, { status: 400 });
         }
 
+        const estadoFinal = ["pagado", "confirmado"].includes(estado)
+            ? estadoAlConfirmar(total, monto_pagado)
+            : estado || "pendiente";
         const reservaData = {
             fecha_inicio,
             fecha_fin,
@@ -55,7 +59,7 @@ export async function POST(request: Request) {
             adultos: adultos || 2,
             total: total ? Number(total) : 0,
             monto_pagado: monto_pagado ? Number(monto_pagado) : 0,
-            estado: estado || 'pendiente',
+            estado: estadoFinal,
             fuente: fuente || 'manual_admin',
             notas: mensaje || null,
             comprobante_url: comprobante_url || null,
@@ -125,7 +129,6 @@ export async function POST(request: Request) {
 
         // Sincronizar SIEMPRE con Google Calendar (idempotente: crea o actualiza el
         // mismo evento). Aplica a creaciones y ediciones; no bloquea el guardado si falla.
-        const estadoFinal = estado || 'pendiente';
         if (['pagado', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(estadoFinal)) {
             NotificationService.syncReservaToCalendar({
                 id: reservaId,
@@ -156,7 +159,7 @@ export async function POST(request: Request) {
                 adultos: adultos || 2,
                 total: total ? Number(total) : 0,
                 montoPagado: monto_pagado ? Number(monto_pagado) : 0,
-                estado: estado || 'pendiente',
+                estado: estadoFinal,
                 fuente: fuente || 'manual_admin',
                 reservaId: result.data.id,
                 adminEmail: adminEmail,

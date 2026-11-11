@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { getVerifiedAdmin } from "@/lib/admin-auth";
+import { estadoAlConfirmar } from "@/lib/admin-confirmacion";
 import { NotificationService } from "@/services/NotificationService";
 
 export async function POST(request: Request) {
@@ -22,8 +23,9 @@ export async function POST(request: Request) {
         // Solo se pueden confirmar reservas reales: nunca bloqueos técnicos ni canceladas.
         const { data: reservaActual } = await supabaseAdmin
             .from("reservas")
-            .select("estado")
+            .select("estado,total,monto_pagado")
             .eq("id", reservaId)
+            .is("deleted_at", null)
             .single();
 
         if (!reservaActual) {
@@ -36,18 +38,28 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: `La reserva está ${reservaActual.estado}: restáurala o edítala antes de confirmar un pago.` }, { status: 400 });
         }
 
-        // Actualizar a estado PAGADO
-        const { error: updateError } = await supabaseAdmin
+        const estado = estadoAlConfirmar(reservaActual.total, reservaActual.monto_pagado);
+        let update = supabaseAdmin
             .from("reservas")
             .update({
-                estado: "pagado",
+                estado,
                 updated_at: new Date().toISOString(),
                 metodo_pago_inicial: "manual_admin" // Marcamos que fue admin
             })
-            .eq("id", reservaId);
+            .eq("id", reservaId)
+            .is("deleted_at", null);
+        for (const campo of ["estado", "monto_pagado", "total"] as const) {
+            const valor = reservaActual[campo];
+            update = valor == null ? update.is(campo, null) : update.eq(campo, valor);
+        }
+        const { data: actualizada, error: updateError } = await update.select("id").maybeSingle();
 
         if (updateError) {
             return NextResponse.json({ error: updateError.message }, { status: 500 });
+        }
+
+        if (!actualizada) {
+            return NextResponse.json({ error: "La reserva cambió. Actualiza el panel antes de confirmar." }, { status: 409 });
         }
 
         // Sincronizar con Google Calendar (idempotente, no bloqueante): cubre el caso
@@ -70,7 +82,7 @@ export async function POST(request: Request) {
                     adultos: r.adultos,
                     total: r.total,
                     monto_pagado: r.monto_pagado,
-                    estado: "pagado",
+                    estado,
                     fuente: r.fuente,
                     domoNombre: (r as any).domos?.nombre || null,
                 }).catch((e) => console.error("Error sincronizando calendario al confirmar:", e));
