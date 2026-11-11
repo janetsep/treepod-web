@@ -13,7 +13,7 @@ import EnviarCotizacion from '../components/EnviarCotizacion';
 import SectionFolio from '../components/SectionFolio';
 import TriBullet from '../components/deco/TriBullet';
 import { btnPrimary, linkLine } from '../components/deco/cta';
-import { crearEnlaceConsultaTinaja } from '@/lib/tinaja-consulta';
+import { crearEnlaceConsultaTinaja, esFechaIsoCalendarioValida, normalizarAdultos } from '@/lib/tinaja-consulta';
 
 type ResultadoPrecio = {
   temporada: string;
@@ -110,12 +110,12 @@ function DisponibilidadContent() {
   const entradaParam = searchParams.get("entrada") || "";
   const salidaParam = searchParams.get("salida") || "";
   const adultosParam = searchParams.get("adultos") || "";
-  const [entrada, setEntrada] = useState(entradaParam);
-  const [salida, setSalida] = useState(salidaParam);
+  const [entrada, setEntrada] = useState(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
+  const [salida, setSalida] = useState(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
   // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
   // rango (?adultos=6) dejaba el select en un valor sin opción visible y pedía
   // precios para una capacidad que no existe.
-  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
+  const [adultos, setAdultos] = useState(normalizarAdultos(adultosParam));
   const [resultado, setResultado] = useState<ResultadoPrecio | null>(null);
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
@@ -123,7 +123,6 @@ function DisponibilidadContent() {
   // Disponibilidad REAL por domo para el rango elegido (null = aún no verificado)
   const [disponibilidad, setDisponibilidad] = useState<{ checking: boolean; disponible: boolean | null; domosLibres: number | null; domos: Array<{ id: string; nombre: string }> }>({ checking: false, disponible: null, domosLibres: null, domos: [] });
   const router = useRouter();
-  const [initialCalcDone, setInitialCalcDone] = useState(false);
   // Pliegues de la ficha: cerrados por defecto. El desglose y el detalle de lo
   // que incluye la estadia no son necesarios para decidir, y en telefono
   // empujaban el boton de pagar fuera de pantalla.
@@ -154,6 +153,7 @@ function DisponibilidadContent() {
   const resultsRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLDivElement>(null);
   const availabilityTrackedRef = useRef("");
+  const precioRequestRef = useRef(0);
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
 
@@ -161,12 +161,12 @@ function DisponibilidadContent() {
   // después del primer render. Sin esta sincronización, la landing del 18
   // entregaba septiembre en la URL, pero el calendario conservaba agosto.
   useEffect(() => {
-    const fechaValida = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
-    if (fechaValida(entradaParam)) setEntrada(entradaParam);
-    if (fechaValida(salidaParam)) setSalida(salidaParam);
-    if (adultosParam) {
-      setAdultos(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
-    }
+    precioRequestRef.current += 1;
+    setResultado(null);
+    setLoading(false);
+    setEntrada(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
+    setSalida(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
+    setAdultos(normalizarAdultos(adultosParam));
   }, [entradaParam, salidaParam, adultosParam]);
 
   // Auto-scroll to results when calculating is done
@@ -247,11 +247,10 @@ function DisponibilidadContent() {
   };
 
   useEffect(() => {
-    // When inputs change, clear previous results to avoid showing stale prices
-    // But ONLY if we are not in the initial landing state (to avoid flickering on first load)
-    if (initialCalcDone) {
-      setResultado(null);
-    }
+    // Invalidar también una petición que ya estaba en vuelo: su respuesta no
+    // puede volver a mostrar el precio de una estadía anterior.
+    precioRequestRef.current += 1;
+    setResultado(null);
   }, [entrada, salida, adultos]);
 
   useEffect(() => {
@@ -356,6 +355,7 @@ function DisponibilidadContent() {
   }, [email, telefono, entrada, salida]);
 
   const calcularPrecio = async () => {
+    const requestId = ++precioRequestRef.current;
     let precioHttpStatus = 0;
     setLoading(true);
     setError(null);
@@ -385,6 +385,7 @@ function DisponibilidadContent() {
       precioHttpStatus = res.status;
 
       const text = await res.text();
+      if (requestId !== precioRequestRef.current) return;
       let data;
       try {
         data = JSON.parse(text);
@@ -396,6 +397,7 @@ function DisponibilidadContent() {
       if (!res.ok) {
         throw new Error(data?.error || `Error al calcular precio (HTTP ${res.status})`);
       }
+      if (requestId !== precioRequestRef.current) return;
       setResultado(data);
 
       trackEvent("select_fechas", {
@@ -414,6 +416,7 @@ function DisponibilidadContent() {
       });
 
     } catch (err: unknown) {
+      if (requestId !== precioRequestRef.current) return;
       console.error("❌ Error en calcularPrecio:", err);
       trackEvent("pricing_failed", {
         stage: "pricing_api",
@@ -422,7 +425,7 @@ function DisponibilidadContent() {
       });
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
-      setLoading(false);
+      if (requestId === precioRequestRef.current) setLoading(false);
     }
   };
 
