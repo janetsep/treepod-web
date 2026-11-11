@@ -26,6 +26,7 @@ type Analytics = {
         view_pricing_result: number;
         click_reservar: number;
         click_whatsapp_reserva: number;
+        click_whatsapp_tinaja: number;
         reservation_created: number;
         click_pagar: number;
         webpay_redirect_started: number;
@@ -41,6 +42,7 @@ type Analytics = {
         view_pricing_result: number;
         click_reservar: number;
         click_whatsapp_reserva: number;
+        click_whatsapp_tinaja: number;
         reservation_created: number;
         click_pagar: number;
         webpay_redirect_started: number;
@@ -492,6 +494,15 @@ export default function DashboardAdmin() {
                             </div>
                             <span className="text-lg font-black text-emerald-700">
                                 {(analytics.eventUsers?.click_whatsapp_reserva || 0).toLocaleString('es-CL')}
+                            </span>
+                        </div>
+                        <div className="mt-3 rounded-xl border border-sky-100 bg-sky-50 p-3 flex items-center justify-between gap-4">
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-wide text-sky-800">Consulta de tinaja</p>
+                                <p className="text-xs text-sky-900">Consultaron disponibilidad y precio por WhatsApp</p>
+                            </div>
+                            <span className="text-lg font-black text-sky-700">
+                                {(analytics.eventUsers?.click_whatsapp_tinaja || 0).toLocaleString('es-CL')}
                             </span>
                         </div>
                         <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">

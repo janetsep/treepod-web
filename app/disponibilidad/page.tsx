@@ -13,7 +13,7 @@ import EnviarCotizacion from '../components/EnviarCotizacion';
 import SectionFolio from '../components/SectionFolio';
 import TriBullet from '../components/deco/TriBullet';
 import { btnPrimary, linkLine } from '../components/deco/cta';
-import { crearEnlaceConsultaTinaja } from '@/lib/tinaja-consulta';
+import { crearEnlaceConsultaTinaja, esFechaIsoCalendarioValida, normalizarAdultos } from '@/lib/tinaja-consulta';
 
 type ResultadoPrecio = {
   temporada: string;
@@ -110,12 +110,12 @@ function DisponibilidadContent() {
   const entradaParam = searchParams.get("entrada") || "";
   const salidaParam = searchParams.get("salida") || "";
   const adultosParam = searchParams.get("adultos") || "";
-  const [entrada, setEntrada] = useState(entradaParam);
-  const [salida, setSalida] = useState(salidaParam);
+  const [entrada, setEntrada] = useState(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
+  const [salida, setSalida] = useState(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
   // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
   // rango (?adultos=6) dejaba el select en un valor sin opción visible y pedía
   // precios para una capacidad que no existe.
-  const [adultos, setAdultos] = useState(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
+  const [adultos, setAdultos] = useState(normalizarAdultos(adultosParam));
   const [resultado, setResultado] = useState<ResultadoPrecio | null>(null);
   const [loading, setLoading] = useState(false);
   const [reserving, setReserving] = useState(false);
@@ -161,12 +161,9 @@ function DisponibilidadContent() {
   // después del primer render. Sin esta sincronización, la landing del 18
   // entregaba septiembre en la URL, pero el calendario conservaba agosto.
   useEffect(() => {
-    const fechaValida = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
-    if (fechaValida(entradaParam)) setEntrada(entradaParam);
-    if (fechaValida(salidaParam)) setSalida(salidaParam);
-    if (adultosParam) {
-      setAdultos(Math.min(4, Math.max(1, Number(adultosParam) || 2)));
-    }
+    setEntrada(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
+    setSalida(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
+    setAdultos(normalizarAdultos(adultosParam));
   }, [entradaParam, salidaParam, adultosParam]);
 
   // Auto-scroll to results when calculating is done
