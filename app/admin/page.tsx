@@ -1,5 +1,6 @@
 "use client";
 
+import { confirmadaConAbono } from "@/lib/admin-confirmacion";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -213,7 +214,7 @@ export default function AdminDashboard() {
     }
 
     async function confirmReserva(id: string) {
-        if (!confirm("¿Confirmar pago manual de esta reserva? Pasará a estado VERDE.")) return;
+        if (!confirm("¿Confirmar la reserva con el monto recibido que figura en el panel?")) return;
 
         setActionLoading(id);
         try {
@@ -1062,7 +1063,7 @@ export default function AdminDashboard() {
                                                                 const pagado = Number(reserva.monto_pagado) || 0;
                                                                 const total = Number(reserva.total) || 0;
                                                                 const saldo = total - pagado;
-                                                                const estadoConSaldo = ['confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(reserva.estado);
+                                                                const estadoConSaldo = ['pagado', 'confirmada', 'confirmado', 'pendiente', 'pending_transfer_confirmation'].includes(reserva.estado);
                                                                 return (
                                                                     <>
                                                                         <div className={`font-black text-xs ${pagado >= total ? 'text-green-600' : 'text-gray-900'}`}>
@@ -1089,7 +1090,8 @@ export default function AdminDashboard() {
                                                             <span className={`px-2 py-1 rounded text-[7px] font-black uppercase tracking-[0.1em] shadow-sm ${getStatusColor(reserva.estado)}`}>
                                                                 {reserva.estado === 'pendiente_pago'
                                                                     ? (reserva.expires_at && new Date(reserva.expires_at) < new Date() ? 'Carrito expirado' : 'Check-out Web')
-                                                                    : getStatusLabel(reserva.estado)}
+                                                                    : (confirmadaConAbono(reserva.estado, reserva.total, reserva.monto_pagado)
+                                                                        ? "Confirmada · Abono recibido" : getStatusLabel(reserva.estado))}
                                                             </span>
                                                         </td>
                                                         <td className="px-5 py-4 text-right">
@@ -1106,12 +1108,12 @@ export default function AdminDashboard() {
                                                                         </button>
                                                                     );
                                                                 })()}
-                                                                 {reserva.estado !== 'pagado' && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && reserva.estado !== 'bloqueado' && adminRole !== 'viewer' && (
+                                                                 {!['pagado', 'confirmado', 'confirmada'].includes(reserva.estado?.toLowerCase()) && reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && reserva.estado !== 'bloqueado' && adminRole !== 'viewer' && (
                                                                     <button
                                                                         onClick={() => confirmReserva(reserva.id)}
                                                                         disabled={actionLoading === reserva.id}
                                                                         className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest transition-all shadow-lg shadow-green-500/20 disabled:opacity-50"
-                                                                        title="Confirmar pago manual de la reserva"
+                                                                        title="Confirmar reserva con el monto registrado"
                                                                     >
                                                                         {actionLoading === reserva.id ? "..." : "Confirmar"}
                                                                     </button>
