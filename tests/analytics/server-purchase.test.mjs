@@ -10,12 +10,13 @@ test('GA4 delivery distinguishes excluded, missing, failed, validated and transp
     delete process.env.VERCEL_ENV;
     delete process.env.GA4_MP_API_SECRET;
     assert.equal((await trackServerPurchase(purchase)).status,'missing_configuration');
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID='G-TEST';
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID='G-TEST\n';
     process.env.GA4_MP_API_SECRET='test-secret';
     process.env.NODE_ENV='production';
     let calls=0;
     globalThis.fetch=async (url,options)=> {
       calls++;
+      assert.equal(new URL(url).searchParams.get('measurement_id'),'G-TEST');
       const body=JSON.parse(options.body);
       assert.equal(body.client_id,'123.456');
       assert.equal(body.events[0].params.session_id,1789073000);
@@ -41,6 +42,9 @@ test('GA4 delivery distinguishes excluded, missing, failed, validated and transp
     assert.equal((await trackServerPurchase(purchase)).status,'validated');
   } finally {
     globalThis.fetch=fetch;
-    for (const key of keys) saved[key]===undefined ? delete process.env[key] : process.env[key]=saved[key];
+    for (const key of keys) {
+      if (saved[key]===undefined) delete process.env[key];
+      else process.env[key]=saved[key];
+    }
   }
 });

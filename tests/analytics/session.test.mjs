@@ -5,7 +5,7 @@ test('session capture preserves the tag session and cannot block checkout on mis
   const oldWindow=globalThis.window;
   const oldId=process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   try {
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID='G-TEST';
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID=' G-TEST\n';
     delete globalThis.window;
     assert.equal(await getGaSessionId(),undefined);
     globalThis.window={gtag:(command,id,field,callback)=>{
@@ -19,7 +19,9 @@ test('session capture preserves the tag session and cannot block checkout on mis
     globalThis.window={gtag:()=>{}};
     assert.equal(await getGaSessionId(),undefined);
   } finally {
-    oldWindow===undefined ? delete globalThis.window : globalThis.window=oldWindow;
-    oldId===undefined ? delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID : process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID=oldId;
+    if (oldWindow===undefined) delete globalThis.window;
+    else globalThis.window=oldWindow;
+    if (oldId===undefined) delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+    else process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID=oldId;
   }
 });

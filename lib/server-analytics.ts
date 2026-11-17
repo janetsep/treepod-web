@@ -33,7 +33,7 @@ export type PurchaseDelivery = {
 };
 
 export async function trackServerPurchase(data: PurchaseData): Promise<PurchaseDelivery> {
-    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
     const GA_API_SECRET = process.env.GA4_MP_API_SECRET;
     if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
         return {status: 'excluded', reason: 'non_production_deployment'};
@@ -41,7 +41,7 @@ export async function trackServerPurchase(data: PurchaseData): Promise<PurchaseD
     if (!data.transaction_id || !Number.isFinite(data.value) || data.value <= 500 || data.currency !== 'CLP') {
         return {status: 'excluded', reason: 'test_or_invalid_purchase'};
     }
-    if (!GA_MEASUREMENT_ID || !GA_API_SECRET) {
+    if (!GA_MEASUREMENT_ID || !/^G-[A-Z0-9]+$/.test(GA_MEASUREMENT_ID) || !GA_API_SECRET) {
         console.warn('⚠️ Server Analytics: Faltan credenciales (GA_MEASUREMENT_ID o GA_API_SECRET)');
         return {status: 'missing_configuration', reason: 'measurement_id_or_api_secret_missing'};
     }

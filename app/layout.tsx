@@ -4,7 +4,6 @@ import './globals.css';
 import Script from 'next/script';
 import { Suspense } from 'react';
 import AdminAwareLayout from './components/AdminAwareLayout';
-import MicrosoftClarity from './components/MicrosoftClarity';
 import AuthRecoveryRedirect from './components/AuthRecoveryRedirect';
 import DebugGTM from './components/DebugGTM';
 import UTMCapture from './components/UTMCapture';
@@ -61,8 +60,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
   return (
     // Las variables de fuente van en <html>: los alias --font-display/--font-sans
     // se declaran en :root (globals.css) y las custom properties resuelven sus
@@ -83,29 +80,8 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/*
-          GA4 explícito para los eventos del embudo. GTM conserva la medición de
-          páginas y las integraciones históricas; send_page_view:false evita que
-          esta segunda vía duplique cada visita.
-        */}
-        {gaMeasurementId && (
-          <>
-            <Script
-              id="google-analytics-library"
-              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics-config" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                window.gtag = window.gtag || gtag;
-                gtag('js', new Date());
-                gtag('config', '${gaMeasurementId}', { send_page_view: false });
-              `}
-            </Script>
-          </>
-        )}
+        {/* GTM configura GA4 una sola vez (etiqueta 42) y mide page_view.
+            Otro config con send_page_view:false puede suprimir esas visitas. */}
 
         {/* Meta Pixel - Tracking Conversiones */}
         <Script id="meta-pixel" strategy="afterInteractive">
@@ -149,7 +125,8 @@ export default function RootLayout({
         <AdminAwareLayout>
           {children}
         </AdminAwareLayout>
-        <MicrosoftClarity />
+        {/* Clarity se carga una sola vez desde GTM-KFDWNCT (etiqueta 63).
+            Proyecto vigente: vbv05w93w9, Domos Treepod. */}
 
         {/* Aura: Global Film Grain Texture for Premium Feel */}
         <div className="fixed inset-0 z-[40] pointer-events-none opacity-[0.04] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>

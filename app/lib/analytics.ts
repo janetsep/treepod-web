@@ -110,14 +110,47 @@ declare global {
   }
 }
 
+// GTM-KFDWNCT, versión pública 43, verificada el 17-11-2026. Estas
+// interacciones ya tienen etiqueta GA4: reenviarlas con gtag las duplicaría.
+const GA4_EVENTS_VIA_GTM = new Set([
+  "purchase", "select_dome", "generate_lead", "begin_checkout",
+  "select_fechas", "view_pricing_result", "view_disponibilidad",
+  "click_reservar", "click_reservar_sticky", "reservation_created",
+  "availability_checked", "availability_check_failed", "pricing_failed",
+  "reservation_create_failed", "view_reserva", "select_payment_method",
+  "click_pagar", "payment_started", "webpay_redirect_started",
+  "webpay_start_failed", "cotizacion_ofrecida", "cotizacion_enviada",
+]);
+
+function gaEventUsesGtm(eventName: AnalyticsEventName): boolean {
+  return GA4_EVENTS_VIA_GTM.has(eventName) || /^(click_whatsapp|whatsapp_click)/.test(eventName);
+}
+
+function googleTag(): NonNullable<Window["gtag"]> {
+  window.dataLayer = window.dataLayer || [];
+  // Google espera un objeto Arguments; un array con ...args no es equivalente
+  // para su cola y puede dejar eventos sin procesar antes de cargar gtag.js.
+  window.gtag = window.gtag || function () {
+    // eslint-disable-next-line prefer-rest-params -- Formato oficial de la cola de Google tag.
+    window.dataLayer.push(arguments);
+  };
+  return window.gtag;
+}
+
+/** Limpiar espacios de configuración; nunca usar un ID inválido como destino. */
+export function gaMeasurementId(value: string | undefined): string | undefined {
+  const id = value?.trim();
+  return id && /^G-[A-Z0-9]+$/.test(id) ? id : undefined;
+}
+
 export function trackEvent(
   eventName: AnalyticsEventName,
   params?: Record<string, unknown>
 ) {
   if (typeof window === "undefined") return;
 
-  // Initialize dataLayer if it doesn't exist
-  window.dataLayer = window.dataLayer || [];
+  // La cola existe aunque GTM todavía esté descargándose.
+  googleTag();
 
   // Push the event to dataLayer
   window.dataLayer.push({
@@ -126,29 +159,27 @@ export function trackEvent(
     ...params,
   });
 
-  // dataLayer se conserva para Meta, Ads y etiquetas históricas. GA4 recibe el
-  // evento por Google tag; el tag genérico equivalente de GTM debe permanecer
-  // pausado para no duplicar la misma interacción.
-  window.gtag = window.gtag || function gtag(...args: unknown[]) {
-    window.dataLayer.push(args);
-  };
+  if (gaEventUsesGtm(eventName)) return;
+
+  // Solo los eventos sin etiqueta GTM propia usan la vía directa de GA4.
   // transport_type "beacon" hace que el envio sobreviva a una navegacion dura.
   // Sin esto se perdian los eventos del final del embudo: al apretar Reservar la
   // pagina crea la reserva y sale hacia Webpay con un envio de formulario, que
   // corta cualquier peticion pendiente. Resultado medido el 24-ago-2026: dos
   // reservas creadas y cero click_reservar / reservation_created en GA4.
-  window.gtag("event", eventName, {
+  googleTag()("event", eventName, {
     site_version: "web_nueva_2026",
     transport_type: "beacon",
     ...params,
+    send_to: gaMeasurementId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID),
   });
 }
 
 /**
  * Dispara un evento y espera a que GA4 confirme el envio antes de continuar.
  *
- * Se usa justo antes de salir del sitio (el POST a Webpay). GA4 llama a
- * event_callback cuando el evento salio; el tiempo limite evita que la reserva
+ * Se usa justo antes de salir del sitio (el POST a Webpay). GTM/GA4 llaman a su
+ * callback cuando terminan; el tiempo limite evita que la reserva
  * quede colgada si la analitica esta bloqueada por el navegador o un adblocker.
  */
 export function trackEventAndWait(
@@ -159,25 +190,24 @@ export function trackEventAndWait(
   if (typeof window === "undefined") return Promise.resolve();
 
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: eventName,
-    site_version: "web_nueva_2026",
-    ...params,
-  });
-
-  const enviar = window.gtag || function gtag(...args: unknown[]) {
-    window.dataLayer.push(args);
-  };
-  window.gtag = enviar;
-
   return new Promise<void>((resolve) => {
     let listo = false;
     const terminar = () => { if (!listo) { listo = true; resolve(); } };
     setTimeout(terminar, esperaMaxMs);
-    enviar("event", eventName, {
+    const viaGtm = gaEventUsesGtm(eventName);
+    window.dataLayer.push({
+      event: eventName,
+      site_version: "web_nueva_2026",
+      ...params,
+      ...(viaGtm ? { eventCallback: terminar, eventTimeout: esperaMaxMs } : {}),
+    });
+    if (viaGtm) return;
+
+    googleTag()("event", eventName, {
       site_version: "web_nueva_2026",
       transport_type: "beacon",
       ...params,
+      send_to: gaMeasurementId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID),
       event_callback: terminar,
     });
   });
@@ -200,14 +230,14 @@ export function getGaClientId(): string | undefined {
 
 /** Ask the Google tag for the active session; never guess its cookie format. */
 export function getGaSessionId(): Promise<number | undefined> {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (typeof window === 'undefined' || !window.gtag || !measurementId) {
+  const measurementId = gaMeasurementId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
+  if (typeof window === 'undefined' || !measurementId) {
     return Promise.resolve(undefined);
   }
   return new Promise((resolve) => {
     const timer = setTimeout(() => resolve(undefined), 300);
     try {
-      window.gtag!('get', measurementId, 'session_id', (value: unknown) => {
+      googleTag()('get', measurementId, 'session_id', (value: unknown) => {
         clearTimeout(timer);
         const sessionId = Number(value);
         resolve(Number.isSafeInteger(sessionId) && sessionId > 0 ? sessionId : undefined);
@@ -237,10 +267,7 @@ export function trackGoogleAdsPurchase(data: {
   } catch { /* La deduplicación de Ads conserva transaction_id como respaldo. */ }
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function gtag(...args: unknown[]) {
-    window.dataLayer.push(args);
-  };
-  window.gtag("event", "conversion", {
+  googleTag()("event", "conversion", {
     send_to: sendTo,
     value: data.value,
     currency: "CLP",
