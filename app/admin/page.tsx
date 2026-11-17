@@ -604,6 +604,9 @@ export default function AdminDashboard() {
                     >
                         Calidad del sistema
                     </Link>
+                    <Link href="/admin/embudo" className="px-4 py-3 text-xs font-bold whitespace-nowrap text-gray-700 hover:bg-white rounded-xl">
+                        Embudo de reservas
+                    </Link>
                     <Link
                         href="/admin/dashboard"
                         className="flex items-center gap-2 px-4 md:px-3 md:px-8 py-2 md:py-2.5 md:py-3.5 rounded-[1.3rem] text-[11px] md:text-xs font-black uppercase tracking-wide md:tracking-widest whitespace-nowrap transition-all text-gray-700 hover:text-gray-600 hover:bg-white/50"

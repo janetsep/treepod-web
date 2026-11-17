@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import Link from "next/link";
 import { DollarSign, Wallet, BedDouble, Eye, TrendingUp, Users, ArrowLeft, Receipt } from "lucide-react";
+import BookingFunnel from "../components/BookingFunnel";
 import { adminFetch } from "@/lib/admin-fetch";
 
 type Analytics = {
@@ -454,67 +455,14 @@ export default function DashboardAdmin() {
                     </div>
                 </div>
 
-                {/* FUNNEL DE CONVERSIÓN + FUENTES DE TRÁFICO */}
+                <BookingFunnel />
+                {analyticsAvailable && <div className="rounded-xl border border-sky-100 bg-sky-50 p-4 text-sm text-sky-900">
+                    Consultas de tinaja por WhatsApp (mes actual): <strong>{(analytics.eventUsers?.click_whatsapp_tinaja || 0).toLocaleString('es-CL')} usuarios</strong>. Son consultas, no reservas pagadas.
+                </div>}
+
+                {/* FUENTES DE TRÁFICO */}
                 {analyticsAvailable && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary" /> Embudo real de reserva (mes)
-                        </h3>
-                        <p className="text-[10px] text-gray-400 mb-5">Personas aproximadas por etapa. Se excluyen los eventos históricos inflados de GA4.</p>
-                        <div className="space-y-3">
-                            {[
-                                { label: 'Llegaron a disponibilidad', value: analytics.eventUsers?.view_disponibilidad || 0, color: 'bg-blue-500' },
-                                { label: 'Consultaron fechas', value: analytics.eventUsers?.availability_checked || 0, color: 'bg-indigo-500' },
-                                { label: 'Vieron precio', value: analytics.eventUsers?.view_pricing_result || 0, color: 'bg-violet-500' },
-                                { label: 'Presionaron Reservar', value: analytics.eventUsers?.click_reservar || 0, color: 'bg-fuchsia-500' },
-                                { label: 'Reserva creada', value: analytics.eventUsers?.reservation_created || 0, color: 'bg-orange-500' },
-                                { label: 'Entraron a Webpay', value: analytics.eventUsers?.webpay_redirect_started || 0, color: 'bg-amber-500' },
-                                { label: 'Compra confirmada', value: analytics.eventUsers?.purchase || 0, color: 'bg-emerald-500' },
-                            ].map((step, i, arr) => {
-                                const maxVal = arr[0].value || 1;
-                                const pct = Math.round((step.value / maxVal) * 100);
-                                return (
-                                    <div key={i}>
-                                        <div className="flex justify-between text-xs mb-1">
-                                            <span className="text-gray-500 font-medium">{step.label}</span>
-                                            <span className="font-bold text-gray-800">{step.value.toLocaleString('es-CL')} <span className="text-gray-400 font-normal">({pct}%)</span></span>
-                                        </div>
-                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                            <div className={`h-full ${step.color} rounded-full transition-all`} style={{ width: `${pct}%` }}></div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 p-3 flex items-center justify-between gap-4">
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-wide text-emerald-800">Salida alternativa</p>
-                                <p className="text-xs text-emerald-900">Consultaron por WhatsApp desde disponibilidad</p>
-                            </div>
-                            <span className="text-lg font-black text-emerald-700">
-                                {(analytics.eventUsers?.click_whatsapp_reserva || 0).toLocaleString('es-CL')}
-                            </span>
-                        </div>
-                        <div className="mt-3 rounded-xl border border-sky-100 bg-sky-50 p-3 flex items-center justify-between gap-4">
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-wide text-sky-800">Consulta de tinaja</p>
-                                <p className="text-xs text-sky-900">Consultaron disponibilidad y precio por WhatsApp</p>
-                            </div>
-                            <span className="text-lg font-black text-sky-700">
-                                {(analytics.eventUsers?.click_whatsapp_tinaja || 0).toLocaleString('es-CL')}
-                            </span>
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tasa de Conversión</span>
-                            <span className="text-lg font-black text-emerald-600">{analytics.conversionRate || '0.0'}%</span>
-                        </div>
-                        <div className="mt-3 rounded-xl bg-rose-50 border border-rose-100 p-3 text-[10px] text-rose-800">
-                            <span className="font-black uppercase tracking-wide">Fallos medidos: </span>
-                            disponibilidad {analytics.events?.availability_check_failed || 0} · precio {analytics.events?.pricing_failed || 0} · crear reserva {analytics.events?.reservation_create_failed || 0} · Webpay {analytics.events?.webpay_start_failed || 0}
-                        </div>
-                    </div>
-
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
                         <h3 className="text-gray-800 font-bold mb-6 text-sm uppercase tracking-wide flex items-center gap-2">
                             <Users className="w-4 h-4 text-primary" /> Fuentes de Tráfico (28d)
