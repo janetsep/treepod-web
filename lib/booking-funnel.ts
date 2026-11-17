@@ -46,6 +46,10 @@ export function reportPeriod(params: URLSearchParams, now = new Date()): Period 
   return {start, end, today, from: chileDayStart(start), until: chileDayStart(nextDate(end,1))};
 }
 const filterEvents = (values: string[]) => ({filter: {fieldName: 'eventName', inListFilter: {values}}});
+const bookingButtonFilter = () => ({andGroup:{expressions:[
+  filterEvents(['click_reservar','click_reservar_sticky']),
+  {filter:{fieldName:'pagePath',stringFilter:{matchType:'EXACT',value:'/disponibilidad'}}},
+]}});
 export const ORDERED_STEPS = [
   {id: 'precio', label: 'Vieron precio', events: ['view_pricing_result']},
   {id: 'reservar', label: 'Presionaron Reservar', events: ['click_reservar','click_reservar_sticky']},
@@ -57,7 +61,10 @@ export function orderedFunnelRequest(period: Period) {
     dateRanges: [{startDate: period.start, endDate: period.end}],
     funnel: {isOpenFunnel: false, steps: ORDERED_STEPS.map(step => ({
       name: step.id, isDirectlyFollowedBy: false,
-      filterExpression: {orGroup: {expressions: step.events.map(eventName => ({funnelEventFilter: {eventName}}))}},
+      filterExpression: step.id === 'reservar' ? {andGroup:{expressions:[
+        {orGroup:{expressions:step.events.map(eventName=>({funnelEventFilter:{eventName}}))}},
+        {funnelFieldFilter:{fieldName:'pagePathPlusQueryString',stringFilter:{matchType:'FULL_REGEXP',value:'^/disponibilidad(\\?.*)?$'}}},
+      ]}} : {orGroup: {expressions: step.events.map(eventName => ({funnelEventFilter: {eventName}}))}},
     }))},
   };
 }
@@ -85,7 +92,7 @@ export async function fetchGaBookingFunnel(client: ReportClient, period: Period)
   const request = <T>(path: string, data: unknown) => client.request<T>({url: `${base}/${path}`, method: 'POST', data, timeout: 12000});
   const [events, buttons, sequence] = await Promise.allSettled([
     request<GaReport>('v1beta/properties/357898604:runReport', {dateRanges, dimensions: [{name:'eventName'}], metrics: [{name:'totalUsers'},{name:'eventCount'}], dimensionFilter: filterEvents([...FUNNEL_EVENTS])}),
-    request<GaReport>('v1beta/properties/357898604:runReport', {dateRanges, metrics: [{name:'totalUsers'},{name:'eventCount'}], dimensionFilter: filterEvents(['click_reservar','click_reservar_sticky'])}),
+    request<GaReport>('v1beta/properties/357898604:runReport', {dateRanges, metrics: [{name:'totalUsers'},{name:'eventCount'}], dimensionFilter: bookingButtonFilter()}),
     request<{funnelTable: GaReport}>('v1alpha/properties/357898604:runFunnelReport', orderedFunnelRequest(period)),
   ]);
   if (events.status !== 'fulfilled' || buttons.status !== 'fulfilled') throw new Error('GA4 unavailable');

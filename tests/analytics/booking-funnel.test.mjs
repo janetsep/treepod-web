@@ -27,8 +27,15 @@ test('CTA user union is queried rather than summed, and a failed ordered report 
   const calls=[];
   const ga=await lib.fetchGaBookingFunnel({request:async request=>{calls.push(request);if(request.url.includes('runFunnelReport'))throw Error('alpha unavailable');return {data:{metricHeaders:[{name:'totalUsers'},{name:'eventCount'}],rows:request.data.dimensions?[{dimensionValues:[{value:'click_reservar'}],metricValues:[{value:'8'},{value:'14'}]},{dimensionValues:[{value:'click_reservar_sticky'}],metricValues:[{value:'1'},{value:'1'}]}]:[{metricValues:[{value:'8'},{value:'15'}]}]}};}},period);
   assert.equal(ga.reserve.users,8);assert.equal(ga.reserve.events,15);assert.equal(ga.ordered,null);
-  assert.equal(calls[1].data.dimensions,undefined);assert.equal(calls[2].data.funnel.isOpenFunnel,false);
-  assert.equal(calls[2].data.funnel.steps[1].filterExpression.orGroup.expressions.length,2);
+  assert.equal(calls[1].data.dimensions,undefined);assert.equal(calls[1].data.dimensionFilter.andGroup.expressions[1].filter.stringFilter.value,'/disponibilidad');assert.equal(calls[2].data.funnel.isOpenFunnel,false);
+  const pageFilter=calls[2].data.funnel.steps[1].filterExpression.andGroup.expressions[1].funnelFieldFilter;
+  assert.equal(pageFilter.fieldName,'pagePathPlusQueryString');
+  const pagePattern=new RegExp(pageFilter.stringFilter.value);
+  assert.ok(pagePattern.test('/disponibilidad?entrada=2026-12-18'));
+  assert.ok(pagePattern.test('/disponibilidad'));
+  assert.ok(!pagePattern.test('/servicios'));
+  assert.ok(!pagePattern.test('/disponibilidad-falsa'));
+  assert.equal(calls[2].data.funnel.steps[1].filterExpression.andGroup.expressions[0].orGroup.expressions.length,2);
 });
 function attempt(id,extra={}){return {reserva_id:id,estado:'registrado',monto:95000,total_reserva:190000,created_at:'2026-11-02T10:00:00Z',updated_at:'2026-11-02T10:05:00Z',reservas:{estado:'pagado',monto_pagado:95000,total:190000,deleted_at:null,fuente:'WEB_NEW_PRICING'},...extra};}
 test('payments count unique confirmed reservations and distinguish paid date, started cohort, tests and missing evidence',()=>{

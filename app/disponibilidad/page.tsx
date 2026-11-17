@@ -1,5 +1,6 @@
 "use client";
 
+import { minimumBookingDate, nextCalendarDate } from '@/lib/booking-date-selection';
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -150,6 +151,17 @@ function DisponibilidadContent() {
       .catch(() => {});
   }, []);
 
+  const calendarioRef = useRef<HTMLDivElement>(null);
+  const huespedesRef = useRef<HTMLSelectElement>(null);
+  const enfocarCalendario = () => {
+    const day = calendarioRef.current?.querySelector<HTMLButtonElement>('.rdp-day_button:not(:disabled)');
+    calendarioRef.current?.scrollIntoView({behavior:'smooth',block:'center'});
+    day?.focus({preventScroll:true});
+  };
+  const abrirSelector = (control: HTMLInputElement | HTMLSelectElement) => {
+    control.focus({preventScroll:true});
+    try { control.showPicker?.(); } catch { /* El control nativo sigue disponible con teclado y foco. */ }
+  };
   const resultsRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -751,6 +763,7 @@ function DisponibilidadContent() {
   const inputFicha =
     "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const fechaMinimaReserva = minimumBookingDate();
   const enlaceConsultaTinaja = crearEnlaceConsultaTinaja(entrada, salida, adultos);
 
   return (
@@ -808,9 +821,11 @@ function DisponibilidadContent() {
               <section className="bg-white p-5 lg:p-6 rounded-[2px] border border-[#1E1B16]/12 space-y-6">
                 {/* Guest Selection moved here */}
                 <div className="space-y-2">
-                  <label className="dato text-[#5B5348] block">¿Cuántos huéspedes?</label>
+                  <label htmlFor="booking-guests" className="dato text-[#5B5348] block cursor-pointer">¿Cuántos huéspedes?</label>
                   <div className="relative">
                     <select
+                      id="booking-guests"
+                      ref={huespedesRef}
                       value={adultos}
                       onChange={(e) => setAdultos(Number(e.target.value))}
                       className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] font-medium appearance-none focus:border-[#00ADEF] focus:ring-0 transition-colors outline-none text-[#1E1B16] cursor-pointer"
@@ -827,7 +842,7 @@ function DisponibilidadContent() {
 
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <label className="dato text-[#5B5348]">Selecciona tus fechas</label>
+                    <button type="button" onClick={enfocarCalendario} className="dato text-[#5B5348] text-left underline decoration-dotted underline-offset-4 focus-visible:outline-2 focus-visible:outline-[#00ADEF]">Selecciona tus fechas</button>
                     {/* Leyenda del calendario (los dots redondos del calendario son
                         la única excepción viva al rectangular) */}
                     <div className="flex flex-wrap items-center gap-3 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
@@ -847,6 +862,7 @@ function DisponibilidadContent() {
                       </div>
                     </div>
                   </div>
+                  <div ref={calendarioRef} className="scroll-mt-28">
                   <AvailabilityCalendar
                     // Sin esto el calendario abría SIEMPRE en el mes actual, aunque
                     // el enlace trajera fechas de otro mes: quien llegaba desde la
@@ -878,6 +894,7 @@ function DisponibilidadContent() {
                     }}
                     className="bg-transparent border-none shadow-none p-0 w-full"
                   />
+                  </div>
                 </div>
               </section>
             </div>
@@ -1090,23 +1107,31 @@ function DisponibilidadContent() {
                     <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
                     <span className="text-[13px] font-semibold text-[#1E1B16]">Huéspedes</span>
                     <DottedLeader />
-                    <span className="text-[13px] tabular-nums text-[#1E1B16]">{adultos} {adultos === 1 ? 'persona' : 'personas'}</span>
+                    <button type="button" aria-label="Cambiar huéspedes" onClick={() => {
+                      huespedesRef.current?.scrollIntoView({behavior:'smooth',block:'center'});
+                      if (huespedesRef.current) abrirSelector(huespedesRef.current);
+                    }} className="text-[13px] tabular-nums text-[#008CBF] underline decoration-dotted underline-offset-4">{adultos} {adultos === 1 ? 'persona' : 'personas'}</button>
                   </div>
                   <div className="flex items-baseline gap-3 py-1.5">
                     <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
-                    <span className="text-[13px] font-semibold text-[#1E1B16]">Ingreso</span>
+                    <label htmlFor="booking-check-in" className="text-[13px] font-semibold text-[#1E1B16] cursor-pointer">Ingreso</label>
                     <DottedLeader />
-                    <span className="text-[13px] tabular-nums text-[#1E1B16] whitespace-nowrap">
-                      {entrada ? entrada.split('-').reverse().join('-') : "—"}
-                    </span>
+                    <input type="date" id="booking-check-in" aria-label="Fecha de ingreso"
+                      value={entrada} min={fechaMinimaReserva}
+                      onClick={e=>abrirSelector(e.currentTarget)}
+                      onChange={e=>{setEntrada(e.target.value);
+                        if (!e.target.value || (salida && salida <= e.target.value)) setSalida("");}}
+                      className="w-36 min-w-0 rounded-[2px] border border-[#1E1B16]/20 bg-white px-2 py-2 text-[13px] tabular-nums text-[#1E1B16] focus:border-[#00ADEF] focus:outline-none" />
                   </div>
                   <div className="flex items-baseline gap-3 py-1.5">
                     <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
-                    <span className="text-[13px] font-semibold text-[#1E1B16]">Salida</span>
+                    <label htmlFor="booking-check-out" className="text-[13px] font-semibold text-[#1E1B16] cursor-pointer">Salida</label>
                     <DottedLeader />
-                    <span className="text-[13px] tabular-nums text-[#1E1B16] whitespace-nowrap">
-                      {salida ? salida.split('-').reverse().join('-') : "—"}
-                    </span>
+                    <input type="date" id="booking-check-out" aria-label="Fecha de salida"
+                      value={salida} min={nextCalendarDate(entrada || fechaMinimaReserva)}
+                      onClick={e=>abrirSelector(e.currentTarget)}
+                      onChange={e=>{setSalida(e.target.value);}}
+                      className="w-36 min-w-0 rounded-[2px] border border-[#1E1B16]/20 bg-white px-2 py-2 text-[13px] tabular-nums text-[#1E1B16] focus:border-[#00ADEF] focus:outline-none" />
                   </div>
                   {resultado && (
                     <div className="flex items-baseline gap-3 py-1.5">

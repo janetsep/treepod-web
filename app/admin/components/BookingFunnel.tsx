@@ -70,7 +70,7 @@ export default function BookingFunnel() {
         <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50"><h3 className="text-sm text-emerald-900">Pagaron por Webpay</h3><p className="text-3xl font-bold mt-2">{count(payments?.paidReservations)}</p><p className="text-xs text-emerald-900 mt-1">reservas con pago confirmado en la base</p></div>
       </div>
       {!ga && <p className="text-sm">Los conteos de personas no están disponibles. Puedes seguir revisando los pagos verificados.</p>}
-      <p className="text-xs text-gray-600">Cada etapa cuenta usuarios de GA4 por separado; una persona puede actuar varias veces o entrar por otra ruta. No sumamos usuarios entre botones. “Salida hacia Webpay” registra el envío desde TreePod: no confirma que la pantalla de Transbank se haya cargado.</p>
+      <p className="text-xs text-gray-600">Cada etapa cuenta usuarios de GA4 por separado; una persona puede actuar varias veces o entrar por otra ruta. No sumamos usuarios entre botones. Reservar cuenta solo botones del formulario de disponibilidad, excluyendo consultas de servicios. “Salida hacia Webpay” registra el envío desde TreePod: no confirma que la pantalla de Transbank se haya cargado.</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="p-5 bg-white rounded-xl border space-y-3"><h3 className="font-bold">¿Dónde se detienen?</h3>
           <p className="text-xs text-gray-600">Secuencia de los mismos usuarios: precio → Reservar → salida a Webpay → compra medida en GA4. Fechas y precio se consultan en paralelo, por eso las fechas se muestran arriba, sin imponerles un orden artificial.</p>

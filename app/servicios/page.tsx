@@ -33,7 +33,7 @@ export default function ServicesPage() {
             alt: "Desayuno cordillerano servido en un domo de TreePod",
             caption: "Desayuno cordillerano en tu domo",
             features: ["Desayuno servido en tu domo (costo adicional)", "Parrilla que llevamos a tu domo (costo adicional)", "Productos del valle (costo adicional)"],
-            buttonText: "Ver opciones de comida",
+            buttonText: "Consultar desayuno y parrilla",
             href: "/contacto"
         }
     ];
@@ -85,6 +85,7 @@ export default function ServicesPage() {
                                 {/* Foto protagonista con pie de foto, sin marcos girados ni gradientes */}
                                 <div className={`col-span-12 lg:col-span-7 ${reverse ? "lg:order-2" : ""}`}>
                                     <figure>
+                                        <Link href={service.href} aria-label={service.buttonText} onClick={() => trackEvent('click_service_details', {service_title:service.title, placement:'photo'})} className="block focus-visible:outline-2 focus-visible:outline-[#00ADEF]">
                                         <div className="relative overflow-hidden rounded-[2px] aspect-[4/3] group">
                                             <Image
                                                 alt={service.alt}
@@ -96,8 +97,9 @@ export default function ServicesPage() {
                                         </div>
                                         <figcaption className="mt-2 flex items-center gap-2">
                                             <span className="w-5 h-px bg-[#00ADEF]" aria-hidden="true" />
-                                            <span className="caption-editorial">{service.caption}</span>
+                                            <span className="caption-editorial underline decoration-dotted underline-offset-4">{service.caption}</span>
                                         </figcaption>
+                                        </Link>
                                     </figure>
                                 </div>
 
@@ -117,14 +119,14 @@ export default function ServicesPage() {
                                         {service.features.map((feature, i) => (
                                             <li key={i} className="flex items-baseline gap-3 py-3 border-b border-[#1E1B16]/10">
                                                 <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0 self-center" />
-                                                <span className="text-[15px] font-medium text-[#1E1B16]">{feature}</span>
+                                                <Link href={service.href} onClick={() => trackEvent('click_service_details', {service_title:service.title, placement:'feature'})} className="text-[15px] font-medium text-[#1E1B16] underline decoration-dotted underline-offset-4 focus-visible:outline-2 focus-visible:outline-[#00ADEF]">{feature}</Link>
                                             </li>
                                         ))}
                                     </ul>
                                     <div className="pt-2">
                                         <Link
                                             href={service.href}
-                                            onClick={() => trackEvent('click_reservar', { service_title: service.title, page: 'servicios' })}
+                                            onClick={() => trackEvent('click_service_details', { service_title: service.title, page: 'servicios', placement:'cta' })}
                                             className={btnPrimary}
                                         >
                                             {service.buttonText}

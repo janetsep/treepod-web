@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { minimumBookingDate } from '@/lib/booking-date-selection';
 import { RefreshCw } from "lucide-react";
 import { DayPicker, DateRange } from "react-day-picker";
 import { format, addMonths, startOfToday, parseISO, addDays } from "date-fns";
@@ -35,15 +36,7 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
     const rangeCompleteRef = useRef(false);
 
     useEffect(() => {
-        const horaChile = parseInt(
-            new Intl.DateTimeFormat("es-CL", {
-                timeZone: "America/Santiago",
-                hour: "2-digit",
-                hour12: false,
-            }).format(new Date()),
-            10
-        ) % 24; // "24" (medianoche) -> 0
-        setMinSelectable(horaChile >= 14 ? addDays(startOfToday(), 1) : startOfToday());
+        setMinSelectable(parseISO(minimumBookingDate()));
     }, []);
 
     // Track when both dates are selected (range is complete)
@@ -253,6 +246,11 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
                 </div>
             )}
 
+            <p role="status" aria-live="polite" className="mb-3 text-sm font-medium text-[#1E1B16]">
+                {!selectedRange?.from ? 'Elige el día de ingreso y luego el de salida.'
+                    : !selectedRange?.to ? 'Ahora elige el día de salida en el calendario.'
+                    : 'Fechas elegidas. Puedes cambiarlas aquí o en el resumen.'}
+            </p>
             <DayPicker
                 mode="range"
                 selected={selectedRange}

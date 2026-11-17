@@ -1,4 +1,5 @@
 export type AnalyticsEventName =
+  | "click_service_details"
   | "checkout_email_missing"
   | "checkout_email_invalid"
   | "checkout_dates_unavailable"
