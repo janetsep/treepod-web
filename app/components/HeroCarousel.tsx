@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import PhotoImage from "./PhotoImage";
 import { useEffect, useRef, useState } from "react";
 import { imagePlaceholder } from "@/lib/image-placeholder";
 
@@ -29,16 +29,21 @@ const SLIDES = [
 const INTERVALO = 6500;
 
 export default function HeroCarousel() {
-  const [activo, setActivo] = useState(0);
+  const [{ activo, anterior }, setSlide] = useState({ activo: 0, anterior: 0 });
   const [montarResto, setMontarResto] = useState(false);
   const cargadas = useRef(new Set<number>());
   const seleccionPendiente = useRef<number | null>(null);
+
+  function mostrar(indice: number) {
+    setSlide((actual) => actual.activo === indice
+      ? actual : { activo: indice, anterior: actual.activo });
+  }
 
   function seleccionar(indice: number) {
     setMontarResto(true);
     if (cargadas.current.has(indice)) {
       seleccionPendiente.current = null;
-      setActivo(indice);
+      mostrar(indice);
     } else {
       seleccionPendiente.current = indice;
     }
@@ -53,10 +58,10 @@ export default function HeroCarousel() {
     // Mantener la foto actual si la siguiente todavía no está descargada y
     // decodificada, también al navegar con una conexión lenta.
     const avance = setInterval(() => {
-      setActivo((i) => {
-        const siguiente = (i + 1) % SLIDES.length;
+      setSlide((actual) => {
+        const siguiente = (actual.activo + 1) % SLIDES.length;
         return seleccionPendiente.current === null && cargadas.current.has(siguiente)
-          ? siguiente : i;
+          ? { activo: siguiente, anterior: actual.activo } : actual;
       });
     }, INTERVALO);
     return () => {
@@ -67,38 +72,41 @@ export default function HeroCarousel() {
 
   return (
     <>
-      {SLIDES.map((s, i) => {
-        if (i > 0 && !montarResto) return null;
-        return (
-          <Image
-            key={s.src}
-            src={s.src}
-            alt={i === 0 ? s.alt : ""}
-            aria-hidden={i === 0 ? undefined : true}
-            fill
-            priority={i === 0}
-            fetchPriority={i === 0 ? "high" : "auto"}
-            quality={72}
-            placeholder="blur"
-            blurDataURL={imagePlaceholder(s.src)}
-            onLoad={() => {
-              cargadas.current.add(i);
-              if (seleccionPendiente.current === i) {
-                seleccionPendiente.current = null;
-                setActivo(i);
+      {/* La anterior sigue opaca bajo la entrante: el fondo nunca se descubre. */}
+      <div className="absolute inset-0 isolate">
+        {SLIDES.map((s, i) => {
+          if (i > 0 && !montarResto) return null;
+          return (
+            <PhotoImage
+              key={s.src}
+              src={s.src}
+              alt={i === 0 ? s.alt : ""}
+              aria-hidden={i === 0 ? undefined : true}
+              priority={i === 0}
+              fetchPriority={i === 0 ? "high" : "auto"}
+              quality={72}
+              preview={imagePlaceholder(s.src)}
+              onLoad={() => {
+                cargadas.current.add(i);
+                if (seleccionPendiente.current === i) {
+                  seleccionPendiente.current = null;
+                  mostrar(i);
+                }
+              }}
+              onError={() => {
+                if (seleccionPendiente.current === i) seleccionPendiente.current = null;
+              }}
+              sizes="100vw"
+              style={{ objectPosition: s.position }}
+              className="object-cover"
+              containerClassName={i === activo
+                ? `z-[2] ${activo === anterior ? "opacity-100" : "photo-slide-active"}`
+                : i === anterior ? "z-[1] opacity-100" : "z-0 opacity-0"
               }
-            }}
-            onError={() => {
-              if (seleccionPendiente.current === i) seleccionPendiente.current = null;
-            }}
-            sizes="100vw"
-            style={{ objectPosition: s.position }}
-            className={`object-cover transition-opacity duration-[1400ms] ease-in-out ${
-              i === activo ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        );
-      })}
+            />
+          );
+        })}
+      </div>
 
       {/* Marcadores: barras finas, la activa en cyan. Sirven además para saltar de foto. */}
       <div className="absolute bottom-6 right-5 md:right-10 z-20 flex gap-1.5" role="group" aria-label="Fotos de portada">

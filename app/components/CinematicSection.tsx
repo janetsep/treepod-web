@@ -1,4 +1,4 @@
-import Image from "next/image";
+import PhotoImage from "./PhotoImage";
 import Link from "next/link";
 import TriBullet from "./deco/TriBullet";
 
@@ -60,14 +60,12 @@ export default function CinematicSection({
   const imageBlurDataURL = imagePlaceholder(image);
   return (
     <section className="relative w-full min-h-[80vh] flex items-end overflow-hidden">
-      <Image
+      <PhotoImage
         src={image}
         alt={alt}
-        fill
         quality={75}
         priority={priority}
-        placeholder={imageBlurDataURL ? "blur" : "empty"}
-        blurDataURL={imageBlurDataURL}
+        preview={imageBlurDataURL}
         sizes="100vw"
         className={`object-cover ${videoSrc ? "" : "ken-burns-soft"}`}
         style={{ objectPosition: position }}

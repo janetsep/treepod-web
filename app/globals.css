@@ -141,6 +141,30 @@ html.reveal-ready .reveal.is-visible {
   animation: ken-burns 18s ease-in-out infinite alternate;
   will-change: transform;
 }
+/* La foto se revela sobre su vista previa sin retirarla de golpe. */
+.photo-image > .photo-full {
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+.photo-image[data-loaded="true"] > .photo-full {
+  opacity: 1;
+}
+@keyframes photo-crossfade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.photo-slide-active {
+  animation: photo-crossfade 1400ms ease-in-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-image > .photo-full {
+    transition: none;
+  }
+  .photo-slide-active {
+    animation: none;
+  }
+}
+
 /* Variante más sutil y lenta para las secciones cinematográficas interiores */
 .ken-burns-soft {
   animation: ken-burns 26s ease-in-out infinite alternate;

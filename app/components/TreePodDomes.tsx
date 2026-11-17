@@ -1,4 +1,4 @@
-import Image from "next/image";
+import PhotoImage from "./PhotoImage";
 import Link from "next/link";
 import SectionFolio from "./SectionFolio";
 import { btnPrimary } from "./deco/cta";
@@ -16,13 +16,12 @@ export default function TreePodDomes() {
         <div className="grid grid-cols-12 gap-x-4 md:gap-x-10 gap-y-10 items-center">
           <figure className="col-span-12 lg:col-span-6">
             <div className="relative aspect-[4/5] overflow-hidden bg-[#E8E5DF]">
-              <Image
+              <PhotoImage
                 alt="Domo geodésico bajo TreePod integrado en el bosque nativo"
-                className="object-cover object-[center_85%]"
+                className="object-cover"
+                style={{ objectPosition: "center 85%" }}
                 src="/images/real/domo-bajo-bosque.jpg"
-                fill
-                placeholder="blur"
-                blurDataURL={imagePlaceholder("/images/real/domo-bajo-bosque.jpg")}
+                preview={imagePlaceholder("/images/real/domo-bajo-bosque.jpg")}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
@@ -61,13 +60,11 @@ export default function TreePodDomes() {
 
             <figure className="w-3/5 ml-auto mt-10">
               <div className="relative aspect-square overflow-hidden">
-                <Image
+                <PhotoImage
                   alt="Cama matrimonial del domo"
                   className="object-cover object-center"
                   src="/images/Santuario2.jpg"
-                  placeholder="blur"
-                  blurDataURL={imagePlaceholder("/images/Santuario2.jpg")}
-                  fill
+                  preview={imagePlaceholder("/images/Santuario2.jpg")}
                   sizes="(max-width: 1024px) 60vw, 22vw"
                 />
               </div>
