@@ -143,6 +143,10 @@ export async function POST(req: Request) {
       .lt("fecha_inicio", salida)
       .gt("fecha_fin", entrada);
 
+    if (resErr) {
+      return NextResponse.json({ error: "No pudimos verificar la disponibilidad. Tus fechas se mantienen; intenta nuevamente." }, { status: 503 });
+    }
+
     const now = new Date();
 
     // Filtramos en memoria:
@@ -169,6 +173,10 @@ export async function POST(req: Request) {
       .in("domo_id", domosPosibles)
       .lt("fecha_inicio", salida)
       .gt("fecha_fin", entrada);
+
+    if (bloqErr) {
+      return NextResponse.json({ error: "No pudimos verificar la disponibilidad. Tus fechas se mantienen; intenta nuevamente." }, { status: 503 });
+    }
 
     const idOcupados = new Set([
       ...ocupadosRes.map((r: any) => r.domo_id),

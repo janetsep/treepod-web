@@ -3,7 +3,7 @@
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState, Suspense, useRef } from "react";
+import { useEffect, useEffectEvent, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { getGaClientId, getGaSessionId, trackEvent, trackEventAndWait } from "../lib/analytics";
 import { getStoredUTMs } from '../components/UTMCapture';
@@ -151,7 +151,9 @@ function DisponibilidadContent() {
   }, []);
 
   const resultsRef = useRef<HTMLDivElement>(null);
-  const datosRef = useRef<HTMLDivElement>(null);
+  const datosRef = useRef<HTMLFormElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const checkoutInFlightRef = useRef(false);
   const availabilityTrackedRef = useRef("");
   const precioRequestRef = useRef(0);
   const isMundialEvent = searchParams.get("event") === "mundial";
@@ -160,13 +162,23 @@ function DisponibilidadContent() {
   // En navegaciones internas de Next.js los search params pueden estar listos
   // después del primer render. Sin esta sincronización, la landing del 18
   // entregaba septiembre en la URL, pero el calendario conservaba agosto.
-  useEffect(() => {
+  const aplicarFechasDesdeUrl = useEffectEvent((nextEntrada: string, nextSalida: string, nextAdultos: number) => {
+    // calcularPrecio también actualiza la URL. Si refleja la selección actual,
+    // no cancelar su petición ni borrar el precio recién recibido.
+    if (nextEntrada === entrada && nextSalida === salida && nextAdultos === adultos) return;
     precioRequestRef.current += 1;
     setResultado(null);
     setLoading(false);
-    setEntrada(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
-    setSalida(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
-    setAdultos(normalizarAdultos(adultosParam));
+    setEntrada(nextEntrada);
+    setSalida(nextSalida);
+    setAdultos(nextAdultos);
+  });
+  useEffect(() => {
+    aplicarFechasDesdeUrl(
+      esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "",
+      esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "",
+      normalizarAdultos(adultosParam),
+    );
   }, [entradaParam, salidaParam, adultosParam]);
 
   // Auto-scroll to results when calculating is done
@@ -430,6 +442,9 @@ function DisponibilidadContent() {
   };
 
   const reservar = async () => {
+    // Estado visual y bloqueo síncrono: Enter y ambos botones no deben abrir
+    // dos retenciones mientras la primera solicitud sigue en vuelo.
+    if (checkoutInFlightRef.current) return;
     let reservaHttpStatus = 0;
     let webpayHttpStatus = 0;
     let reservaCreadaId: string | null = null;
@@ -439,6 +454,7 @@ function DisponibilidadContent() {
 
       // Bloquear si las fechas no tienen un domo libre toda la estadía
       if (disponibilidad.disponible === false) {
+        trackEvent("checkout_dates_unavailable", { stage: "client_validation" });
         trackEvent("reservation_create_failed", {
           stage: "client_validation",
           failure_reason: "dates_unavailable",
@@ -456,6 +472,7 @@ function DisponibilidadContent() {
       // ultima barrera del checkout: en agosto de 2026, 13 personas vieron el
       // precio y ninguna llego a completarlos.
       if (!email.trim()) {
+        trackEvent("checkout_email_missing", { stage: "client_validation" });
         trackEvent("reservation_create_failed", {
           stage: "client_validation",
           failure_reason: "missing_email",
@@ -464,6 +481,7 @@ function DisponibilidadContent() {
         setError("Ingresa tu correo para continuar al pago seguro");
         // Validación visible: marca los campos vacíos y lleva la vista al formulario
         setIntentoEnvio(true);
+        emailRef.current?.focus({ preventScroll: true });
         datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
@@ -471,6 +489,7 @@ function DisponibilidadContent() {
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
+        trackEvent("checkout_email_invalid", { stage: "client_validation" });
         trackEvent("reservation_create_failed", {
           stage: "client_validation",
           failure_reason: "invalid_email_format",
@@ -478,10 +497,12 @@ function DisponibilidadContent() {
         });
         setError("Por favor ingresa un email válido");
         setIntentoEnvio(true);
+        emailRef.current?.focus({ preventScroll: true });
         datosRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
+      checkoutInFlightRef.current = true;
       setReserving(true);
       setError(null);
 
@@ -539,14 +560,15 @@ function DisponibilidadContent() {
       });
       reservaHttpStatus = res.status;
 
-      const data = await res.json();
+      const rawReserva = await res.text();
+      let data;
+      try { data = JSON.parse(rawReserva); } catch { data = null; }
       if (!res.ok) {
-        // Intentamos mostrar el mensaje de detalle si existe, para debuguear mejor
-        const errorMsg = data?.details || data?.error || "Error creando reserva";
+        const errorMsg = data?.error || "No pudimos iniciar la reserva. Tus fechas se mantienen; intenta nuevamente.";
         throw new Error(errorMsg);
       }
       if (!data?.id) {
-        throw new Error("No se recibió el ID de la reserva");
+        throw new Error("No pudimos iniciar la reserva. Tus fechas se mantienen; intenta nuevamente.");
       }
       reservaCreadaId = data.id;
       console.log("✅ Reserva creada con éxito:", data.id);
@@ -613,7 +635,7 @@ function DisponibilidadContent() {
         throw new Error("Webpay no entregó los datos necesarios para continuar.");
       }
 
-      trackEvent("webpay_redirect_started", {
+      trackEvent("webpay_token_created", {
         stage: "token_created",
         value: calcularTotalConServicios(),
         currency: "CLP",
@@ -643,6 +665,7 @@ function DisponibilidadContent() {
       // Se espera a que GA4 confirme este ultimo evento (maximo 800 ms) para no
       // perder el tramo final del embudo, que es justo el que no se podia medir.
       await trackEventAndWait("webpay_redirect_started", {
+        stage: "redirect_submit",
         reserva_id: data.id,
         transaction_id: data.id,
         value: calcularTotalConServicios(),
@@ -652,6 +675,10 @@ function DisponibilidadContent() {
     } catch (err: unknown) {
       console.error("❌ Error en reservar:", err);
       if (reservaCreadaId) {
+        trackEvent("checkout_webpay_failed", {
+          stage: "webpay_create_or_redirect",
+          http_status: webpayHttpStatus,
+        });
         // La reserva ya existe y retiene el domo. Evitamos crear otra al reintentar:
         // la pantalla de respaldo usa el mismo ID y vuelve a iniciar Webpay.
         trackEvent("webpay_start_failed", {
@@ -661,6 +688,10 @@ function DisponibilidadContent() {
         });
         router.push(`/reserva/${reservaCreadaId}?error=webpay_start_failed`);
       } else {
+        trackEvent("checkout_reservation_failed", {
+          stage: "reservation_api",
+          http_status: reservaHttpStatus,
+        });
         trackEvent("reservation_create_failed", {
           stage: "reservation_api",
           failure_reason: reservaHttpStatus ? "http_or_response_error" : "network_error",
@@ -669,7 +700,10 @@ function DisponibilidadContent() {
         setError(err instanceof Error ? err.message : "Error desconocido");
       }
     } finally {
-      if (!redirectingToWebpay) setReserving(false);
+      if (!redirectingToWebpay) {
+        checkoutInFlightRef.current = false;
+        setReserving(false);
+      }
     }
   };
 
@@ -716,7 +750,7 @@ function DisponibilidadContent() {
   // quedó vacío tras intentar reservar.
   const inputFicha =
     "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
-  const bordeCampo = (v: string) => (intentoEnvio && !v.trim() ? "border-red-400" : "border-[#1E1B16]/20");
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const enlaceConsultaTinaja = crearEnlaceConsultaTinaja(entrada, salida, adultos);
 
   return (
@@ -1168,35 +1202,46 @@ function DisponibilidadContent() {
                       )}
 
                     {/* Client Data Form */}
-                    <div ref={datosRef} className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2">
+                    <form
+                      id="booking-checkout"
+                      ref={datosRef}
+                      noValidate
+                      onSubmit={(event) => { event.preventDefault(); void reservar(); }}
+                      className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2"
+                    >
                       <h3 className="flex items-center gap-2 dato text-[#1E1B16] mb-4">
                         <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
                         ¿Dónde enviamos tu confirmación?
                       </h3>
 
                       <div>
-                        <label className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
+                        <label htmlFor="checkout-email" className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
                         <input
+                          id="checkout-email"
+                          ref={emailRef}
+                          name="email"
                           type="email"
                           inputMode="email"
                           autoComplete="email"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className={`${inputFicha} ${bordeCampo(email)}`}
+                          onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                          aria-invalid={intentoEnvio && !emailValido}
+                          aria-describedby={error ? "checkout-help checkout-error" : "checkout-help"}
+                          className={`${inputFicha} ${intentoEnvio && !emailValido ? "border-red-400" : "border-[#1E1B16]/20"}`}
                           placeholder="tu@email.com"
                         />
                       </div>
 
-                      <p className="text-[12px] text-[#5B5348] mt-3 leading-snug">
+                      <p id="checkout-help" className="text-[12px] text-[#5B5348] mt-3 leading-snug">
                         Al continuar irás directamente a Webpay. Después de pagar te pediremos nombre y teléfono para coordinar tu llegada.
                       </p>
 
                       {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
+                        <div id="checkout-error" role="alert" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
                           {error}
                         </div>
                       )}
-                    </div>
+                    </form>
 
                     {enlaceConsultaTinaja && <p className="text-sm text-[#5B5348] mb-4">
                       ¿Buscas un domo con tinaja?{" "}
@@ -1214,7 +1259,9 @@ function DisponibilidadContent() {
                     {/* CTA principal: dice exactamente lo que se cobra hoy (el 50%
                         ya calculado en pantalla), no "Pagar ahora". */}
                     <button
-                      onClick={() => { trackEvent("click_reservar"); reservar(); }}
+                      type="submit"
+                      form="booking-checkout"
+                      onClick={() => trackEvent("click_reservar")}
                       disabled={reserving || disponibilidad.disponible === false}
                       className={`${btnPrimary} w-full mt-2 disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
@@ -1455,11 +1502,13 @@ function DisponibilidadContent() {
                 </div>
               </div>
               <button
-                onClick={() => { trackEvent("click_reservar_sticky"); reservar(); }}
+                type="submit"
+                form="booking-checkout"
+                onClick={() => trackEvent("click_reservar_sticky")}
                 disabled={reserving || disponibilidad.disponible === false}
                 className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {reserving ? <RefreshCw className="w-4 h-4 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : "Reservar"}
+                {reserving ? <RefreshCw className="w-4 h-4 animate-spin" /> : disponibilidad.disponible === false ? "No disponible" : emailValido ? "Ir a Webpay" : "Ingresar correo"}
               </button>
             </div>
           </div>

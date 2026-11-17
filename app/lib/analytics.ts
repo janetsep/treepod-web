@@ -1,4 +1,10 @@
 export type AnalyticsEventName =
+  | "checkout_email_missing"
+  | "checkout_email_invalid"
+  | "checkout_dates_unavailable"
+  | "checkout_reservation_failed"
+  | "checkout_webpay_failed"
+  | "webpay_token_created"
   | "view_home"
   | "click_ver_disponibilidad_home"
   | "view_disponibilidad"
