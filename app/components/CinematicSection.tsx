@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import TriBullet from "./deco/TriBullet";
 
-const imageBlurDataURL =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
+import { imagePlaceholder } from "@/lib/image-placeholder";
 
 interface Props {
   image: string;
@@ -58,6 +57,7 @@ export default function CinematicSection({
   videoSrc,
 }: Props) {
   const TitleTag = titleAs;
+  const imageBlurDataURL = imagePlaceholder(image);
   return (
     <section className="relative w-full min-h-[80vh] flex items-end overflow-hidden">
       <Image
@@ -66,7 +66,7 @@ export default function CinematicSection({
         fill
         quality={75}
         priority={priority}
-        placeholder="blur"
+        placeholder={imageBlurDataURL ? "blur" : "empty"}
         blurDataURL={imageBlurDataURL}
         sizes="100vw"
         className={`object-cover ${videoSrc ? "" : "ken-burns-soft"}`}

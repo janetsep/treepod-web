@@ -3,8 +3,7 @@ import Link from "next/link";
 import SectionFolio from "./SectionFolio";
 import { btnPrimary } from "./deco/cta";
 
-const imageBlurDataURL =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzYnPjxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzYnIGZpbGw9JyNlOGU1ZGYnLz48L3N2Zz4=";
+import { imagePlaceholder } from "@/lib/image-placeholder";
 
 // La foto y el texto se mantienen en columnas independientes: el domo debe verse
 // completo y el titular nunca puede invadir ni quedar cortado por la imagen.
@@ -23,7 +22,7 @@ export default function TreePodDomes() {
                 src="/images/real/domo-bajo-bosque.jpg"
                 fill
                 placeholder="blur"
-                blurDataURL={imageBlurDataURL}
+                blurDataURL={imagePlaceholder("/images/real/domo-bajo-bosque.jpg")}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
@@ -66,6 +65,8 @@ export default function TreePodDomes() {
                   alt="Cama matrimonial del domo"
                   className="object-cover object-center"
                   src="/images/Santuario2.jpg"
+                  placeholder="blur"
+                  blurDataURL={imagePlaceholder("/images/Santuario2.jpg")}
                   fill
                   sizes="(max-width: 1024px) 60vw, 22vw"
                 />

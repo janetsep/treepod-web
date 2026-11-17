@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { imagePlaceholder } from "@/lib/image-placeholder";
 
 // Carrusel de portada. La versión anterior de 6 fotos se sacó porque cargaba las
 // 6 de una y hundía el LCP (73% de las visitas son móviles). Aquí solo la PRIMERA
@@ -30,6 +31,18 @@ const INTERVALO = 6500;
 export default function HeroCarousel() {
   const [activo, setActivo] = useState(0);
   const [montarResto, setMontarResto] = useState(false);
+  const cargadas = useRef(new Set<number>());
+  const seleccionPendiente = useRef<number | null>(null);
+
+  function seleccionar(indice: number) {
+    setMontarResto(true);
+    if (cargadas.current.has(indice)) {
+      seleccionPendiente.current = null;
+      setActivo(indice);
+    } else {
+      seleccionPendiente.current = indice;
+    }
+  }
 
   useEffect(() => {
     // Quien pidió menos animación se queda con la portada fija.
@@ -37,7 +50,15 @@ export default function HeroCarousel() {
     if (reduce) return;
 
     const alta = setTimeout(() => setMontarResto(true), 2500);
-    const avance = setInterval(() => setActivo((i) => (i + 1) % SLIDES.length), INTERVALO);
+    // Mantener la foto actual si la siguiente todavía no está descargada y
+    // decodificada, también al navegar con una conexión lenta.
+    const avance = setInterval(() => {
+      setActivo((i) => {
+        const siguiente = (i + 1) % SLIDES.length;
+        return seleccionPendiente.current === null && cargadas.current.has(siguiente)
+          ? siguiente : i;
+      });
+    }, INTERVALO);
     return () => {
       clearTimeout(alta);
       clearInterval(avance);
@@ -58,6 +79,18 @@ export default function HeroCarousel() {
             priority={i === 0}
             fetchPriority={i === 0 ? "high" : "auto"}
             quality={72}
+            placeholder="blur"
+            blurDataURL={imagePlaceholder(s.src)}
+            onLoad={() => {
+              cargadas.current.add(i);
+              if (seleccionPendiente.current === i) {
+                seleccionPendiente.current = null;
+                setActivo(i);
+              }
+            }}
+            onError={() => {
+              if (seleccionPendiente.current === i) seleccionPendiente.current = null;
+            }}
             sizes="100vw"
             style={{ objectPosition: s.position }}
             className={`object-cover transition-opacity duration-[1400ms] ease-in-out ${
@@ -72,7 +105,7 @@ export default function HeroCarousel() {
         {SLIDES.map((s, i) => (
           <button
             key={s.src}
-            onClick={() => setActivo(i)}
+            onClick={() => seleccionar(i)}
             aria-label={`Ver foto ${i + 1} de ${SLIDES.length}`}
             aria-current={i === activo}
             className={`h-[3px] w-8 rounded-[1px] transition-colors ${
