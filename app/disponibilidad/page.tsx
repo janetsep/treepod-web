@@ -1,6 +1,7 @@
 "use client";
 
 import { minimumBookingDate, nextCalendarDate } from '@/lib/booking-date-selection';
+import BookingOffer from '../components/BookingOffer';
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -775,7 +776,7 @@ function DisponibilidadContent() {
           <p className="display-lg text-[#1E1B16] max-w-3xl" aria-hidden="true">
             Reserva tu{" "}
             <span className="italic whitespace-nowrap">
-              glamping
+              domo
               <TriBullet className="inline-block w-3 h-2.5 ml-2 text-[#00ADEF]" />
             </span>{" "}
             en Las Trancas
@@ -783,7 +784,9 @@ function DisponibilidadContent() {
           {/* Fila de confianza tipo masthead: el "50% hoy" es el reductor de
               fricción n° 1 y se ve también en mobile. */}
           <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 dato text-[#5B5348]">
-            {tarifaDesde && (
+            {resultado ? <span className="font-semibold text-[#1E1B16]">
+              {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'} · {adultos} {adultos === 1 ? 'persona' : 'personas'} · Total ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+            </span> : tarifaDesde && (
               <>
                 <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche · 2 personas, 2 noches o más</span>
                 <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
@@ -805,12 +808,12 @@ function DisponibilidadContent() {
           {entrada && salida ? "Revisa tu resumen y confirma" : "Selecciona tus fechas en el calendario"}
         </p>
 
-        {/* TRES COLUMNAS: ESTADÍA — EXTRAS — RESUMEN */}
+        {/* Selección de estadía y resumen; los extras se contratan después. */}
         <div id="reservar" className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 pt-2 items-start scroll-mt-24 md:scroll-mt-28">
 
           {/* COL 1: 01 — Estadía */}
           {!isMundialEvent && (
-            <div className="lg:col-span-6 xl:col-span-4 space-y-4">
+            <div className="lg:col-span-6 space-y-4">
               <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
                 <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">01</span>
                 <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">Estadía</h2>
@@ -1089,7 +1092,7 @@ function DisponibilidadContent() {
           )}
 
           {/* COL 3: 03 — Resumen (ficha de reserva) */}
-          <aside className={`lg:sticky lg:top-28 z-20 pb-24 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-12 xl:col-span-4'}`}>
+          <aside className={`lg:sticky lg:top-28 z-20 pb-24 lg:pb-0 h-fit space-y-4 ${isMundialEvent ? 'lg:col-span-12 xl:col-span-8 xl:col-start-3' : 'lg:col-span-6'}`}>
             <header className="flex items-baseline gap-3 border-b border-[#1E1B16]/15 pb-3">
               <span className="font-display italic text-lg text-[#008CBF] tabular-nums" aria-hidden="true">02</span>
               <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.14em] text-[#1E1B16]">
@@ -1179,35 +1182,12 @@ function DisponibilidadContent() {
                 ) : (
                   <div ref={resultsRef} className="space-y-6 pt-1">
 
-                    {/* La cifra que manda es la que se cobra HOY: es la que baja la barrera.
-                        Antes competia en tamano con el total de la estadia y se
-                        confundian. El total y el saldo bajan a lineas de ficha. */}
-                    <div className="pt-5 border-t border-[#1E1B16]/15">
-                      <div className="dato text-[#008CBF]">Hoy pagas para confirmar</div>
-                      <div
-                        key={abonoHoy}
-                        className="font-display font-medium text-[clamp(2.4rem,5.5vw,3rem)] leading-none tabular-nums text-[#008CBF] mt-3 animate-fade-in"
-                      >
-                        ${abonoHoy.toLocaleString("es-CL")}
-                      </div>
-                      <div className="mt-5 pt-4 border-t border-[#1E1B16]/12 space-y-2">
-                        <div className="flex items-baseline gap-3 text-[13px]">
-                          <span className="text-[#5B5348]">Total de la estadía</span>
-                          <DottedLeader />
-                          <span className="tabular-nums text-[#1E1B16]">
-                            ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
-                          </span>
-                        </div>
-                        <div className="flex items-baseline gap-3 text-[13px]">
-                          <span className="text-[#5B5348]">Saldo a pagar al llegar</span>
-                          <DottedLeader />
-                          <span className="tabular-nums text-[#1E1B16]">
-                            ${((calcularTotalConServicios() || 0) - abonoHoy).toLocaleString("es-CL")}
-                          </span>
-                        </div>
-                        <p className="caption-editorial pt-1">Valor total · IVA incluido</p>
-                      </div>
-                    </div>
+                    <BookingOffer
+                      nights={resultado.noches}
+                      guests={adultos}
+                      total={calcularTotalConServicios() || 0}
+                      deposit={abonoHoy}
+                    />
 
                     {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
                         1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
@@ -1231,13 +1211,9 @@ function DisponibilidadContent() {
                       ref={datosRef}
                       noValidate
                       onSubmit={(event) => { event.preventDefault(); void reservar(); }}
-                      className="border border-[#1E1B16]/12 rounded-[2px] p-5 mt-2"
+                      aria-label="Correo para confirmar tu reserva"
+                      className="border border-[#1E1B16]/12 rounded-[2px] p-4 mt-2"
                     >
-                      <h3 className="flex items-center gap-2 dato text-[#1E1B16] mb-4">
-                        <TriBullet className="w-2.5 h-2 text-[#00ADEF] shrink-0" />
-                        ¿Dónde enviamos tu confirmación?
-                      </h3>
-
                       <div>
                         <label htmlFor="checkout-email" className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
                         <input
@@ -1257,7 +1233,7 @@ function DisponibilidadContent() {
                       </div>
 
                       <p id="checkout-help" className="text-[12px] text-[#5B5348] mt-3 leading-snug">
-                        Al continuar irás directamente a Webpay. Después de pagar te pediremos nombre y teléfono para coordinar tu llegada.
+                        Solo tu correo para ir a Webpay. Después del pago completamos tus datos.
                       </p>
 
                       {error && (
@@ -1294,8 +1270,7 @@ function DisponibilidadContent() {
                       Pago seguro mediante Webpay Plus
                     </p>
                     <p className="text-[11px] text-gray-600 text-center pt-1 leading-snug">
-                      Desayuno y otros extras se pueden agregar después de reservar, por WhatsApp o
-                      correo.
+                      Desayuno y extras opcionales, con costo adicional.
                     </p>
                     {/* Lo que no hace falta para decidir vive plegado. Antes esto sumaba
                         18 bloques entre el precio y el boton, y ahi se iba el 96%. */}
@@ -1431,7 +1406,7 @@ function DisponibilidadContent() {
                         )}
                       </div>
                       </Pliegue>
-                      <Pliegue titulo="Qué incluye tu domo" abierto={verIncluye} onToggle={() => setVerIncluye(v => !v)} ultimo>
+                      <Pliegue titulo="Más detalles del domo" abierto={verIncluye} onToggle={() => setVerIncluye(v => !v)} ultimo>
                       {/* Refuerzo de valor en el punto de mayor abandono del embudo:
                           aparece después del precio y antes de pedir datos. */}
                       <section
@@ -1502,14 +1477,14 @@ function DisponibilidadContent() {
               <div className="min-w-0">
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#5B5348]">
-                    Hoy pagas
+                    Hoy pagas (50%)
                   </span>
                   <span key={abonoHoy} className="font-display font-medium text-xl leading-none tabular-nums text-[#1E1B16] whitespace-nowrap animate-fade-in">
                     ${abonoHoy.toLocaleString("es-CL")}
                   </span>
                 </div>
-                <div className="text-[10px] uppercase tracking-[0.1em] text-[#5B5348] truncate mt-0.5">
-                  50% del total · ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+                <div className="text-[11px] text-[#5B5348] mt-0.5">
+                  {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'} · Total ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                 </div>
               </div>
               <button
