@@ -1,19 +1,38 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TriBullet from "./deco/TriBullet";
 import { trackEvent } from "../lib/analytics";
+
+function openDatePicker(input: HTMLInputElement) {
+  // Older Safari opens the native picker from the input tap itself.
+  try { input.showPicker?.(); } catch { input.focus(); }
+}
+
+function localDate(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
 
 // "Ficha de reserva" del home. Convierte el home de folleto en herramienta de
 // reserva: el visitante elige fechas y huéspedes y entra al flujo con todo
 // precargado. Estilo ficha del sistema: rectangular, regla superior cyan, papel.
 export default function BookingWidget({ embedded = false }: { embedded?: boolean }) {
   const router = useRouter();
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = localDate(new Date());
   const [entrada, setEntrada] = useState("");
   const [salida, setSalida] = useState("");
   const [adultos, setAdultos] = useState(2);
+  const entradaRef = useRef<HTMLInputElement>(null);
+  const salidaRef = useRef<HTMLInputElement>(null);
+  const nextDay = entrada ? new Date(`${entrada}T12:00:00`) : null;
+  if (nextDay) nextDay.setDate(nextDay.getDate() + 1);
+  const salidaMin = nextDay ? localDate(nextDay) : hoy;
+  const dateHint = entrada && (!salida || salida <= entrada)
+    ? "Ahora elige tu fecha de salida."
+    : salida && !entrada ? "Falta elegir tu fecha de llegada."
+    : entrada && salida ? "Fechas listas. Consulta disponibilidad y precio."
+    : "Selecciona la llegada y luego la salida.";
   // Precio "desde" real de la temporada vigente (tarifas de la base): ancla la
   // expectativa antes de pedir fechas. Si el endpoint falla, simplemente no se muestra.
   const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
@@ -25,6 +44,14 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   }, []);
 
   const buscar = () => {
+    // Keep partially selected dates here instead of sending an incomplete stay.
+    const missing = entrada && (!salida || salida <= entrada) ? salidaRef.current
+      : salida && !entrada ? entradaRef.current : null;
+    if (missing) {
+      missing.focus();
+      openDatePicker(missing);
+      return;
+    }
     const p = new URLSearchParams();
     if (entrada) p.set("entrada", entrada);
     if (salida) p.set("salida", salida);
@@ -40,9 +67,11 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
 
   const baseField =
     "w-full bg-white border border-[#1E1B16]/20 rounded-[2px] px-3 py-2.5 text-[#1E1B16] text-sm outline-none focus:border-[#00ADEF] transition-colors";
-  // appearance-none + color-scheme:light quitan el borde/sombra nativo que Safari iOS
-  // le agrega a <input type="date"> encima de nuestro estilo, y evitan el date picker oscuro.
-  const dateField = `${baseField} appearance-none [color-scheme:light]`;
+  // The native input covers the entire field; its segmented placeholder is hidden
+  // so Chromium/Safari never paint dd/mm beneath the visible date label.
+  const dateField = "absolute inset-0 w-full h-full opacity-0 cursor-pointer [color-scheme:light]";
+  const dateShell = `${baseField} relative flex items-center justify-between gap-1 min-h-[44px] focus-within:border-[#00ADEF] focus-within:ring-2 focus-within:ring-[#00ADEF]/30`;
+  const calendarIcon = <svg aria-hidden="true" className="w-4 h-4 shrink-0 text-[#008CBF] pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>;
 
   return (
     <div className={embedded ? "w-full" : "relative z-30 -mt-20 md:-mt-14 px-4"}>
@@ -68,8 +97,11 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
             {/* Llegada */}
             <label className="block">
               <span className="block dato text-[#5B5348] mb-1.5">Llegada</span>
-              <div className="relative">
+              <div className={dateShell}>
                 <input
+                  ref={entradaRef}
+                  aria-label="Llegada"
+                  aria-describedby="hero-date-hint"
                   type="date"
                   min={hoy}
                   value={entrada}
@@ -79,36 +111,37 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
                     // No se marca una noche automáticamente; el min ancla el calendario de salida.
                     if (salida && e.target.value && salida <= e.target.value) setSalida("");
                   }}
-                  className={`${dateField} ${!entrada ? "text-transparent" : ""}`}
+                  onClick={(e) => openDatePicker(e.currentTarget)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDatePicker(e.currentTarget); } }}
+                  className={dateField}
                 />
-                {/* iOS Safari no muestra placeholder en <input type="date"> vacío: sin esto se ve como una caja en blanco.
-                    text-transparent oculta el "dd/mm/aaaa" nativo de Chrome para que no choque con este texto. */}
-                {!entrada && (
-                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-600 pointer-events-none">
-                    Elegir fecha
-                  </span>
-                )}
+                <span aria-hidden="true" className="pointer-events-none">{entrada ? entrada.split("-").reverse().join("/") : "Elegir fecha"}</span>
+                {calendarIcon}
               </div>
             </label>
 
             {/* Salida */}
             <label className="block">
               <span className="block dato text-[#5B5348] mb-1.5">Salida</span>
-              <div className="relative">
+              <div className={dateShell}>
                 <input
+                  ref={salidaRef}
+                  aria-label="Salida"
+                  aria-describedby="hero-date-hint"
                   type="date"
-                  min={entrada || hoy}
+                  min={salidaMin}
                   value={salida}
                   onChange={(e) => setSalida(e.target.value)}
-                  className={`${dateField} ${!salida ? "text-transparent" : ""}`}
+                  onClick={(e) => openDatePicker(e.currentTarget)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDatePicker(e.currentTarget); } }}
+                  className={dateField}
                 />
-                {!salida && (
-                  <span className="absolute inset-y-0 left-3 flex items-center text-sm text-gray-600 pointer-events-none">
-                    Elegir fecha
-                  </span>
-                )}
+                <span aria-hidden="true" className="pointer-events-none">{salida ? salida.split("-").reverse().join("/") : "Elegir fecha"}</span>
+                {calendarIcon}
               </div>
             </label>
+
+            <p id="hero-date-hint" role="status" aria-live="polite" className="col-span-2 text-[12px] leading-snug text-[#5B5348]">{dateHint}</p>
 
             {/* Huéspedes */}
             <label className="block col-span-2">
