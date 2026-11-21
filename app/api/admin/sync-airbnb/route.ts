@@ -14,6 +14,7 @@ interface ICalEvent {
   dtstart: string; // YYYY-MM-DD (check-in)
   dtend: string;   // YYYY-MM-DD (día de checkout = DTEND del iCal, igual que las reservas web)
   description: string;
+  status?: string;
 }
 
 function parseICalDate(value: string): string {
@@ -52,7 +53,8 @@ function parseICalText(text: string): ICalEvent[] {
         // para que fecha_fin signifique SIEMPRE el día de salida, consistente con las reservas web.
         events.push({
           uid: current.uid,
-          summary: current.summary || "Reservado",
+          summary: current.summary || "",
+          status: current.status,
           dtstart: current.dtstart,
           dtend: current.dtend,
           description: current.description || "",
@@ -70,6 +72,9 @@ function parseICalText(text: string): ICalEvent[] {
     const value = line.slice(colonIdx + 1);
 
     switch (key) {
+      case "STATUS":
+        current.status = value.trim().toUpperCase();
+        break;
       case "UID":
         current.uid = value;
         break;
@@ -194,20 +199,31 @@ async function run(request: NextRequest) {
         const icalText = await response.text();
         const events = parseICalText(icalText);
 
-        // 3. Filtrar solo reservas reales de huéspedes
-        const reservas = events.filter((e) => {
-          // Ignorar eventos que nosotros exportamos (uid contiene nuestro dominio)
-          if (e.uid.includes("domostreepod.cl")) return false;
-          // Ignorar TODOS los bloqueos de calendario (reflejos de nuestro propio iCal)
-          // Airbnb los devuelve con summary "Airbnb (Not available)" o "Not available"
-          const summaryLower = e.summary.toLowerCase();
-          if (summaryLower.includes("not available")) return false;
-          if (summaryLower.includes("no disponible")) return false;
-          if (summaryLower.includes("bloqueado")) return false;
-          // Solo importar reservas reales ("Reserved")
-          if (!summaryLower.includes("reserved") && !summaryLower.includes("reservado")) return false;
-          return true;
-        });
+        // A partial response must never release previously occupied nights.
+        const complete = icalText.trim().startsWith("BEGIN:VCALENDAR") &&
+          icalText.trim().endsWith("END:VCALENDAR") &&
+          (icalText.match(/^BEGIN:VEVENT\s*$/gm) || []).length === events.length &&
+          (icalText.match(/^END:VEVENT\s*$/gm) || []).length === events.length;
+        if (!complete) throw new Error("Calendario incompleto; se mantiene la ocupación anterior.");
+        const external = events.filter(e => !e.uid.includes("domostreepod.cl") && e.status !== "CANCELLED");
+        const reservas = external.filter(e => /^(reserved|reservad[oa])\b/i.test(e.summary));
+        const blocks = external.filter(e => /not available|no disponible|bloquead[oa]/i.test(e.summary));
+        if (external.some(e => !reservas.includes(e) && !blocks.includes(e))) {
+          throw new Error("Evento iCal sin clasificar; se conserva la ocupación anterior.");
+        }
+        function ranges(items: ICalEvent[]) {
+          return "{" + items.map(e => {
+            if (![e.dtstart,e.dtend].every(d => /^\d{4}-\d{2}-\d{2}$/.test(d)) || e.dtstart >= e.dtend) {
+              throw new Error("Fechas inválidas en calendario externo.");
+            }
+            return `[${e.dtstart},${e.dtend})`;
+          }).join(",") + "}";
+        }
+        const blockRanges = {
+          p_domo: domo.id, p_closed: ranges(blocks), p_reserved: ranges(reservas),
+        };
+        const { error: blockError } = await supabaseAdmin.rpc("sync_airbnb_blocks", blockRanges);
+        if (blockError) throw new Error("No se pudieron reconciliar los bloqueos: " + blockError.message);
 
         // 4. Upsert cada reserva
         for (const event of reservas) {
@@ -217,6 +233,7 @@ async function run(request: NextRequest) {
           const { data: existing } = await supabaseAdmin
             .from("reservas")
             .select("id, fecha_inicio, fecha_fin")
+            .eq("domo_id", domo.id)
             .eq("airbnb_uid", event.uid)
             .single();
 
@@ -246,6 +263,8 @@ async function run(request: NextRequest) {
               .eq("domo_id", domo.id)
               .eq("fecha_inicio", event.dtstart)
               .eq("fecha_fin", event.dtend)
+              .neq("estado", "bloqueado")
+              .is("deleted_at", null)
               .in("fuente", ["airbnb", "manual_admin"])
               .is("airbnb_uid", null)
               .single();
@@ -322,13 +341,6 @@ async function run(request: NextRequest) {
         // del feed. Buscamos reservas de Airbnb en la BD (FUTURAS y activas) cuyo UID ya
         // no está en el feed y las marcamos "cancelada" → libera las fechas automáticamente.
         // Solo futuras: el iCal de Airbnb deja de listar las pasadas, y esas NO son cancelaciones.
-        // RESGUARDO: solo reconciliar si el feed es un calendario válido (evita cancelar
-        // reservas reales por un feed vacío/roto que igual devolvió 200).
-        if (!icalText.includes("BEGIN:VCALENDAR")) {
-          (domoResult.errores as string[]).push("Feed iCal inválido: se omitió la reconciliación de cancelaciones por seguridad.");
-          results.push(domoResult);
-          continue;
-        }
         const uidsEnFeed = new Set(reservas.map((e) => e.uid));
         const hoyStr = new Date().toISOString().slice(0, 10);
         const { data: activasBd } = await supabaseAdmin
@@ -353,6 +365,11 @@ async function run(request: NextRequest) {
               (domoResult.canceladas as number)++;
             }
           }
+        }
+        // A previously occupied night can become an external closure in the same snapshot.
+        if (Number(domoResult.canceladas) || Number(domoResult.actualizadas)) {
+          const { error } = await supabaseAdmin.rpc("sync_airbnb_blocks", blockRanges);
+          if (error) throw new Error("Error actualizando los bloqueos tras el cambio de reservas.");
         }
       } catch (err: unknown) {
         (domoResult.errores as string[]).push(
