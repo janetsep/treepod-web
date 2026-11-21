@@ -12,7 +12,7 @@ import { btnPrimary, btnPrimaryDark, linkLineDark } from '../components/deco/cta
 
 export const metadata: Metadata = {
     title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
-    description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado. Reserva directo, sin comisiones.',
+    description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés como servicio adicional, estufa a pellet y cielo estrellado. Reserva directo, sin comisiones.',
     keywords: [
         'escapada romantica las trancas',
         'escapada romantica chile',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Escapada Romántica con Tinaja en Las Trancas | TreePod',
-        description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés en temporada, estufa a pellet y cielo estrellado.',
+        description: 'Domo privado para dos en el bosque de Las Trancas: tinaja de ciprés como servicio adicional, estufa a pellet y cielo estrellado.',
         images: ['/images/Galeria/domo-iluminado-noche.jpg'],
         type: 'website',
         locale: 'es_CL',

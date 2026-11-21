@@ -116,7 +116,7 @@ const galeria = [
     {
         src: "/images/wellness/Tinaja1.jpg",
         alt: "Tinaja privada de ciprés en el bosque nativo de Las Trancas",
-        caption: "Tinaja privada · ciprés, servicio de temporada",
+        caption: "Tinaja privada · ciprés, servicio adicional",
     },
     {
         src: "/images/EquipamientoParaTuEstadia/Cocina.jpg",

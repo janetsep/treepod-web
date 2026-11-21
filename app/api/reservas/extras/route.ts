@@ -53,8 +53,11 @@ async function catalogoServicios() {
     .select("id, nombre, descripcion, precio, multiplicador_personas, multiplicador_noches")
     .eq("activo", true)
     .order("precio", { ascending: true });
-  // La tinaja es servicio de temporada: no se ofrece como extra en invierno.
-  return (data || []).filter((s) => !String(s.nombre).toLowerCase().includes("tinaja"));
+  // Conserva los extras ya disponibles y agrega únicamente la tinaja autorizada.
+  return (data || []).filter((s) => {
+    const nombre = String(s.nombre).toLowerCase();
+    return !nombre.includes("tinaja") || nombre === "tinaja privada en el bosque";
+  });
 }
 
 export async function GET(request: Request) {

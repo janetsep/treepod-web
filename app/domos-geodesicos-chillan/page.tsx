@@ -111,7 +111,7 @@ const galeria = [
     {
         src: "/images/wellness/Tinaja5.jpg",
         alt: "Tinaja privada de ciprés rodeada de bosque nativo",
-        caption: "Tinaja privada · servicio de temporada",
+        caption: "Tinaja privada · servicio adicional",
     },
     {
         src: "/images/EquipamientoParaTuEstadia/interior-domo-acogedor-21-3.jpg",

@@ -17,11 +17,11 @@ export default function ServicesPage() {
         {
             title: "Tinaja privada bajo las estrellas",
             subtitle: "Uso exclusivo · Servicio adicional",
-            description: "Tu propia tinaja de ciprés al aire libre, temperada a leña y con vista al bosque. Sin compartir. Disponible para contratar como servicio adicional por $48.000.",
+            description: "Tu propia tinaja de ciprés al aire libre, temperada a leña y con vista al bosque. Sin compartir. Disponible para contratar como servicio adicional. Consulta el precio vigente al reservar.",
             image: "/images/wellness/Tinaja1.jpg",
             alt: "Tinaja privada de ciprés al aire libre en TreePod",
             caption: "Tinaja privada, al aire libre",
-            features: ["Servicio adicional · $48.000", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
+            features: ["Servicio adicional · precio vigente al reservar", "Uso exclusivo, sin compartir", "Agua caliente a leña, al aire libre"],
             buttonText: "Ver disponibilidad y precio",
             href: "/disponibilidad"
         },

@@ -3,7 +3,7 @@ import SeasonalLanding from '../components/SeasonalLanding';
 
 export const metadata: Metadata = {
     title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-    description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio de temporada). Escapada 1 mayo Ñuble.',
+    description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio adicional). Escapada 1 mayo Ñuble.',
     keywords: ['finde largo mayo Las Trancas', 'escapada 1 mayo Ñuble', 'día del trabajo Valle Las Trancas', 'glamping finde largo', 'domos geodésicos mayo', 'alojamiento 1 mayo chile', 'finde largo ñuble', 'glamping día del trabajo'],
     // Landing de fecha pasada (finde largo 01-04 mayo 2026): noindex hasta
     // reutilizarla para la próxima edición, para no invitar a reservar fechas vencidas.
@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-        description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio de temporada).',
+        description: 'Pasa el finde largo del día del trabajo en Valle Las Trancas. Domos geodésicos en bosque nativo, con tinaja privada opcional (servicio adicional).',
         images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Finde Largo Mayo Las Trancas | Escapada 1 Mayo Ñuble — TreePod',
-        description: 'Finde largo del día del trabajo en Valle Las Trancas. Domos en el bosque, con tinaja privada opcional (servicio de temporada).',
+        description: 'Finde largo del día del trabajo en Valle Las Trancas. Domos en el bosque, con tinaja privada opcional (servicio adicional).',
         images: ['/images/hero/Las Trancas Bosque Nativo 4.jpeg'],
     }
 };
@@ -71,7 +71,7 @@ export default function FindeLargoPage() {
                         desc: "Mayo en Las Trancas tiene días templados, noches frescas y colores de otoño, lejos de las multitudes de la temporada alta de invierno."
                     },
                     {
-                        title: "Tinaja privada opcional (servicio de temporada)",
+                        title: "Tinaja privada opcional (servicio adicional)",
                         desc: "Tinaja de ciprés con agua caliente, en uso exclusivo para tu domo. Está disponible para contratar como servicio adicional."
                     },
                     {
@@ -100,7 +100,7 @@ export default function FindeLargoPage() {
                     {
                         src: "/images/wellness/Tinaja1.jpg",
                         alt: "Tinaja privada en el bosque para el finde largo",
-                        caption: "Tinaja privada · servicio de temporada",
+                        caption: "Tinaja privada · servicio adicional",
                     },
                     {
                         src: "/images/EquipamientoParaTuEstadia/Cocina.jpg",

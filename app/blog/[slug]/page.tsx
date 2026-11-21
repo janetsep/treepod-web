@@ -83,7 +83,7 @@ Días largos y temperaturas agradables para recorrer el valle a pie.
 El bosque nativo se llena de tonos rojos, dorados y ocres. Es la temporada favorita de fotógrafos y de quienes buscan tranquilidad: hay menos visitantes y los paisajes están en su mejor momento.
 
 ### Descanso junto a la estufa
-Las noches frescas son perfectas para un asado con la parrilla en tu domo o un libro junto a la estufa. La tinaja al aire libre es un servicio de temporada: consúltanos si estará disponible en la fecha de tu visita.
+Las noches frescas son perfectas para un asado con la parrilla en tu domo o un libro junto a la estufa. La tinaja al aire libre está disponible como servicio adicional; su disponibilidad se confirma para las fechas de tu visita.
 
 ## Resumen rápido
 
@@ -613,7 +613,7 @@ Reserva directo y paga solo el 50% de abono; el saldo se paga en el check-in. [V
     'escapada-romantica-glamping-chile': {
         title: 'Escapada Romántica en Chile: un Domo en el Bosque para Dos',
         excerpt: 'Por qué un domo geodésico en Las Trancas le gana al hotel de siempre: cielo desde la cama, bosque privado y cero logística.',
-        metaDescription: 'Escapada romántica en Chile: glamping para dos en un domo geodésico en Valle Las Trancas. Tinaja de temporada, desayuno en el bosque y cielo estrellado desde la cama.',
+        metaDescription: 'Escapada romántica en Chile: glamping para dos en un domo geodésico en Valle Las Trancas. Tinaja como servicio adicional, desayuno en el bosque y cielo estrellado desde la cama.',
         image: '/images/Galeria/Domo3noche.jpeg',
         content: `
 El plan romántico de siempre — hotel, cena, spa — está bien. Pero no sorprende a nadie. Si lo que buscas es un fin de semana que se recuerde, cambia la habitación por un domo geodésico en un bosque nativo de la cordillera.
@@ -985,7 +985,7 @@ export default async function BlogPost({ params }: Props) {
                                 <span className="italic text-[#00ADEF]">en bosque nativo</span>
                             </h2>
                             <p className="lead text-[#F7F3EC]/80 mt-6 max-w-2xl font-display italic">
-                                Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada en temporada. Reserva directa con abono del 50%.
+                                Calefacción a pellet las 24 horas, WiFi Starlink y tinaja privada como servicio adicional. Reserva directa con abono del 50%.
                             </p>
                         </div>
                         <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-6">

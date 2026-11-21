@@ -64,7 +64,7 @@ export default function MundialMtbPage() {
                 eyebrow="Mundial UCI MTB 2026 · Nevados de Chillán"
                 eyebrowKicker
                 title={<>Tú te concentras en pedalear. Nosotros te damos dónde descansar y recuperarte.</>}
-                text="La base para tu equipo durante el Mundial UCI MTB 2026 en Nevados de Chillán. Domos en Valle Las Trancas, con tinaja privada para recuperarte (servicio de temporada)."
+                text="La base para tu equipo durante el Mundial UCI MTB 2026 en Nevados de Chillán. Domos en Valle Las Trancas, con tinaja privada para recuperarte como servicio adicional."
                 priority
                 titleAs="h1"
                 stat="26–29"
