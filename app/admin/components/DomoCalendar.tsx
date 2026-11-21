@@ -1,5 +1,6 @@
 "use client";
 
+import { confirmadaConAbono } from "@/lib/admin-confirmacion";
 import { useState } from "react";
 
 interface Domo {
@@ -13,6 +14,8 @@ interface Reserva {
     fecha_fin: string;
     domo_id: string;
     estado: string;
+    monto_pagado?: number | null;
+    total?: number | null;
     nombre: string;
     apellido: string;
 }
@@ -176,10 +179,16 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
 
                                         if (matches.length > 0) {
                                             const res = matches[0];
+                                            const estado = res.estado?.toLowerCase();
+                                            const conAbono = confirmadaConAbono(estado, res.total, res.monto_pagado);
+                                            const etiqueta = conAbono ? "Confirmada · Abono recibido" : ESTADO_LABELS[estado] || res.estado;
                                             if (matches.length > 1) {
                                                 cellClass = "bg-red-500 text-white";
                                                 content = "!";
-                                            } else if (res.estado === 'pagado') {
+                                            } else if (conAbono || ["confirmado", "confirmada"].includes(estado)) {
+                                                cellClass = "bg-blue-600 text-white";
+                                                content = res.id.slice(-5).toUpperCase();
+                                            } else if (estado === 'pagado') {
                                                 cellClass = "bg-green-500 text-white";
                                                 content = res.id.slice(-5).toUpperCase();
                                             } else {
@@ -195,7 +204,7 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                                                 <td key={i} className="p-1 relative h-10 border-r border-dashed border-gray-100">
                                                     <div
                                                         className={`w-full h-8 flex items-center justify-center text-[9px] font-bold shadow-sm cursor-pointer transition-all hover:brightness-110 ${cellClass}`}
-                                                        title={`${res.nombre} ${res.apellido} (${ESTADO_LABELS[res.estado?.toLowerCase()] || res.estado}) - COD: ${res.id.slice(-5).toUpperCase()}`}
+                                                        title={`${res.nombre} ${res.apellido} (${etiqueta}) - COD: ${res.id.slice(-5).toUpperCase()}`}
                                                     >
                                                         {content}
                                                     </div>
@@ -214,8 +223,9 @@ export default function DomoCalendar({ reservas, domos }: DomoCalendarProps) {
                         </tbody>
                     </table>
                 </div>
-                <div className="mt-4 flex gap-4 text-xs text-gray-900 justify-end">
+                <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-900 justify-end">
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-500 rounded"></span> Pagado</div>
+                    <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-600 rounded"></span> Confirmada</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-400 rounded"></span> Pendiente</div>
                     <div className="flex items-center gap-2"><span className="w-4 h-4 bg-red-500 rounded"></span> Conflicto</div>
                 </div>

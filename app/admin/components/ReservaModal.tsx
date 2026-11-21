@@ -1,5 +1,6 @@
 "use client";
 
+import { estadoAlConfirmar, tieneAbonoParcial } from "@/lib/admin-confirmacion";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useState, useEffect, useMemo } from "react";
 import { X, Upload, FileText, ExternalLink, Trash2 } from "lucide-react";
@@ -123,7 +124,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
         adultos: 2,
         total: 0,
         monto_pagado: 0,
-        estado: "pagado",
+        estado: "confirmado",
         fuente: "manual_admin",
         mensaje: "",
         comprobante_url: "",
@@ -206,7 +207,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                     adultos: 2,
                     total: 0,
                     monto_pagado: 0,
-                    estado: "pagado",
+                    estado: "confirmado",
                     fuente: "manual_admin",
                     mensaje: "",
                     comprobante_url: "",
@@ -739,13 +740,13 @@ export default function ReservaModal({ isOpen, onClose, onSave, domos, reservaTo
                                 <label className="text-[10px] font-black text-gray-700 uppercase tracking-widest pl-1">Estado Reserva</label>
                                 <select
                                     required
-                                    value={formData.estado}
+                                    value={["confirmado", "pagado"].includes(formData.estado) ? estadoAlConfirmar(formData.total, formData.monto_pagado) : formData.estado}
                                     onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
                                     disabled={isViewer}
                                     className={selectClasses}
                                 >
-                                    <option value="pagado">Pagado Total</option>
-                                    <option value="confirmado">Confirmada (Ocupado)</option>
+                                    <option value="pagado" disabled={estadoAlConfirmar(formData.total, formData.monto_pagado) !== "pagado"}>Pago total recibido</option>
+                                    <option value="confirmado">{tieneAbonoParcial(formData.total, formData.monto_pagado) ? "Confirmada · Abono recibido" : "Confirmada"}</option>
                                     <option value="pendiente_pago">Abono Pendiente</option>
                                     <option value="pendiente">Manual Pendiente</option>
                                     <option value="suspendido">Suspendido (Retomará)</option>
