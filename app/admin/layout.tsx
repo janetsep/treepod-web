@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { isAdminRole, isPublicAdminPath } from "@/lib/admin-permissions";
 
@@ -114,6 +115,7 @@ export default function AdminLayout({
                         </div>
 
                         <div className="flex items-center gap-4">
+                            <Link href="/admin/operacion" className="rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-900">Operación</Link>
                             <div className="hidden sm:flex flex-col text-right">
                                 <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Panel de Control</span>
                                 <span className="text-xs font-bold text-gray-900">Sesión Activa</span>
