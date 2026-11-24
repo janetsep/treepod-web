@@ -1,0 +1,312 @@
+[
+  {
+    "id": "pool",
+    "group": "Mañana",
+    "title": "Revisar y limpiar la piscina",
+    "frequency": "Diario · Primera hora",
+    "steps": [
+      "Dejar la piscina sin gente durante la limpieza. Revisar el nivel del agua y sacar los objetos grandes.",
+      "Barrer la terraza hacia afuera y sacar hojas e insectos del agua con la malla.",
+      "Apagar la bomba y pausar su horario automático. Sacar el canastillo de la abertura lateral de la piscina, botar las hojas, enjuagarlo y ponerlo de vuelta.",
+      "Si hay hojas en el canastillo bajo la tapa de la bomba, limpiarlo con la corriente cortada y después de quitar la presión como indica el manual. Si no sabes cómo quitar la presión, deja la tapa cerrada. Enjuaga el canastillo y vuelve a cerrar bien.",
+      "Cepillar las paredes, los escalones y la marca que deja el agua en el borde. Para limpiar el fondo con el robot o lavar el filtro grande, abrir la actividad correspondiente.",
+      "Si usas aspirador manual, apaga la bomba, hunde la manguera hasta llenarla de agua y conéctala donde se enchufa el aspirador. Usa FILTRADO para poca suciedad. Si hay mucho barro, usa DESAGÜE solo si tu equipo lo permite. Enciende la bomba, aspira despacio y vigila que no baje demasiado el agua.",
+      "Al terminar, apaga la bomba antes de sacar la manguera o mover la perilla del filtro. Vuelve a FILTRADO y deja abiertas las llaves que usas normalmente. Si abriste la tapa de la bomba, llénala de agua según su manual antes de encender. Verifica que vuelva a circular agua y que no haya goteras. Reactiva el horario automático.",
+      "Antes de abrir la piscina, comprueba que se vea el fondo. Mide y anota el cloro libre y el pH. Si están fuera del rango requerido, deja la piscina cerrada."
+    ]
+  },
+  {
+    "id": "robot",
+    "group": "Según programación",
+    "title": "Limpiar piscina con el robot",
+    "frequency": "1 ciclo por día programado · 2 días por semana · 1 ciclo",
+    "steps": [
+      "Dejar la piscina sin bañistas, retirar objetos y hojas grandes y apagar la bomba de filtración para este procedimiento.",
+      "Para un robot con cable, ubicar la fuente apagada y desenchufada en un lugar seco y estable, fuera de salpicaduras y a la distancia del borde indicada por su manual. Usar un enchufe fijo con protección diferencial, sin alargador. La ubicación exacta del enchufe de TreePod queda por confirmar.",
+      "Desenrollar el cable flotante. Con manos secas y la fuente desenchufada, alinear el conector del robot con la toma de la fuente y asegurarlo según el modelo. Enchufar la fuente y dejarla apagada.",
+      "Como punto inicial, bajar el robot desde el centro de un lado largo si el manual del equipo lo permite. Sujetarlo por el asa, introducirlo suavemente, dejar salir el aire y soltarlo dentro del agua para que llegue al fondo. Dejar cable suficiente para llegar a la esquina más lejana.",
+      "Encender la fuente cuando el robot esté sumergido y seleccionar el ciclo de fondo o el ciclo completo según lo que necesite la piscina y las funciones del modelo. Dejar que termine el ciclo.",
+      "Apagar y desenchufar la fuente. Acercar el robot al borde según el manual y levantarlo por el asa. Dejar escurrir el agua antes de retirarlo por completo.",
+      "Retirar y enjuagar el canastillo o los cartuchos del robot con agua limpia. Volver a colocarlos y guardar el robot y el cable sin dobleces.",
+      "Revisar que el fondo quedó limpio. Con el robot fuera del agua, reanudar la filtración en FILTRADO y completar el bloque previsto para ese día."
+    ]
+  },
+  {
+    "id": "filter-am",
+    "group": "Mañana",
+    "title": "Filtración de piscina · Bloque 1",
+    "frequency": "Diario · 3 horas por bloque · 6 horas en total",
+    "steps": [
+      "Revisar el motor, el selector en filtrado y la llave de entrada paralela a la cañería.",
+      "Enciende la bomba en FILTRADO con el robot fuera del agua. Verifica que vuelva agua a la piscina. Anota la hora de inicio y filtra 3 horas. Si se interrumpe, cuenta solo el tiempo con la bomba encendida. Marca el bloque cuando acumules las 3 horas."
+    ]
+  },
+  {
+    "id": "decks",
+    "group": "Mañana",
+    "title": "Limpiar terrazas de los domos",
+    "frequency": "Diario",
+    "steps": [
+      "Pasar la sopladora por la terraza del domo 1.",
+      "Pasar la sopladora por la terraza del domo 2.",
+      "Pasar la sopladora por la terraza del domo 3.",
+      "Pasar la sopladora por la terraza del domo 4.",
+      "Sacudir los domos si es posible. Omitir el sacudido en los domos ocupados."
+    ]
+  },
+  {
+    "id": "air",
+    "group": "Mañana",
+    "title": "Ventilar los domos desocupados",
+    "frequency": "Diario · Solo domos desocupados",
+    "steps": [
+      "Revisar la ocupación de los domos 1, 2, 3 y 4. Si los cuatro están ocupados, marcar No aplica.",
+      "Abrir la cortina, la ventana y la puerta principal de cada domo desocupado para ventilarlo. Omitir los domos ocupados."
+    ]
+  },
+  {
+    "id": "tub-clean",
+    "group": "Mañana",
+    "title": "Revisar y limpiar las dos tinajas",
+    "frequency": "Diario",
+    "steps": [
+      "Revisar encima de cada tinaja y retirar la suciedad con la sopladora.",
+      "Si hay agua encima, retirarla con el recipiente blanco.",
+      "Soplar las terrazas de las dos tinajas."
+    ]
+  },
+  {
+    "id": "tub-am",
+    "group": "Mañana",
+    "title": "Poner en marcha las tinajas",
+    "frequency": "Diario · 30 min por tinaja en cada bloque",
+    "steps": [
+      "Poner en marcha la tinaja 1.",
+      "Poner en marcha la tinaja 2.",
+      "Poner en marcha la tinaja 1.",
+      "Poner en marcha la tinaja 2."
+    ]
+  },
+  {
+    "id": "common",
+    "group": "Mañana",
+    "title": "Limpiar terrazas y pasarela",
+    "frequency": "Diario",
+    "steps": [
+      "Soplar la terraza de la cabaña.",
+      "Soplar la terraza del quincho propio.",
+      "Soplar la pasarela al quincho."
+    ]
+  },
+  {
+    "id": "quincho",
+    "group": "Mañana",
+    "title": "Ventilar el quincho",
+    "frequency": "Diario · Omitir si entra lluvia por puertas o ventanas",
+    "steps": [
+      "Abrir ventanas y puerta para sacar la humedad y dejar secar."
+    ]
+  },
+  {
+    "id": "filter-pm",
+    "group": "Tarde",
+    "title": "Filtración de piscina · Bloque 2",
+    "frequency": "Diario · 3 horas por bloque · 6 horas en total",
+    "steps": [
+      "Filtra 3 horas en el horario del bloque 2. Si el bloque 1 sigue en marcha, continúa la filtración sin reiniciar la bomba. Cuenta solo el tiempo con la bomba encendida y verifica que se cumplan 6 horas en total."
+    ]
+  },
+  {
+    "id": "wash",
+    "group": "Según programación",
+    "title": "Mantención del filtro de piscina",
+    "frequency": "Revisar lunes y viernes · Retrolavar según presión y manual",
+    "steps": [
+      "Confirmar que el filtro sea de arena o medio filtrante con válvula selectora. Revisar la presión en FILTRADO y compararla con la presión del filtro limpio. Hacer el retrolavado cuando corresponda según el manual.",
+      "Comprobar nivel de agua suficiente y salida de desagüe habilitada. Apagar la bomba y poner el selector en RETROLAVADO.",
+      "Encender la bomba y retrolavar hasta que salga agua clara por el visor, siguiendo el tiempo del manual. Vigilar el nivel de agua.",
+      "Apagar la bomba, mover el selector a ENJUAGUE y encender durante el tiempo que indique el manual.",
+      "Apagar la bomba, volver a FILTRADO y encender. Verificar caudal, presión y fugas. Registrar la presión con el filtro limpio."
+    ]
+  },
+  {
+    "id": "pellet",
+    "group": "Según necesidad",
+    "title": "Limpiar estufas a pellet",
+    "frequency": "Al desocuparse un domo, según uso",
+    "steps": [
+      "Limpiar la estufa del domo 1 si se utilizó.",
+      "Limpiar la estufa del domo 2 si se utilizó.",
+      "Limpiar la estufa del domo 3 si se utilizó.",
+      "Limpiar la estufa del domo 4 si se utilizó."
+    ]
+  },
+  {
+    "id": "organic",
+    "group": "Según necesidad",
+    "title": "Llevar residuos orgánicos",
+    "frequency": "Cuando el recipiente esté por llenarse",
+    "steps": [
+      "Llevar los residuos al sector al lado de la casa.",
+      "Mover un poco la tierra y depositar los residuos.",
+      "Cubrir con tierra de hojas secas y volver a tapar."
+    ]
+  },
+  {
+    "id": "laundry",
+    "group": "Según necesidad",
+    "title": "Lavar ropa de domos",
+    "frequency": "Cuando haya ropa usada",
+    "steps": [
+      "Recoger y separar sábanas, toallas y paños según el tipo de lavado.",
+      "Revisar manchas y lavar según la etiqueta de cada prenda.",
+      "Secar completamente y guardar la ropa limpia separada de la ropa usada."
+    ]
+  },
+  {
+    "id": "ironing",
+    "group": "Según necesidad",
+    "title": "Planchar ropa de domos",
+    "frequency": "Según recambio",
+    "steps": [
+      "Seleccionar las prendas limpias y secas que necesiten planchado.",
+      "Ajustar la temperatura según la tela y planchar las prendas.",
+      "Doblar y guardar la ropa lista por tipo. Apagar y desconectar la plancha."
+    ]
+  },
+  {
+    "id": "cooking",
+    "group": "Según necesidad",
+    "title": "Preparar desayunos y cocina",
+    "frequency": "Según pedidos confirmados",
+    "steps": [
+      "Confirmar pedidos, horarios y restricciones alimentarias.",
+      "Revisar ingredientes, preparar y porcionar según el pedido.",
+      "Dejar listo el pedido a la hora acordada y limpiar utensilios y superficies."
+    ]
+  },
+  {
+    "id": "housekeeping",
+    "group": "Según necesidad",
+    "title": "Aseo y preparación de domos",
+    "frequency": "Al desocuparse un domo o según necesidad",
+    "steps": [
+      "Identificar los domos desocupados que requieren aseo y retirar basura y ropa usada.",
+      "Limpiar baño, cocina, superficies y pisos.",
+      "Reponer ropa limpia e insumos. Revisar el domo antes de marcarlo listo."
+    ]
+  },
+  {
+    "id": "ops-admin",
+    "group": "Según necesidad",
+    "title": "Administración diaria de TreePod",
+    "frequency": "Según movimiento del día",
+    "steps": [
+      "Revisar reservas, llegadas, salidas y solicitudes pendientes.",
+      "Conciliar abonos, saldos y gastos registrados cuando corresponda.",
+      "Actualizar pendientes con responsable y fecha de seguimiento."
+    ]
+  },
+  {
+    "id": "stock",
+    "group": "Semanal",
+    "title": "Revisar inventario de operación",
+    "frequency": "Semanal · Día configurable",
+    "steps": [
+      "Contar ropa limpia, insumos de aseo y otros consumibles.",
+      "Registrar faltantes y preparar la reposición."
+    ]
+  },
+  {
+    "id": "weekly-review",
+    "group": "Semanal",
+    "title": "Revisar reservas y pendientes de la semana",
+    "frequency": "Semanal · Día configurable",
+    "steps": [
+      "Revisar las llegadas y salidas próximas.",
+      "Confirmar responsables para recambios y pendientes."
+    ]
+  },
+  {
+    "id": "monthly-maint",
+    "group": "Mensual",
+    "title": "Revisar mantención de la propiedad",
+    "frequency": "Mensual · Día configurable",
+    "steps": [
+      "Revisar incidencias abiertas, reparaciones y fechas de mantención.",
+      "Asignar responsable y plazo a cada pendiente."
+    ]
+  },
+  {
+    "id": "monthly-energy",
+    "group": "Mensual",
+    "title": "Revisar consumo eléctrico del mes",
+    "frequency": "Mensual · Día configurable",
+    "steps": [
+      "Comparar generación solar, consumo y compra de red con un mes de ocupación comparable.",
+      "Identificar cambios de uso o equipos y anotar las verificaciones pendientes."
+    ]
+  },
+  {
+    "id": "monthly-admin",
+    "group": "Mensual",
+    "title": "Hacer cierre administrativo",
+    "frequency": "Mensual · Día configurable",
+    "steps": [
+      "Conciliar ingresos, gastos y abonos del mes.",
+      "Revisar saldos pendientes y guardar los respaldos."
+    ]
+  },
+  {
+    "id": "plan",
+    "group": "Certificación",
+    "title": "Revisión de diagnóstico y planificación estratégica",
+    "frequency": "Según planificación",
+    "steps": [
+      "Reunir el último diagnóstico de certificación, las observaciones recibidas y las evidencias disponibles. Anotar la fecha y versión revisadas.",
+      "Revisar cada requisito del diagnóstico y registrar si está cumplido, pendiente o por verificar. Asociar la evidencia que respalda cada respuesta.",
+      "Anotar las brechas por resolver y ordenarlas por urgencia, impacto en la operación y plazo de certificación.",
+      "Para cada brecha priorizada, definir una acción, quién la ejecuta, una fecha límite y cómo se comprobará el resultado.",
+      "Revisar el plan con las personas responsables, guardar la versión fechada y agendar la próxima revisión."
+    ]
+  },
+  {
+    "id": "roles",
+    "group": "Certificación",
+    "title": "Definir estructura operativa y roles",
+    "frequency": "Según planificación",
+    "steps": [
+      "Listar las funciones de TreePod: reservas y llegada, atención de huéspedes, limpieza de domos, piscina y tinajas, mantención y administración.",
+      "Indicar para cada función qué se hace, en qué momento y qué se considera una tarea terminada.",
+      "Asignar una persona responsable y un reemplazo por función. Anotar quién puede autorizar cambios o resolver incidencias.",
+      "Definir cómo se entrega un turno: reservas próximas, domos listos, tareas abiertas, incidencias y dónde se deja el registro.",
+      "Revisar la asignación con las personas involucradas y guardar la tabla de funciones, responsables y reemplazos con fecha."
+    ]
+  },
+  {
+    "id": "admin",
+    "group": "Certificación",
+    "title": "Actualizar documentación administrativa",
+    "frequency": "Según planificación",
+    "steps": [
+      "Reunir los documentos que pide la certificación y contrastarlos con la lista de requisitos vigente. Anotar cuáles faltan.",
+      "Revisar fecha, vigencia, titular y versión de cada documento. Identificar los que deban corregirse o renovarse.",
+      "Actualizar los registros internos y solicitar los documentos faltantes a la persona responsable. Registrar responsable y plazo de cada pendiente.",
+      "Guardar las versiones vigentes en la carpeta de certificación y actualizar el índice con nombre, fecha y ubicación.",
+      "Comprobar desde el índice que cada documento se pueda abrir y que los pendientes tengan seguimiento."
+    ]
+  },
+  {
+    "id": "infra",
+    "group": "Certificación",
+    "title": "Supervisar infraestructura y eficiencia energética",
+    "frequency": "Según planificación",
+    "steps": [
+      "Hacer una ronda visual por los cuatro domos, terrazas, accesos, quincho y sector de piscina y tinajas. Anotar deterioro, fugas o equipos fuera de servicio.",
+      "Revisar por fuera los equipos e instalaciones accesibles y anotar las alarmas visibles. Derivar las fallas eléctricas a personal calificado.",
+      "Revisar el sistema solar en su panel de monitoreo. Registrar fecha y hora, generación, consumo, compra o inyección a la red, estado de batería y alarmas, según los datos disponibles.",
+      "Comparar los registros con días de operación similar y anotar qué equipos estaban funcionando si hubo un aumento de consumo.",
+      "Priorizar los hallazgos, asignar responsable y plazo y guardar lecturas y fotos cuando corresponda. Verificar el cierre en la siguiente ronda."
+    ]
+  }
+]
