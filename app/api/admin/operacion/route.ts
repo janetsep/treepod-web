@@ -10,10 +10,18 @@ export async function GET(request: Request) {
     if (!await getVerifiedAdmin(request)) return response({ error: "Inicia sesión en TreePod Admin." }, 401);
     const day = new URL(request.url).searchParams.get("fecha") ?? chileToday();
     if (!validDay(day)) return response({ error: "Fecha inválida." }, 400);
-    const { data, error } = await supabaseAdmin.from("operation_days")
-        .select("entries, revision").eq("day", day).maybeSingle();
-    if (error) return response({ error: "No se pudo consultar la jornada." }, 503);
-    return response(data ?? { entries: {}, revision: 0 });
+    const [operation, departures] = await Promise.all([
+        supabaseAdmin.from("operation_days").select("entries, revision").eq("day", day).maybeSingle(),
+        supabaseAdmin.from("reservas").select("domo_id", { count: "exact", head: true })
+            .is("deleted_at", null).is("cancelled_at", null).not("domo_id", "is", null)
+            .eq("fecha_fin", day)
+            .in("estado", ["pagado", "confirmado", "completada", "completado"]),
+    ]);
+    if (operation.error) return response({ error: "No se pudo consultar la jornada." }, 503);
+    return response({
+        ...(operation.data ?? { entries: {}, revision: 0 }),
+        departures: departures.error ? null : departures.count,
+    });
 }
 
 export async function PUT(request: Request) {

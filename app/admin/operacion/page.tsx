@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import { chileToday, emptyEntry, operationTasks, parseEntries, validDay, type Entry, type OperationDay } from "@/lib/operation";
 
@@ -20,6 +20,10 @@ export default function Operacion() {
 function Jornada({ day }: { day: string }) {
     const [snapshot, setSnapshot] = useState<OperationDay | null>(null);
     const [notice, setNotice] = useState("");
+    const [departures, setDepartures] = useState<number | null>(null);
+    const [pending, setPending] = useState<{ id: string; entry: Entry } | null>(null);
+    const [taskFeedback, setTaskFeedback] = useState<{ id: string; state: "pending" | "saved" | "error"; savesTime: boolean } | null>(null);
+    const inFlight = useRef(false);
     const [busy, setBusy] = useState(false);
     const [reload, setReload] = useState(0);
 
@@ -32,6 +36,7 @@ function Jornada({ day }: { day: string }) {
                 if (!result.ok) throw new Error(data.error);
                 if (controller.signal.aborted) return;
                 setSnapshot(current => current && current.revision > data.revision ? current : data);
+                setDepartures(data.departures ?? null);
             } catch (error) {
                 if (!controller.signal.aborted) setNotice(error instanceof Error ? error.message : "Sin conexión.");
             }
@@ -47,11 +52,16 @@ function Jornada({ day }: { day: string }) {
     }, [day, reload]);
 
     async function update(id: string, change: Partial<Entry>) {
-        if (!snapshot || busy) return;
+        if (!snapshot || inFlight.current) return;
+        inFlight.current = true;
+        const entry = { ...(snapshot.entries[id] ?? emptyEntry), ...change };
+        const savesTime = change.minutes !== undefined;
+        setPending({ id, entry });
         setBusy(true);
         setNotice("Guardando…");
+        setTaskFeedback({ id, state: "pending", savesTime });
         try {
-            const entries = { ...snapshot.entries, [id]: { ...(snapshot.entries[id] ?? emptyEntry), ...change } };
+            const entries = { ...snapshot.entries, [id]: entry };
             const result = await adminFetch("/api/admin/operacion", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -62,15 +72,20 @@ function Jornada({ day }: { day: string }) {
             if (!result.ok) throw new Error(data.error);
             setSnapshot(current => current && current.revision > data.revision ? current : data);
             setNotice("Guardado");
+            setTaskFeedback({ id, state: "saved", savesTime });
         } catch (error) {
             setNotice(error instanceof Error ? error.message : "Sin conexión. No se guardó el cambio.");
+            setTaskFeedback({ id, state: "error", savesTime });
         } finally {
+            inFlight.current = false;
+            setPending(null);
             setBusy(false);
         }
     }
 
     async function importBackup(file: File) {
-        if (!snapshot || busy) return;
+        if (!snapshot || inFlight.current) return;
+        inFlight.current = true;
         setBusy(true);
         setNotice("Importando respaldo…");
         let imported = 0;
@@ -123,14 +138,18 @@ function Jornada({ day }: { day: string }) {
         } catch (error) {
             setNotice(`Importación detenida después de ${imported} actividades. ${error instanceof Error ? error.message : "Error de conexión."}`);
         } finally {
+            inFlight.current = false;
             setBusy(false);
             setReload(value => value + 1);
         }
     }
 
     const weekday = new Date(day + "T12:00:00Z").getUTCDay();
-    const scheduled = operationTasks.filter(task => ["Mañana", "Tarde"].includes(task.group)
+    const visibleTasks = operationTasks.filter(task => task.id !== "pellet" ||
+        (departures !== null && departures > 0) || Boolean(snapshot?.entries[task.id]));
+    const scheduled = visibleTasks.filter(task => ["Mañana", "Tarde"].includes(task.group)
         || (task.id === "wash" && [1, 5].includes(weekday))
+        || (task.id === "pellet" && departures !== null && departures > 0)
         || Boolean(snapshot?.entries[task.id]));
     const completed = scheduled.filter(task => {
         const entry = snapshot?.entries[task.id];
@@ -143,27 +162,35 @@ function Jornada({ day }: { day: string }) {
     }
 
     const card = (task: typeof operationTasks[number]) => {
-        const entry = snapshot?.entries[task.id] ?? emptyEntry;
+        const stored = snapshot?.entries[task.id] ?? emptyEntry;
+        const entry = pending?.id === task.id ? pending.entry : stored;
+        const historyOnly = task.id === "pellet" && !(departures !== null && departures > 0);
+        const feedback = taskFeedback?.id === task.id ? taskFeedback.state : null;
+        const timeState = taskFeedback?.savesTime ? feedback : null;
+        const buttonLabels = { pending: "Guardando…", saved: "Guardado", error: "Reintentar guardado" };
         const count = task.steps.filter((_, i) => entry.steps[i]).length;
         return <details key={task.id} className="mb-3 rounded-xl border border-slate-200 bg-white px-4">
             <summary className="cursor-pointer py-4 font-semibold">{task.title}
                 <span className="mt-1 block text-sm font-normal text-slate-600">{entry.status === "skip" ? "No aplica" : `${count} de ${task.steps.length} pasos`} · {task.frequency}</span>
             </summary>
-            <fieldset disabled={!snapshot || busy} className="pb-4">
+            {feedback && <p role="status" className={`mb-2 text-sm ${feedback === "saved" ? "text-green-800" : feedback === "error" ? "text-red-700" : "text-slate-600"}`}>{feedback === "error" ? notice : buttonLabels[feedback]}</p>}
+            {historyOnly && <p className="mb-2 text-sm text-slate-600">Registro de estufas. Edición disponible al haber una salida confirmada para esta fecha.</p>}
+            <fieldset disabled={!snapshot || busy || historyOnly} className="pb-4">
                 {task.steps.map((step, i) => <label key={i} className="flex min-h-12 items-start gap-3 border-t border-slate-100 py-3">
                     <input type="checkbox" checked={Boolean(entry.steps[i])} className="mt-1 h-5 w-5 shrink-0 accent-sky-700"
                         onChange={event => void update(task.id, { status: "", steps: { ...entry.steps, [i]: event.target.checked } })} />
                     <span>{step}</span>
                 </label>)}
-                <form key={JSON.stringify([entry.person, entry.minutes])} className="my-3 flex flex-wrap items-end gap-3"
+                <form key={JSON.stringify([stored.person, stored.minutes])} className="my-3 flex flex-wrap items-end gap-3"
+                    onChange={() => { if (feedback) setTaskFeedback(null); }}
                     onSubmit={event => {
                         event.preventDefault();
                         const fields = new FormData(event.currentTarget);
                         void update(task.id, { person: String(fields.get("person")), minutes: Number(fields.get("minutes")) });
                     }}>
-                    <label className="grid gap-1 text-sm">Responsable<input name="person" maxLength={120} defaultValue={entry.person} className="w-36 rounded border p-2" /></label>
-                    <label className="grid gap-1 text-sm">Minutos<input name="minutes" type="number" min="0" max="1440" defaultValue={entry.minutes} className="w-20 rounded border p-2" /></label>
-                    <button className="min-h-11 rounded-lg bg-sky-800 px-4 text-white">Guardar tiempo</button>
+                    <label className="grid gap-1 text-sm">Responsable<input name="person" maxLength={120} defaultValue={stored.person} className="w-36 rounded border p-2" /></label>
+                    <label className="grid gap-1 text-sm">Minutos<input name="minutes" type="number" min="0" max="1440" inputMode="numeric" placeholder="Min" defaultValue={stored.minutes || ""} className="w-20 rounded border p-2" /></label>
+                    <button className={`min-h-11 rounded-lg px-4 text-white ${timeState === "saved" ? "bg-green-700" : timeState === "error" ? "bg-red-700" : timeState === "pending" ? "bg-slate-600" : "bg-sky-800"}`}>{timeState ? buttonLabels[timeState] : "Guardar tiempo"}</button>
                 </form>
                 <button type="button" className="min-h-11 rounded-lg border px-3"
                     onClick={() => void update(task.id, { status: entry.status === "skip" ? "" : "skip" })}>
@@ -181,9 +208,10 @@ function Jornada({ day }: { day: string }) {
                 {[...totals].map(([name, minutes]) => <p key={name}>{name} · {minutes} min</p>)}
             </div>
             <h2 className="mb-3 text-xl font-bold">Tareas del día</h2>
+            {departures === null && <p className="mb-3 text-sm text-slate-600">Salidas sin confirmar. La limpieza de estufas queda pendiente de verificación.</p>}
             {scheduled.map(card)}
             <details className="mt-6"><summary className="cursor-pointer py-3 text-lg font-semibold">Actividades adicionales</summary>
-                {operationTasks.filter(task => !scheduled.includes(task)).map(card)}
+                {visibleTasks.filter(task => !scheduled.includes(task)).map(card)}
             </details>
             <details className="mt-6 border-t border-slate-200">
                 <summary className="cursor-pointer py-3 font-semibold">Importar respaldo del Mac</summary>
