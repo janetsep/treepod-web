@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Informe from "./Informe";
 import { adminFetch } from "@/lib/admin-fetch";
 import { chileToday, emptyEntry, operationTasks, parseEntries, validDay, type Entry, type OperationDay } from "@/lib/operation";
 
@@ -14,6 +15,16 @@ export default function Operacion() {
                 onChange={event => { if (event.target.value) setDay(event.target.value); }} />
         </label>
         <Jornada key={day} day={day} />
+        <Informe key={day} day={day} />
+        <details className="my-5 rounded-xl border border-slate-200 p-4">
+            <summary className="cursor-pointer font-semibold">Qué se puede automatizar</summary>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm">
+                <li>Salidas: Operación ya consulta las reservas confirmadas para mostrar la limpieza de estufas.</li>
+                <li>Riego y filtración: identifica el enchufe o relé en Home Assistant y registra inicio y fin. Un medidor de caudal o consumo permite verificar funcionamiento.</li>
+                <li>Terrazas y ventilación: conecta el pronóstico de SIGRE y la ocupación por domo para asignar una franja seca a los domos libres.</li>
+                <li>Cierre de las 20:00: un servicio de WhatsApp Business puede enviar el informe a los inscritos una vez configurado el número emisor.</li>
+            </ul>
+        </details>
     </div>;
 }
 
