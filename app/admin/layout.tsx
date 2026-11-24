@@ -13,6 +13,7 @@ export default function AdminLayout({
 }) {
     const router = useRouter();
     const pathname = usePathname();
+    const operation = pathname === "/admin/operacion";
     const [authorized, setAuthorized] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -101,10 +102,10 @@ export default function AdminLayout({
     return (
         <div className="min-h-screen bg-white">
             {/* PWA: permite instalar el panel como app en el teléfono (React hoistea estos tags al <head>) */}
-            <link rel="manifest" href="/manifest-admin.json" />
+            <link rel="manifest" href={operation ? "/manifest-operacion.json" : "/manifest-admin.json"} />
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-            <meta name="apple-mobile-web-app-title" content="TreePod" />
+            <meta name="apple-mobile-web-app-title" content={operation ? "Operación TreePod" : "TreePod"} />
             <meta name="theme-color" content="#00ADEF" />
             {authorized && !isPublicAdminPath(pathname) && (
                 <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -115,7 +116,7 @@ export default function AdminLayout({
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <Link href="/admin/operacion" className="rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-900">Operación</Link>
+                            <Link href={operation ? "/admin" : "/admin/operacion"} className="rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-900">{operation ? "Volver a Administración" : "Operación"}</Link>
                             <div className="hidden sm:flex flex-col text-right">
                                 <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Panel de Control</span>
                                 <span className="text-xs font-bold text-gray-900">Sesión Activa</span>

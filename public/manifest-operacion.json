@@ -1,0 +1,30 @@
+{
+  "name": "Operación TreePod",
+  "short_name": "Operación",
+  "description": "Jornada, estadísticas e informes de TreePod",
+  "start_url": "/admin/operacion",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#00ADEF",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/admin/operacion"
+}

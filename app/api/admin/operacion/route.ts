@@ -10,6 +10,17 @@ export async function GET(request: Request) {
     if (!await getVerifiedAdmin(request)) return response({ error: "Inicia sesión en TreePod Admin." }, 401);
     const day = new URL(request.url).searchParams.get("fecha") ?? chileToday();
     if (!validDay(day)) return response({ error: "Fecha inválida." }, 400);
+    if (new URL(request.url).searchParams.get("vista") === "informe") {
+        const first = day.slice(0, 7) + "-01";
+        const next = new Date(first + "T12:00:00Z");
+        next.setUTCMonth(next.getUTCMonth() + 1);
+        const [days, recipients] = await Promise.all([
+            supabaseAdmin.from("operation_days").select("day, entries").gte("day", first).lt("day", next.toISOString().slice(0, 10)).order("day"),
+            supabaseAdmin.from("operation_recipients").select("name, phone").order("name"),
+        ]);
+        if (days.error || recipients.error) return response({ error: "No se pudo cargar el informe." }, 503);
+        return response({ days: days.data, recipients: recipients.data });
+    }
     const [operation, departures] = await Promise.all([
         supabaseAdmin.from("operation_days").select("entries, revision").eq("day", day).maybeSingle(),
         supabaseAdmin.from("reservas").select("domo_id", { count: "exact", head: true })
@@ -43,4 +54,19 @@ export async function PUT(request: Request) {
     }
     if (error) return response({ error: "No se pudo guardar. Vuelve a intentarlo." }, 503);
     return response(data);
+}
+
+
+export async function POST(request: Request) {
+    if (!await getVerifiedAdmin(request)) return response({ error: "Tu cuenta necesita permiso para editar." }, 403);
+    const body = await request.json().catch(() => null);
+    const phone = typeof body?.phone === "string" ? body.phone.replace(/[ +().-]/g, "") : "";
+    const name = typeof body?.name === "string" ? body.name.trim() : "";
+    if (!/^[1-9][0-9]{7,14}$/.test(phone) || (body.remove !== true && (!name || name.length > 100))) {
+        return response({ error: "Ingresa un nombre y un número internacional, por ejemplo +56 9 seguido de ocho dígitos." }, 400);
+    }
+    const table = supabaseAdmin.from("operation_recipients");
+    const result = body.remove === true ? await table.delete().eq("phone", phone) : await table.upsert({ phone, name });
+    if (result.error) return response({ error: "No se pudo actualizar el listado." }, 503);
+    return response({ ok: true });
 }
