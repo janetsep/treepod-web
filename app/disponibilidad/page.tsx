@@ -114,6 +114,7 @@ function DisponibilidadContent() {
   const entradaParam = searchParams.get("entrada") || "";
   const salidaParam = searchParams.get("salida") || "";
   const adultosParam = searchParams.get("adultos") || "";
+  const errorParam = searchParams.get("error");
   const [entrada, setEntrada] = useState(esFechaIsoCalendarioValida(entradaParam) ? entradaParam : "");
   const [salida, setSalida] = useState(esFechaIsoCalendarioValida(salidaParam) ? salidaParam : "");
   // Clamp 1-4: la capacidad real por domo es 4 personas. Un query param fuera de
@@ -135,6 +136,9 @@ function DisponibilidadContent() {
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState<Set<string>>(new Set());
   const [nochesPorServicio, setNochesPorServicio] = useState<Record<string, number>>({});
+
+  const sinDisponibilidad = Boolean(entrada && salida && disponibilidad.disponible === false);
+  const ofertaDisponible = sinDisponibilidad ? null : resultado;
 
   // Client data states
   const [nombre, setNombre] = useState("");
@@ -166,10 +170,12 @@ function DisponibilidadContent() {
     try { control.showPicker?.(); } catch { /* El control nativo sigue disponible con teclado y foco. */ }
   };
   const resultsRef = useRef<HTMLDivElement>(null);
+  const unavailableRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const checkoutInFlightRef = useRef(false);
   const availabilityTrackedRef = useRef("");
+  const precioVistoRef = useRef<ResultadoPrecio | null>(null);
   const precioRequestRef = useRef(0);
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
@@ -196,17 +202,17 @@ function DisponibilidadContent() {
     );
   }, [entradaParam, salidaParam, adultosParam]);
 
-  // Auto-scroll to results when calculating is done
   useEffect(() => {
-    if (resultado && resultsRef.current && !isMundialEvent && !isSemanaSantaEvent) {
-      setTimeout(() => {
-        // 'start' (no 'center'): en el móvil, centrar dejaba el formulario de datos
-        // arriba y parecía pedir datos antes de mostrar la disponibilidad. Con 'start'
-        // el resultado (¿hay cupo?) queda visible primero.
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }, [resultado, isMundialEvent, isSemanaSantaEvent]);
+    if (isMundialEvent || isSemanaSantaEvent || disponibilidad.checking) return;
+    const target = sinDisponibilidad
+      ? unavailableRef.current
+      : ofertaDisponible && resultsRef.current;
+    if (!target) return;
+    const timer = setTimeout(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [ofertaDisponible, sinDisponibilidad, disponibilidad.checking, isMundialEvent, isSemanaSantaEvent]);
 
   // Set default values if it's Mundial MTB event or Semana Santa
   useEffect(() => {
@@ -243,7 +249,6 @@ function DisponibilidadContent() {
   // webpay_abort / missing_token (el huésped canceló), webpay_commit (falló la confirmación
   // con Transbank) o reserva_no_encontrada. Sin este aviso, volvía sin ningún mensaje.
   useEffect(() => {
-    const errorParam = searchParams.get("error");
     if (errorParam === "webpay_abort" || errorParam === "missing_token") {
       setError("El pago no se completó en Webpay y no se realizó ningún cobro. Puedes intentar tu reserva de nuevo cuando quieras.");
     } else if (errorParam === "webpay_commit") {
@@ -251,7 +256,7 @@ function DisponibilidadContent() {
     } else if (errorParam === "reserva_no_encontrada") {
       setError("No encontramos la reserva asociada a ese pago. Por favor intenta de nuevo o escríbenos por WhatsApp al +56 9 8464 3307 si el problema persiste.");
     }
-  }, [searchParams]);
+  }, [errorParam]);
 
   const fetchServicios = async () => {
     try {
@@ -385,11 +390,11 @@ function DisponibilidadContent() {
 
     console.log("🔍 Iniciando cálculo de precio:", { entrada, salida, adultos });
 
-    const params = new URLSearchParams();
-    if (entrada) params.set("entrada", entrada);
-    if (salida) params.set("salida", salida);
-    params.set("adultos", adultos.toString());
-    window.history.replaceState(null, "", `?${params.toString()}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set("entrada", entrada);
+    url.searchParams.set("salida", salida);
+    url.searchParams.set("adultos", adultos.toString());
+    if (url.href !== window.location.href) window.history.replaceState(null, "", url);
 
     try {
       const res = await fetch("/api/calcular-precio", {
@@ -430,12 +435,6 @@ function DisponibilidadContent() {
         temporada: data.temporada,
         total: data.total
       });
-      trackEvent("view_pricing_result", {
-        precio_noche: data.precio_noche,
-        total: data.total,
-        temporada: data.temporada,
-        noches: data.noches
-      });
 
     } catch (err: unknown) {
       if (requestId !== precioRequestRef.current) return;
@@ -450,6 +449,17 @@ function DisponibilidadContent() {
       if (requestId === precioRequestRef.current) setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!ofertaDisponible || disponibilidad.checking || precioVistoRef.current === ofertaDisponible) return;
+    precioVistoRef.current = ofertaDisponible;
+    trackEvent("view_pricing_result", {
+      precio_noche: ofertaDisponible.precio_noche,
+      total: ofertaDisponible.total,
+      temporada: ofertaDisponible.temporada,
+      noches: ofertaDisponible.noches,
+    });
+  }, [ofertaDisponible, disponibilidad.checking]);
 
   const reservar = async () => {
     // Estado visual y bloqueo síncrono: Enter y ambos botones no deben abrir
@@ -762,6 +772,9 @@ function DisponibilidadContent() {
     "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
+  const huespedesTexto = `${adultos} ${adultos === 1 ? "persona" : "personas"}`;
+  const whatsappReserva = "https://wa.me/56984643307?text=";
+
 
   return (
     <div className="min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16]">
@@ -769,7 +782,7 @@ function DisponibilidadContent() {
           sin priority: el único de cada página es la portada del hero en la home). */}
       <header className="bg-[#F7F3EC] border-b border-[#1E1B16]/15 pt-28 md:pt-32 pb-8">
         <div className="mx-auto max-w-[1280px] px-5 md:px-10">
-          <SectionFolio num={`Paso ${resultado ? 2 : 1} de 2`} label="Reserva directa" />
+          <SectionFolio num={`Paso ${ofertaDisponible ? 2 : 1} de 2`} label="Reserva directa" />
           <p className="display-lg text-[#1E1B16] max-w-3xl" aria-hidden="true">
             Reserva tu{" "}
             <span className="italic whitespace-nowrap">
@@ -799,10 +812,10 @@ function DisponibilidadContent() {
       </header>
 
       <main className="mx-auto max-w-[1280px] px-5 md:px-10 py-8 md:py-10 flex-1">
-        <Stepper activeStep={resultado ? 2 : 1} />
+        <Stepper activeStep={ofertaDisponible ? 2 : 1} />
 
         <p className="dato text-[#5B5348] mb-8">
-          {entrada && salida ? "Revisa tu resumen y confirma" : "Selecciona tus fechas en el calendario"}
+          {sinDisponibilidad ? "Consulta otras fechas" : entrada && salida ? "Revisa tu resumen y confirma" : "Selecciona tus fechas en el calendario"}
         </p>
 
         {/* Selección de estadía y resumen; los extras se contratan después. */}
@@ -1145,11 +1158,29 @@ function DisponibilidadContent() {
                   </p>
                 </div>
 
-                {/* Aviso de disponibilidad real por domo */}
-                {entrada && salida && disponibilidad.disponible === false && (
-                  <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-[2px] text-xs font-medium flex items-start gap-2">
-                    <TriBullet className="w-2.5 h-2 text-amber-500 shrink-0 mt-1" />
-                    <span>{entrada < fechaMinimaReserva ? bookingCutoffMessage : "No tenemos un domo disponible para toda esta estadía. Prueba con otras fechas o escríbenos por WhatsApp y revisamos opciones."}</span>
+                {sinDisponibilidad && (
+                  <div ref={unavailableRef} className="scroll-mt-28 rounded-[2px] border border-amber-200 bg-amber-50 p-4 text-amber-900">
+                    <p role="status" className="text-sm font-semibold">
+                      {entrada < fechaMinimaReserva ? bookingCutoffMessage : "No hay un domo libre para toda tu estadía."}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm font-semibold">
+                      {!isMundialEvent && (
+                        <button type="button" onClick={enfocarCalendario} className="min-h-11 rounded-[2px] bg-[#1E1B16] px-4 text-white">
+                          Cambiar fechas
+                        </button>
+                      )}
+                      <a
+                        href={whatsappReserva + encodeURIComponent(
+                          `Hola, busco un domo para ${huespedesTexto} del ${entrada} al ${salida}. ¿Qué fechas alternativas tienen disponibles?`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent("click_whatsapp_reserva", { origen: "fechas_no_disponibles" })}
+                        className="inline-flex min-h-11 items-center underline underline-offset-4"
+                      >
+                        Consultar otras fechas por WhatsApp
+                      </a>
+                    </div>
                   </div>
                 )}
                 {entrada && salida && disponibilidad.checking && (
@@ -1161,13 +1192,13 @@ function DisponibilidadContent() {
                 {/* Un solo mensaje de error visible a la vez: aquí cuando aún no hay
                     resultado (errores de Webpay o de cálculo); junto al formulario
                     cuando ya se está reservando. */}
-                {error && !resultado && (
+                {error && !resultado && !sinDisponibilidad && (
                   <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-[2px] text-xs font-medium">
                     {error}
                   </div>
                 )}
 
-                {!resultado ? (
+                {sinDisponibilidad ? null : !resultado ? (
                   <button
                     onClick={calcularPrecio}
                     disabled={loading || !entrada || !salida}
@@ -1177,7 +1208,7 @@ function DisponibilidadContent() {
                     <span aria-hidden="true">→</span>
                   </button>
                 ) : (
-                  <div ref={resultsRef} className="space-y-6 pt-1">
+                  <div ref={resultsRef} className="space-y-6 pt-1 scroll-mt-28">
 
                     <BookingOffer
                       nights={resultado.noches}
@@ -1442,30 +1473,32 @@ function DisponibilidadContent() {
             {/* Canal alternativo: la mayoría de las reservas reales llega por
                 WhatsApp. Este botón captura al visitante que no quiere pagar
                 en línea, con las fechas y huéspedes ya elegidos en el mensaje. */}
-            <div className="bg-white rounded-[2px] border border-[#1E1B16]/15 p-5">
-              <p className="dato text-[#5B5348] mb-3">¿Prefieres reservar por WhatsApp?</p>
-              <a
-                href={`https://wa.me/56984643307?text=${encodeURIComponent(
-                  entrada && salida
-                    ? `Hola, quiero reservar en TreePod del ${entrada} al ${salida} para ${adultos} ${adultos === 1 ? "persona" : "personas"}.`
-                    : "Hola, quiero consultar disponibilidad en TreePod."
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackEvent("click_whatsapp_reserva")}
-                className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb958] text-[#1E1B16] font-semibold text-[15px] px-6 py-3 rounded-[2px] transition-colors"
-              >
-                Escríbenos por WhatsApp
-              </a>
-              <p className="text-[11px] text-gray-600 mt-2 leading-snug">
-                Te respondemos rápido al +56 9 8464 3307 y confirmamos tu reserva por ese medio.
-              </p>
-            </div>
+            {!sinDisponibilidad && (
+              <div className="bg-white rounded-[2px] border border-[#1E1B16]/15 p-5">
+                <p className="dato text-[#5B5348] mb-3">¿Prefieres reservar por WhatsApp?</p>
+                <a
+                  href={whatsappReserva + encodeURIComponent(
+                    entrada && salida
+                      ? `Hola, quiero reservar en TreePod del ${entrada} al ${salida} para ${huespedesTexto}.`
+                      : "Hola, quiero consultar disponibilidad en TreePod."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("click_whatsapp_reserva")}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb958] text-[#1E1B16] font-semibold text-[15px] px-6 py-3 rounded-[2px] transition-colors"
+                >
+                  Escríbenos por WhatsApp
+                </a>
+                <p className="text-[11px] text-gray-600 mt-2 leading-snug">
+                  Te respondemos rápido al +56 9 8464 3307 y confirmamos tu reserva por ese medio.
+                </p>
+              </div>
+            )}
           </aside>
         </div>
 
         {/* BARRA-FOLIO STICKY (Mobile): la cifra principal es lo que se paga HOY */}
-        {resultado && (
+        {ofertaDisponible && (
           <div className="lg:hidden fixed inset-x-0 bottom-0 z-[100] animate-fade-in-up">
             <div
               className="bg-white/95 backdrop-blur border-t-2 border-[#00ADEF] px-4 py-2.5 flex items-center justify-between gap-3"
@@ -1481,7 +1514,7 @@ function DisponibilidadContent() {
                   </span>
                 </div>
                 <div className="text-[11px] text-[#5B5348] mt-0.5">
-                  {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'} · Total ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
+                  {ofertaDisponible.noches} {ofertaDisponible.noches === 1 ? 'noche' : 'noches'} · Total ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
                 </div>
               </div>
               <button
