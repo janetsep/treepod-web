@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useMinimumBookingDate } from "@/lib/use-minimum-booking-date";
 import { RefreshCw } from "lucide-react";
-import { DayPicker, DateRange } from "react-day-picker";
+import { DayPicker, DateRange, labelDayButton } from "react-day-picker";
 import { format, addMonths, startOfToday, parseISO, addDays } from "date-fns";
 import { es } from "date-fns/locale";
 import "react-day-picker/src/style.css";
@@ -224,9 +224,9 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
         color: rgba(30, 27, 22, 0.15) !important;
         pointer-events: none;
     }
-    .rdp-unavailable {
-        background-color: rgba(30, 27, 22, 0.03) !important;
-        color: rgba(30, 27, 22, 0.25) !important;
+    .rdp-unavailable .rdp-day_button {
+        background-color: rgba(30, 27, 22, 0.08);
+        color: #5B5348;
         text-decoration: line-through;
     }
   `;
@@ -262,6 +262,13 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
                 ]}
                 modifiers={{
                     unavailable: blockedDates
+                }}
+                modifiersClassNames={{ unavailable: "rdp-unavailable" }}
+                labels={{
+                    labelDayButton: (date, modifiers, options, dateLib) => {
+                        const label = labelDayButton(date, modifiers, options, dateLib);
+                        return modifiers.unavailable ? `${label}, noche sin cupo` : label;
+                    }
                 }}
                 className="font-sans"
             />
