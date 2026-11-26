@@ -82,16 +82,6 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
           <div className="flex items-center gap-2 mb-4">
             <TriBullet />
             <span className="dato text-[#5B5348]">Reserva directa</span>
-            {tarifaDesde && (
-              <span className="text-right leading-tight">
-                <span className="block text-[13px] font-semibold text-[#1E1B16] whitespace-nowrap">
-                  desde ${tarifaDesde.toLocaleString("es-CL")} / noche
-                </span>
-                <span className="block text-[10px] text-[#5B5348] whitespace-nowrap">
-                  2 personas · 2 noches o más
-                </span>
-              </span>
-            )}
             <span className="flex-1 h-px bg-[#1E1B16]/10" aria-hidden="true" />
           </div>
 
@@ -171,6 +161,12 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
               Ver disponibilidad y precio
             </button>
           </div>
+          {tarifaDesde !== null && (
+            <p className="mt-3 text-xs leading-snug text-[#5B5348]">
+              <strong className="text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche</strong>
+              {" para 2 personas en estadías de 2 noches o más. También puedes consultar por 1 noche."}
+            </p>
+          )}
 
           <p className="text-[11px] text-gray-600 mt-3 leading-snug">
             Elige tus fechas, revisa el precio al instante y confirma tu domo con el 50%. El saldo se

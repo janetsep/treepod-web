@@ -12,6 +12,8 @@ export type AnalyticsEventName =
   | "booking_dates_prefilled"
   | "booking_dates_started"
   | "booking_dates_completed"
+  | "booking_price_visible"
+  | "booking_payment_button_visible"
   | "select_fechas"
   | "availability_checked"
   | "availability_check_failed"

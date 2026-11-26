@@ -172,6 +172,8 @@ function DisponibilidadContent() {
     try { control.showPicker?.(); } catch { /* El control nativo sigue disponible con teclado y foco. */ }
   };
   const resultsRef = useRef<HTMLDivElement>(null);
+  const botonPagoRef = useRef<HTMLButtonElement>(null);
+  const botonPagoMovilRef = useRef<HTMLButtonElement>(null);
   const unavailableRef = useRef<HTMLDivElement>(null);
   const datosRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -497,6 +499,37 @@ function DisponibilidadContent() {
       noches: ofertaDisponible.noches,
     });
   }, [ofertaDisponible, disponibilidad.checking]);
+
+  useEffect(() => {
+    if (!ofertaDisponible || disponibilidad.disponible !== true || typeof IntersectionObserver === "undefined") return;
+
+    const price = resultsRef.current?.querySelector("[data-offer-total]");
+    const buttons = [botonPagoRef.current, botonPagoMovilRef.current];
+    let priceSeen = false;
+    let buttonSeen = false;
+    const observer = new IntersectionObserver((entries) => {
+      if (document.visibilityState !== "visible") return;
+      for (const entry of entries) {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.75) continue;
+        if (entry.target === price && !priceSeen) {
+          priceSeen = true;
+          trackEvent("booking_price_visible");
+        } else if (entry.target !== price && !buttonSeen) {
+          buttonSeen = true;
+          trackEvent("booking_payment_button_visible", {
+            origen: entry.target === buttons[1] ? "barra_movil" : "ficha",
+          });
+        }
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.75 });
+
+    if (price) observer.observe(price);
+    for (const button of buttons) {
+      if (button) observer.observe(button);
+    }
+    return () => observer.disconnect();
+  }, [ofertaDisponible, disponibilidad.disponible]);
 
   const reservar = async () => {
     // Estado visual y bloqueo síncrono: Enter y ambos botones no deben abrir
@@ -835,7 +868,7 @@ function DisponibilidadContent() {
               {resultado.noches} {resultado.noches === 1 ? 'noche' : 'noches'} · {adultos} {adultos === 1 ? 'persona' : 'personas'} · Total ${(calcularTotalConServicios() || 0).toLocaleString("es-CL")}
             </span> : tarifaDesde && (
               <>
-                <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche · 2 personas, 2 noches o más</span>
+                <span className="font-semibold text-[#1E1B16]">Desde ${tarifaDesde.toLocaleString("es-CL")} por noche para 2 personas en estadías de 2 noches o más. También puedes consultar por 1 noche.</span>
                 <span className="text-[#5B5348]/40" aria-hidden="true">·</span>
               </>
             )}
@@ -1297,6 +1330,7 @@ function DisponibilidadContent() {
                           ya calculado en pantalla), no "Pagar ahora". */}
                       <button
                         type="submit"
+                        ref={botonPagoRef}
                         form="booking-checkout"
                         aria-controls="booking-checkout"
                         onClick={(event) => {
@@ -1543,6 +1577,7 @@ function DisponibilidadContent() {
               </div>
               <button
                 type="submit"
+                ref={botonPagoMovilRef}
                 form="booking-checkout"
                 aria-controls="booking-checkout"
                 onClick={(event) => {
