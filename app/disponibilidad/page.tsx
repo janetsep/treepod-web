@@ -149,6 +149,7 @@ function DisponibilidadContent() {
   // Solo UI: al intentar reservar con datos incompletos, marca en rojo los campos
   // vacíos y lleva la vista al formulario. Cero lógica de reserva.
   const [intentoEnvio, setIntentoEnvio] = useState(false);
+  const [checkoutAbierto, setCheckoutAbierto] = useState(false);
   // Precio "desde" real de la temporada vigente: ancla la expectativa antes de
   // pedirle nada al visitante. Si el endpoint falla, simplemente no se muestra.
   const [tarifaDesde, setTarifaDesde] = useState<number | null>(null);
@@ -175,6 +176,17 @@ function DisponibilidadContent() {
   const datosRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const checkoutInFlightRef = useRef(false);
+  useEffect(() => {
+    if (checkoutAbierto) emailRef.current?.focus();
+  }, [checkoutAbierto]);
+
+  const checkoutVisible = checkoutAbierto || Boolean(error);
+  const mostrarCorreo = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (checkoutVisible) return;
+    event.preventDefault();
+    setCheckoutAbierto(true);
+  };
+
   const availabilityTrackedRef = useRef("");
   const precioVistoRef = useRef<ResultadoPrecio | null>(null);
   const precioRequestRef = useRef(0);
@@ -1224,91 +1236,94 @@ function DisponibilidadContent() {
                       guests={adultos}
                       total={calcularTotalConServicios() || 0}
                       deposit={abonoHoy}
-                    />
-
-                    {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
-                        1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
-                    {disponibilidad.disponible === true &&
-                      disponibilidad.domosLibres !== null &&
-                      disponibilidad.domosLibres > 0 &&
-                      disponibilidad.domosLibres <= 2 && (
-                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-[2px] text-sm font-medium animate-fade-in">
-                          <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0" />
-                          <span>
-                            {disponibilidad.domosLibres === 1
-                              ? "Queda solo 1 domo libre para estas fechas."
-                              : `Quedan solo ${disponibilidad.domosLibres} domos libres para estas fechas.`}
-                          </span>
-                        </div>
-                      )}
-
-                    {/* Client Data Form */}
-                    <form
-                      id="booking-checkout"
-                      ref={datosRef}
-                      noValidate
-                      onSubmit={(event) => { event.preventDefault(); void reservar(); }}
-                      aria-label="Correo para confirmar tu reserva"
-                      className="border border-[#1E1B16]/12 rounded-[2px] p-4 mt-2"
                     >
-                      <div>
-                        <label htmlFor="checkout-email" className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
-                        <input
-                          id="checkout-email"
-                          ref={emailRef}
-                          name="email"
-                          type="email"
-                          inputMode="email"
-                          autoComplete="email"
-                          value={email}
-                          onChange={(e) => { setEmail(e.target.value); setError(null); }}
-                          aria-invalid={intentoEnvio && !emailValido}
-                          aria-describedby={error ? "checkout-help checkout-error" : "checkout-help"}
-                          className={`${inputFicha} ${intentoEnvio && !emailValido ? "border-red-400" : "border-[#1E1B16]/20"}`}
-                          placeholder="tu@email.com"
-                        />
-                      </div>
 
-                      <p id="checkout-help" className="text-[12px] text-[#5B5348] mt-3 leading-snug">
-                        Solo tu correo para ir a Webpay. Después del pago completamos tus datos.
+                      {/* Escasez honesta: solo se muestra cuando la API confirma que quedan
+                          1 o 2 domos libres para la estadía completa. Nunca se inventa. */}
+                      {disponibilidad.disponible === true &&
+                        disponibilidad.domosLibres !== null &&
+                        disponibilidad.domosLibres > 0 &&
+                        disponibilidad.domosLibres <= 2 && (
+                          <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-[2px] text-sm font-medium animate-fade-in">
+                            <TriBullet className="w-2.5 h-2 text-amber-600 shrink-0" />
+                            <span>
+                              {disponibilidad.domosLibres === 1
+                                ? "Queda solo 1 domo libre para estas fechas."
+                                : `Quedan solo ${disponibilidad.domosLibres} domos libres para estas fechas.`}
+                            </span>
+                          </div>
+                        )}
+
+                      {/* Client Data Form */}
+                      <form
+                        id="booking-checkout"
+                        hidden={!checkoutVisible}
+                        ref={datosRef}
+                        noValidate
+                        onSubmit={(event) => { event.preventDefault(); void reservar(); }}
+                        aria-label="Correo para confirmar tu reserva"
+                        className="border border-[#1E1B16]/12 rounded-[2px] p-4 mt-2"
+                      >
+                        <div>
+                          <label htmlFor="checkout-email" className="block dato text-[#5B5348] mb-2">Correo electrónico *</label>
+                          <input
+                            id="checkout-email"
+                            ref={emailRef}
+                            name="email"
+                            type="email"
+                            inputMode="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                            aria-invalid={intentoEnvio && !emailValido}
+                            aria-describedby={error ? "checkout-help checkout-error" : "checkout-help"}
+                            className={`${inputFicha} ${intentoEnvio && !emailValido ? "border-red-400" : "border-[#1E1B16]/20"}`}
+                            placeholder="tu@email.com"
+                          />
+                        </div>
+
+                        <p id="checkout-help" className="text-[12px] text-[#5B5348] mt-3 leading-snug">
+                          Solo tu correo para ir a Webpay. Después del pago completamos tus datos.
+                        </p>
+
+                        {error && (
+                          <div id="checkout-error" role="alert" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
+                            {error}
+                          </div>
+                        )}
+                      </form>
+
+                      {/* CTA principal: dice exactamente lo que se cobra hoy (el 50%
+                          ya calculado en pantalla), no "Pagar ahora". */}
+                      <button
+                        type="submit"
+                        form="booking-checkout"
+                        aria-controls="booking-checkout"
+                        onClick={(event) => {
+                          trackEvent("click_reservar");
+                          mostrarCorreo(event);
+                        }}
+                        disabled={reserving || disponibilidad.disponible === false}
+                        className={`${btnPrimary} w-full mt-2 disabled:opacity-40 disabled:cursor-not-allowed`}
+                      >
+                        {reserving ? (
+                          <>
+                            <RefreshCw className="w-5 h-5 animate-spin" />
+                            <span>Procesando…</span>
+                          </>
+                        ) : disponibilidad.disponible === false
+                          ? "No disponible en estas fechas"
+                          : abonoHoy > 0
+                            ? `Pagar $${abonoHoy.toLocaleString("es-CL")} con Webpay`
+                            : "Ir a Webpay"}
+                      </button>
+
+                      {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
+                      <p className="flex items-center justify-center gap-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348]">
+                        <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
+                        Pago seguro mediante Webpay Plus
                       </p>
-
-                      {error && (
-                        <div id="checkout-error" role="alert" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] mt-4 text-sm font-medium">
-                          {error}
-                        </div>
-                      )}
-                    </form>
-
-                    {/* CTA principal: dice exactamente lo que se cobra hoy (el 50%
-                        ya calculado en pantalla), no "Pagar ahora". */}
-                    <button
-                      type="submit"
-                      form="booking-checkout"
-                      onClick={() => trackEvent("click_reservar")}
-                      disabled={reserving || disponibilidad.disponible === false}
-                      className={`${btnPrimary} w-full mt-2 disabled:opacity-40 disabled:cursor-not-allowed`}
-                    >
-                      {reserving ? (
-                        <>
-                          <RefreshCw className="w-5 h-5 animate-spin" />
-                          <span>Procesando…</span>
-                        </>
-                      ) : disponibilidad.disponible === false
-                        ? "No disponible en estas fechas"
-                        : abonoHoy > 0
-                          ? `Pagar $${abonoHoy.toLocaleString("es-CL")} con Webpay`
-                          : "Ir a Webpay"}
-                    </button>
-
-                    {/* Solo Webpay: el checkout no ofrece transferencia, así que no la prometemos aquí. */}
-                    <p className="flex items-center justify-center gap-2 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B5348]">
-                      <TriBullet className="w-2 h-1.5 text-[#00ADEF] shrink-0" />
-                      Pago seguro mediante Webpay Plus
-                    </p>
-                    <p className="text-[11px] text-gray-600 text-center pt-1 leading-snug">
-                      Desayuno y extras opcionales, con costo adicional.
-                    </p>
+                    </BookingOffer>
                     {/* Lo que no hace falta para decidir vive plegado. Antes esto sumaba
                         18 bloques entre el precio y el boton, y ahi se iba el 96%. */}
                     <div className="border border-[#1E1B16]/12 rounded-[2px] px-5 mt-5">
@@ -1529,7 +1544,11 @@ function DisponibilidadContent() {
               <button
                 type="submit"
                 form="booking-checkout"
-                onClick={() => trackEvent("click_reservar_sticky")}
+                aria-controls="booking-checkout"
+                onClick={(event) => {
+                  trackEvent("click_reservar_sticky");
+                  mostrarCorreo(event);
+                }}
                 disabled={reserving || disponibilidad.disponible === false}
                 className="shrink-0 relative z-0 inline-flex items-center justify-center gap-2 bg-[#00ADEF] hover:bg-[#0098d4] text-[#1E1B16] font-semibold text-sm px-5 py-2.5 rounded-[2px] transition-all after:absolute after:inset-0 after:rounded-[2px] after:border after:border-[#1E1B16] after:translate-x-1 after:translate-y-1 after:-z-10 after:transition-transform active:after:translate-x-0 active:after:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed"
               >
