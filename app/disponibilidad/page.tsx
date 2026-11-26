@@ -6,6 +6,7 @@ import BookingOffer from '../components/BookingOffer';
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { format } from "date-fns";
 import { useEffect, useEffectEvent, useState, Suspense, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { getGaClientId, getGaSessionId, trackEvent, trackEventAndWait } from "../lib/analytics";
@@ -180,6 +181,29 @@ function DisponibilidadContent() {
   const isMundialEvent = searchParams.get("event") === "mundial";
   const isSemanaSantaEvent = searchParams.get("event") === "semana-santa";
 
+  const fechasPrecargadas = useRef(
+    esFechaIsoCalendarioValida(entradaParam) &&
+    esFechaIsoCalendarioValida(salidaParam) && salidaParam > entradaParam,
+  );
+  const inicioFechasMedido = useRef(false);
+  const finFechasMedido = useRef(false);
+  const cambiarFechas = (ingreso: string, partida: string, origen: "calendario" | "campo_fecha") => {
+    if (ingreso === entrada && partida === salida) return;
+    setEntrada(ingreso);
+    setSalida(partida);
+
+    if (!esFechaIsoCalendarioValida(ingreso) || ingreso < fechaMinimaReserva) return;
+    const params = { origen, fechas_precargadas: fechasPrecargadas.current };
+    if (!inicioFechasMedido.current) {
+      inicioFechasMedido.current = true;
+      trackEvent("booking_dates_started", params);
+    }
+    if (!finFechasMedido.current && esFechaIsoCalendarioValida(partida) && partida > ingreso) {
+      finFechasMedido.current = true;
+      trackEvent("booking_dates_completed", params);
+    }
+  };
+
   // En navegaciones internas de Next.js los search params pueden estar listos
   // después del primer render. Sin esta sincronización, la landing del 18
   // entregaba septiembre en la URL, pero el calendario conservaba agosto.
@@ -242,6 +266,7 @@ function DisponibilidadContent() {
 
   useEffect(() => {
     trackEvent("view_disponibilidad");
+    if (fechasPrecargadas.current) trackEvent("booking_dates_prefilled");
     fetchServicios();
   }, []);
 
@@ -831,27 +856,6 @@ function DisponibilidadContent() {
               </header>
 
               <section className="bg-white p-5 lg:p-6 rounded-[2px] border border-[#1E1B16]/12 space-y-6">
-                {/* Guest Selection moved here */}
-                <div className="space-y-2">
-                  <label htmlFor="booking-guests" className="dato text-[#5B5348] block cursor-pointer">¿Cuántos huéspedes?</label>
-                  <div className="relative">
-                    <select
-                      id="booking-guests"
-                      ref={huespedesRef}
-                      value={adultos}
-                      onChange={(e) => setAdultos(Number(e.target.value))}
-                      className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] font-medium appearance-none focus:border-[#00ADEF] focus:ring-0 transition-colors outline-none text-[#1E1B16] cursor-pointer"
-                    >
-                      {[1, 2, 3, 4].map(n => (
-                        <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'persona' : 'personas'}</option>
-                      ))}
-                    </select>
-                    <TriBullet className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-2.5 text-[#00ADEF] rotate-180" />
-                  </div>
-                </div>
-
-                <div className="h-px bg-[#1E1B16]/12 w-full"></div>
-
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <button type="button" onClick={enfocarCalendario} className="dato text-[#5B5348] text-left underline decoration-dotted underline-offset-4 focus-visible:outline-2 focus-visible:outline-[#00ADEF]">Selecciona tus fechas</button>
@@ -885,29 +889,35 @@ function DisponibilidadContent() {
                       from: entrada ? new Date(entrada + 'T12:00:00') : undefined,
                       to: salida ? new Date(salida + 'T12:00:00') : undefined
                     }}
-                    onSelect={(range) => {
-                      if (range?.from) {
-                        const year = range.from.getFullYear();
-                        const month = String(range.from.getMonth() + 1).padStart(2, '0');
-                        const day = String(range.from.getDate()).padStart(2, '0');
-                        setEntrada(`${year}-${month}-${day}`);
-                      } else {
-                        setEntrada("");
-                      }
-
-                      if (range?.to) {
-                        const year = range.to.getFullYear();
-                        const month = String(range.to.getMonth() + 1).padStart(2, '0');
-                        const day = String(range.to.getDate()).padStart(2, '0');
-                        setSalida(`${year}-${month}-${day}`);
-                      } else {
-                        setSalida("");
-                      }
-                    }}
+                    onSelect={(range) => cambiarFechas(
+                      range?.from ? format(range.from, "yyyy-MM-dd") : "",
+                      range?.to ? format(range.to, "yyyy-MM-dd") : "",
+                      "calendario",
+                    )}
                     className="bg-transparent border-none shadow-none p-0 w-full"
                   />
                   </div>
                 </div>
+                <div className="h-px bg-[#1E1B16]/12" />
+
+                <div className="space-y-2">
+                  <label htmlFor="booking-guests" className="dato text-[#5B5348] block cursor-pointer">¿Cuántos huéspedes?</label>
+                  <div className="relative">
+                    <select
+                      id="booking-guests"
+                      ref={huespedesRef}
+                      value={adultos}
+                      onChange={(e) => setAdultos(Number(e.target.value))}
+                      className="w-full bg-white border border-[#1E1B16]/20 rounded-[2px] h-12 px-4 text-[15px] font-medium appearance-none focus:border-[#00ADEF] focus:ring-0 transition-colors outline-none text-[#1E1B16] cursor-pointer"
+                    >
+                      {[1, 2, 3, 4].map(n => (
+                        <option key={n} value={n} className="bg-white">{n} {n === 1 ? 'persona' : 'personas'}</option>
+                      ))}
+                    </select>
+                    <TriBullet className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-2.5 text-[#00ADEF] rotate-180" />
+                  </div>
+                </div>
+
               </section>
             </div>
           )}
@@ -1131,8 +1141,7 @@ function DisponibilidadContent() {
                     <input type="date" id="booking-check-in" aria-label="Fecha de ingreso"
                       value={entrada} min={fechaMinimaReserva}
                       onClick={e=>abrirSelector(e.currentTarget)}
-                      onChange={e=>{setEntrada(e.target.value);
-                        if (!e.target.value || (salida && salida <= e.target.value)) setSalida("");}}
+                      onChange={(e) => cambiarFechas(e.target.value, e.target.value && salida > e.target.value ? salida : "", "campo_fecha")}
                       className="w-36 min-w-0 rounded-[2px] border border-[#1E1B16]/20 bg-white px-2 py-2 text-[13px] tabular-nums text-[#1E1B16] focus:border-[#00ADEF] focus:outline-none" />
                   </div>
                   <div className="flex items-baseline gap-3 py-1.5">
@@ -1142,7 +1151,7 @@ function DisponibilidadContent() {
                     <input type="date" id="booking-check-out" aria-label="Fecha de salida"
                       value={salida} min={nextCalendarDate(entrada || fechaMinimaReserva)}
                       onClick={e=>abrirSelector(e.currentTarget)}
-                      onChange={e=>{setSalida(e.target.value);}}
+                      onChange={(e) => cambiarFechas(entrada, e.target.value, "campo_fecha")}
                       className="w-36 min-w-0 rounded-[2px] border border-[#1E1B16]/20 bg-white px-2 py-2 text-[13px] tabular-nums text-[#1E1B16] focus:border-[#00ADEF] focus:outline-none" />
                   </div>
                   {resultado && (
