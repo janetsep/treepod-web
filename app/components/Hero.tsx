@@ -47,25 +47,18 @@ export default function Hero() {
         </div>
 
         {/* Cuerpo de portada: titular a sangre + ficha de reserva */}
-        <div className="flex-1 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-8 items-end content-end pb-8 pt-10">
+        <div className="flex-1 grid grid-cols-12 gap-x-4 md:gap-x-6 gap-y-5 md:gap-y-8 items-end content-end pb-8 pt-5 md:pt-10">
           <div className="col-span-12 lg:col-span-8">
             {/* !text-white: la regla base h1..h6 de globals.css va sin capa y le gana
                 a las utilidades; misma convención que el resto del sitio.
                 Tamaño algo menor que display-xl para que la ficha de reserva quede
                 dentro del primer viewport en desktop (prioridad de conversión). */}
             <h1 className="font-normal text-[clamp(2.4rem,7vw,6.5rem)] leading-[0.98] tracking-[-0.02em] !text-white drop-shadow-[0_2px_20px_rgba(30,27,22,0.7)]">
-              <span className="block">Glamping en Valle Las Trancas:</span>
-              <span className="block italic text-[#00ADEF]">domos en el bosque nativo.</span>
+              <span className="block">Cuatro domos privados</span>
+              <span className="block italic text-[#00ADEF]">en el bosque de Las Trancas.</span>
             </h1>
-            <p className="lead text-white/90 mt-5 max-w-xl drop-shadow-[0_2px_12px_rgba(30,27,22,0.7)]">
-              Domos geodésicos cálidos en pleno bosque, a minutos de las termas y la nieve. Llegas y
-              todo está listo.
-            </p>
-            {/* Diferenciador n° 1 según las reseñas: la atención de los dueños.
-                100% veraz: Janet y Jaime son los anfitriones y viven el proyecto. */}
-            <p className="text-white/85 text-[14px] mt-3 max-w-xl drop-shadow-[0_2px_12px_rgba(30,27,22,0.7)]">
-              Atendido por sus dueños, Janet y Jaime — por eso las 209 reseñas hablan de los
-              detalles.
+            <p className="mt-3 max-w-xl text-base text-white/90 drop-shadow-[0_2px_12px_rgba(30,27,22,0.7)]">
+              Glamping para 1 a 4 personas por domo. Somos Janet y Jaime. Te esperamos en el Km 72.
             </p>
             {/* Fila de confianza: sin repetir lo que ya dice la nota de la ficha */}
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80 text-[12px] font-medium">
