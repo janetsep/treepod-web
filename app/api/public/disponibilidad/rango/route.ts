@@ -36,6 +36,14 @@ export async function GET(request: Request) {
         if (domosErr) throw domosErr;
 
         const totalDomos = domosComp?.length || 0;
+        if (from < minimumBookingDate()) {
+            return NextResponse.json({
+                disponible: false,
+                domosLibres: 0,
+                totalDomos,
+                mensaje: bookingCutoffMessage,
+            });
+        }
         if (totalDomos === 0) {
             return NextResponse.json({ disponible: false, domosLibres: 0, totalDomos: 0 });
         }
