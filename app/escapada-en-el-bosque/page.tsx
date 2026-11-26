@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import TrackView from "../components/TrackView";
 import { btnPrimary } from "../components/deco/cta";
 
@@ -33,14 +32,17 @@ export default async function EscapadaEnElBosquePage({
       <TrackView eventName="view_escapada_bosque" />
       <div className="mx-auto grid max-w-5xl items-center gap-5 md:grid-cols-2 md:gap-10">
         <div className="relative aspect-video overflow-hidden rounded-[2px] bg-[#1E1B16]">
-          <Image
-            src="/images/hero/hero-domo-poster-v6.jpg"
-            alt="Ventanal del domo TreePod junto a la cama, con el bosque al fondo"
-            fill
-            preload
-            sizes="(min-width: 1024px) 492px, (min-width: 768px) 45vw, calc(100vw - 40px)"
-            className="object-cover"
-          />
+          <video
+            aria-label="Video del domo TreePod y el bosque de Las Trancas"
+            controls
+            playsInline
+            preload="none"
+            poster="/images/hero/hero-domo-poster-v6.jpg"
+            className="h-full w-full object-cover"
+          >
+            <source src="/videos/hero-treepod-v6.mp4" type="video/mp4" />
+            <a href="/videos/hero-treepod-v6.mp4">Ver video de TreePod</a>
+          </video>
         </div>
         <div>
           <h1 className="font-display text-[clamp(2.15rem,5vw,3.8rem)] leading-none">
