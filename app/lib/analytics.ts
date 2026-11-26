@@ -7,6 +7,7 @@ export type AnalyticsEventName =
   | "checkout_webpay_failed"
   | "webpay_token_created"
   | "view_home"
+  | "view_escapada_bosque"
   | "click_ver_disponibilidad_home"
   | "view_disponibilidad"
   | "booking_dates_prefilled"
