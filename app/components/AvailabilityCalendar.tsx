@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { minimumBookingDate } from '@/lib/booking-date-selection';
+import { useMinimumBookingDate } from "@/lib/use-minimum-booking-date";
 import { RefreshCw } from "lucide-react";
 import { DayPicker, DateRange } from "react-day-picker";
 import { format, addMonths, startOfToday, parseISO, addDays } from "date-fns";
@@ -29,15 +29,11 @@ export default function AvailabilityCalendar({ selectedRange, onSelect, classNam
         if (defaultMonth) setMonth(defaultMonth);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mesObjetivo]);
-    // Regla de negocio: el sistema solo acepta reservas para HOY si son antes de las
-    // 14:00 (hora de Chile). Pasadas las 14:00, la fecha mínima de entrada es mañana.
-    const [minSelectable, setMinSelectable] = useState<Date>(startOfToday());
+    const minSelectable = parseISO(useMinimumBookingDate());
     const [aviso, setAviso] = useState<string | null>(null);
     const rangeCompleteRef = useRef(false);
 
-    useEffect(() => {
-        setMinSelectable(parseISO(minimumBookingDate()));
-    }, []);
+
 
     // Track when both dates are selected (range is complete)
     useEffect(() => {

@@ -1,3 +1,4 @@
+import { minimumBookingDate, bookingCutoffMessage } from "@/lib/booking-date-selection";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sendWhatsAppAlert } from "@/lib/whatsapp-alert";
@@ -61,37 +62,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
     }
 
-    // Regla de negocio: las reservas para el MISMO DÍA (check-in hoy) solo se aceptan
-    // hasta las 14:00 hrs (hora de Chile). Pasada esa hora, la entrada mínima es mañana.
-    // Se calcula con la zona horaria de Chile en el servidor (no depende del cliente).
-    {
-      const partes = new Intl.DateTimeFormat("es-CL", {
-        timeZone: "America/Santiago",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        hour12: false,
-      }).formatToParts(new Date());
-      const val = (t: string) => partes.find((p) => p.type === t)?.value || "";
-      const hoyChile = `${val("year")}-${val("month")}-${val("day")}`;
-      const horaChile = parseInt(val("hour"), 10) % 24; // "24" (medianoche) -> 0
-
-      if (entrada < hoyChile) {
-        return NextResponse.json(
-          { error: "La fecha de entrada ya no está disponible. Elige una fecha futura." },
-          { status: 400 }
-        );
-      }
-      if (entrada === hoyChile && horaChile >= 14) {
-        return NextResponse.json(
-          {
-            error:
-              "Las reservas para el mismo día solo se aceptan hasta las 14:00 hrs. Por favor elige a partir de mañana.",
-          },
-          { status: 400 }
-        );
-      }
+    if (entrada < minimumBookingDate()) {
+      return NextResponse.json({ error: bookingCutoffMessage }, { status: 400 });
     }
 
     // El correo es el único dato personal imprescindible antes de Webpay.

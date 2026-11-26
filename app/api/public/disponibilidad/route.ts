@@ -1,3 +1,4 @@
+import { minimumBookingDate } from "@/lib/booking-date-selection";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { addDays, eachDayOfInterval, format, parseISO, startOfDay } from "date-fns";
@@ -64,6 +65,7 @@ export async function GET(request: Request) {
 
         const allBlocks = [...validReservations, ...(bloqueos || [])];
 
+        const minimum = minimumBookingDate();
         days.forEach(day => {
             const dayStr = format(day, "yyyy-MM-dd");
 
@@ -82,7 +84,7 @@ export async function GET(request: Request) {
                 }
             });
 
-            if (occupiedCount.size >= totalDomos) {
+            if (dayStr < minimum || occupiedCount.size >= totalDomos) {
                 blockedDates.push(dayStr);
             }
         });

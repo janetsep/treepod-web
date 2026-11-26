@@ -1,3 +1,4 @@
+import * as dates from '../../lib/booking-date-selection.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -27,6 +28,7 @@ function handler(rows,price=190000) {
     async rpc(name){calls.push({method:'rpc',name});return {data:[{total:price}],error:null};},
   };
   const mocks={
+    '@/lib/booking-date-selection':dates,
     'next/server':{NextResponse:{json:Response.json}},
     '@/lib/supabase-admin':{supabaseAdmin:client},
     '@/lib/whatsapp-alert':{sendWhatsAppAlert:async()=>{throw Error('Unexpected notification');}},

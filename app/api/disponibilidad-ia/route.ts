@@ -1,3 +1,4 @@
+import { minimumBookingDate, bookingCutoffMessage } from "@/lib/booking-date-selection";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
@@ -7,6 +8,10 @@ export async function POST(request: Request) {
 
         if (!entrada || !salida) {
             return NextResponse.json({ error: "Faltan fechas" }, { status: 400 });
+        }
+
+        if (entrada < minimumBookingDate()) {
+            return NextResponse.json({ disponible: false, mensaje: bookingCutoffMessage });
         }
 
         // 1. Buscar domos con capacidad suficiente

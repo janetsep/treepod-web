@@ -1,5 +1,7 @@
 "use client";
 
+import { useMinimumBookingDate } from "@/lib/use-minimum-booking-date";
+import { minimumBookingDate } from "@/lib/booking-date-selection";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import TriBullet from "./deco/TriBullet";
@@ -19,7 +21,7 @@ function localDate(date: Date) {
 // precargado. Estilo ficha del sistema: rectangular, regla superior cyan, papel.
 export default function BookingWidget({ embedded = false }: { embedded?: boolean }) {
   const router = useRouter();
-  const hoy = localDate(new Date());
+  const hoy = useMinimumBookingDate();
   const [entrada, setEntrada] = useState("");
   const [salida, setSalida] = useState("");
   const [adultos, setAdultos] = useState(2);
@@ -28,7 +30,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
   const nextDay = entrada ? new Date(`${entrada}T12:00:00`) : null;
   if (nextDay) nextDay.setDate(nextDay.getDate() + 1);
   const salidaMin = nextDay ? localDate(nextDay) : hoy;
-  const dateHint = entrada && (!salida || salida <= entrada)
+  const dateHint = entrada && entrada < hoy ? "Elige otra llegada. Las reservas para hoy cierran a las 13:00." : entrada && (!salida || salida <= entrada)
     ? "Ahora elige tu fecha de salida."
     : salida && !entrada ? "Falta elegir tu fecha de llegada."
     : entrada && salida ? "Fechas listas. Consulta disponibilidad y precio."
@@ -45,7 +47,7 @@ export default function BookingWidget({ embedded = false }: { embedded?: boolean
 
   const buscar = () => {
     // Keep partially selected dates here instead of sending an incomplete stay.
-    const missing = entrada && (!salida || salida <= entrada) ? salidaRef.current
+    const missing = entrada && entrada < minimumBookingDate() ? entradaRef.current : entrada && (!salida || salida <= entrada) ? salidaRef.current
       : salida && !entrada ? entradaRef.current : null;
     if (missing) {
       missing.focus();

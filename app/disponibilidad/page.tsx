@@ -1,6 +1,7 @@
 "use client";
 
-import { minimumBookingDate, nextCalendarDate } from '@/lib/booking-date-selection';
+import { useMinimumBookingDate } from "@/lib/use-minimum-booking-date";
+import { bookingCutoffMessage, nextCalendarDate } from '@/lib/booking-date-selection';
 import BookingOffer from '../components/BookingOffer';
 import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import { useRouter, useSearchParams } from "next/navigation";
@@ -108,6 +109,7 @@ function Pliegue({
 }
 
 function DisponibilidadContent() {
+  const fechaMinimaReserva = useMinimumBookingDate();
   const searchParams = useSearchParams();
   const entradaParam = searchParams.get("entrada") || "";
   const salidaParam = searchParams.get("salida") || "";
@@ -223,11 +225,6 @@ function DisponibilidadContent() {
   // Todas las fechas se manejan como texto YYYY-MM-DD en horario local: evita el
   // corrimiento de un día que producía new Date("YYYY-MM-DD") (que parsea en UTC).
   useEffect(() => {
-    const hoyLocal = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
-    if (entrada && entrada < hoyLocal) {
-      setEntrada(hoyLocal);
-    }
-
     // Solo corregir cuando AMBAS fechas existen y la salida quedó antes/igual a la
     // entrada. No disparar cuando la salida está vacía (selección de rango en curso).
     if (entrada && salida && salida <= entrada) {
@@ -345,7 +342,7 @@ function DisponibilidadContent() {
       }
     }, 400);
     return () => { cancelado = true; clearTimeout(timer); };
-  }, [entrada, salida, adultos]);
+  }, [fechaMinimaReserva, entrada, salida, adultos]);
 
   // Captura de lead pre-pago: apenas hay un email válido con fechas, se guarda el
   // contacto en leads_checkout. Si la persona no completa el pago, deja de ser un
@@ -764,7 +761,7 @@ function DisponibilidadContent() {
   const inputFicha =
     "w-full px-4 py-3 bg-white border rounded-[2px] focus:outline-none focus:ring-0 focus:border-[#00ADEF] transition-colors text-sm text-[#1E1B16] placeholder:text-[#5B5348]/50";
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const fechaMinimaReserva = minimumBookingDate();
+
 
   return (
     <div className="min-h-screen bg-[#F7F3EC] font-sans text-[#1E1B16]">
@@ -1152,7 +1149,7 @@ function DisponibilidadContent() {
                 {entrada && salida && disponibilidad.disponible === false && (
                   <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-[2px] text-xs font-medium flex items-start gap-2">
                     <TriBullet className="w-2.5 h-2 text-amber-500 shrink-0 mt-1" />
-                    <span>No tenemos un domo disponible para toda esta estadía. Prueba con otras fechas o escríbenos por WhatsApp y revisamos opciones.</span>
+                    <span>{entrada < fechaMinimaReserva ? bookingCutoffMessage : "No tenemos un domo disponible para toda esta estadía. Prueba con otras fechas o escríbenos por WhatsApp y revisamos opciones."}</span>
                   </div>
                 )}
                 {entrada && salida && disponibilidad.checking && (
